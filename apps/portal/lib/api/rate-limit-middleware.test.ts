@@ -15,6 +15,15 @@ const mockRedisClient = {
   del: jest.fn(async (key: string) => {
     mockCache.delete(key);
   }),
+  incr: jest.fn(async (key: string) => {
+    const current = parseInt(mockCache.get(key) ?? "0", 10);
+    const next = current + 1;
+    mockCache.set(key, String(next));
+    return next;
+  }),
+  expire: jest.fn(async (_key: string, _seconds: number) => {
+    // no-op in test mock
+  }),
 };
 
 jest.mock("@repo/redis", () => ({

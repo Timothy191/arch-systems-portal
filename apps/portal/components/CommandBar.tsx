@@ -118,7 +118,9 @@ const NAV_COMMANDS: CommandItem[] = [
     id: "nav-logout",
     label: "Log Out",
     action: () => {
-      logout().catch(console.error);
+      logout().catch(() => {
+        // ignore logout failures in UI; auth state will be inconsistent anyway
+      });
     },
     category: "Navigation",
     icon: <LogOut className="w-4 h-4" />,

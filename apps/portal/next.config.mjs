@@ -27,6 +27,15 @@ const nextConfig = {
     "@repo/redis",
     "@repo/theme",
   ],
+  serverExternalPackages: [
+    "@opentelemetry/sdk-node",
+    "@opentelemetry/auto-instrumentations-node",
+    "@opentelemetry/exporter-trace-otlp-http",
+    "@opentelemetry/resources",
+    "@opentelemetry/semantic-conventions",
+    "@opentelemetry/otlp-transformer",
+    "@opentelemetry/api",
+  ],
   images: {
     formats: ["image/avif", "image/webp"],
     minimumCacheTTL: 86400,

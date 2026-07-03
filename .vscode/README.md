@@ -52,6 +52,33 @@ We have preconfigured the following Model Context Protocol (MCP) servers in `cli
   - `NEO4J_PASSWORD` (default: `memex-local`)
   - `GEMINI_API_KEY` (Gemini API key for analytical processing)
 
+### 7. DeepGraph MCP Servers (Next.js, React, TypeScript Code Graphs)
+
+- **Commands**:
+  - `npx -y mcp-code-graph@latest vercel/next.js`
+  - `npx -y mcp-code-graph@latest facebook/react`
+  - `npx -y mcp-code-graph@latest microsoft/TypeScript`
+- **Purpose**: Provides structural code graph representation and querying for Next.js, React, and TypeScript projects.
+
+### 8. `github-official` (GitHub Integration)
+
+- **Command**: `docker run -i --rm -e GITHUB_PERSONAL_ACCESS_TOKEN ghcr.io/github/github-mcp-server`
+- **Environment Variables**:
+  - `GITHUB_PERSONAL_ACCESS_TOKEN` (your personal GitHub API token)
+- **Purpose**: Exposes GitHub APIs (issues, pull requests, files) as MCP tools.
+
+### 9. `redis` (Redis Database Manager)
+
+- **Command**: `uvx --from redis-mcp-server@latest redis-mcp-server`
+- **Environment Variables**:
+  - `REDIS_URL` (your Redis database URL, e.g. `redis://localhost:6379`)
+- **Purpose**: Exposes Redis keys, values, and database operations as MCP tools.
+
+### 10. `trace-mcp` (Tracing Utility)
+
+- **Command**: `npx -y trace-mcp@latest`
+- **Purpose**: Standard tracing and debugger logging MCP server.
+
 ---
 
 ## Local Tooling & Database Setup (Neo4j)
@@ -108,52 +135,26 @@ claude mcp add repowise-mcp uv --project tools/repowise repowise mcp .
 # Add Sense MCP
 claude mcp add sense-mcp tools/sense/bin/sense
 
-# Add Memex MCP (replace placeholders with actual values)
+# Add Memex MCP
 claude mcp add memex-mcp uv --project tools/memex memex serve --env NEO4J_URI="bolt://localhost:7687" --env NEO4J_USER="neo4j" --env NEO4J_PASSWORD="memex-local" --env GEMINI_API_KEY="your-gemini-key"
+
+# Add DeepGraph MCPs
+claude mcp add deepgraph-nextjs npx -y mcp-code-graph@latest vercel/next.js
+claude mcp add deepgraph-react npx -y mcp-code-graph@latest facebook/react
+claude mcp add deepgraph-typescript npx -y mcp-code-graph@latest microsoft/TypeScript
+
+# Add GitHub Official
+claude mcp add github-official docker run -i --rm -e GITHUB_PERSONAL_ACCESS_TOKEN ghcr.io/github/github-mcp-server --env GITHUB_PERSONAL_ACCESS_TOKEN="your-token"
+
+# Add Redis MCP
+claude mcp add redis uvx --from redis-mcp-server@latest redis-mcp-server --env REDIS_URL="redis://localhost:6379"
+
+# Add Trace MCP
+claude mcp add trace-mcp npx -y trace-mcp@latest
 ```
 
 ### 3. Gemini / Antigravity IDE
 
 Register the servers in your global user configuration located at `~/.gemini/antigravity-ide/mcp_config.json`:
 
-```json
-{
-  "mcpServers": {
-    "preflight-mcp": {
-      "command": "node",
-      "args": ["/absolute/path/to/Arch-Mk2/tools/preflight-mcp/index.js"]
-    },
-    "repowise-mcp": {
-      "command": "/absolute/path/to/uv",
-      "args": [
-        "run",
-        "--project",
-        "/absolute/path/to/Arch-Mk2/tools/repowise",
-        "repowise",
-        "mcp",
-        "/absolute/path/to/Arch-Mk2"
-      ]
-    },
-    "sense-mcp": {
-      "command": "/absolute/path/to/Arch-Mk2/tools/sense/bin/sense",
-      "args": []
-    },
-    "memex-mcp": {
-      "command": "/absolute/path/to/uv",
-      "args": [
-        "run",
-        "--project",
-        "/absolute/path/to/Arch-Mk2/tools/memex",
-        "memex",
-        "serve"
-      ],
-      "env": {
-        "NEO4J_URI": "bolt://localhost:7687",
-        "NEO4J_USER": "neo4j",
-        "NEO4J_PASSWORD": "memex-local",
-        "GEMINI_API_KEY": "your-gemini-key"
-      }
-    }
-  }
-}
-```
+Refer to the [.vscode/README.md](file:///home/timothy/Documents/Arch-Mk2/.vscode/README.md) contents for absolute path examples.

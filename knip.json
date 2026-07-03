@@ -6,9 +6,16 @@
     "@secretlint/secretlint-rule-preset-recommend",
     "preflight",
     "@repo/eslint-config",
-    "@typescript-eslint/parser"
+    "@typescript-eslint/parser",
+    "eslint-import-resolver-typescript",
+    "@eslint/js",
+    "@nx/eslint-plugin",
+    "globals",
+    "lint-staged",
+    "typescript-eslint"
   ],
-  "ignore": ["**/jest.config.*", "**/postcss.config.*"],
+  "ignoreBinaries": ["python3", "psql"],
+  "ignore": ["**/jest.config.*", "**/postcss.config.*", "pnpm-workspace.yaml"],
   "workspaces": {
     ".": {
       "entry": ["scripts/**/*.{ts,js}", ".eslintrc.{js,cjs}"],
@@ -38,7 +45,8 @@
         "lib/observability/metrics.ts",
         "components/ui/PrecisionInput.tsx",
         "features/analytics/components/ReportTemplate.tsx",
-        "lib/ai/tool-dispatch.ts"
+        "lib/ai/tool-dispatch.ts",
+        "lib/errors/error-classes.ts"
       ]
     },
     "apps/cms": {

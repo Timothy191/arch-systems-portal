@@ -5,7 +5,6 @@
  *   L1 in-process Map <-> L2 Postgres cache <-> Ollama provider.
  */
 
-import { APIError } from "@/lib/errors/error-classes";
 import { logError } from "@/lib/errors/error-logger";
 import {
   getCachedEmbedding as getL1,

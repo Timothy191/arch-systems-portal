@@ -53,6 +53,62 @@
         "NEO4J_PASSWORD": "memex-local",
         "GEMINI_API_KEY": "your-gemini-api-key-here"
       }
+    },
+    "deepgraph-nextjs": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-code-graph@latest",
+        "vercel/next.js"
+      ]
+    },
+    "deepgraph-react": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-code-graph@latest",
+        "facebook/react"
+      ]
+    },
+    "deepgraph-typescript": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-code-graph@latest",
+        "microsoft/TypeScript"
+      ]
+    },
+    "github-official": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "-e",
+        "GITHUB_PERSONAL_ACCESS_TOKEN",
+        "ghcr.io/github/github-mcp-server"
+      ],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "<your-github-token>"
+      }
+    },
+    "redis": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "redis-mcp-server@latest",
+        "redis-mcp-server"
+      ],
+      "env": {
+        "REDIS_URL": "<your-redis-url>"
+      }
+    },
+    "trace-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "trace-mcp@latest"
+      ]
     }
   }
 }

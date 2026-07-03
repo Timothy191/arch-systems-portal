@@ -102,9 +102,32 @@ From `GEMINI.md` — these are project rules, not generic advice:
 - Playwright E2E is pinned to `/usr/bin/google-chrome` and `http://localhost:3000` — keep the portal running on the default port.
 - Portal Jest coverage thresholds: 40% lines, 30% branches.
 
+## Codebase Intelligence & Workspace Integration
+
+- **Security & RLS Audits (`.audit`):** DB schema migrations are validated via
+  static Row Level Security analysis (`pnpm audit:rls`). The generated report
+  resides at `.audit/rls-report.md`.
+- **Git Hooks (`.husky`):** Pre-commit and commit-msg hooks are configured via
+  Husky. Ensure commits conform to Conventional Commits styling.
+- **Monorepo Execution (`.nx`):** The Nx workspace caching engine stores
+  previous build, test, and lint runs in `.nx`. Running tasks through Nx is
+  highly encouraged to optimize build times.
+- **Repowise Codebase Intelligence (`.repowise`, `.repowise-workspace`):** The
+  repository and its workspace boundaries are indexed. Eagerly use Repowise MCP
+  tools (like `get_answer`, `get_context`, `get_why`) for orientation and
+  decision archaeology.
+- **VS Code Configuration (`.vscode`):** Pre-configured settings, recommended
+  extensions, and workspace-level MCP configs (such as
+  `.vscode/cline_mcp_settings.json` and `.vscode/roo_mcp_settings.json`) are
+  provided. See `.vscode/README.md` for developer/agent onboarding.
+- **Claude Code Settings (`.claude`):** Claude-specific plugins and custom
+  workspace instructions are located in `.claude/`.
+
 ## Where to look further
 
 - `GEMINI.md` (root + per-app/package) — working conventions and agent-tracing rules.
+- `.agents/AGENTS.md` — workspace-level rules and behavioral constraints for
+  AI coding agents.
 - `packages/theme/README.md`, `packages/supabase/README.md` — local Supabase + token-pipeline setup.
 - `tools/policy-definitions.ts` — the authoritative dependency/intent boundary definitions.
 - `docs/` — VitePress wiki (run from `/wiki`); runbooks in `docs/runbooks/`.

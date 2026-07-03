@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { ArchPlugin } from "../../lib/plugins/types";
-import { APIError } from "@repo/errors";
+import { APIError } from "@/lib/errors/error-classes";
 
 // Types matching our Rust binary JSON output contract
 interface RustTelemetryData {

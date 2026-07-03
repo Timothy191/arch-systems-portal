@@ -263,7 +263,7 @@ describe("ServicesDropdown", () => {
       expect(screen.getByText("Safety & Emergency")).toBeInTheDocument();
       expect(screen.getByText("Reload")).toBeInTheDocument();
       expect(screen.getByText("Toggle Fullscreen")).toBeInTheDocument();
-      expect(screen.getByText("Report Incident")).toBeInTheDocument();
+      expect(screen.getByText("Daily Safety Log")).toBeInTheDocument();
       expect(screen.getByText("Safety Dashboard")).toBeInTheDocument();
       expect(screen.getByText("Emergency Line")).toBeInTheDocument();
     });

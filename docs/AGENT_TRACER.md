@@ -30,6 +30,20 @@ This file maintains a record of AI agent interventions, context hand-offs, and a
   - Removed dead `/api/*` checks from middleware body (matcher already excludes API routes).
   - Added comprehensive `isValidRedirect` tests in `apps/portal/proxy.test.ts`; full suite 33/33 passing.
 
+## [2026-07-03] Quality gate green
+
+- **Agent**: Claude Code
+- **Changes**:
+  - Fixed `apps/portal/lib/errors/error-classes.ts` constructor overloads to accept an options bag `{ statusCode, context, cause, ...extra }` (matches `@repo/errors` API) and removed stale ESLint disable.
+  - Fixed `_redis` field access in `apps/portal/lib/ai/rate-limiter.ts` and `apps/portal/lib/api/rate-limit-middleware.ts`; added missing `incr`/`expire` to the rate-limit middleware test mock.
+  - Replaced broken `@repo/errors` import in `apps/portal/plugins/rust-telemetry-engine/index.tsx` with local `@/lib/errors/error-classes`.
+  - Removed `console.error` from `apps/portal/components/CommandBar.tsx` logout handler.
+  - Fixed stale test expectation in `apps/portal/components/nav/ServicesDropdown.test.tsx`.
+  - Inlined all `catalog:` / `catalog:react19` references across package.json files to actual versions (syncpack 13 cannot parse pnpm catalog protocol); ran `pnpm exec syncpack format`.
+  - Added `.syncpackrc` ignoring workspace protocol deps and enforcing `^` semver ranges.
+  - Updated `knip.json` to ignore root tooling deps, `pnpm-workspace.yaml`, `python3`/`psql` binaries, `eslint-import-resolver-typescript` unresolved import, and `lib/errors/error-classes.ts`.
+  - `pnpm quality` now passes (EXIT_CODE=0).
+
 ## [2026-06-05] AMCA Foundation / Initialization
 
 - **Agent**: Antigravity

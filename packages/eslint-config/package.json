@@ -1,15 +1,15 @@
 {
   "name": "@repo/eslint-config",
   "version": "0.0.0",
-  "private": true,
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "eslint-plugin-only-warn": "^1.1.0",
+    "typescript": "^5.7.0"
+  },
   "files": [
     "library.js",
     "next.js",
     "react-internal.js"
   ],
-  "devDependencies": {
-    "typescript": "catalog:",
-    "eslint-plugin-only-warn": "^1.1.0",
-    "eslint": "catalog:"
-  }
+  "private": true
 }

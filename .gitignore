@@ -25,6 +25,10 @@ Thumbs.db
 .vscode/settings.json
 .vscode/launch.json
 .idea
+.nx/
+
+# Next.js generated types
+**/next-env.d.ts
 
 # Test / coverage
 coverage

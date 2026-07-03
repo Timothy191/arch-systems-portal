@@ -1,0 +1,20 @@
+{
+  "$schema": "https://jamiemason.github.io/syncpack/schema/syncpack.json",
+  "dependencyTypes": ["dev", "prod", "peer"],
+  "filter": ".",
+  "semverGroups": [
+    {
+      "range": "^",
+      "dependencies": ["**"],
+      "packages": ["**"]
+    }
+  ],
+  "versionGroups": [
+    {
+      "label": "Ignore workspace protocol dependencies (pnpm workspaces)",
+      "dependencies": ["@repo/*"],
+      "packages": ["**"],
+      "isIgnored": true
+    }
+  ]
+}

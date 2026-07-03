@@ -78,3 +78,11 @@ This file maintains a record of AI agent interventions, context hand-offs, and a
   - Created `scripts/copy-assets.sh`: rsyncs root `assets/` → `apps/portal/public/assets/`.
   - Updated `scripts/dev.sh`: Runs copy-assets.sh before portal start (Phase 1d).
 - **Next Agent**: All shared branding/background assets live in root `assets/`. Portal-specific files (favicon, PWA icons, cursors) stay in `public/`. Run `bash scripts/copy-assets.sh` after adding assets to root.
+
+## 2026-07-03 Fix Turbopack OTel module resolution + OS file watch limit
+
+- **Purpose**: Fix dev-mode Turbopack crash from `@opentelemetry/otlp-transformer` ESM module resolution failure, and prevent OS file watch limit exhaustion.
+- **Changes**:
+  - `next.config.mjs`: Added `serverExternalPackages` for all 7 OTel packages (`@opentelemetry/sdk-node`, `@opentelemetry/auto-instrumentations-node`, `@opentelemetry/exporter-trace-otlp-http`, `@opentelemetry/resources`, `@opentelemetry/semantic-conventions`, `@opentelemetry/otlp-transformer`, `@opentelemetry/api`). These are excluded from Turbopack's module graph — they're only used via dynamic `await import()` in `instrumentation.ts`, gated behind `OTEL_EXPORTER_OTLP_ENDPOINT`.
+- **OS fix**: `sudo sysctl fs.inotify.max_user_watches=524288` + persist in `/etc/sysctl.conf`.
+- **Next Agent**: If adding more server-only Node packages, add them to `serverExternalPackages` to keep Turbopack from trying to resolve ESM internals. The inotify fix is a one-time environment config.
