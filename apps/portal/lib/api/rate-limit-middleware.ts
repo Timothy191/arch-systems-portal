@@ -15,7 +15,10 @@ import { getRateLimitConfig } from "./rate-limit-config";
 class MemoryStore {
   private counters = new Map<string, { count: number; resetTime: number }>();
 
-  async increment(key: string, windowMs: number): Promise<{ count: number; resetTime: number }> {
+  async increment(
+    key: string,
+    windowMs: number,
+  ): Promise<{ count: number; resetTime: number }> {
     const now = Date.now();
     const entry = this.counters.get(key);
 
@@ -29,7 +32,9 @@ class MemoryStore {
     return entry;
   }
 
-  async get(key: string): Promise<{ count: number; resetTime: number } | undefined> {
+  async get(
+    key: string,
+  ): Promise<{ count: number; resetTime: number } | undefined> {
     return this.counters.get(key);
   }
 
@@ -42,7 +47,10 @@ class MemoryStore {
 class RedisStore {
   constructor(private redis: Awaited<ReturnType<typeof getRedisClient>>) {}
 
-  async increment(key: string, windowMs: number): Promise<{ count: number; resetTime: number }> {
+  async increment(
+    key: string,
+    windowMs: number,
+  ): Promise<{ count: number; resetTime: number }> {
     const now = Date.now();
     const resetTime = now + windowMs;
 
@@ -54,7 +62,9 @@ class RedisStore {
     return { count: result, resetTime };
   }
 
-  async get(key: string): Promise<{ count: number; resetTime: number } | undefined> {
+  async get(
+    key: string,
+  ): Promise<{ count: number; resetTime: number } | undefined> {
     const count = await this.redis.get(key);
     if (!count) return undefined;
     return { count: parseInt(count, 10), resetTime: Date.now() + 60000 };
@@ -78,7 +88,10 @@ class TokenBucketStrategy {
       limit,
       remaining,
       resetTime: result.resetTime,
-      retryAfter: Math.max(0, Math.ceil((result.resetTime - Date.now()) / 1000)),
+      retryAfter: Math.max(
+        0,
+        Math.ceil((result.resetTime - Date.now()) / 1000),
+      ),
     };
   }
 }
@@ -100,7 +113,10 @@ class SlidingWindowStrategy {
       limit,
       remaining,
       resetTime: result.resetTime,
-      retryAfter: Math.max(0, Math.ceil((result.resetTime - Date.now()) / 1000)),
+      retryAfter: Math.max(
+        0,
+        Math.ceil((result.resetTime - Date.now()) / 1000),
+      ),
     };
   }
 }

@@ -25,9 +25,11 @@ pnpm dev                    # Quick portal development only
 ### Development
 
 #### `dev.sh` ⭐ **Primary Development Script**
+
 **Purpose**: Comprehensive development environment bootstrap
 
 **Features**:
+
 - Starts Docker and Supabase local
 - Caches cleanup and port conflict resolution
 - Next.js HMR with health checks
@@ -36,6 +38,7 @@ pnpm dev                    # Quick portal development only
 - Built-in status terminal monitoring
 
 **Usage**:
+
 ```bash
 ./dev.sh                    # Standard development mode
 ./dev.sh --quick|-q          # Skip Docker/Supabase, start portal only
@@ -47,6 +50,7 @@ pnpm dev                    # Quick portal development only
 ```
 
 **Requirements**:
+
 - Node.js >= 22.0.0
 - pnpm 9.15.9
 - Docker (for Supabase)
@@ -57,9 +61,11 @@ pnpm dev                    # Quick portal development only
 ### Deployment
 
 #### `deploy.sh` ⭐ **Primary Deployment Script**
+
 **Purpose**: Sequential stable deployment for all environments
 
 **Features**:
+
 - Three deployment modes: local, staging, production
 - Sequential phase execution with health checks
 - Automatic migration application
@@ -68,6 +74,7 @@ pnpm dev                    # Quick portal development only
 - Auto-browser launch when ready
 
 **Usage**:
+
 ```bash
 ./deploy.sh local             # Full local development deployment
 ./deploy.sh staging           # Staging environment deployment
@@ -78,6 +85,7 @@ pnpm dev                    # Quick portal development only
 ```
 
 **Modes**:
+
 - **local**: Full stack with local Supabase (development)
 - **staging**: Production-like on staging environment
 - **production**: Production deployment (external Supabase)
@@ -85,9 +93,11 @@ pnpm dev                    # Quick portal development only
 ---
 
 #### `deploy-live-local.sh` 🌐 **Network Deployment**
+
 **Purpose**: Turn local machine into LAN-accessible server
 
 **Features**:
+
 - Automatic LAN IP detection
 - Network reachability configuration
 - Environment backup/restore
@@ -95,11 +105,13 @@ pnpm dev                    # Quick portal development only
 - Multi-terminal deployment monitoring
 
 **Usage**:
+
 ```bash
 ./deploy-live-local.sh       # Deploy on local network
 ```
 
 **Requirements**:
+
 - Connected to Wi-Fi or LAN
 - Valid network IP address
 - Updated Supabase URL configuration
@@ -107,9 +119,11 @@ pnpm dev                    # Quick portal development only
 ---
 
 #### `setup-production-environment.sh` 🏭 **Production Setup**
+
 **Purpose**: Automated production environment configuration
 
 **Features**:
+
 - systemd service setup
 - Environment configuration automation
 - Background process management
@@ -119,6 +133,7 @@ pnpm dev                    # Quick portal development only
 - OS detection (Rocky Linux, RHEL, CentOS)
 
 **Usage**:
+
 ```bash
 ./setup-production-environment.sh                 # Full setup
 ./setup-production-environment.sh --no-systemd    # Skip systemd
@@ -128,6 +143,7 @@ pnpm dev                    # Quick portal development only
 ```
 
 **Components**:
+
 - **Essential**: Next.js server, Supabase, Redis
 - **Recommended**: Docker tools stack
 - **Optional**: Monitoring stack
@@ -137,9 +153,11 @@ pnpm dev                    # Quick portal development only
 ### Utilities
 
 #### `shutdown.sh` 🔌 **Graceful Shutdown**
+
 **Purpose**: Safe shutdown of all services without data loss
 
 **Features**:
+
 - SIGTERM for Next.js connection pool drainage
 - Non-destructive container halting
 - Complete CPU/RAM relief for stack tools
@@ -147,11 +165,13 @@ pnpm dev                    # Quick portal development only
 - Database volume preservation
 
 **Usage**:
+
 ```bash
 ./shutdown.sh                # Graceful shutdown
 ```
 
 **Guarantees**:
+
 1. Graceful signal drainage prevents DB transaction corruption
 2. Non-destructive container halting preserves postgres data
 3. Complete CPU/RAM relief for all stack tools
@@ -159,9 +179,11 @@ pnpm dev                    # Quick portal development only
 ---
 
 #### `preflight-checklist.sh` ✅ **Environment Validation**
+
 **Purpose**: Validate environment before deployment
 
 **Features**:
+
 - Environment checks (Node.js, pnpm, Docker)
 - Repository structure validation
 - Environment file verification
@@ -169,12 +191,14 @@ pnpm dev                    # Quick portal development only
 - Comprehensive error reporting
 
 **Usage**:
+
 ```bash
 ./preflight-checklist.sh                     # Check only
 ./preflight-checklist.sh --fix              # Fix issues
 ```
 
 **Checks**:
+
 - Node.js >= 22.0.0
 - pnpm 9.15.9
 - Docker daemon
@@ -185,9 +209,11 @@ pnpm dev                    # Quick portal development only
 ---
 
 #### `monitor-hud.sh` 📊 **Monitoring Dashboard**
+
 **Purpose**: Terminal-based system monitoring
 
 **Features**:
+
 - API health and connection latency
 - Next.js portal resource profiling
 - Docker container resource matrix
@@ -195,11 +221,13 @@ pnpm dev                    # Quick portal development only
 - Zero terminal flicker rendering
 
 **Usage**:
+
 ```bash
 ./monitor-hud.sh            # Start monitoring dashboard
 ```
 
 **Monitors**:
+
 - Next.js Portal API
 - Supabase API
 - Redis
@@ -210,15 +238,18 @@ pnpm dev                    # Quick portal development only
 ---
 
 #### `pentest.sh` 🔒 **Security Scanning**
+
 **Purpose**: OWASP ZAP security baseline scan
 
 **Features**:
+
 - Passive baseline scanning (safe for production)
 - Full active scan (development only)
 - HTML and JSON report generation
 - Docker-based ZAP container
 
 **Usage**:
+
 ```bash
 ./pentest.sh                    # Baseline scan of localhost:3000
 ./pentest.sh http://myserver    # Scan custom target
@@ -226,19 +257,23 @@ pnpm dev                    # Quick portal development only
 ```
 
 **Reports**:
+
 - `test-results/pentest/zap-report-*.html`
 - `test-results/pentest/zap-report-*.json`
 
 **Requirements**:
+
 - Docker must be running
 - Target must be accessible
 
 ---
 
 #### `ensure_reachability.py` 🌐 **Network Configuration**
+
 **Purpose**: Configure network reachability for LAN access
 
 **Features**:
+
 - Automatic LAN IP detection
 - Environment file updates
 - Supabase configuration updates
@@ -246,6 +281,7 @@ pnpm dev                    # Quick portal development only
 - Multi-file update support
 
 **Usage**:
+
 ```bash
 ./ensure_reachability.py                  # Auto-detect IP
 ./ensure_reachability.py 192.168.1.100   # Use specific IP
@@ -253,6 +289,7 @@ pnpm dev                    # Quick portal development only
 ```
 
 **Files Modified**:
+
 - `.env` (root)
 - `apps/portal/.env`
 - `packages/supabase/config.toml`
@@ -260,24 +297,29 @@ pnpm dev                    # Quick portal development only
 ---
 
 #### `generate-db-docs.sh` 📚 **Database Documentation**
+
 **Purpose**: Generate database ER diagrams and documentation
 
 **Features**:
+
 - Uses tbls (PostgreSQL documentation tool)
 - Generates visual ER diagrams
 - Creates markdown documentation
 - Auto-generated TypeScript types
 
 **Usage**:
+
 ```bash
 ./generate-db-docs.sh        # Generate documentation
 ```
 
 **Requirements**:
+
 - `tbls` CLI tool installed
 - Database connection (local: `postgres://postgres:postgres@127.0.0.1:54322/postgres`)
 
 **Install tbls**:
+
 ```bash
 go install github.com/k1LoW/tbls/cmd/tbls@latest
 ```
@@ -289,6 +331,7 @@ go install github.com/k1LoW/tbls/cmd/tbls@latest
 ## 🔧 Environment Variables
 
 ### Required for Development
+
 ```bash
 # Supabase Local (default)
 NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321
@@ -306,6 +349,7 @@ OLLAMA_URL=http://localhost:11434
 ```
 
 ### Production Requirements
+
 ```bash
 # Production Supabase
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
@@ -322,6 +366,7 @@ SENTRY_AUTH_TOKEN=<your Sentry auth token>
 ## 🎯 Common Workflows
 
 ### First-Time Setup
+
 ```bash
 # 1. Install dependencies
 pnpm install
@@ -337,6 +382,7 @@ cp apps/portal/.env.example apps/portal/.env
 ```
 
 ### Daily Development
+
 ```bash
 # Quick development start
 ./dev.sh --quick
@@ -349,6 +395,7 @@ cp apps/portal/.env.example apps/portal/.env
 ```
 
 ### Deployment Workflow
+
 ```bash
 # 1. Pre-flight validation
 ./preflight-checklist.sh
@@ -364,6 +411,7 @@ pnpm quality
 ```
 
 ### Network Deployment
+
 ```bash
 # 1. Configure network reachability
 ./ensure_reachability.py
@@ -376,6 +424,7 @@ pnpm quality
 ```
 
 ### Production Setup
+
 ```bash
 # 1. Manual prerequisites (Node.js, pnpm, Docker)
 # 2. Run production setup
@@ -391,6 +440,7 @@ sudo systemctl start arch-portal
 ## 🛠️ Troubleshooting
 
 ### Port Conflicts
+
 ```bash
 # Force kill port conflicts
 ./dev.sh --force
@@ -400,6 +450,7 @@ lsof -i :3000
 ```
 
 ### Docker Issues
+
 ```bash
 # Restart Docker
 sudo systemctl restart docker
@@ -409,6 +460,7 @@ docker ps
 ```
 
 ### Supabase Issues
+
 ```bash
 # Reset local Supabase
 pnpm --filter @repo/database supabase:reset
@@ -418,6 +470,7 @@ cd packages/database && pnpx supabase status
 ```
 
 ### Environment Issues
+
 ```bash
 # Validate environment
 ./preflight-checklist.sh --fix
@@ -429,6 +482,7 @@ pnpm --filter @repo/database supabase:gen
 ## 📝 Script Maintenance
 
 When modifying scripts:
+
 1. Update version checks to match AGENTS.md requirements
 2. Test on all supported platforms (macOS, Linux)
 3. Ensure proper error handling and exit codes
@@ -438,6 +492,7 @@ When modifying scripts:
 ## 🔄 Version Requirements
 
 Current project requirements (from AGENTS.md):
+
 - **Node.js**: >= 22.0.0 (Volta-managed)
 - **pnpm**: 9.15.9 (Volta-managed)
 - **Docker**: Latest stable version

@@ -57,7 +57,9 @@ describe("logError", () => {
 
   it("does NOT forward 4xx AppErrors to Sentry", async () => {
     const warnSpy = jest.spyOn(console, "warn").mockImplementation(() => {});
-    const { AuthError, ValidationError } = await import("@/lib/errors/error-classes");
+    const { AuthError, ValidationError } = await import(
+      "@/lib/errors/error-classes"
+    );
     await logError(new AuthError("Unauthorized"));
     await logError(new ValidationError("bad input"));
     expect(mockCaptureException).not.toHaveBeenCalled();

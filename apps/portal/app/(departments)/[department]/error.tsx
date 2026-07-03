@@ -3,7 +3,11 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { SecondaryButton } from "@repo/ui/SecondaryButton";
-import { isAppError, isNotFoundError, isAuthError } from "@/lib/errors/error-classes";
+import {
+  isAppError,
+  isNotFoundError,
+  isAuthError,
+} from "@/lib/errors/error-classes";
 import { logError } from "@/lib/errors/error-logger";
 
 interface DepartmentErrorProps {

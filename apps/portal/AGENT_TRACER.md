@@ -1,12 +1,15 @@
 # Agent Tracer Log
+
 This file maintains a record of AI agent interventions, context hand-offs, and architectural breadcrumbs for this specific package/app.
 
 ## [2026-06-05] AMCA Foundation / Initialization
+
 - **Agent**: Antigravity
 - **Changes**: Initialized tracing protocols globally as per user instruction.
 - [2026-06-05T14:52:00Z] Cleaned up incomplete caching infrastructure items and restored @repo/errors and @repo/rate-limiter to ensure full architectural compliance and system integrity.
 
 ## [2026-06-05] ESLint Fixes for Git Push
+
 - **Agent**: Devin (Claude Code)
 - **Purpose**: Fix ESLint warnings preventing git push in pre-commit hook
 - **Changes Made**:
@@ -18,6 +21,7 @@ This file maintains a record of AI agent interventions, context hand-offs, and a
 - **Next Agent Notes**: The error classes in `lib/errors/error-classes.ts` are intentionally simple replacements for the @repo/errors package. They use public constructor parameters to define the error interface. If modifying error handling, maintain this pattern or consider re-integrating @repo/errors if it becomes necessary again. The Redis stores in rate limiting files are placeholders - full Redis integration is pending.
 
 ## [2026-06-05] Agent Tracing Rule Enforcement Setup
+
 - **Agent**: Devin (Claude Code)
 - **Purpose**: Enhance agent setup to make MANDATORY tracing rule impossible to miss
 - **Changes Made**:
@@ -30,6 +34,7 @@ This file maintains a record of AI agent interventions, context hand-offs, and a
 - **Next Agent Notes**: The tracing rule is now enforced through multiple mechanisms: prominent documentation, session start hooks, and post-edit reminders. ALWAYS update AGENT_TRACER.md when modifying code and leave // AGENT-TRACE: comments for complex logic.
 
 ## [2026-06-05] Fix Asset Mismatches in Public Directory
+
 - **Agent**: Antigravity
 - **Purpose**: Fix broken assets and alignment between component code and the `public/` directory structure.
 - **Changes Made**:
@@ -39,6 +44,7 @@ This file maintains a record of AI agent interventions, context hand-offs, and a
 - **Next Agent Notes**: When modifying or bringing in new static assets, be aware that `public/` asset naming uses hyphens or underscores in place of spaces. Always verify `<video>` and `<img>` asset references against the actual filesystem layout of `apps/portal/public/`.
 
 ## 2026-06-05T21:45:00Z - Agent
+
 - **Purpose**: Fix broken internal application routes.
 - **Changes**:
   - Updated `/drilling/machine-telemetry/live` to `/drilling/drilling-operations` in `apps/portal/app/(departments)/drilling/machine-telemetry/page.tsx`.
@@ -47,6 +53,7 @@ This file maintains a record of AI agent interventions, context hand-offs, and a
 - **Next Agent**: Links have been updated to point to existing functioning routes. No broken 404 links remain.
 
 ## 2026-06-05T21:48:00Z - Agent
+
 - **Purpose**: Second pass resolving additional broken internal links and pseudo-routes.
 - **Changes**:
   - `CommandBar.tsx`: Replaced hardcoded `window.location.href = "/logout"` with the actual server action `logout()` imported from `~/app/actions`.
@@ -55,12 +62,14 @@ This file maintains a record of AI agent interventions, context hand-offs, and a
 - **Next Agent**: System routes and layout dropdowns are now fully aligned with the Next.js `app/` folder structure.
 
 ## 2026-06-05T21:53:00Z - Agent
+
 - **Purpose**: Third pass resolving further broken links found by subagents.
 - **Changes**:
   - `CommandBar.tsx`: Updated broken `/profile` link to `/admin`.
 - **Next Agent**: Link resolution complete. Quality gate checks initiated.
 
 ## 2026-07-03 Asset consolidation — root `assets/` as canonical source
+
 - **Purpose**: Consolidate all shared static assets into root `assets/` directory as single source of truth.
 - **Changes**:
   - Updated `components/RouteBackground.tsx`: All image/video src paths changed from `/auth-bg-poster.jpg`, `/background/light_mode.mp4`, `/assets/large/focused-mode.mp4` to `/assets/...` equivalents.

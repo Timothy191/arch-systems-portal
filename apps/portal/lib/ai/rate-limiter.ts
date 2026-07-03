@@ -18,7 +18,10 @@ const MAX_REQUESTS = 30;
 class MemoryStore {
   private counters = new Map<string, { count: number; resetTime: number }>();
 
-  async increment(key: string, windowMs: number): Promise<{ count: number; resetTime: number }> {
+  async increment(
+    key: string,
+    windowMs: number,
+  ): Promise<{ count: number; resetTime: number }> {
     const now = Date.now();
     const entry = this.counters.get(key);
 
@@ -32,7 +35,9 @@ class MemoryStore {
     return entry;
   }
 
-  async get(key: string): Promise<{ count: number; resetTime: number } | undefined> {
+  async get(
+    key: string,
+  ): Promise<{ count: number; resetTime: number } | undefined> {
     return this.counters.get(key);
   }
 
@@ -47,7 +52,10 @@ class MemoryStore {
 class RedisStore {
   constructor(private _redis: Awaited<ReturnType<typeof getRedisClient>>) {}
 
-  async increment(key: string, windowMs: number): Promise<{ count: number; resetTime: number }> {
+  async increment(
+    key: string,
+    windowMs: number,
+  ): Promise<{ count: number; resetTime: number }> {
     const now = Date.now();
     const resetTime = now + windowMs;
 
@@ -59,7 +67,9 @@ class RedisStore {
     return { count: result, resetTime };
   }
 
-  async get(key: string): Promise<{ count: number; resetTime: number } | undefined> {
+  async get(
+    key: string,
+  ): Promise<{ count: number; resetTime: number } | undefined> {
     const count = await this.redis.get(key);
     if (!count) return undefined;
     return { count: parseInt(count, 10), resetTime: Date.now() + 60000 };
@@ -73,7 +83,12 @@ class TokenBucketStrategy {
     limit: number,
     windowMs: number,
     store: MemoryStore | RedisStore,
-  ): Promise<{ allowed: boolean; limit: number; remaining: number; resetTime: number }> {
+  ): Promise<{
+    allowed: boolean;
+    limit: number;
+    remaining: number;
+    resetTime: number;
+  }> {
     const result = await store.increment(key, windowMs);
     const allowed = result.count <= limit;
     const remaining = Math.max(0, limit - result.count);

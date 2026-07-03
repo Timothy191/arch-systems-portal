@@ -1,0 +1,73 @@
+# Dependencies
+node_modules
+
+# Build outputs
+.next
+dist
+out
+build
+*.tsbuildinfo
+.turbo
+
+# Lockfiles
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+uv.lock
+Cargo.lock
+
+# Generated / vendored tooling
+.claude/
+.repowise/
+.repowise-workspace/
+ltm/
+report/
+scratch/
+tools/memex/**
+tools/repowise/**
+tools/secrin/**
+tools/sense/**
+tools/n8n-mcp/**
+tools/preflight-mcp/**
+tools/wiki-viewer/**
+tools/audit-rls.cjs
+tools/policy-compiler.cjs
+tools/policy/*.generated.*
+
+# Test fixtures
+e2e/test-results/
+playwright-report/
+coverage/
+*.snap
+
+# Docker / infra
+infra/
+systemd/
+
+# Supabase generated
+packages/supabase/supabase/.temp
+packages/supabase/supabase/functions/**/*.pem
+packages/supabase/src/types/generated.ts
+packages/supabase/src/types/db-types.ts
+
+# Python
+__pycache__
+*.pyc
+.pytest_cache
+.venv
+venv
+
+# Assets / media
+assets/**
+*.mp4
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.ico
+*.woff
+*.woff2
+*.ttf
+*.otf
+*.eot

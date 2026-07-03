@@ -14,10 +14,12 @@ This directory contains workspace-level configurations to align the development 
 We have preconfigured the following Model Context Protocol (MCP) servers in `cline_mcp_settings.json` and `roo_mcp_settings.json`:
 
 ### 1. `preflight-mcp` (Diagnostic Utility)
+
 - **Command**: `node tools/preflight-mcp/index.js`
 - **Purpose**: A lightweight utility server used for workspace diagnostic checks.
 
 ### 2. `n8n-mcp` (Workflows Bridge)
+
 - **Command**: `node tools/n8n-mcp/index.js`
 - **Environment Variables**:
   - `N8N_URL` (default: `http://localhost:5678`)
@@ -25,19 +27,23 @@ We have preconfigured the following Model Context Protocol (MCP) servers in `cli
   - `N8N_PASSWORD` (your n8n account password)
 
 ### 3. `codebase-memory` (Knowledge Graph)
+
 - **Command**: `codebase-memory-mcp`
 - **Purpose**: A custom codebase knowledge graph server used for graph queries, code intelligence, and dependency analysis.
 
 ### 4. `repowise-mcp` (Codebase Intelligence & Health)
+
 - **Command**: `uv run --project tools/repowise repowise mcp .`
 - **Purpose**: Provides deep structural dependency graphs, git history analytics (hotspots, ownership), and deterministic code health scores.
 - **Initialization**: Run `uv run --project tools/repowise repowise init` to initialize or update the repository's index.
 
 ### 5. `sense-mcp` (Go-based Codebase Navigation)
+
 - **Command**: `tools/sense/bin/sense`
 - **Purpose**: Compiled Go codebase understanding tool providing symbol graphs, semantic search, and blast radius analysis.
 
 ### 6. `memex-mcp` (Developer Context Memory)
+
 - **Command**: `uv run --project tools/memex memex serve`
 - **Purpose**: Builds and maintains a temporal knowledge graph of your codebase, tracking modules, symbols, decisions, and open problems.
 - **Environment Variables**:
@@ -53,11 +59,13 @@ We have preconfigured the following Model Context Protocol (MCP) servers in `cli
 Both `memex` and `secrin` utilize a Neo4j graph database to store codebase representations. To avoid port conflicts, we run them in separate Docker containers:
 
 ### Start Database for Memex (Port 7687)
+
 ```bash
 docker run -d --name neo4j-memex -p 7687:7687 -p 7474:7474 -e NEO4J_AUTH=neo4j/memex-local neo4j:5.20.0
 ```
 
 ### Start Database for Secrin (Port 7688)
+
 ```bash
 docker run -d --name neo4j-secrin -p 7688:7687 -p 7475:7474 -e NEO4J_AUTH=neo4j/secrin-local neo4j:5.20.0
 ```
@@ -67,7 +75,9 @@ docker run -d --name neo4j-secrin -p 7688:7687 -p 7475:7474 -e NEO4J_AUTH=neo4j/
 ## Additional Context Tools
 
 ### Secrin (Wiki Software Encyclopedia)
+
 Located in `tools/secrin`, **Secrin** parses the codebase into a Neo4j graph to generate a living software wiki and dashboard.
+
 - **Setup & Install**: Run `uv sync --all-packages` inside `tools/secrin`.
 - **Verify Connections**: `uv run --project tools/secrin python scripts/verify.py`
 - **Build Graph**: `uv run --project tools/secrin secrin graph build --repo .`
@@ -81,9 +91,11 @@ Located in `tools/secrin`, **Secrin** parses the codebase into a Neo4j graph to 
 ## Onboarding Custom AI Agents
 
 ### 1. Cline & Roo Code
+
 No manual action is required. Cline and Roo Code automatically detect and load MCP servers configured in `.vscode/cline_mcp_settings.json` and `.vscode/roo_mcp_settings.json` when the workspace is opened.
 
 ### 2. Claude Code
+
 Add these servers to Claude Code's global configuration by running the following commands from the repository root:
 
 ```bash
@@ -101,6 +113,7 @@ claude mcp add memex-mcp uv --project tools/memex memex serve --env NEO4J_URI="b
 ```
 
 ### 3. Gemini / Antigravity IDE
+
 Register the servers in your global user configuration located at `~/.gemini/antigravity-ide/mcp_config.json`:
 
 ```json
@@ -112,7 +125,14 @@ Register the servers in your global user configuration located at `~/.gemini/ant
     },
     "repowise-mcp": {
       "command": "/absolute/path/to/uv",
-      "args": ["run", "--project", "/absolute/path/to/Arch-Mk2/tools/repowise", "repowise", "mcp", "/absolute/path/to/Arch-Mk2"]
+      "args": [
+        "run",
+        "--project",
+        "/absolute/path/to/Arch-Mk2/tools/repowise",
+        "repowise",
+        "mcp",
+        "/absolute/path/to/Arch-Mk2"
+      ]
     },
     "sense-mcp": {
       "command": "/absolute/path/to/Arch-Mk2/tools/sense/bin/sense",
@@ -120,7 +140,13 @@ Register the servers in your global user configuration located at `~/.gemini/ant
     },
     "memex-mcp": {
       "command": "/absolute/path/to/uv",
-      "args": ["run", "--project", "/absolute/path/to/Arch-Mk2/tools/memex", "memex", "serve"],
+      "args": [
+        "run",
+        "--project",
+        "/absolute/path/to/Arch-Mk2/tools/memex",
+        "memex",
+        "serve"
+      ],
       "env": {
         "NEO4J_URI": "bolt://localhost:7687",
         "NEO4J_USER": "neo4j",

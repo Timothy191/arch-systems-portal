@@ -3,7 +3,11 @@
 import { cacheInvalidateTags, CacheCategory } from "@repo/redis";
 import { createServerSupabaseClient } from "@repo/supabase/server";
 import { revalidatePath } from "next/cache";
-import { AuthError, DatabaseError, ForbiddenError } from "@/lib/errors/error-classes";
+import {
+  AuthError,
+  DatabaseError,
+  ForbiddenError,
+} from "@/lib/errors/error-classes";
 import { withCache } from "@/lib/cache-utils";
 
 /* ------------------------------------------------------------------ */

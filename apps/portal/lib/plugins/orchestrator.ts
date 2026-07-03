@@ -1,5 +1,9 @@
 import { ArchPlugin, PluginHooks, PluginWidget } from "./types";
-import { NotFoundError, APIError, ConflictError } from "@/lib/errors/error-classes";
+import {
+  NotFoundError,
+  APIError,
+  ConflictError,
+} from "@/lib/errors/error-classes";
 import { logError } from "@/lib/errors/error-logger";
 import { interpret, type ActorRefFrom } from "xstate";
 import { orchestratorMachine, type HealthReport } from "./machines";

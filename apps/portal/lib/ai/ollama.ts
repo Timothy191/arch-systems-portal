@@ -51,7 +51,9 @@ async function withTimeout<T>(
     return await factory(controller.signal);
   } catch (err) {
     if (timedOut) {
-      const error = new Error(`Ollama request timed out after ${timeoutMs}ms`) as Error & { statusCode?: number };
+      const error = new Error(
+        `Ollama request timed out after ${timeoutMs}ms`,
+      ) as Error & { statusCode?: number };
       error.statusCode = 504;
       throw error;
     }
@@ -101,7 +103,9 @@ export async function ollamaChat(
 
   if (!res.ok) {
     const errText = await res.text().catch(() => "");
-    const error = new Error(`Ollama chat error ${res.status}: ${errText}`) as Error & { statusCode?: number };
+    const error = new Error(
+      `Ollama chat error ${res.status}: ${errText}`,
+    ) as Error & { statusCode?: number };
     error.statusCode = res.status;
     throw error;
   }

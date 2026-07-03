@@ -1,11 +1,14 @@
 # Agent Tracer Log
+
 This file maintains a record of AI agent interventions, context hand-offs, and architectural breadcrumbs for this specific package/app.
 
 ## [2026-06-05] AMCA Foundation / Initialization
+
 - **Agent**: Antigravity
 - **Changes**: Initialized tracing protocols globally as per user instruction.
 
 ## [2026-06-05] ESLint Fix for APIError Constructor
+
 - **Agent**: Devin (Claude Code)
 - **Purpose**: Fix ESLint warnings preventing git push due to unused parameters in APIError constructors
 - **Changes Made**:
@@ -16,6 +19,7 @@ This file maintains a record of AI agent interventions, context hand-offs, and a
 - **Next Agent Notes**: The APIError classes are intentionally simple - they don't need statusCode options as the errors are thrown internally within the package. If you need to add more sophisticated error handling, consider extending the base error class or using the app-level error classes in `apps/portal/lib/errors/error-classes.ts`.
 
 ## [2026-06-05] Agent Tracing Rule Enforcement Setup
+
 - **Agent**: Devin (Claude Code)
 - **Purpose**: Enhance agent setup to make MANDATORY tracing rule impossible to miss
 - **Changes Made**:
