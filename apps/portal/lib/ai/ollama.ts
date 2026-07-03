@@ -1,4 +1,5 @@
 import { APIError } from "@/lib/errors/error-classes";
+
 /**
  * Ollama provider — simple fetch-based HTTP calls to local Ollama server.
  * No SDK wrapper; uses native fetch against /api/chat and /api/embed.
@@ -28,6 +29,15 @@ export type OllamaMessage = {
   role: "system" | "user" | "assistant";
   content: string;
 };
+
+interface ChatRequestBody {
+  model: string;
+  messages: OllamaMessage[];
+  stream: boolean;
+  options: { temperature: number; num_predict: number };
+  keep_alive: string | number;
+  system?: string;
+}
 
 /**
  * Race a fetch operation against a hard timeout and abort the underlying
@@ -63,14 +73,10 @@ async function withTimeout<T>(
   }
 }
 
-/**
- * POST /api/chat — chat completion (non-streaming).
- * Returns the full assistant message text.
- */
-export async function ollamaChat(
+function buildChatBody(
   messages: OllamaMessage[],
-  opts: OllamaChatOptions = {},
-): Promise<string> {
+  opts: OllamaChatOptions,
+): ChatRequestBody {
   const {
     model = DEFAULT_MODEL,
     system,
@@ -79,30 +85,51 @@ export async function ollamaChat(
     keepAlive = "1h",
   } = opts;
 
-  const body: Record<string, unknown> = {
+  const body: ChatRequestBody = {
     model,
     messages,
-    stream: false,
+    stream: !!opts.stream,
     options: { temperature, num_predict: maxTokens },
     keep_alive: keepAlive,
   };
   if (system) {
     body.system = system;
   }
+  return body;
+}
 
-  const res = await withTimeout(
+async function postChat(
+  messages: OllamaMessage[],
+  opts: OllamaChatOptions,
+): Promise<Response> {
+  return withTimeout(
     (signal) =>
       fetch(`${OLLAMA_URL}/api/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
+        body: JSON.stringify(buildChatBody(messages, opts)),
         signal,
       }),
     OLLAMA_TIMEOUT_MS,
   );
+}
+
+async function parseErrorText(res: Response): Promise<string> {
+  return res.text().catch(() => "");
+}
+
+/**
+ * POST /api/chat — chat completion (non-streaming).
+ * Returns the full assistant message text.
+ */
+export async function ollamaChat(
+  messages: OllamaMessage[],
+  opts: OllamaChatOptions = {},
+): Promise<string> {
+  const res = await postChat(messages, { ...opts, stream: false });
 
   if (!res.ok) {
-    const errText = await res.text().catch(() => "");
+    const errText = await parseErrorText(res);
     const error = new Error(
       `Ollama chat error ${res.status}: ${errText}`,
     ) as Error & { statusCode?: number };
@@ -114,6 +141,40 @@ export async function ollamaChat(
   return data.message?.content ?? "";
 }
 
+interface StreamChunk {
+  message?: { content?: string };
+  done?: boolean;
+}
+
+function decodeChunk(value: Uint8Array, decoder: TextDecoder): string {
+  return decoder.decode(value, { stream: true });
+}
+
+function parseStreamBuffer(
+  buffer: string,
+): {
+  chunks: Array<{ text: string; done: boolean }>;
+  remainder: string;
+} {
+  const lines = buffer.split("\n");
+  const remainder = lines.pop() ?? "";
+  const chunks: Array<{ text: string; done: boolean }> = [];
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed) continue;
+    try {
+      const chunk = JSON.parse(trimmed) as StreamChunk;
+      const content = chunk.message?.content ?? "";
+      chunks.push({ text: content, done: !!chunk.done });
+    } catch {
+      // skip malformed chunk
+    }
+  }
+
+  return { chunks, remainder };
+}
+
 /**
  * POST /api/chat — streaming chat completion.
  * Returns an async iterator over text chunks.
@@ -122,40 +183,12 @@ export async function* ollamaChatStream(
   messages: OllamaMessage[],
   opts: OllamaChatOptions = {},
 ): AsyncIterable<string> {
-  const {
-    model = DEFAULT_MODEL,
-    system,
-    temperature = 0.7,
-    maxTokens = 4096,
-    keepAlive = "1h",
-  } = opts;
-
-  const body: Record<string, unknown> = {
-    model,
-    messages,
-    stream: true,
-    options: { temperature, num_predict: maxTokens },
-    keep_alive: keepAlive,
-  };
-  if (system) {
-    body.system = system;
-  }
-
   // Race the fetch against the hard timeout so we abort the underlying
   // connection and don't leak a hanging request in serverless.
-  const res = await withTimeout(
-    (signal) =>
-      fetch(`${OLLAMA_URL}/api/chat`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-        signal,
-      }),
-    OLLAMA_TIMEOUT_MS,
-  );
+  const res = await postChat(messages, { ...opts, stream: true });
 
   if (!res.ok) {
-    const errText = await res.text().catch(() => "");
+    const errText = await parseErrorText(res);
     throw new APIError(`Ollama stream error ${res.status}: ${errText}`, {
       statusCode: res.status,
       endpoint: "/api/chat",
@@ -177,21 +210,13 @@ export async function* ollamaChatStream(
       const { done, value } = await reader.read();
       if (done) break;
 
-      buffer += decoder.decode(value, { stream: true });
-      const lines = buffer.split("\n");
-      buffer = lines.pop() ?? "";
+      buffer += decodeChunk(value, decoder);
+      const { chunks, remainder } = parseStreamBuffer(buffer);
+      buffer = remainder;
 
-      for (const line of lines) {
-        const trimmed = line.trim();
-        if (!trimmed) continue;
-        try {
-          const chunk = JSON.parse(trimmed);
-          const content = chunk.message?.content;
-          if (content) yield content;
-          if (chunk.done) return;
-        } catch {
-          // skip malformed chunk
-        }
+      for (const chunk of chunks) {
+        if (chunk.text) yield chunk.text;
+        if (chunk.done) return;
       }
     }
   } finally {
@@ -226,7 +251,7 @@ export async function ollamaEmbed(
   );
 
   if (!res.ok) {
-    const errText = await res.text().catch(() => "");
+    const errText = await parseErrorText(res);
     throw new APIError(`Ollama embed error ${res.status}: ${errText}`, {
       statusCode: res.status,
       endpoint: "/api/embed",

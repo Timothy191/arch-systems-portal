@@ -59,6 +59,220 @@ const FORM_META: Record<RequiredForm, { label: string; path: string }> = {
   "hourly-loads": { label: "Hourly Loads", path: "hourly-loads" },
 };
 
+interface RawMachine {
+  id: string;
+  name: string;
+  machine_type: string;
+  report_exempt: boolean | null;
+}
+
+interface RawMachineOp {
+  machine_id: string;
+  hours_worked: number | null;
+}
+
+interface RawDozerRoll {
+  machine_id: string;
+  hours_operated: number | null;
+}
+
+interface RawHourlyLoad {
+  machine_id: string;
+  total_loads: number | null;
+}
+
+interface ShiftFormData {
+  machineOpIds: Set<string>;
+  excavatorIds: Set<string>;
+  dozerIds: Set<string>;
+  loadIds: Set<string>;
+  machineOpHoursMap: Map<string, number>;
+  dozerHoursMap: Map<string, number>;
+}
+
+// AGENT-TRACE: Keep DB column selection minimal and strongly typed. Each helper
+// isolates one form table so the main orchestrator stays readable.
+
+async function fetchMachines(
+  supabase: SupabaseClient,
+  deptId: string,
+): Promise<RawMachine[]> {
+  const { data } = await supabase
+    .from("machines")
+    .select("id, name, machine_type, report_exempt")
+    .eq("department_id", deptId)
+    .eq("active", true)
+    .order("name");
+  return data ?? [];
+}
+
+async function fetchMachineOperations(
+  supabase: SupabaseClient,
+  deptId: string,
+  date: string,
+  shift: "day" | "night",
+): Promise<RawMachineOp[]> {
+  const { data } = await supabase
+    .from("machine_operations")
+    .select("machine_id, hours_worked")
+    .eq("department_id", deptId)
+    .eq("shift_date", date)
+    .eq("shift_type", shift);
+  return data ?? [];
+}
+
+async function fetchExcavatorActivity(
+  supabase: SupabaseClient,
+  deptId: string,
+  date: string,
+  shift: "day" | "night",
+): Promise<{ machine_id: string }[]> {
+  const { data } = await supabase
+    .from("excavator_activity")
+    .select("machine_id")
+    .eq("department_id", deptId)
+    .eq("activity_date", date)
+    .eq("shift_type", shift);
+  return data ?? [];
+}
+
+async function fetchDozerRolls(
+  supabase: SupabaseClient,
+  deptId: string,
+  date: string,
+  shift: "day" | "night",
+): Promise<RawDozerRoll[]> {
+  const { data } = await supabase
+    .from("dozer_rolls")
+    .select("machine_id, hours_operated")
+    .eq("department_id", deptId)
+    .eq("roll_date", date)
+    .eq("shift_type", shift);
+  return data ?? [];
+}
+
+async function fetchHourlyLoads(
+  supabase: SupabaseClient,
+  deptId: string,
+  date: string,
+  shift: "day" | "night",
+): Promise<RawHourlyLoad[]> {
+  const { data } = await supabase
+    .from("hourly_loads")
+    .select("machine_id, total_loads")
+    .eq("department_id", deptId)
+    .eq("load_date", date)
+    .eq("shift_type", shift);
+  return data ?? [];
+}
+
+function toIdSet(rows: { machine_id: string }[]): Set<string> {
+  return new Set(rows.map((r) => r.machine_id));
+}
+
+function sumHoursByMachineId(
+  rows: { machine_id: string; hours: number | null }[],
+): Map<string, number> {
+  const map = new Map<string, number>();
+  for (const { machine_id, hours } of rows) {
+    if (machine_id && hours !== null) {
+      map.set(machine_id, (map.get(machine_id) || 0) + Number(hours));
+    }
+  }
+  return map;
+}
+
+function buildFormData(
+  machineOps: RawMachineOp[],
+  excavatorActs: { machine_id: string }[],
+  dozerRolls: RawDozerRoll[],
+  hourlyLoads: RawHourlyLoad[],
+): ShiftFormData {
+  return {
+    machineOpIds: toIdSet(machineOps),
+    excavatorIds: toIdSet(excavatorActs),
+    dozerIds: toIdSet(dozerRolls),
+    loadIds: new Set(
+      hourlyLoads
+        .filter((r) => (r.total_loads ?? 0) > 0)
+        .map((r) => r.machine_id),
+    ),
+    machineOpHoursMap: sumHoursByMachineId(
+      machineOps.map((r) => ({ machine_id: r.machine_id, hours: r.hours_worked })),
+    ),
+    dozerHoursMap: sumHoursByMachineId(
+      dozerRolls.map((r) => ({
+        machine_id: r.machine_id,
+        hours: r.hours_operated,
+      })),
+    ),
+  };
+}
+
+function resolveHasEntry(requiredForm: RequiredForm, data: ShiftFormData, machineId: string): boolean {
+  switch (requiredForm) {
+    case "excavator-activity":
+      return data.excavatorIds.has(machineId);
+    case "roll-over":
+      return data.dozerIds.has(machineId);
+    case "hourly-loads":
+      return data.loadIds.has(machineId);
+    default:
+      return data.machineOpIds.has(machineId);
+  }
+}
+
+function resolveHoursWorked(
+  requiredForm: RequiredForm,
+  data: ShiftFormData,
+  machineId: string,
+): number | null {
+  if (requiredForm === "machine-operations") {
+    return data.machineOpHoursMap.get(machineId) ?? null;
+  }
+  if (requiredForm === "roll-over") {
+    return data.dozerHoursMap.get(machineId) ?? null;
+  }
+  return null;
+}
+
+function buildMachineStatuses(
+  machines: RawMachine[],
+  formData: ShiftFormData,
+  departmentSlug: string | null,
+): MachineCoverageStatus[] {
+  return machines.map((m) => {
+    const requiredForm = requiredFormFor(m.machine_type);
+    const meta = FORM_META[requiredForm];
+
+    return {
+      machineId: m.id,
+      machineName: m.name,
+      machineType: m.machine_type,
+      requiredForm,
+      formLabel: meta.label,
+      formPath: departmentSlug
+        ? `/${departmentSlug}/${meta.path}`
+        : `/${meta.path}`,
+      hasEntry: resolveHasEntry(requiredForm, formData, m.id),
+      exempt: m.report_exempt ?? false,
+      hoursWorked: resolveHoursWorked(requiredForm, formData, m.id),
+    };
+  });
+}
+
+function summarize(statuses: MachineCoverageStatus[]): ShiftCompleteness {
+  const required = statuses.filter((s) => !s.exempt);
+  const covered = required.filter((s) => s.hasEntry);
+
+  return {
+    complete: required.length === 0 || covered.length === required.length,
+    totalRequired: required.length,
+    totalCovered: covered.length,
+    statuses,
+  };
+}
+
 export async function getShiftCompleteness(
   supabase: SupabaseClient,
   deptId: string,
@@ -68,145 +282,27 @@ export async function getShiftCompleteness(
 ): Promise<ShiftCompleteness> {
   return withCache(
     async () => {
-      const [
-        { data: machines },
-        { data: machineOps },
-        { data: excavatorActs },
-        { data: dozerRolls },
-        { data: hourlyLoads },
-      ] = await Promise.all([
-        supabase
-          .from("machines")
-          .select("id, name, machine_type, report_exempt")
-          .eq("department_id", deptId)
-          .eq("active", true)
-          .order("name"),
-        supabase
-          .from("machine_operations")
-          .select("machine_id, hours_worked")
-          .eq("department_id", deptId)
-          .eq("shift_date", date)
-          .eq("shift_type", shift),
-        supabase
-          .from("excavator_activity")
-          .select("machine_id")
-          .eq("department_id", deptId)
-          .eq("activity_date", date)
-          .eq("shift_type", shift),
-        supabase
-          .from("dozer_rolls")
-          .select("machine_id, hours_operated")
-          .eq("department_id", deptId)
-          .eq("roll_date", date)
-          .eq("shift_type", shift),
-        supabase
-          .from("hourly_loads")
-          .select("machine_id, total_loads")
-          .eq("department_id", deptId)
-          .eq("load_date", date)
-          .eq("shift_type", shift),
-      ]);
+      const [machines, machineOps, excavatorActs, dozerRolls, hourlyLoads] =
+        await Promise.all([
+          fetchMachines(supabase, deptId),
+          fetchMachineOperations(supabase, deptId, date, shift),
+          fetchExcavatorActivity(supabase, deptId, date, shift),
+          fetchDozerRolls(supabase, deptId, date, shift),
+          fetchHourlyLoads(supabase, deptId, date, shift),
+        ]);
 
-      const machineOpIds = new Set(
-        (machineOps ?? []).map((r: { machine_id: string }) => r.machine_id),
+      const formData = buildFormData(
+        machineOps,
+        excavatorActs,
+        dozerRolls,
+        hourlyLoads,
       );
-      const excavatorIds = new Set(
-        (excavatorActs ?? []).map((r: { machine_id: string }) => r.machine_id),
+      const statuses = buildMachineStatuses(
+        machines,
+        formData,
+        departmentSlug,
       );
-      const dozerIds = new Set(
-        (dozerRolls ?? []).map((r: { machine_id: string }) => r.machine_id),
-      );
-      const loadIds = new Set(
-        (hourlyLoads ?? [])
-          .filter(
-            (r: { machine_id: string; total_loads: number | null }) =>
-              (r.total_loads ?? 0) > 0,
-          )
-          .map(
-            (r: { machine_id: string; total_loads: number | null }) =>
-              r.machine_id,
-          ),
-      );
-
-      const machineOpHoursMap = new Map<string, number>();
-      for (const op of machineOps ?? []) {
-        if (op.machine_id && op.hours_worked !== null) {
-          const current = machineOpHoursMap.get(op.machine_id) || 0;
-          machineOpHoursMap.set(
-            op.machine_id,
-            current + Number(op.hours_worked),
-          );
-        }
-      }
-
-      const dozerHoursMap = new Map<string, number>();
-      for (const roll of dozerRolls ?? []) {
-        if (roll.machine_id && roll.hours_operated !== null) {
-          const current = dozerHoursMap.get(roll.machine_id) || 0;
-          dozerHoursMap.set(
-            roll.machine_id,
-            current + Number(roll.hours_operated),
-          );
-        }
-      }
-
-      const statuses: MachineCoverageStatus[] = (machines ?? []).map(
-        (m: {
-          id: string;
-          name: string;
-          machine_type: string;
-          report_exempt: boolean | null;
-        }) => {
-          const requiredForm = requiredFormFor(m.machine_type);
-          const meta = FORM_META[requiredForm];
-
-          let hasEntry: boolean;
-          switch (requiredForm) {
-            case "excavator-activity":
-              hasEntry = excavatorIds.has(m.id);
-              break;
-            case "roll-over":
-              hasEntry = dozerIds.has(m.id);
-              break;
-            case "hourly-loads":
-              hasEntry = loadIds.has(m.id);
-              break;
-            default:
-              hasEntry = machineOpIds.has(m.id);
-          }
-
-          let hoursWorked: number | null = null;
-          if (requiredForm === "machine-operations") {
-            hoursWorked = machineOpHoursMap.get(m.id) ?? null;
-          } else if (requiredForm === "roll-over") {
-            hoursWorked = dozerHoursMap.get(m.id) ?? null;
-          }
-
-          return {
-            machineId: m.id,
-            machineName: m.name,
-            machineType: m.machine_type,
-            requiredForm,
-            formLabel: meta.label,
-            formPath: departmentSlug
-              ? `/${departmentSlug}/${meta.path}`
-              : `/${meta.path}`,
-            hasEntry,
-            exempt: m.report_exempt ?? false,
-            hoursWorked,
-          };
-        },
-      );
-
-      const required = statuses.filter((s) => !s.exempt);
-      const covered = required.filter((s) => s.hasEntry);
-
-      return {
-        complete: required.length === 0 || covered.length === required.length,
-        totalRequired: required.length,
-        totalCovered: covered.length,
-        statuses,
-      };
+      return summarize(statuses);
     },
     {
       category: CacheCategory.SHIFT,
