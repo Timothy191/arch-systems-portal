@@ -19,6 +19,7 @@ import type {
 interface Props {
   departmentId: string;
   departmentSlug: string;
+  initialCompleteness?: ShiftCompleteness;
 }
 
 function getCurrentShift(): "day" | "night" {
@@ -33,10 +34,13 @@ function todayDate(): string {
 export function MachineOperationsComplianceWidget({
   departmentId,
   departmentSlug,
+  initialCompleteness,
 }: Props) {
   const router = useRouter();
-  const [data, setData] = useState<ShiftCompleteness | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<ShiftCompleteness | null>(
+    initialCompleteness ?? null,
+  );
+  const [loading, setLoading] = useState(!initialCompleteness);
   const [expanded, setExpanded] = useState(false);
   const [lastRefresh, setLastRefresh] = useState<Date | null>(null);
 
@@ -61,10 +65,11 @@ export function MachineOperationsComplianceWidget({
 
   // Initial load + 60-second auto-refresh
   useEffect(() => {
+    if (initialCompleteness) return;
     fetchCompleteness();
     const interval = setInterval(fetchCompleteness, 60_000);
     return () => clearInterval(interval);
-  }, [fetchCompleteness]);
+  }, [fetchCompleteness, initialCompleteness]);
 
   if (loading && !data) {
     return (

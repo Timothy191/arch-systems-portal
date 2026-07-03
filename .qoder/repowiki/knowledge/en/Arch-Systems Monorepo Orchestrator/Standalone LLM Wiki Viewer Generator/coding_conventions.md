@@ -1,0 +1,4 @@
+- Hard-coded absolute paths are used for both input (`WIKI_ROOT`) and output (`OUT_FILE`) rather than relative resolution, keeping the tool portable across repos but tying it to a fixed workspace layout.
+- Markdown parsing is implemented as a sequence of regex-based transformations applied in a fixed order (code-blocks escaped first, then wikilinks, headings, tables, lists, emphasis, paragraphs restored last) to avoid cross-contamination between rules.
+- User-facing strings are always passed through `escapeHtml` before being injected into HTML, including sidebar labels, search snippets, and frontmatter values.
+- Frontmatter fields are mapped to a fixed schema with sensible defaults (e.g. `tags`/`sources`/`contradictions` coerced to arrays, booleans normalized from string literals) during page collection.

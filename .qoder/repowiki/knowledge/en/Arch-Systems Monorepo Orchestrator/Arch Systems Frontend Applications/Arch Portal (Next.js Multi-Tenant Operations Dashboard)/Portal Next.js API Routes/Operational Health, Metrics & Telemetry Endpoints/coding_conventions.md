@@ -1,0 +1,4 @@
+- Route handlers declare `export const dynamic = "force-dynamic"` so they are always evaluated at request time rather than cached at build time.
+- Health/readiness checks wrap each dependency probe in try/catch and set a composite `status` field (`healthy` | `degraded` | `error`) instead of throwing, returning HTTP 200 for degraded and 503 for error.
+- Telemetry push requests are wrapped through reusable API helpers (`withBodyLimit`, `applyCors`, `validateBody`) before reaching the business handler, keeping cross-cutting concerns out of the core logic.
+- Outbound service calls (Ollama, FUXA) use `AbortController` with a short timeout or return a warning response with HTTP 200 so callers can still process partial results when downstream services are unreachable.

@@ -1,0 +1,8 @@
+schema_version: 1
+module_path: apps/portal/api_routes/webhooks
+title: Webhook Endpoints Management API
+scope:
+    - apps/portal/app/api/webhooks/
+source_files: []
+depends_on: []
+related_to: []

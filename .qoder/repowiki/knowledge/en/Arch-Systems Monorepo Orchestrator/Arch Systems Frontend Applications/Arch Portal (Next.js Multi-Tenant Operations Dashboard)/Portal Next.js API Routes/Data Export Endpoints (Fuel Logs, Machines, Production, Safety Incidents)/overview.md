@@ -1,0 +1,1 @@
+Next.js Route Handlers that export daily operational data as JSON or CSV for fuel logs, machines, production, and safety incidents.

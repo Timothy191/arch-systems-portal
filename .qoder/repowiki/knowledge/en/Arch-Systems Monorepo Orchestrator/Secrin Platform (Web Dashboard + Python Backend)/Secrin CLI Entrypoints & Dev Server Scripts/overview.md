@@ -1,0 +1,1 @@
+Thin CLI entrypoints that bootstrap the FastAPI server, arc42gen API/worker processes, and an interactive .env setup wizard for the Secrin project.

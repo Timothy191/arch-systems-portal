@@ -1,0 +1,3 @@
+- Workflows use explicit `uses: actions/*@v4` pinned versions rather than floating tags.
+- Each workflow declares a single top-level job with a descriptive name and runs on `ubuntu-latest`.
+- Shell helpers are bare executable scripts starting with `#!/bin/bash` and `set -e` for fail-fast behavior.

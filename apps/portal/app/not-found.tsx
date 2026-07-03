@@ -12,6 +12,7 @@ export default function NotFound() {
             alt="404 Not Found"
             width={120}
             height={120}
+            sizes="120px"
             priority
             className="opacity-80 hover:opacity-100 transition-opacity duration-200"
           />

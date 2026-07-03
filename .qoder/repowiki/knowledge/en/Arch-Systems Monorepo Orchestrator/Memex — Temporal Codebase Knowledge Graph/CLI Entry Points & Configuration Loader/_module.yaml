@@ -1,0 +1,10 @@
+schema_version: 1
+module_path: tools_memex/cli_and_entrypoints
+title: CLI Entry Points & Configuration Loader
+scope:
+    - tools/memex/memex/cli.py
+    - tools/memex/memex/__main__.py
+    - tools/memex/memex/config.py
+source_files: []
+depends_on: []
+related_to: []

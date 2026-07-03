@@ -1,0 +1,8 @@
+schema_version: 1
+module_path: tools_repowise
+title: Repowise Codebase Intelligence Platform
+scope:
+    - tools/repowise/
+source_files: []
+depends_on: []
+related_to: []

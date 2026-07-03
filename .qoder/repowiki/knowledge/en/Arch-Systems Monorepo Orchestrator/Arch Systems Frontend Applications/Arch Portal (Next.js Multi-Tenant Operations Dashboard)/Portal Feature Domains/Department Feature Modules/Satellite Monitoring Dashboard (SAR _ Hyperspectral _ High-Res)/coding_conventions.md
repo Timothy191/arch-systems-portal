@@ -1,0 +1,6 @@
+- Heavy map libraries are loaded lazily through `next/dynamic` with `ssr: false` and an inline loading skeleton so the dashboard shell renders without blocking on browser-only dependencies.
+- Each satellite sensor is exposed as a standalone panel component that receives its dataset as a plain prop array (e.g. `scenes: STACItem[]`, `readings?: DeformationReading[]`) rather than fetching internally, keeping data flow unidirectional from the dashboard.
+- UI state inside panels is local (`useState<string | null>` for selected scene/zone/composite) and surfaced only through optional callback props (`onCompositeChange`, `onSceneSelect`, `onReadingClick`) passed down by the dashboard.
+- Sensor-specific explanatory banners follow a fixed pattern: a colored rounded container with an emoji icon, a bold title line, and a paragraph describing the sensor revisit cycle and geotechnical relevance.
+- Color-coded severity levels use a shared `RISK_COLORS` / alert-threshold mapping keyed by string (`high|medium|low`, `critical|moderate|minor|stable`) and applied via Tailwind accent tokens (`text-accent-red`, `text-accent-blue`, `text-[#3ecf8e]`).
+- Scene list items display truncated identifiers (`scene.id.slice(0, 20)…`) alongside machine-readable badges (cloud %, platform tag) and human-friendly dates produced by `formatSceneDate`.

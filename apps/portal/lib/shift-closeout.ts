@@ -123,6 +123,10 @@ export async function setPin(employeeCode: string, pin: string) {
 
 export async function verifyPin(employeeCode: string, pin: string) {
   const supabase = await createServerSupabaseClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error("Unauthorized");
 
   const { data: employee, error } = await supabase
     .from("employees")

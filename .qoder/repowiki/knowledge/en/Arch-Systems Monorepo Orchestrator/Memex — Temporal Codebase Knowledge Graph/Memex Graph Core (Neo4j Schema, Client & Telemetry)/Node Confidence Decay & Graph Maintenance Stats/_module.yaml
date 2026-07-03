@@ -1,0 +1,10 @@
+schema_version: 1
+module_path: tools_memex/graph/confidence_decay_stats
+title: Node Confidence Decay & Graph Maintenance Stats
+scope:
+    - tools/memex/memex/graph/confidence.py
+    - tools/memex/memex/graph/decay.py
+    - tools/memex/memex/graph/stats.py
+source_files: []
+depends_on: []
+related_to: []

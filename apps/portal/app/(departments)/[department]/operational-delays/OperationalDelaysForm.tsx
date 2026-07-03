@@ -22,6 +22,7 @@ interface OperationalDelaysFormProps {
   departmentId: string;
   machines: Machine[];
   categories: DelayCategory[];
+  initialShift?: "day" | "night";
 }
 
 const DELAY_TYPES = [
@@ -61,6 +62,7 @@ export function OperationalDelaysForm({
   departmentId,
   machines,
   categories,
+  initialShift,
 }: OperationalDelaysFormProps) {
   const router = useRouter();
   const supabase = createBrowserSupabaseClient();
@@ -78,7 +80,7 @@ export function OperationalDelaysForm({
     description: "",
     impactDescription: "",
     recoveryAction: "",
-    shiftType: getCurrentShift(),
+    shiftType: initialShift ?? "day",
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);

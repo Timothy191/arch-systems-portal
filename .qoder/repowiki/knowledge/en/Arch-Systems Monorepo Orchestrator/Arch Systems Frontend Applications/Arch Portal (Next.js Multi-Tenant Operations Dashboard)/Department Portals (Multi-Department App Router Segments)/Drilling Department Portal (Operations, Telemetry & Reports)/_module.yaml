@@ -1,0 +1,8 @@
+schema_version: 1
+module_path: apps/portal/departments_routes/drilling
+title: Drilling Department Portal (Operations, Telemetry & Reports)
+scope:
+    - apps/portal/app/(departments)/drilling/
+source_files: []
+depends_on: []
+related_to: []

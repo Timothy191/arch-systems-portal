@@ -15,10 +15,5 @@
 
 const generated = require('./tools/policy/eslint-boundaries.generated.cjs');
 
-const resolved = {
-  ...generated,
-  plugins: ['@nx/eslint-plugin'],
-};
-
-module.exports = resolved;
+module.exports = generated;
 

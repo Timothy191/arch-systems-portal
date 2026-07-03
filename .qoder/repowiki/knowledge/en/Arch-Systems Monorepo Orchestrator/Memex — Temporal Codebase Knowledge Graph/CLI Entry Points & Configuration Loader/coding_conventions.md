@@ -1,0 +1,4 @@
+- Subcommand implementations are imported lazily inside their `elif parsed_args.command == ...` branch and wrapped in `try/except ImportError` so future phases can ship feature-gated commands that print a 'not yet implemented' message and exit with code 2.
+- Async command handlers are invoked from the synchronous `main` via `asyncio.run(...)`, keeping the CLI surface synchronous while delegating I/O-bound work to async services.
+- Optional repository context is always resolved as `path = repo_root or "."` and canonicalised through `Path(path).resolve()` before filesystem access, ensuring consistent behaviour whether `--repo` is supplied.
+- Configuration values come from environment variables first, then optionally merged from `<repo>/config.yaml`, with numeric env strings coerced to float/int before Pydantic validation.

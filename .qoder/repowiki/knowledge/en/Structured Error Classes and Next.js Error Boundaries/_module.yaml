@@ -1,0 +1,13 @@
+schema_version: 1
+module_path: error_handling
+title: Structured Error Classes and Next.js Error Boundaries
+scope: []
+source_files:
+    - apps/portal/lib/errors/error-classes.ts
+    - apps/portal/lib/errors/error-logger.ts
+    - apps/portal/app/error.tsx
+    - apps/portal/app/global-error.tsx
+    - apps/portal/app/not-found.tsx
+    - apps/portal/middleware.ts
+depends_on: []
+related_to: []

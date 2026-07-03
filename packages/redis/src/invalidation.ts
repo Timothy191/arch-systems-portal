@@ -1,4 +1,4 @@
-import { getRedisClient } from "./client";
+import { getRedisClient } from "./client.js";
 
 const TAG_PREFIX = "arch:__tags__";
 

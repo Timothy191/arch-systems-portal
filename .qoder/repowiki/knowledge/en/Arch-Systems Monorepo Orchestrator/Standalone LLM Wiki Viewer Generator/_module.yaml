@@ -1,0 +1,8 @@
+schema_version: 1
+module_path: tools_wiki_viewer
+title: Standalone LLM Wiki Viewer Generator
+scope:
+    - tools/wiki-viewer/
+source_files: []
+depends_on: []
+related_to: []

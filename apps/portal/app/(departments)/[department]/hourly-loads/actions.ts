@@ -28,6 +28,26 @@ export async function updateMachineSite(
     throw new Error("Unauthorized");
   }
 
+  const { data: machine } = await supabase
+    .from("machines")
+    .select("department_id")
+    .eq("id", machineId)
+    .single();
+
+  if (!machine) {
+    throw new Error("Machine not found");
+  }
+
+  const hasAccess =
+    employee.role === "admin" ||
+    employee.department_id === machine.department_id;
+
+  if (!hasAccess) {
+    throw new Error(
+      "Forbidden: You do not have access to manage this machine.",
+    );
+  }
+
   // Update machine's site_id using service role client to bypass admin-only update RLS
   const serviceClient = createServiceRoleClient();
   const { error } = await serviceClient

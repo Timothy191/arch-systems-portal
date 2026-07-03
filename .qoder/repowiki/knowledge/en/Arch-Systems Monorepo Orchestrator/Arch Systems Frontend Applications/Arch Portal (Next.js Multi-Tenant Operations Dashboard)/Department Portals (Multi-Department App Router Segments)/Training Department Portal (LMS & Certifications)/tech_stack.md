@@ -1,0 +1,1 @@
+Next.js App Router with React Server Components for layouts/pages, Tailwind CSS with custom CSS variables for theming, lucide-react icons, and shared UI primitives from the monorepo `@repo/ui` package (`DepartmentLayout`, `GlassCard`).

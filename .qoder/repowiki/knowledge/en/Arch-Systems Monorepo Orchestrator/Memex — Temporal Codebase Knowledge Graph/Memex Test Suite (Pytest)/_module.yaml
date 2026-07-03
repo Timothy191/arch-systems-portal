@@ -1,0 +1,8 @@
+schema_version: 1
+module_path: tools_memex/tests
+title: Memex Test Suite (Pytest)
+scope:
+    - tools/memex/tests/
+source_files: []
+depends_on: []
+related_to: []

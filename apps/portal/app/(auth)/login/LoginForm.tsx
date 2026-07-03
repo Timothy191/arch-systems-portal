@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import * as Sentry from "@sentry/nextjs";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -55,7 +55,9 @@ export function LoginForm() {
   const rawRedirect = searchParams.get("redirect") || "/";
   const redirectTo = isValidPageRedirect(rawRedirect) ? rawRedirect : "/";
 
-  const [employeeId, setEmployeeId] = useState("");
+  const emailParam =
+    searchParams.get("email") || searchParams.get("employeeId") || "";
+  const [employeeId, setEmployeeId] = useState(emailParam);
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
@@ -63,12 +65,7 @@ export function LoginForm() {
   const [capsLock, setCapsLock] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
 
-  // Pre-fill email from query params (password pre-fill intentionally omitted — credential exposure risk)
-  useEffect(() => {
-    const emailParam =
-      searchParams.get("email") || searchParams.get("employeeId");
-    if (emailParam) setEmployeeId(emailParam);
-  }, [searchParams]);
+  // TODO: Consider converting to a Server Action for improved performance and security
 
   function handleCapsLockKey(e: React.KeyboardEvent) {
     setCapsLock(e.getModifierState("CapsLock"));

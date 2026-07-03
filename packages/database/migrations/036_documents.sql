@@ -169,7 +169,13 @@ CREATE POLICY "documents_storage_update"
   TO authenticated
   USING (
     bucket_id = 'documents'
-    AND public.has_department_access((storage.foldername(name))[1]::uuid)
+    AND (
+      public.is_admin()
+      OR (
+        public.has_department_access((storage.foldername(name))[1]::uuid)
+        AND (storage.foldername(name))[2] = (SELECT id::text FROM employees WHERE auth_id = auth.uid() LIMIT 1)
+      )
+    )
   );
 
 -- Delete: admin only

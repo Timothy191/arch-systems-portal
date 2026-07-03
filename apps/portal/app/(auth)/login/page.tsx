@@ -5,6 +5,8 @@ import {
 } from "@repo/supabase/server";
 import { LoginForm } from "./LoginForm";
 import { AlertTriangle, Lock } from "lucide-react";
+import { Suspense } from "react";
+import Image from "next/image";
 
 const PORTAL_VERSION = process.env.PORTAL_VERSION ?? "2.0.0.1";
 
@@ -89,10 +91,14 @@ export default async function LoginPage() {
                     <span>Secure</span>
                   </div>
                   {/* Company Branding (do not remove) */}
-                  <img
+                  <Image
                     src="/assets/company-branding.jpeg"
                     alt="Company Logo"
+                    width={112}
+                    height={32}
+                    sizes="112px"
                     className="h-8 w-auto object-contain opacity-95"
+                    priority
                   />
                 </div>
               </div>
@@ -100,10 +106,14 @@ export default async function LoginPage() {
               {/* Title */}
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-4">
-                  <img
+                  <Image
                     src="/assets/logo-large.png"
                     alt="Arch Logo"
+                    width={64}
+                    height={64}
+                    sizes="64px"
                     className="w-16 h-16 object-contain shrink-0"
+                    priority
                   />
                 </div>
                 <div className="space-y-1">
@@ -116,7 +126,17 @@ export default async function LoginPage() {
                 </div>
               </div>
 
-              <LoginForm />
+              <Suspense
+                fallback={
+                  <div className="flex flex-col space-y-4 animate-pulse">
+                    <div className="h-10 bg-black/[0.04] rounded-lg" />
+                    <div className="h-10 bg-black/[0.04] rounded-lg" />
+                    <div className="h-10 bg-black/[0.04] rounded-lg" />
+                  </div>
+                }
+              >
+                <LoginForm />
+              </Suspense>
 
               {/* Contextual System Notice */}
               <div className="px-3.5 py-2.5 rounded-lg border border-black/[0.04] bg-black/[0.02] text-[11px] text-[var(--text-secondary)] leading-relaxed flex items-start gap-2.5 select-none">

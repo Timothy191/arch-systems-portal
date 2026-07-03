@@ -1,0 +1,1 @@
+Run the CLI from the repository root as a module: `python -m packages.config.cli validate|summary|flags|export|env|provider|test-connection`. Settings are read from `<repo_root>/.env` (case-insensitive env var names, unknown vars ignored).

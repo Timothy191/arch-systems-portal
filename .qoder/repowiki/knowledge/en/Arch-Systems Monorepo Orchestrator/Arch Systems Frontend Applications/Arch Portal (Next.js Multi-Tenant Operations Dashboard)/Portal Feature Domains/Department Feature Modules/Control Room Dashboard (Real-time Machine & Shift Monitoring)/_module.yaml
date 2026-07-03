@@ -1,0 +1,8 @@
+schema_version: 1
+module_path: apps/portal/feature_domains/departments/control_room
+title: Control Room Dashboard (Real-time Machine & Shift Monitoring)
+scope:
+    - apps/portal/features/departments/components/control-room/
+source_files: []
+depends_on: []
+related_to: []

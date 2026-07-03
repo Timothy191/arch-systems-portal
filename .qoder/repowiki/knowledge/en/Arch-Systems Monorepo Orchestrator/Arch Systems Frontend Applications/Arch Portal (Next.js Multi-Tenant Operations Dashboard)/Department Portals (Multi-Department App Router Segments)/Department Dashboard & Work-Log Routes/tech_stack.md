@@ -1,0 +1,1 @@
+Next.js App Router with React Server Components; Supabase client (`@repo/supabase/server`) plus service-role client for admin bypass; `next/dynamic` + `Suspense` for code-splitting heavy control-room widgets; `cachedRSC`/`withCache` wrapping parallel `Promise.all` Supabase queries with table tags for cache invalidation.

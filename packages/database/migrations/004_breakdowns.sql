@@ -85,6 +85,9 @@ CREATE POLICY "breakdowns_update_department"
           OR breakdowns.department_id = ANY(e.accessible_departments)
         )
     )
+  )
+  WITH CHECK (
+    (deleted_at IS NULL OR (SELECT role FROM employees WHERE auth_id = auth.uid() LIMIT 1) = 'admin')
   );
 
 -- Only admins can soft-delete

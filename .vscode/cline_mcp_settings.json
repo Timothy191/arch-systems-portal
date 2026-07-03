@@ -104,10 +104,9 @@
       }
     },
     "trace-mcp": {
-      "command": "npx",
+      "command": "/home/timothy/.trace-mcp/bin/trace-mcp",
       "args": [
-        "-y",
-        "trace-mcp@latest"
+        "serve"
       ]
     }
   }

@@ -1,0 +1,868 @@
+# 知识卡导出索引文件
+schema_version: 1
+locale: en-US
+branch: main
+nodes_managed: true
+exported_at: "2026-07-03T18:09:14Z"
+modules:
+    "":
+        dir_name: Arch-Systems Monorepo Orchestrator
+        title: Arch-Systems Monorepo Orchestrator
+        scope:
+            - package.json
+            - nx.json
+            - pnpm-workspace.yaml
+            - pnpm-lock.yaml
+            - eslint.boundaries.cjs
+            - commitlint.config.mjs
+            - prettier.config.mjs
+            - .gitignore
+            - README.md
+            - CLAUDE.md
+            - docker-compose.portal.yml
+            - docker-compose.production.yml
+            - docker-compose.monitoring.yml
+            - docker-compose.security.yml
+            - docker-compose.tools.yml
+            - vercel.json
+            - lighthouserc.json
+            - playwright.config.ts
+            - knip.json
+            - .repowise-workspace.yaml
+            - .eslintignore
+            - .mcp.json
+            - .prettierignore
+            - .syncpackrc
+            - LICENSE
+        source_files: []
+        children:
+            - apps
+            - ci
+            - docs
+            - e2e
+            - infra
+            - packages
+            - redis_topology
+            - tools_memex
+            - tools_n8n_mcp
+            - tools_policy
+            - tools_repowise
+            - tools_secrin
+            - tools_sense
+            - tools_wiki_viewer
+        depends_on: []
+        related_to: []
+    apps:
+        dir_name: Arch Systems Frontend Applications
+        title: Arch Systems Frontend Applications
+        scope:
+            - apps/cms/
+            - apps/overview/
+            - apps/portal/
+        source_files: []
+        children:
+            - apps/cms
+            - apps/overview
+            - apps/portal
+        depends_on: []
+        related_to: []
+    apps/cms:
+        dir_name: CMS Admin & Content API (Payload + Next.js)
+        title: CMS Admin & Content API (Payload + Next.js)
+        scope:
+            - apps/cms/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    apps/overview:
+        dir_name: Arch Systems Overview Visualizer
+        title: Arch Systems Overview Visualizer
+        scope:
+            - apps/overview/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    apps/portal:
+        dir_name: Arch Portal (Next.js Multi-Tenant Operations Dashboard)
+        title: Arch Portal (Next.js Multi-Tenant Operations Dashboard)
+        scope:
+            - apps/portal/
+        source_files: []
+        children:
+            - apps/portal/admin_routes
+            - apps/portal/api_routes
+            - apps/portal/auth_routes
+            - apps/portal/departments_routes
+            - apps/portal/feature_domains
+            - apps/portal/hooks
+            - apps/portal/hub_routes
+            - apps/portal/lib
+            - apps/portal/rust_telemetry_plugin
+            - apps/portal/shared_components
+        depends_on: []
+        related_to: []
+    apps/portal/admin_routes:
+        dir_name: Admin Dashboard (Multi-Tab Management Console)
+        title: Admin Dashboard (Multi-Tab Management Console)
+        scope:
+            - apps/portal/app/admin/
+            - apps/portal/features/admin/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    apps/portal/api_routes:
+        dir_name: Portal Next.js API Routes
+        title: Portal Next.js API Routes
+        scope:
+            - apps/portal/app/api/
+        source_files: []
+        children:
+            - apps/portal/api_routes/ai
+            - apps/portal/api_routes/export
+            - apps/portal/api_routes/ops_health
+            - apps/portal/api_routes/webhooks
+        depends_on: []
+        related_to: []
+    apps/portal/api_routes/ai:
+        dir_name: AI Agent & LLM API Routes
+        title: AI Agent & LLM API Routes
+        scope:
+            - apps/portal/app/api/ai/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    apps/portal/api_routes/export:
+        dir_name: Data Export Endpoints (Fuel Logs, Machines, Production, Safety Incidents)
+        title: Data Export Endpoints (Fuel Logs, Machines, Production, Safety Incidents)
+        scope:
+            - apps/portal/app/api/export/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    apps/portal/api_routes/ops_health:
+        dir_name: Operational Health, Metrics & Telemetry Endpoints
+        title: Operational Health, Metrics & Telemetry Endpoints
+        scope:
+            - apps/portal/app/api/health/
+            - apps/portal/app/api/metrics/
+            - apps/portal/app/api/telemetry/push/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    apps/portal/api_routes/webhooks:
+        dir_name: Webhook Endpoints Management API
+        title: Webhook Endpoints Management API
+        scope:
+            - apps/portal/app/api/webhooks/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    apps/portal/auth_routes:
+        dir_name: Portal Authentication Pages (Login, Reset & Update Password)
+        title: Portal Authentication Pages (Login, Reset & Update Password)
+        scope:
+            - apps/portal/app/(auth)/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    apps/portal/departments_routes:
+        dir_name: Department Portals (Multi-Department App Router Segments)
+        title: Department Portals (Multi-Department App Router Segments)
+        scope:
+            - apps/portal/app/(departments)/
+        source_files: []
+        children:
+            - apps/portal/departments_routes/access_control
+            - apps/portal/departments_routes/department_dashboard
+            - apps/portal/departments_routes/drilling
+            - apps/portal/departments_routes/engineering
+            - apps/portal/departments_routes/training
+        depends_on: []
+        related_to: []
+    apps/portal/departments_routes/access_control:
+        dir_name: Access Control Department Dashboard & Credential Management
+        title: Access Control Department Dashboard & Credential Management
+        scope:
+            - apps/portal/app/(departments)/access-control/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    apps/portal/departments_routes/department_dashboard:
+        dir_name: Department Dashboard & Work-Log Routes
+        title: Department Dashboard & Work-Log Routes
+        scope:
+            - apps/portal/app/(departments)/[department]/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    apps/portal/departments_routes/drilling:
+        dir_name: Drilling Department Portal (Operations, Telemetry & Reports)
+        title: Drilling Department Portal (Operations, Telemetry & Reports)
+        scope:
+            - apps/portal/app/(departments)/drilling/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    apps/portal/departments_routes/engineering:
+        dir_name: Engineering Department Portal
+        title: Engineering Department Portal
+        scope:
+            - apps/portal/app/(departments)/engineering/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    apps/portal/departments_routes/training:
+        dir_name: Training Department Portal (LMS & Certifications)
+        title: Training Department Portal (LMS & Certifications)
+        scope:
+            - apps/portal/app/(departments)/training/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    apps/portal/feature_domains:
+        dir_name: Portal Feature Domains
+        title: Portal Feature Domains
+        scope:
+            - apps/portal/features/
+        source_files: []
+        children:
+            - apps/portal/feature_domains/admin
+            - apps/portal/feature_domains/analytics
+            - apps/portal/feature_domains/departments
+            - apps/portal/feature_domains/hub
+        depends_on: []
+        related_to: []
+    apps/portal/feature_domains/admin:
+        dir_name: Admin Portal Feature (Multi-Tab Management Console)
+        title: Admin Portal Feature (Multi-Tab Management Console)
+        scope:
+            - apps/portal/features/admin/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    apps/portal/feature_domains/analytics:
+        dir_name: Analytics Export & Reporting UI
+        title: Analytics Export & Reporting UI
+        scope:
+            - apps/portal/features/analytics/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    apps/portal/feature_domains/departments:
+        dir_name: Department Feature Modules
+        title: Department Feature Modules
+        scope:
+            - apps/portal/features/departments/
+        source_files: []
+        children:
+            - apps/portal/feature_domains/departments/control_room
+            - apps/portal/feature_domains/departments/engineering_breakdowns
+            - apps/portal/feature_domains/departments/safety
+            - apps/portal/feature_domains/departments/satellite_monitoring
+            - apps/portal/feature_domains/departments/tools
+        depends_on: []
+        related_to: []
+    apps/portal/feature_domains/departments/control_room:
+        dir_name: Control Room Dashboard (Real-time Machine & Shift Monitoring)
+        title: Control Room Dashboard (Real-time Machine & Shift Monitoring)
+        scope:
+            - apps/portal/features/departments/components/control-room/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    apps/portal/feature_domains/departments/engineering_breakdowns:
+        dir_name: Engineering Breakdowns Dashboard
+        title: Engineering Breakdowns Dashboard
+        scope:
+            - apps/portal/features/departments/components/engineering/breakdowns/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    apps/portal/feature_domains/departments/safety:
+        dir_name: Department Safety Dashboard & Incident Management
+        title: Department Safety Dashboard & Incident Management
+        scope:
+            - apps/portal/features/departments/components/safety/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    apps/portal/feature_domains/departments/satellite_monitoring:
+        dir_name: Satellite Monitoring Dashboard (SAR _ Hyperspectral _ High-Res)
+        title: Satellite Monitoring Dashboard (SAR / Hyperspectral / High-Res)
+        scope:
+            - apps/portal/features/departments/components/satellite/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    apps/portal/feature_domains/departments/tools:
+        dir_name: Department Tools Dashboard & Embedded Spreadsheet
+        title: Department Tools Dashboard & Embedded Spreadsheet
+        scope:
+            - apps/portal/features/departments/components/tools/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    apps/portal/feature_domains/hub:
+        dir_name: Hub Landing Page Feature
+        title: Hub Landing Page Feature
+        scope:
+            - apps/portal/features/hub/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    apps/portal/hooks:
+        dir_name: Portal UI State & Performance Hooks
+        title: Portal UI State & Performance Hooks
+        scope:
+            - apps/portal/hooks/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    apps/portal/hub_routes:
+        dir_name: Hub Dashboard & Executive Routes (Next.js App Router)
+        title: Hub Dashboard & Executive Routes (Next.js App Router)
+        scope:
+            - apps/portal/app/(hub)/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    apps/portal/lib:
+        dir_name: Portal Shared Library (Cross-Cutting Services)
+        title: Portal Shared Library (Cross-Cutting Services)
+        scope:
+            - apps/portal/lib/
+        source_files: []
+        children:
+            - apps/portal/lib/ai
+            - apps/portal/lib/api_clients
+            - apps/portal/lib/domain_services
+            - apps/portal/lib/errors
+            - apps/portal/lib/jobs
+            - apps/portal/lib/plugins
+            - apps/portal/lib/top_level_utils
+        depends_on: []
+        related_to: []
+    apps/portal/lib/ai:
+        dir_name: Local Ollama AI Agent Graph & Tooling
+        title: Local Ollama AI Agent Graph & Tooling
+        scope:
+            - apps/portal/lib/ai/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    apps/portal/lib/api_clients:
+        dir_name: Portal API Shared Utilities & External Service Clients
+        title: Portal API Shared Utilities & External Service Clients
+        scope:
+            - apps/portal/lib/api/
+            - apps/portal/lib/weather-api.ts
+            - apps/portal/lib/monitoring-api.ts
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    apps/portal/lib/domain_services:
+        dir_name: Portal Domain Services (Departments, Shifts & Dashboard)
+        title: Portal Domain Services (Departments, Shifts & Dashboard)
+        scope:
+            - apps/portal/lib/dashboard-service.ts
+            - apps/portal/lib/departments.ts
+            - apps/portal/lib/dept-context.ts
+            - apps/portal/lib/employee.ts
+            - apps/portal/lib/shift-calculation.test.ts
+            - apps/portal/lib/shift-closeout.ts
+            - apps/portal/lib/shift-completeness.ts
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    apps/portal/lib/errors:
+        dir_name: Portal Error Classes & Structured Logger
+        title: Portal Error Classes & Structured Logger
+        scope:
+            - apps/portal/lib/errors/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    apps/portal/lib/jobs:
+        dir_name: Inngest Background Jobs
+        title: Inngest Background Jobs
+        scope:
+            - apps/portal/lib/jobs/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    apps/portal/lib/plugins:
+        dir_name: Plugin System Orchestrator (XState Actor Model)
+        title: Plugin System Orchestrator (XState Actor Model)
+        scope:
+            - apps/portal/lib/plugins/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    apps/portal/lib/top_level_utils:
+        dir_name: Portal Shared Utilities (Env, Caching, Audit, Tools)
+        title: Portal Shared Utilities (Env, Caching, Audit, Tools)
+        scope:
+            - apps/portal/lib/audit.ts
+            - apps/portal/lib/cache-utils.ts
+            - apps/portal/lib/server-cache.ts
+            - apps/portal/lib/tools.ts
+            - apps/portal/lib/env.ts
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    apps/portal/rust_telemetry_plugin:
+        dir_name: Rust Native Telemetry Stress-Fatigue Engine
+        title: Rust Native Telemetry Stress-Fatigue Engine
+        scope:
+            - apps/portal/plugins/rust-telemetry-engine/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    apps/portal/shared_components:
+        dir_name: Portal Shared UI Components & System Widgets
+        title: Portal Shared UI Components & System Widgets
+        scope:
+            - apps/portal/components/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    build_system:
+        dir_name: Nx + pnpm Monorepo Build & Deployment Orchestration
+        title: Nx + pnpm Monorepo Build & Deployment Orchestration
+        scope: []
+        source_files:
+            - package.json
+            - nx.json
+            - pnpm-workspace.yaml
+            - tools/policy-compiler.cjs
+            - scripts/deploy.sh
+            - apps/portal/Dockerfile
+            - docker-compose.production.yml
+            - ci/workflows/pr-cache-warmup.yml
+            - ci/workflows/policy-evaluation.yml
+            - apps/portal/project.json
+            - apps/cms/project.json
+            - apps/overview/project.json
+            - packages/ui/project.json
+            - vercel.json
+        children: []
+        depends_on: []
+        related_to: []
+    ci:
+        dir_name: GitHub Actions CI Workflows & Rollout Scripts
+        title: GitHub Actions CI Workflows & Rollout Scripts
+        scope:
+            - ci/workflows/
+            - ci/scripts/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    configuration_system:
+        dir_name: Zod-Validated Environment Configuration with Docker_Compose Overlay
+        title: Zod-Validated Environment Configuration with Docker/Compose Overlay
+        scope: []
+        source_files:
+            - apps/portal/lib/env.ts
+            - apps/portal/.env.example
+            - apps/portal/.env.production.example
+            - apps/portal/next.config.mjs
+            - apps/cms/payload.config.ts
+            - docker-compose.production.yml
+            - config/nginx.conf
+            - config/prometheus.yml
+            - nx.json
+        children: []
+        depends_on: []
+        related_to: []
+    dependency_management:
+        dir_name: Multi-language Monorepo Dependency Management with pnpm Catalogs and Nx Orchestr
+        title: Multi-language Monorepo Dependency Management with pnpm Catalogs and Nx Orchestration
+        scope: []
+        source_files:
+            - package.json
+            - pnpm-workspace.yaml
+            - pnpm-lock.yaml
+            - nx.json
+            - tools/sense/go.mod
+            - tools/sense/go.sum
+            - tools/memex/pyproject.toml
+            - tools/memex/uv.lock
+            - tools/repowise/pyproject.toml
+            - tools/secrin/pyproject.toml
+            - tools/secrin/poetry.lock
+        children: []
+        depends_on: []
+        related_to: []
+    docs:
+        dir_name: Arch-Systems Wiki & Runbooks (VitePress)
+        title: Arch-Systems Wiki & Runbooks (VitePress)
+        scope:
+            - docs/
+            - wiki/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    e2e:
+        dir_name: End-to-End & Visual Regression Tests (Playwright)
+        title: End-to-End & Visual Regression Tests (Playwright)
+        scope:
+            - e2e/visual/
+            - e2e/data-entry.spec.ts
+            - e2e/login.spec.ts
+            - e2e/navigation.spec.ts
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    error_handling:
+        dir_name: Structured Error Classes and Next.js Error Boundaries
+        title: Structured Error Classes and Next.js Error Boundaries
+        scope: []
+        source_files:
+            - apps/portal/lib/errors/error-classes.ts
+            - apps/portal/lib/errors/error-logger.ts
+            - apps/portal/app/error.tsx
+            - apps/portal/app/global-error.tsx
+            - apps/portal/app/not-found.tsx
+            - apps/portal/middleware.ts
+        children: []
+        depends_on: []
+        related_to: []
+    frontend_style:
+        dir_name: Tailwind + Style Dictionary Design System with Shared Theme Package
+        title: Tailwind + Style Dictionary Design System with Shared Theme Package
+        scope: []
+        source_files:
+            - packages/theme/package.json
+            - packages/ui/package.json
+            - apps/portal/tailwind.config.ts
+            - apps/overview/tailwind.config.ts
+            - packages/ui/tailwind.config.ts
+            - packages/ui/src/globals.css
+            - apps/overview/app/globals.css
+            - apps/cms/app/(payload)/custom.css
+        children: []
+        depends_on: []
+        related_to: []
+    infra:
+        dir_name: Cache Agent Kubernetes & Observability Manifests
+        title: Cache Agent Kubernetes & Observability Manifests
+        scope:
+            - infra/k8s/
+            - infra/observability/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    logging_system:
+        dir_name: Error-Centric Logging with Sentry and OpenTelemetry
+        title: Error-Centric Logging with Sentry and OpenTelemetry
+        scope: []
+        source_files:
+            - apps/portal/lib/errors/error-logger.ts
+            - apps/portal/instrumentation.ts
+            - apps/portal/sentry.server.config.ts
+            - apps/portal/sentry.client.config.ts
+            - apps/portal/lib/observability/metrics.ts
+        children: []
+        depends_on: []
+        related_to: []
+    packages:
+        dir_name: Shared Database Migrations, UI Component Library & Supabase Client
+        title: Shared Database Migrations, UI Component Library & Supabase Client
+        scope:
+            - packages/database/
+            - packages/ui/
+            - packages/supabase/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    redis_topology:
+        dir_name: Redis Cluster Topology & Infrastructure
+        title: Redis Cluster Topology & Infrastructure
+        scope:
+            - redis-topology/config/
+            - redis-topology/docker-compose/
+            - redis-topology/terraform/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    tools_memex:
+        dir_name: Memex — Temporal Codebase Knowledge Graph
+        title: Memex — Temporal Codebase Knowledge Graph
+        scope:
+            - tools/memex/
+        source_files: []
+        children:
+            - tools_memex/cli_and_entrypoints
+            - tools_memex/graph
+            - tools_memex/mcp_server
+            - tools_memex/memory_tool
+            - tools_memex/tests
+            - tools_memex/vscode_extension
+            - tools_memex/watcher
+        depends_on: []
+        related_to: []
+    tools_memex/cli_and_entrypoints:
+        dir_name: CLI Entry Points & Configuration Loader
+        title: CLI Entry Points & Configuration Loader
+        scope:
+            - tools/memex/memex/cli.py
+            - tools/memex/memex/__main__.py
+            - tools/memex/memex/config.py
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    tools_memex/graph:
+        dir_name: Memex Graph Core (Neo4j Schema, Client & Telemetry)
+        title: Memex Graph Core (Neo4j Schema, Client & Telemetry)
+        scope:
+            - tools/memex/memex/graph/
+        source_files: []
+        children:
+            - tools_memex/graph/cluster_runner
+            - tools_memex/graph/confidence_decay_stats
+        depends_on: []
+        related_to: []
+    tools_memex/graph/cluster_runner:
+        dir_name: Cluster Engine & Runner (Leiden-based Module Grouping)
+        title: Cluster Engine & Runner (Leiden-based Module Grouping)
+        scope:
+            - tools/memex/memex/graph/cluster.py
+            - tools/memex/memex/graph/cluster_overrides.py
+            - tools/memex/memex/graph/cluster_runner.py
+            - tools/memex/memex/graph/cluster_summary.py
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    tools_memex/graph/confidence_decay_stats:
+        dir_name: Node Confidence Decay & Graph Maintenance Stats
+        title: Node Confidence Decay & Graph Maintenance Stats
+        scope:
+            - tools/memex/memex/graph/confidence.py
+            - tools/memex/memex/graph/decay.py
+            - tools/memex/memex/graph/stats.py
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    tools_memex/mcp_server:
+        dir_name: Memex MCP Server (Agent Tool Gateway)
+        title: Memex MCP Server (Agent Tool Gateway)
+        scope:
+            - tools/memex/memex/mcp_server/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    tools_memex/memory_tool:
+        dir_name: Anthropic Memory Tool Backend Adapter
+        title: Anthropic Memory Tool Backend Adapter
+        scope:
+            - tools/memex/memex/memory_tool/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    tools_memex/tests:
+        dir_name: Memex Test Suite (Pytest)
+        title: Memex Test Suite (Pytest)
+        scope:
+            - tools/memex/tests/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    tools_memex/vscode_extension:
+        dir_name: memex VS Code Extension — Knowledge Graph Panel
+        title: memex VS Code Extension — Knowledge Graph Panel
+        scope:
+            - tools/memex/memex-vscode/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    tools_memex/watcher:
+        dir_name: Repository Change Watcher Daemon
+        title: Repository Change Watcher Daemon
+        scope:
+            - tools/memex/memex/watcher/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    tools_n8n_mcp:
+        dir_name: n8n MCP Server & Workflow Assets
+        title: n8n MCP Server & Workflow Assets
+        scope:
+            - tools/n8n-mcp/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    tools_policy:
+        dir_name: Nx Policy SSoT Compiler & Tag Enforcer
+        title: Nx Policy SSoT Compiler & Tag Enforcer
+        scope:
+            - tools/policy/
+            - tools/policy-compiler.cjs
+            - tools/apply-project-tags.cjs
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    tools_repowise:
+        dir_name: Repowise Codebase Intelligence Platform
+        title: Repowise Codebase Intelligence Platform
+        scope:
+            - tools/repowise/
+        source_files: []
+        children:
+            - tools_repowise/scripts_and_docker
+            - tools_repowise/ts_packages
+        depends_on: []
+        related_to: []
+    tools_repowise/scripts_and_docker:
+        dir_name: Dev, Deployment & Operations Scripts
+        title: Dev, Deployment & Operations Scripts
+        scope:
+            - scripts/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    tools_repowise/ts_packages:
+        dir_name: Shared React UI Component Library (@repo_ui)
+        title: Shared React UI Component Library (@repo/ui)
+        scope:
+            - packages/ui/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    tools_secrin:
+        dir_name: Secrin Platform (Web Dashboard + Python Backend)
+        title: Secrin Platform (Web Dashboard + Python Backend)
+        scope:
+            - tools/secrin/
+        source_files: []
+        children:
+            - tools_secrin/python_packages
+            - tools_secrin/scripts
+            - tools_secrin/web_app
+        depends_on: []
+        related_to: []
+    tools_secrin/python_packages:
+        dir_name: Secrin Python Packages Monorepo
+        title: Secrin Python Packages Monorepo
+        scope:
+            - tools/secrin/packages/
+        source_files: []
+        children:
+            - tools_secrin/python_packages/arc42gen
+            - tools_secrin/python_packages/cli
+            - tools_secrin/python_packages/config
+        depends_on: []
+        related_to: []
+    tools_secrin/python_packages/arc42gen:
+        dir_name: Arc42 Documentation Generator (Secrin Package)
+        title: Arc42 Documentation Generator (Secrin Package)
+        scope:
+            - tools/secrin/packages/arc42gen/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    tools_secrin/python_packages/cli:
+        dir_name: Secrin CLI — Code Knowledge Graph & Wiki Tool
+        title: Secrin CLI — Code Knowledge Graph & Wiki Tool
+        scope:
+            - tools/secrin/packages/cli/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    tools_secrin/python_packages/config:
+        dir_name: Application Configuration & Feature Flags
+        title: Application Configuration & Feature Flags
+        scope:
+            - tools/secrin/packages/config/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    tools_secrin/scripts:
+        dir_name: Secrin CLI Entrypoints & Dev Server Scripts
+        title: Secrin CLI Entrypoints & Dev Server Scripts
+        scope:
+            - tools/secrin/scripts/
+            - tools/secrin/pyproject.toml
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    tools_secrin/web_app:
+        dir_name: Secrin Web Dashboard (Next.js Frontend)
+        title: Secrin Web Dashboard (Next.js Frontend)
+        scope:
+            - tools/secrin/apps/web/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    tools_sense:
+        dir_name: Sense — MCP Codebase Context Server
+        title: Sense — MCP Codebase Context Server
+        scope:
+            - tools/sense/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    tools_wiki_viewer:
+        dir_name: Standalone LLM Wiki Viewer Generator
+        title: Standalone LLM Wiki Viewer Generator
+        scope:
+            - tools/wiki-viewer/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []

@@ -1,0 +1,8 @@
+schema_version: 1
+module_path: apps/portal
+title: Arch Portal (Next.js Multi-Tenant Operations Dashboard)
+scope:
+    - apps/portal/
+source_files: []
+depends_on: []
+related_to: []

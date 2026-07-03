@@ -17,21 +17,24 @@ export default async function BreakdownsPage({
     department: deptSlug,
   });
 
-  // Fetch all non-deleted breakdowns
-  const { data: breakdowns } = await supabase
-    .from("breakdowns")
-    .select("*, machine_name")
-    .eq("department_id", deptId)
-    .is("deleted_at", null)
-    .order("created_at", { ascending: false })
-    .limit(200);
+  // Fetch breakdowns and active machines concurrently
+  const [breakdownsResult, machinesResult] = await Promise.all([
+    supabase
+      .from("breakdowns")
+      .select("*, machine_name")
+      .eq("department_id", deptId)
+      .is("deleted_at", null)
+      .order("created_at", { ascending: false })
+      .limit(200),
+    supabase
+      .from("machines")
+      .select("id, name, machine_type, serial_number, active")
+      .eq("active", true)
+      .order("name"),
+  ]);
 
-  // Fetch active machines (centralised fleet)
-  const { data: machines } = await supabase
-    .from("machines")
-    .select("id, name, machine_type, serial_number, active")
-    .eq("active", true)
-    .order("name");
+  const breakdowns = breakdownsResult.data;
+  const machines = machinesResult.data;
 
   // Compute metrics
   const allBreakdowns = (breakdowns ?? []) as Breakdown[];

@@ -1,0 +1,1 @@
+Hybrid Leiden clustering via `graspologic.partition.hierarchical_leiden` over a `networkx.Graph`; Neo4j persistence through the shared `memex.graph.client` driver; optional LLM summaries via `google.genai` (`gemini-2.5-flash`); YAML overrides via PyYAML's `safe_load`.

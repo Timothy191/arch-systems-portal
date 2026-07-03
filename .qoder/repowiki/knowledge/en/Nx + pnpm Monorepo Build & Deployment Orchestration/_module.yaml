@@ -1,0 +1,21 @@
+schema_version: 1
+module_path: build_system
+title: Nx + pnpm Monorepo Build & Deployment Orchestration
+scope: []
+source_files:
+    - package.json
+    - nx.json
+    - pnpm-workspace.yaml
+    - tools/policy-compiler.cjs
+    - scripts/deploy.sh
+    - apps/portal/Dockerfile
+    - docker-compose.production.yml
+    - ci/workflows/pr-cache-warmup.yml
+    - ci/workflows/policy-evaluation.yml
+    - apps/portal/project.json
+    - apps/cms/project.json
+    - apps/overview/project.json
+    - packages/ui/project.json
+    - vercel.json
+depends_on: []
+related_to: []

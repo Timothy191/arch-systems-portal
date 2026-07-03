@@ -1,0 +1,4 @@
+- Each entrypoint exposes a single `def main():` function and guards it with `if __name__ == "__main__": main()`, so it can be invoked both directly and as a Poetry console script.
+- Server workers configure a uniform root logger via `logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s", datefmt="%H:%M:%S")` before starting uvicorn or the RQ worker.
+- Runtime configuration is loaded through `from packages.config.settings import Settings` and consumed via attribute access (e.g. `settings.API_HOST`, `settings.REDIS_URL`, `settings.ENVIRONMENT`) rather than raw env reads.
+- Scripts stay thin: they only wire up logging/settings and immediately delegate to an ASGI app or worker class defined under `packages.*` / `apps.*`, never implementing business logic themselves.

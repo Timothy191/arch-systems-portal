@@ -1,0 +1,1 @@
+Next.js App Router server components for auth gating, React Server Actions ("use server") for mutations, Supabase JS client (server & browser variants) for data access, and @repo/ui shadcn-based primitives (Tabs, Dialog, Button, Badge, GlassCard).

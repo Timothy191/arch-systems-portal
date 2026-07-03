@@ -1,0 +1,1 @@
+Root orchestrator that binds pnpm workspaces, Nx task graph, ESLint boundary rules, Docker Compose stacks, and CI into a single multi-language codebase.

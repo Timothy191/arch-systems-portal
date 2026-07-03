@@ -1,0 +1,3 @@
+- All runtime configuration flows through `packages.config.settings.Settings` (Pydantic settings) consumed uniformly by the FastAPI server, arc42gen processes, and CLI commands.
+- Each executable entry point is declared once in `pyproject.toml`'s `[tool.poetry.scripts]` and implemented as a thin script under `scripts/` or a package `main()` function.
+- The Next.js frontend communicates with the backend solely via REST endpoints under `/api/*`; no direct database or Python imports cross the language boundary.

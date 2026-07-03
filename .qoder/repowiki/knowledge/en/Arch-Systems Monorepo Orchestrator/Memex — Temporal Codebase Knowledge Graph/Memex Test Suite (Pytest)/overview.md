@@ -1,0 +1,1 @@
+Pytest suite for the memex tool covering CLI, MCP server, graph cluster runner, memory-tool adapter, and end-to-end pipeline against stubbed or real Neo4j backends.

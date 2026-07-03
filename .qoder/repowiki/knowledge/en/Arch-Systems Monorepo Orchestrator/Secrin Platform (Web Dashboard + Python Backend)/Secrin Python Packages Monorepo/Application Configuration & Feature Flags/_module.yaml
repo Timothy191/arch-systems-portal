@@ -1,0 +1,8 @@
+schema_version: 1
+module_path: tools_secrin/python_packages/config
+title: Application Configuration & Feature Flags
+scope:
+    - tools/secrin/packages/config/
+source_files: []
+depends_on: []
+related_to: []

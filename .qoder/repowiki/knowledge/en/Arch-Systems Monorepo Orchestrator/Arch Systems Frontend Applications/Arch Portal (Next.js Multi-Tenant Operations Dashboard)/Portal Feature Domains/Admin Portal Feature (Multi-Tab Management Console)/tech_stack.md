@@ -1,0 +1,1 @@
+Next.js Server Actions + React Client Components; Supabase via `@repo/supabase/server` (server) and `@repo/supabase/client` (browser); Redis-backed tag invalidation via `@repo/redis`; UI built on `@repo/ui` primitives (Tabs, Dialog, Button, Badge, GlassCard).

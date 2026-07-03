@@ -3,6 +3,7 @@ import { cacheGet, cacheSet } from "@repo/redis/cache";
 import { DEPARTMENTS } from "./departments";
 import { notFound } from "next/navigation";
 import { getOperationalToday } from "@repo/utils";
+import { cache } from "react";
 
 /**
  * Resolves department context for a server component page.
@@ -12,43 +13,43 @@ import { getOperationalToday } from "@repo/utils";
  *
  * @returns `{ dept, deptId, supabase, today }`
  */
-export async function getDepartmentContext(params: {
-  department: string;
-}): Promise<{
-  dept: (typeof DEPARTMENTS)[number];
-  deptId: string;
-  supabase: Awaited<ReturnType<typeof createServerSupabaseClient>>;
-  today: string;
-}> {
-  const dept = DEPARTMENTS.find((d) => d.name === params.department);
-  if (!dept) notFound();
+export const getDepartmentContext = cache(
+  async function getDepartmentContext(params: { department: string }): Promise<{
+    dept: (typeof DEPARTMENTS)[number];
+    deptId: string;
+    supabase: Awaited<ReturnType<typeof createServerSupabaseClient>>;
+    today: string;
+  }> {
+    const dept = DEPARTMENTS.find((d) => d.name === params.department);
+    if (!dept) notFound();
 
-  const supabase = await createServerSupabaseClient();
+    const supabase = await createServerSupabaseClient();
 
-  const cacheKey = `dept:uuid:${params.department}`;
-  let deptId = await cacheGet<string>(cacheKey);
+    const cacheKey = `dept:uuid:${params.department}`;
+    let deptId = await cacheGet<string>(cacheKey);
 
-  if (!deptId) {
-    const { data: department } = await supabase
-      .from("departments")
-      .select("id")
-      .eq("name", params.department)
-      .single();
+    if (!deptId) {
+      const { data: department } = await supabase
+        .from("departments")
+        .select("id")
+        .eq("name", params.department)
+        .single();
 
-    if (!department) notFound();
-    deptId = department.id;
-    await cacheSet(cacheKey, deptId, 3600); // 1 hour
-  }
+      if (!department) notFound();
+      deptId = department.id;
+      await cacheSet(cacheKey, deptId, 3600); // 1 hour
+    }
 
-  const today = getOperationalToday();
+    const today = getOperationalToday();
 
-  return {
-    dept,
-    deptId: deptId as string,
-    supabase,
-    today,
-  };
-}
+    return {
+      dept,
+      deptId: deptId as string,
+      supabase,
+      today,
+    };
+  },
+);
 
 /**
  * Checks that the current department matches one of the allowed departments.

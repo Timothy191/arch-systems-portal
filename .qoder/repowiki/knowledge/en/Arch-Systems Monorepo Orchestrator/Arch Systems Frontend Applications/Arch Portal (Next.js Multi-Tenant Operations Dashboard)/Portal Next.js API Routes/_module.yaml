@@ -1,0 +1,8 @@
+schema_version: 1
+module_path: apps/portal/api_routes
+title: Portal Next.js API Routes
+scope:
+    - apps/portal/app/api/
+source_files: []
+depends_on: []
+related_to: []

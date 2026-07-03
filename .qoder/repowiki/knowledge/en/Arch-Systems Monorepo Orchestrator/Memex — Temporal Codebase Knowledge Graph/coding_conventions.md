@@ -1,0 +1,4 @@
+- Each subpackage exposes a `__init__.py` that re-exports public symbols so callers import `memex.graph` / `memex.mcp_server` rather than deep paths.
+- Configuration is loaded once through `memex.config.Config` (Pydantic model backed by `config.yaml` + env), and every long-lived component reads from this singleton instead of parsing env directly.
+- Async components use `pytest-asyncio` with `asyncio_mode = auto` and module-scoped fixture loops, so tests never explicitly decorate coroutines.
+- Neo4j access goes exclusively through the `graph.client.GraphClient` singleton; direct `neo4j` driver usage is confined to that layer.

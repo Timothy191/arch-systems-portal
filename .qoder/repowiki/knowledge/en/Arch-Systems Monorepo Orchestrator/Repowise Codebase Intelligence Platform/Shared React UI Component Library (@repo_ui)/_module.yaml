@@ -1,0 +1,8 @@
+schema_version: 1
+module_path: tools_repowise/ts_packages
+title: Shared React UI Component Library (@repo/ui)
+scope:
+    - packages/ui/
+source_files: []
+depends_on: []
+related_to: []

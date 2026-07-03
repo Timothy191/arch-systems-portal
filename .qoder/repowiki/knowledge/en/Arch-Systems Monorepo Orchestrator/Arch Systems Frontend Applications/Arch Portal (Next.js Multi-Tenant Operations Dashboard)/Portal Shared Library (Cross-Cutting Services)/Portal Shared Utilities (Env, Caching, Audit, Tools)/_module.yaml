@@ -1,0 +1,12 @@
+schema_version: 1
+module_path: apps/portal/lib/top_level_utils
+title: Portal Shared Utilities (Env, Caching, Audit, Tools)
+scope:
+    - apps/portal/lib/audit.ts
+    - apps/portal/lib/cache-utils.ts
+    - apps/portal/lib/server-cache.ts
+    - apps/portal/lib/tools.ts
+    - apps/portal/lib/env.ts
+source_files: []
+depends_on: []
+related_to: []

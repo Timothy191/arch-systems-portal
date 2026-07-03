@@ -13,7 +13,25 @@ services:
     env_file:
       - apps/portal/.env
     healthcheck:
-      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/api/health', (r) => { if (r.statusCode !== 200) process.exit(1); }).on('error', () => process.exit(1));"]
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/api/health/live', (r) => { if (r.statusCode !== 200) process.exit(1); }).on('error', () => process.exit(1));"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    restart: always
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - HOSTNAME=0.0.0.0
+    env_file:
+      - apps/api/.env
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3001/api/health/live', (r) => { if (r.statusCode !== 200) process.exit(1); }).on('error', () => process.exit(1));"]
       interval: 30s
       timeout: 5s
       retries: 3
@@ -31,6 +49,7 @@ services:
       - nginx-cache:/var/cache/nginx
     depends_on:
       - portal
+      - api
 
 volumes:
   nginx-cache:

@@ -1,0 +1,8 @@
+schema_version: 1
+module_path: apps/portal/feature_domains/analytics
+title: Analytics Export & Reporting UI
+scope:
+    - apps/portal/features/analytics/
+source_files: []
+depends_on: []
+related_to: []

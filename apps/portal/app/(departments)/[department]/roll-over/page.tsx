@@ -13,22 +13,22 @@ export default async function RollOverPage({
     department: deptSlug,
   });
 
-  // Fetch dozers with site info (centralised fleet)
-  const { data: dozers } = await supabase
-    .from("machines")
-    .select("id, name, serial_number, site_id, sites(name)")
-    .eq("machine_type", "Dozer")
-    .eq("active", true)
-    .order("name");
-
-  // Fetch today's roll data — include site via machine join
-  const { data: todayRolls } = await supabase
-    .from("dozer_rolls")
-    .select(
-      "*, machine:machines(name, site_id, sites(name)), operator:operators(full_name)",
-    )
-    .eq("department_id", deptId)
-    .eq("roll_date", today);
+  // Fetch all data in parallel
+  const [{ data: dozers }, { data: todayRolls }] = await Promise.all([
+    supabase
+      .from("machines")
+      .select("id, name, serial_number, site_id, sites(name)")
+      .eq("machine_type", "Dozer")
+      .eq("active", true)
+      .order("name"),
+    supabase
+      .from("dozer_rolls")
+      .select(
+        "*, machine:machines(name, site_id, sites(name)), operator:operators(full_name)",
+      )
+      .eq("department_id", deptId)
+      .eq("roll_date", today),
+  ]);
 
   const totalPasses =
     todayRolls?.reduce((sum, r) => sum + (r.blade_passes || 0), 0) || 0;

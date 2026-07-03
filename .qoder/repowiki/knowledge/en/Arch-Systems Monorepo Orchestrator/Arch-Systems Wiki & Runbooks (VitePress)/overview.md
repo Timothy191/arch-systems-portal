@@ -1,0 +1,1 @@
+VitePress-powered knowledge base and runbook collection for the Arch-Systems plant operations portal, covering architecture decisions, how-to guides, and operational procedures.

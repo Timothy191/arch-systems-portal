@@ -1,0 +1,10 @@
+schema_version: 1
+module_path: tools_policy
+title: Nx Policy SSoT Compiler & Tag Enforcer
+scope:
+    - tools/policy/
+    - tools/policy-compiler.cjs
+    - tools/apply-project-tags.cjs
+source_files: []
+depends_on: []
+related_to: []

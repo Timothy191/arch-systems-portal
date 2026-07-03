@@ -1,0 +1,8 @@
+schema_version: 1
+module_path: apps/portal/feature_domains/hub
+title: Hub Landing Page Feature
+scope:
+    - apps/portal/features/hub/
+source_files: []
+depends_on: []
+related_to: []

@@ -1,0 +1,1 @@
+Next.js App Router Server Components for read paths, Tremor (`@tremor/react`) for AreaChart/DonutChart rendered client-side, Supabase JS clients split by role (`createServerSupabaseClient` vs `createBrowserSupabaseClient`), and n8n workflows invoked lazily through `@repo/utils.triggerWorkflow`.

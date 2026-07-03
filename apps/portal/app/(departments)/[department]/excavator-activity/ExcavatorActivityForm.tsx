@@ -76,9 +76,12 @@ export function ExcavatorActivityForm({
   const router = useRouter();
   const supabase = createBrowserSupabaseClient();
 
+  const defaultOperatorId =
+    operators.length > 0 && operators[0]?.id ? operators[0].id : "";
+
   const [formData, setFormData] = useState({
     excavatorId: "",
-    operatorId: "",
+    operatorId: defaultOperatorId,
     siteId: "",
     shiftType: getCurrentShift(),
     blockMinedId: "",
@@ -122,16 +125,6 @@ export function ExcavatorActivityForm({
       }
     }
   }, [departmentId]);
-
-  // Pre-populate operator from recent activity
-  useEffect(() => {
-    if (!formData.operatorId && operators.length > 0) {
-      const firstOp = operators[0];
-      if (firstOp) {
-        setFormData((prev) => ({ ...prev, operatorId: firstOp.id }));
-      }
-    }
-  }, [operators, formData.operatorId]);
 
   // Filter dumpers and mine blocks by selected site
   const siteDumpers = formData.siteId

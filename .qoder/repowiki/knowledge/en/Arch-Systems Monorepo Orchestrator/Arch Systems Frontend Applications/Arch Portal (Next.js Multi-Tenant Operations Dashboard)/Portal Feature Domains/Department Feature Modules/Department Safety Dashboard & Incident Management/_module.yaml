@@ -1,0 +1,8 @@
+schema_version: 1
+module_path: apps/portal/feature_domains/departments/safety
+title: Department Safety Dashboard & Incident Management
+scope:
+    - apps/portal/features/departments/components/safety/
+source_files: []
+depends_on: []
+related_to: []

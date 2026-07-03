@@ -82,18 +82,22 @@ export default async function DailyLogPage({
     );
   }
 
-  // Standard daily log for non-safety departments (centralised fleet)
-  const { data: machines } = await supabase
-    .from("machines")
-    .select("id, name, machine_type")
-    .eq("active", true)
-    .order("name");
+  // Fetch active machines and logged shifts concurrently
+  const [machinesResult, logsResult] = await Promise.all([
+    supabase
+      .from("machines")
+      .select("id, name, machine_type")
+      .eq("active", true)
+      .order("name"),
+    supabase
+      .from("daily_logs")
+      .select("id, shift, notes")
+      .eq("department_id", deptId)
+      .eq("log_date", today),
+  ]);
 
-  const { data: todayLogs } = await supabase
-    .from("daily_logs")
-    .select("id, shift, notes")
-    .eq("department_id", deptId)
-    .eq("log_date", today);
+  const machines = machinesResult.data;
+  const todayLogs = logsResult.data;
 
   const existingShifts = (todayLogs || []).map(
     (l) => l.shift as "day" | "night",

@@ -1,0 +1,8 @@
+schema_version: 1
+module_path: apps/portal/lib/errors
+title: Portal Error Classes & Structured Logger
+scope:
+    - apps/portal/lib/errors/
+source_files: []
+depends_on: []
+related_to: []

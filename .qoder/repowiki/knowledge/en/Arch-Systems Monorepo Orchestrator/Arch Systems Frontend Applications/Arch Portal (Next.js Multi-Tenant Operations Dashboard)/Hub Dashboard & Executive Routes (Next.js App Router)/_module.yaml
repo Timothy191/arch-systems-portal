@@ -1,0 +1,8 @@
+schema_version: 1
+module_path: apps/portal/hub_routes
+title: Hub Dashboard & Executive Routes (Next.js App Router)
+scope:
+    - apps/portal/app/(hub)/
+source_files: []
+depends_on: []
+related_to: []

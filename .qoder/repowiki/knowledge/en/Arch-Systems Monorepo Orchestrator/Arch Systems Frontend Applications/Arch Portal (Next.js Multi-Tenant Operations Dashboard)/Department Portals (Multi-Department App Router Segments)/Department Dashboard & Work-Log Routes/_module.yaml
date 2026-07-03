@@ -1,0 +1,8 @@
+schema_version: 1
+module_path: apps/portal/departments_routes/department_dashboard
+title: Department Dashboard & Work-Log Routes
+scope:
+    - apps/portal/app/(departments)/[department]/
+source_files: []
+depends_on: []
+related_to: []

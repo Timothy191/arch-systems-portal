@@ -1,0 +1,67 @@
+name: API Build & Test
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'apps/api/**'
+      - 'packages/supabase/**'
+      - 'packages/redis/**'
+      - 'packages/utils/**'
+      - 'pnpm-lock.yaml'
+  pull_request:
+    paths:
+      - 'apps/api/**'
+      - 'packages/supabase/**'
+      - 'packages/redis/**'
+      - 'packages/utils/**'
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Type check
+        working-directory: apps/api
+        run: pnpm run type-check
+
+      - name: Build
+        working-directory: apps/api
+        run: pnpm run build
+
+      - name: Test
+        working-directory: apps/api
+        run: pnpm run test --passWithNoTests
+
+  docker:
+    needs: build-and-test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            -f apps/api/Dockerfile \
+            -t arch-api:${{ github.sha }} \
+            .
+
+      - name: Health check
+        run: |
+          docker run -d --name api-test -p 3001:3001 arch-api:${{ github.sha }}
+          sleep 5
+          curl -f http://localhost:3001/api/health || exit 1
+          docker stop api-test

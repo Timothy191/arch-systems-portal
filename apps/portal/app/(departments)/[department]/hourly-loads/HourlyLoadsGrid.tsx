@@ -113,9 +113,15 @@ export function HourlyLoadsGrid({
     loadsByMachine.set(load.machine_id, load);
   });
 
-  const [selectedShift, setSelectedShift] = useState<"day" | "night">(
-    new Date().getHours() >= 6 && new Date().getHours() < 18 ? "day" : "night",
-  );
+  const [selectedShift, setSelectedShift] = useState<"day" | "night">("day");
+
+  useEffect(() => {
+    setSelectedShift(
+      new Date().getHours() >= 6 && new Date().getHours() < 18
+        ? "day"
+        : "night",
+    );
+  }, []);
   const [saving, setSaving] = useState(false);
 
   const hourLabels =

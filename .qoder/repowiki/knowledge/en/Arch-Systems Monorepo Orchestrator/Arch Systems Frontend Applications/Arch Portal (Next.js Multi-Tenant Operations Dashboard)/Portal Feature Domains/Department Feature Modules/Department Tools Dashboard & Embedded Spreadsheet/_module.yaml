@@ -1,0 +1,8 @@
+schema_version: 1
+module_path: apps/portal/feature_domains/departments/tools
+title: Department Tools Dashboard & Embedded Spreadsheet
+scope:
+    - apps/portal/features/departments/components/tools/
+source_files: []
+depends_on: []
+related_to: []

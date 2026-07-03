@@ -1,0 +1,10 @@
+schema_version: 1
+module_path: apps/portal/lib/api_clients
+title: Portal API Shared Utilities & External Service Clients
+scope:
+    - apps/portal/lib/api/
+    - apps/portal/lib/weather-api.ts
+    - apps/portal/lib/monitoring-api.ts
+source_files: []
+depends_on: []
+related_to: []

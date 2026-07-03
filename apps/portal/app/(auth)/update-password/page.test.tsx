@@ -5,7 +5,7 @@ import {
   fireEvent,
   act,
 } from "@testing-library/react";
-import UpdatePasswordPage from "./page";
+import { UpdatePasswordForm } from "./UpdatePasswordForm";
 
 const mockPush = jest.fn();
 jest.mock("next/navigation", () => ({
@@ -53,7 +53,7 @@ const { createBrowserSupabaseClient } = jest.requireMock(
   "@repo/supabase/client",
 );
 
-describe("UpdatePasswordPage", () => {
+describe("UpdatePasswordForm", () => {
   let mockGetSession: jest.Mock;
   let mockUpdateUser: jest.Mock;
 
@@ -84,7 +84,7 @@ describe("UpdatePasswordPage", () => {
       }),
     );
 
-    render(<UpdatePasswordPage />);
+    render(<UpdatePasswordForm />);
 
     expect(screen.getByText("Verifying session...")).toBeInTheDocument();
 
@@ -94,7 +94,7 @@ describe("UpdatePasswordPage", () => {
   });
 
   it("shows expired link UI if no session exists", async () => {
-    render(<UpdatePasswordPage />);
+    render(<UpdatePasswordForm />);
 
     await waitFor(() => {
       expect(screen.getByText("Link Expired")).toBeInTheDocument();
@@ -107,7 +107,7 @@ describe("UpdatePasswordPage", () => {
       data: { session: { id: "test-session" } },
     });
 
-    render(<UpdatePasswordPage />);
+    render(<UpdatePasswordForm />);
 
     await waitFor(() => {
       expect(screen.getByLabelText("New Password")).toBeInTheDocument();
@@ -123,7 +123,7 @@ describe("UpdatePasswordPage", () => {
       data: { session: { id: "test-session" } },
     });
 
-    render(<UpdatePasswordPage />);
+    render(<UpdatePasswordForm />);
 
     await waitFor(() => {
       expect(screen.getByLabelText("New Password")).toBeInTheDocument();
@@ -147,7 +147,7 @@ describe("UpdatePasswordPage", () => {
       data: { session: { id: "test-session" } },
     });
 
-    render(<UpdatePasswordPage />);
+    render(<UpdatePasswordForm />);
 
     await waitFor(() => {
       expect(screen.getByLabelText("New Password")).toBeInTheDocument();
@@ -176,7 +176,7 @@ describe("UpdatePasswordPage", () => {
       error: { message: "weak password error from auth engine" },
     });
 
-    render(<UpdatePasswordPage />);
+    render(<UpdatePasswordForm />);
 
     await waitFor(() => {
       expect(screen.getByLabelText("New Password")).toBeInTheDocument();
@@ -204,7 +204,7 @@ describe("UpdatePasswordPage", () => {
       error: { message: "cannot be the same password" },
     });
 
-    render(<UpdatePasswordPage />);
+    render(<UpdatePasswordForm />);
 
     await waitFor(() => {
       expect(screen.getByLabelText("New Password")).toBeInTheDocument();
@@ -231,7 +231,7 @@ describe("UpdatePasswordPage", () => {
       data: { session: { id: "test-session" } },
     });
 
-    render(<UpdatePasswordPage />);
+    render(<UpdatePasswordForm />);
 
     await waitFor(() => {
       expect(screen.getByLabelText("New Password")).toBeInTheDocument();

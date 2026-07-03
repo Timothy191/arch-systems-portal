@@ -1,0 +1,8 @@
+schema_version: 1
+module_path: tools_memex
+title: Memex — Temporal Codebase Knowledge Graph
+scope:
+    - tools/memex/
+source_files: []
+depends_on: []
+related_to: []

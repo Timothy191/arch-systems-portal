@@ -1,0 +1,6 @@
+Single-leaf feature under `features/departments/components/safety/` composed of four React components plus a test:
+- `SafetyDashboard.tsx` is a Server Component: it calls `createServerSupabaseClient`, queries `safety_incidents` (today's count/open/LTI-free days, last 30-day trend), aggregates data in-process, and renders `GlassCard`/`PageHeader` from `@repo/ui`.
+- `SafetyChartsWrapper.tsx` wraps `SafetyCharts.tsx` with a dynamic `import()` so the Tremor chart library loads only on the client; `SafetyCharts.tsx` itself is marked `'use client'` and renders an AreaChart + DonutChart.
+- `SafetyIncidentForm.tsx` is a Client Component (`'use client'`) using `createBrowserSupabaseClient` to insert rows into `safety_incidents`; after write it calls `revalidateRSC(['table:safety_incidents'])` to refresh RSC cache and triggers an n8n workflow via lazy `import('@repo/utils').triggerWorkflow('safety-incident', ...)`.
+- `SafetyIncidentsList.tsx` lists recent incidents (client-side).
+Dependency direction is one-way: dashboard → charts wrapper → charts; form writes back to Supabase and invalidates the dashboard's cache — no cross-imports between list/form/chart beyond shared UI primitives.

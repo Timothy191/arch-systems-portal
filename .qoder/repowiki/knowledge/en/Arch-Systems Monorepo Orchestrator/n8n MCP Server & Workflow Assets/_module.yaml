@@ -1,0 +1,8 @@
+schema_version: 1
+module_path: tools_n8n_mcp
+title: n8n MCP Server & Workflow Assets
+scope:
+    - tools/n8n-mcp/
+source_files: []
+depends_on: []
+related_to: []

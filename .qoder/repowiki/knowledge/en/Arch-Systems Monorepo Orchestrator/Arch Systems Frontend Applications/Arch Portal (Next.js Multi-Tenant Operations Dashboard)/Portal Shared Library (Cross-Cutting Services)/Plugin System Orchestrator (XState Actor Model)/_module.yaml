@@ -1,0 +1,8 @@
+schema_version: 1
+module_path: apps/portal/lib/plugins
+title: Plugin System Orchestrator (XState Actor Model)
+scope:
+    - apps/portal/lib/plugins/
+source_files: []
+depends_on: []
+related_to: []

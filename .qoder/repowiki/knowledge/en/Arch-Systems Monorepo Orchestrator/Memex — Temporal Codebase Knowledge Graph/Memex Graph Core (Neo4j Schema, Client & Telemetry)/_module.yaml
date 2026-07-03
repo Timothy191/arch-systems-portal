@@ -1,0 +1,8 @@
+schema_version: 1
+module_path: tools_memex/graph
+title: Memex Graph Core (Neo4j Schema, Client & Telemetry)
+scope:
+    - tools/memex/memex/graph/
+source_files: []
+depends_on: []
+related_to: []

@@ -1,0 +1,8 @@
+schema_version: 1
+module_path: apps/portal/feature_domains
+title: Portal Feature Domains
+scope:
+    - apps/portal/features/
+source_files: []
+depends_on: []
+related_to: []

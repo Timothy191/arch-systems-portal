@@ -1,0 +1,1 @@
+Pytest with `pytest-asyncio`; uses `unittest.mock` (`AsyncMock`, `patch`, `MagicMock`) for dependency injection and `tmp_path_factory` for disposable filesystems.

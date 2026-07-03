@@ -1,0 +1,8 @@
+schema_version: 1
+module_path: apps/portal/lib/jobs
+title: Inngest Background Jobs
+scope:
+    - apps/portal/lib/jobs/
+source_files: []
+depends_on: []
+related_to: []

@@ -1,0 +1,1 @@
+Requires `uv` installed and on PATH so `memex.startServer` can spawn `uv run memex serve --repo <workspace> --transport http --port <port>`. Development build/test: `npm run compile` (or `--watch`) via `esbuild.js`; publishing runs `node esbuild.js --minify` through `vscode:prepublish`.

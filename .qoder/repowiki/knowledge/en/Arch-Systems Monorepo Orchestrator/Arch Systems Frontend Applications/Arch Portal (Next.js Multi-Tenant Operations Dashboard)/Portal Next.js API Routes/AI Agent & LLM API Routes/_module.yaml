@@ -1,0 +1,8 @@
+schema_version: 1
+module_path: apps/portal/api_routes/ai
+title: AI Agent & LLM API Routes
+scope:
+    - apps/portal/app/api/ai/
+source_files: []
+depends_on: []
+related_to: []

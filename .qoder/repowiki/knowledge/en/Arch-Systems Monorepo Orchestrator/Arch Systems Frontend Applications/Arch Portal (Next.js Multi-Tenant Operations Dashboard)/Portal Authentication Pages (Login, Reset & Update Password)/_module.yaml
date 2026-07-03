@@ -1,0 +1,8 @@
+schema_version: 1
+module_path: apps/portal/auth_routes
+title: Portal Authentication Pages (Login, Reset & Update Password)
+scope:
+    - apps/portal/app/(auth)/
+source_files: []
+depends_on: []
+related_to: []

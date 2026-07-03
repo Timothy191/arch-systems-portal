@@ -80,23 +80,24 @@ export function AIAssistant({ context, className }: AIAssistantProps) {
   }, [isOpen, openPanel]);
 
   // Stable session ID persisted across reloads via localStorage
-  const sessionId = useMemo(() => {
+  const [sessionId, setSessionId] = useState<string>("");
+  useEffect(() => {
     const key = "arch:ai:sessionId";
     let id = "";
     try {
       id = localStorage.getItem(key) ?? "";
     } catch {
-      // Ignore localStorage access errors during SSR or if disabled
+      /* ignore */
     }
     if (!id) {
       id = `chat_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
       try {
         localStorage.setItem(key, id);
       } catch {
-        // Ignore localStorage access errors during SSR or if disabled
+        /* ignore */
       }
     }
-    return id;
+    setSessionId(id);
   }, []);
 
   const initialMessages = useMemo<Message[]>(

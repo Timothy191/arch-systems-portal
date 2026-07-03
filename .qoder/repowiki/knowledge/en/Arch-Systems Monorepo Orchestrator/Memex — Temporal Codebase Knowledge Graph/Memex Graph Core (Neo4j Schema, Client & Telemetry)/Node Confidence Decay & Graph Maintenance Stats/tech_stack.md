@@ -1,0 +1,1 @@
+Python stdlib `math.exp`/`log` for exponential decay; `apscheduler` (`AsyncIOScheduler` + cron trigger) for the nightly job; `sqlite3` for local telemetry aggregation; `rich` for terminal rendering; Neo4j driver accessed through `memex.graph.client.get_graph_client`.

@@ -16,28 +16,24 @@ export default async function OperationalDelaysPage({
     department,
   });
 
-  // Fetch machines for dropdown (centralised fleet)
-  const { data: machines } = await supabase
-    .from("machines")
-    .select("id, name, site_id, sites(name)")
-    .eq("active", true)
-    .order("name");
-
-  // Fetch delay categories for dropdown
-  const { data: categories } = await supabase
-    .from("delay_categories")
-    .select("*")
-    .order("sort_order");
-
-  // Fetch today's operational delays
-  const { data: todayDelays } = await supabase
-    .from("operational_delays")
-    .select(
-      "*, category:delay_categories(name, color, icon), machine:machines(name, sites(name))",
-    )
-    .eq("department_id", deptId)
-    .eq("delay_date", today)
-    .order("created_at", { ascending: false });
+  // Fetch all data in parallel
+  const [{ data: machines }, { data: categories }, { data: todayDelays }] =
+    await Promise.all([
+      supabase
+        .from("machines")
+        .select("id, name, site_id, sites(name)")
+        .eq("active", true)
+        .order("name"),
+      supabase.from("delay_categories").select("*").order("sort_order"),
+      supabase
+        .from("operational_delays")
+        .select(
+          "*, category:delay_categories(name, color, icon), machine:machines(name, sites(name))",
+        )
+        .eq("department_id", deptId)
+        .eq("delay_date", today)
+        .order("created_at", { ascending: false }),
+    ]);
 
   // Calculate statistics
   const totalDelayMinutes =

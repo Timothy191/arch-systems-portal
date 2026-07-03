@@ -1,0 +1,8 @@
+schema_version: 1
+module_path: tools_secrin/python_packages/arc42gen
+title: Arc42 Documentation Generator (Secrin Package)
+scope:
+    - tools/secrin/packages/arc42gen/
+source_files: []
+depends_on: []
+related_to: []

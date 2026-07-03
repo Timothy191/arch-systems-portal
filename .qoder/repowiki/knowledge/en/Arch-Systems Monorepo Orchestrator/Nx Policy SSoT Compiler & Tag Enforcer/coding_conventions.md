@@ -1,0 +1,3 @@
+- Policy rules are declared as plain arrays of objects (sourceTag/targetTag/allowed/reason) and then transformed into multiple output formats (Nx depConstraints, architecture checks, security patterns) rather than being stored per-format.
+- Every generated JSON artifact wraps its payload in `{ version, generatedAt, ...data }` and the check mode strips `generatedAt` before diffing so timestamps do not trigger false drift.
+- Scripts operate in dual write/check mode controlled by a CLI flag (`--check`) and exit non-zero when drift is detected, making them safe to call from both local dev and CI.

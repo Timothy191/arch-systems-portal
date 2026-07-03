@@ -3,8 +3,6 @@ import { createMiddlewareClient } from "@repo/supabase/middleware";
 import { cacheGet, cacheSet, cacheEvictL1ByPrefix } from "@repo/redis/cache";
 import { recordJobExecution } from "@/lib/observability/metrics";
 
-export const runtime = "nodejs";
-
 export function isValidRedirect(path: string): boolean {
   if (!path) return false;
 
@@ -262,8 +260,19 @@ async function isDepartmentAllowed(
   return hasAccess ? "ok" : "unauthorized";
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
+
+  // Next.js 16 proxy runs on every request, so explicitly skip the paths the
+  // old matcher excluded: static assets, Next internals, API routes, and root
+  // files that should never be intercepted.
+  if (
+    pathname.startsWith("/_next/") ||
+    pathname.startsWith("/api/") ||
+    pathname === "/favicon.ico"
+  ) {
+    return NextResponse.next();
+  }
 
   if (
     pathname.startsWith("/reset-password") ||
@@ -365,6 +374,3 @@ export async function middleware(request: NextRequest) {
   return client.response;
 }
 
-export const config = {
-  matcher: ["/((?!_next/static|_next/image|api/|favicon.ico).*)"],
-};

@@ -1,5 +1,5 @@
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
-import ResetPasswordPage from "./page";
+import { ResetPasswordForm } from "./ResetPasswordForm";
 
 jest.mock("next/link", () => ({
   __esModule: true,
@@ -51,13 +51,13 @@ const { createBrowserSupabaseClient } = jest.requireMock(
   "@repo/supabase/client",
 );
 
-describe("ResetPasswordPage", () => {
+describe("ResetPasswordForm", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
   it("renders form elements successfully", () => {
-    render(<ResetPasswordPage />);
+    render(<ResetPasswordForm />);
 
     expect(screen.getByLabelText("Email")).toBeInTheDocument();
     expect(
@@ -74,7 +74,7 @@ describe("ResetPasswordPage", () => {
       },
     });
 
-    render(<ResetPasswordPage />);
+    render(<ResetPasswordForm />);
 
     fireEvent.change(screen.getByLabelText("Email"), {
       target: { value: "test@arch.os" },
@@ -104,7 +104,7 @@ describe("ResetPasswordPage", () => {
       },
     });
 
-    render(<ResetPasswordPage />);
+    render(<ResetPasswordForm />);
 
     fireEvent.change(screen.getByLabelText("Email"), {
       target: { value: "test@arch.os" },
@@ -129,7 +129,7 @@ describe("ResetPasswordPage", () => {
       },
     });
 
-    render(<ResetPasswordPage />);
+    render(<ResetPasswordForm />);
 
     fireEvent.change(screen.getByLabelText("Email"), {
       target: { value: "not-an-email" },
@@ -154,7 +154,7 @@ describe("ResetPasswordPage", () => {
       },
     });
 
-    render(<ResetPasswordPage />);
+    render(<ResetPasswordForm />);
 
     fireEvent.change(screen.getByLabelText("Email"), {
       target: { value: "test@arch.os" },

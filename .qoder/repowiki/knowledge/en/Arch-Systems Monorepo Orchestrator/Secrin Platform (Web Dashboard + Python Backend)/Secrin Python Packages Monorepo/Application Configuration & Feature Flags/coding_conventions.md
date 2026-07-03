@@ -1,0 +1,5 @@
+- Every setting in `Settings` is declared as a class attribute using `Field(default=..., description=...)` with an explicit type annotation, never plain Python defaults.
+- Cross-cutting validation beyond Pydantic's built-in constraints is implemented via `@field_validator` classmethods on `Settings` rather than ad-hoc checks at construction time.
+- Feature flags are defined as string-backed `Enum` members whose values are kebab-case identifiers, and their defaults are centralized in `FeatureFlagManager._initialize_defaults()` grouped by domain comment sections.
+- Heavy or cross-package imports (e.g. `Settings`, `Neo4jClient`) are performed lazily inside functions/methods instead of at module top to break import cycles.
+- CLI subcommands follow a uniform pattern: define a `cmd_<name>(args)` function, register it with `parser.add_parser(...).set_defaults(func=...)`, then dispatch via `args.func(args)`.

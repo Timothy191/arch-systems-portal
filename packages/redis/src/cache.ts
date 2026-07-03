@@ -1,4 +1,4 @@
-import { recordCacheHit, recordCacheMiss, recordRedisError } from "./stats";
+import { recordCacheHit, recordCacheMiss, recordRedisError } from "./stats.js";
 import {
   cacheInvalidateTags,
   cacheInvalidatePrefixes,
@@ -61,7 +61,7 @@ function memoryDeleteByPrefix(prefix: string): void {
 
 async function getRedisClientSafe() {
   try {
-    const { getRedisClient } = await import("./client");
+    const { getRedisClient } = await import("./client.js");
     return await getRedisClient();
   } catch {
     return null;

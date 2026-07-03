@@ -41,6 +41,8 @@ interface MachineOperationsFormProps {
   operators: Operator[];
   sites: Site[];
   todayOperations: MachineOperation[];
+  initialShift?: "day" | "night";
+  initialStartTime?: string;
 }
 
 // Auto-save key for localStorage
@@ -52,17 +54,12 @@ export function MachineOperationsForm({
   operators,
   sites,
   todayOperations,
+  initialShift,
+  initialStartTime,
 }: MachineOperationsFormProps) {
   const router = useRouter();
   const supabase = createBrowserSupabaseClient();
 
-  // Determine current shift based on time
-  const getCurrentShift = (): "day" | "night" => {
-    const hour = new Date().getHours();
-    return hour >= 6 && hour < 18 ? "day" : "night";
-  };
-
-  // Get default start time (now, rounded to nearest 15 min)
   const getDefaultStartTime = () => {
     const now = new Date();
     const minutes = Math.floor(now.getMinutes() / 15) * 15;
@@ -70,12 +67,17 @@ export function MachineOperationsForm({
     return now.toTimeString().slice(0, 5);
   };
 
+  const defaultOperatorId =
+    todayOperations.length > 0 && todayOperations[0]?.operator_id
+      ? todayOperations[0].operator_id
+      : "";
+
   const [formData, setFormData] = useState({
     machineId: "",
-    operatorId: "",
+    operatorId: defaultOperatorId,
     siteId: "",
-    shiftType: getCurrentShift(),
-    startTime: getDefaultStartTime(),
+    shiftType: initialShift ?? "day",
+    startTime: initialStartTime ?? "",
     endTime: "",
   });
 
@@ -110,17 +112,6 @@ export function MachineOperationsForm({
       }
     }
   }, [departmentId]);
-
-  // Pre-populate operator if there's a pattern
-  useEffect(() => {
-    if (todayOperations.length > 0 && !formData.operatorId) {
-      // Use the most recent operator as default
-      const lastOp = todayOperations[0];
-      if (lastOp?.operator_id) {
-        setFormData((prev) => ({ ...prev, operatorId: lastOp.operator_id! }));
-      }
-    }
-  }, [todayOperations, formData.operatorId]);
 
   // Calculate hours worked
   const calculateHours = useCallback(() => {

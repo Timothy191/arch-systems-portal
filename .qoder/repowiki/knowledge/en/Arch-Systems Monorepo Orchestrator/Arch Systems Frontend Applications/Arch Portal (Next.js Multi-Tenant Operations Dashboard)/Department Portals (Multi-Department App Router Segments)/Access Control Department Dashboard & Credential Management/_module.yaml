@@ -1,0 +1,8 @@
+schema_version: 1
+module_path: apps/portal/departments_routes/access_control
+title: Access Control Department Dashboard & Credential Management
+scope:
+    - apps/portal/app/(departments)/access-control/
+source_files: []
+depends_on: []
+related_to: []

@@ -1,0 +1,1 @@
+Defines the portal's AppError hierarchy and a Sentry-backed structured logger for API routes and server actions.

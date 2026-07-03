@@ -19,6 +19,11 @@ interface ShiftCoverageClientProps {
   departmentSlug: string;
   initialDate: string;
   initialShift: "day" | "night";
+  initialData?: {
+    machines: MachineWithOp[];
+    isClosed: boolean;
+    history: ShiftHistoryItem[];
+  };
 }
 
 interface MachineWithOp {
@@ -41,18 +46,24 @@ export function ShiftCoverageClient({
   departmentSlug,
   initialDate,
   initialShift,
+  initialData,
 }: ShiftCoverageClientProps) {
   const supabase = createBrowserSupabaseClient();
   const [date, setDate] = useState(initialDate);
   const [shiftType, setShiftType] = useState<"day" | "night">(initialShift);
-  const [machines, setMachines] = useState<MachineWithOp[]>([]);
-  const [isClosed, setIsClosed] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [machines, setMachines] = useState<MachineWithOp[]>(
+    initialData?.machines ?? [],
+  );
+  const [isClosed, setIsClosed] = useState(initialData?.isClosed ?? false);
+  const [loading, setLoading] = useState(!initialData);
   const [error, setError] = useState<string | null>(null);
-  const [history, setHistory] = useState<ShiftHistoryItem[]>([]);
+  const [history, setHistory] = useState<ShiftHistoryItem[]>(
+    initialData?.history ?? [],
+  );
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
+    if (initialData) return;
     let cancelled = false;
 
     async function fetchData() {
@@ -119,9 +130,10 @@ export function ShiftCoverageClient({
     return () => {
       cancelled = true;
     };
-  }, [departmentId, date, shiftType, supabase]);
+  }, [departmentId, date, shiftType, supabase, initialData]);
 
   useEffect(() => {
+    if (initialData) return;
     let cancelled = false;
 
     async function fetchHistory() {
@@ -141,7 +153,7 @@ export function ShiftCoverageClient({
     return () => {
       cancelled = true;
     };
-  }, [departmentId, supabase]);
+  }, [departmentId, supabase, initialData]);
 
   const prevDay = () => {
     const d = new Date(date);

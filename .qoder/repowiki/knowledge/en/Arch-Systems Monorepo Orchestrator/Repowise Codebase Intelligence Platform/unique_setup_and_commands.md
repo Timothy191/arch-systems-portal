@@ -1,0 +1,1 @@
+`make` targets at the repo root orchestrate the full stack (dev bootstrap, build, test, publish); `uv` workspace members mirror the three Python packages for local editable installs, while `npm run build --workspaces` drives the TS side.

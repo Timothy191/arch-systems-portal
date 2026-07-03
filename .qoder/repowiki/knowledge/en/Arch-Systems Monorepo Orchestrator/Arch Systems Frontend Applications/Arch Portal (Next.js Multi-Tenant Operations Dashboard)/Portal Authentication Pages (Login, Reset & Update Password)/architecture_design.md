@@ -1,0 +1,6 @@
+Organized as a Next.js App Router route group `app/(auth)/` that shares a single `layout.tsx` wrapper (`AuthLayout`) rendering a full-viewport flex container for all auth screens.
+
+- Each route is its own subdirectory (`login/`, `reset-password/`, `update-password/`) following the file-based routing convention, with an async `page.tsx` server component acting as a thin controller and a sibling `*Form.tsx` client component holding the interactive UI.
+- Server components handle Supabase session checks via `@repo/supabase/server`: `login/page.tsx` inspects cookies for `sb-*-auth-token` and calls `getUserSafely` to detect catastrophic auth-service failures (showing a "System Unavailable" card), while `update-password/page.tsx` redirects unauthenticated users to `/login`; `reset-password/page.tsx` is stateless and renders its form directly.
+- The login page is marked `export const dynamic = "force-dynamic"` so it always hits the edge/runtime and can read cookies; the form is wrapped in `<Suspense>` to stream the client component.
+- Dependency direction: page → form component only; forms import client-only APIs (e.g. `useEffect`, `useState`); server logic stays in the page layer — no shared service layer inside this module.

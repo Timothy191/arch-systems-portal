@@ -1,0 +1,1 @@
+Next.js App Router segments that host one department sub-application per route group, each with its own dashboard and feature pages under a shared `[department]` layout.

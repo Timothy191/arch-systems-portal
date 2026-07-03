@@ -10,6 +10,13 @@
         "stdio"
       ],
       "description": "repowise: codebase intelligence \u2014 docs, graph, git signals, dead code, decisions"
+    },
+    "trace-mcp": {
+      "type": "stdio",
+      "command": "/home/timothy/.trace-mcp/bin/trace-mcp",
+      "args": [
+        "serve"
+      ]
     }
   }
 }

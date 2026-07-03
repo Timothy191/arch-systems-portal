@@ -1,0 +1,2 @@
+- All consumers load configuration exclusively via `from packages.config.settings import Settings` rather than reading env vars directly.
+- Each subpackage exposes a curated public surface through its `__init__.py` `__all__` list instead of allowing arbitrary internal imports.

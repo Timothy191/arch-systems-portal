@@ -1,0 +1,6 @@
+- Every route page opts into runtime rendering by exporting `export const dynamic = "force-dynamic"` so the dashboard reflects live badge/visitor state.
+- Each page resolves the active department via `getDepartmentContext({ department: "access-control" })` rather than reading params directly, keeping the department identifier centralized.
+- All database access goes through `actions.ts` server functions guarded by `assertAccessControlRole()`, which checks Supabase auth and requires `admin` or `access_control` roles before any query.
+- Read-only server functions wrap their body in `withCache({ category: CacheCategory.METRICS, keyParts: [...], tags: [...] })` to share a Redis cache keyed by department and invalidated by `table:*` tags.
+- Mutating actions (e.g. `_revokeBadge`) invalidate the relevant Redis tags via `cacheInvalidateTags(["table:badges", ...])` and trigger `revalidatePath("/access-control/<route>")` instead of manual client refetches.
+- Denial reasons are normalized into a fixed union type (`Granted | Denied | Expired Credential | Tailgate Alert`) by string-matching `denial_reason` substrings, both in `actions.ts` and in each list view.

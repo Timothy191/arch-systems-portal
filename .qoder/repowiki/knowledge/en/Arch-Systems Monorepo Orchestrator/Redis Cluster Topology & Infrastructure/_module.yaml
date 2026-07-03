@@ -1,0 +1,10 @@
+schema_version: 1
+module_path: redis_topology
+title: Redis Cluster Topology & Infrastructure
+scope:
+    - redis-topology/config/
+    - redis-topology/docker-compose/
+    - redis-topology/terraform/
+source_files: []
+depends_on: []
+related_to: []

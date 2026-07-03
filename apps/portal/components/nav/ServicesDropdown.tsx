@@ -68,11 +68,15 @@ interface SafetyAlert {
 }
 
 function useSafetyAlerts() {
-  const [alerts, _setAlerts] = useState<SafetyAlert[]>(() => {
-    if (typeof window === "undefined") return [];
+  const [alerts, setAlerts] = useState<SafetyAlert[]>([]);
+
+  useEffect(() => {
     try {
       const raw = window.localStorage.getItem("arch-safety-alerts");
-      if (raw) return JSON.parse(raw);
+      if (raw) {
+        setAlerts(JSON.parse(raw));
+        return;
+      }
     } catch {
       /* ignore */
     }
@@ -92,8 +96,8 @@ function useSafetyAlerts() {
       },
     ];
     window.localStorage.setItem("arch-safety-alerts", JSON.stringify(seed));
-    return seed;
-  });
+    setAlerts(seed);
+  }, []);
 
   const criticalCount = alerts.filter((a) => a.severity === "critical").length;
   const warningCount = alerts.filter((a) => a.severity === "warning").length;

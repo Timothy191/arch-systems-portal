@@ -100,7 +100,8 @@ export function LidarLayerPanel({
   const [colorMode, setColorMode] = useState<ColorMode>("classification");
   const [pointSize, setPointSize] = useState(3);
 
-  const demoPoints = points ?? useRef(generateDemoPoints(center)).current;
+  const demoPointsRef = useRef(generateDemoPoints(center));
+  const demoPoints = points ?? demoPointsRef.current;
 
   const getPointColor = useCallback(
     (d: LidarPoint) => {

@@ -1,0 +1,14 @@
+schema_version: 1
+module_path: apps/portal/lib/domain_services
+title: Portal Domain Services (Departments, Shifts & Dashboard)
+scope:
+    - apps/portal/lib/dashboard-service.ts
+    - apps/portal/lib/departments.ts
+    - apps/portal/lib/dept-context.ts
+    - apps/portal/lib/employee.ts
+    - apps/portal/lib/shift-calculation.test.ts
+    - apps/portal/lib/shift-closeout.ts
+    - apps/portal/lib/shift-completeness.ts
+source_files: []
+depends_on: []
+related_to: []

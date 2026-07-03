@@ -1,0 +1,1 @@
+TypeScript compiled by esbuild (CJS, target node16, vscode external); runtime depends on Node `http` for REST + Server-Sent Events, D3 v7 for the force-directed graph, and the system `uv` Python runner to launch the embedded memex server (`uv run memex serve`).

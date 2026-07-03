@@ -1,0 +1,8 @@
+schema_version: 1
+module_path: apps/overview
+title: Arch Systems Overview Visualizer
+scope:
+    - apps/overview/
+source_files: []
+depends_on: []
+related_to: []

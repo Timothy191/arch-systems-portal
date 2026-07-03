@@ -1,0 +1,8 @@
+schema_version: 1
+module_path: apps/portal/lib/ai
+title: Local Ollama AI Agent Graph & Tooling
+scope:
+    - apps/portal/lib/ai/
+source_files: []
+depends_on: []
+related_to: []

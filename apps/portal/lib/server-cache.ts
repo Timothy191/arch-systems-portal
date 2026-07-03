@@ -17,6 +17,8 @@ export function cachedRSC<T>(
     tags?: string[];
   },
 ): Promise<T> {
+  if (keyParts.length === 0)
+    throw new Error("cachedRSC requires at least one key part");
   return unstable_cache(fn, keyParts, {
     revalidate: options?.revalidate,
     tags: options?.tags,

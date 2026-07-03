@@ -25,9 +25,16 @@ interface SystemMetrics {
  * - Online connection status tracked via browser network events
  */
 export function useSystemMetrics(): SystemMetrics {
-  const [metrics, setMetrics] = useState<SystemMetrics>(() => {
+  const [metrics, setMetrics] = useState<SystemMetrics>({
+    websocketLatency: 0,
+    serverTimeSAST: "",
+    currentShift: { shift: "A", label: "", start: "", end: "" },
+    online: true,
+  });
+
+  useEffect(() => {
     const now = new Date();
-    return {
+    setMetrics({
       websocketLatency: 15,
       serverTimeSAST: now.toLocaleTimeString("en-US", {
         timeZone: "Africa/Johannesburg",
@@ -37,11 +44,8 @@ export function useSystemMetrics(): SystemMetrics {
         second: "2-digit",
       }),
       currentShift: getThreeShift(now),
-      online: typeof window !== "undefined" ? window.navigator.onLine : true,
-    };
-  });
-
-  useEffect(() => {
+      online: navigator.onLine,
+    });
     // Network status change listeners
     const handleOnline = () =>
       setMetrics((prev) => ({ ...prev, online: true }));

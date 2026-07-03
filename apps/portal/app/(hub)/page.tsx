@@ -38,10 +38,11 @@ export const dynamic = "force-dynamic";
 
 async function getDashboardCounts(
   today: string,
+  userId: string,
   cookieList: Array<{ name: string; value: string }>,
 ) {
   return cachedRSC(
-    ["hub", "counts", today],
+    ["hub", "counts", userId, today],
     async () => {
       return withCache(
         async () => {
@@ -70,8 +71,9 @@ async function getDashboardCounts(
         },
         {
           category: CacheCategory.METRICS,
-          keyParts: ["hub", "counts", today],
+          keyParts: ["hub", "counts", userId, today],
           tags: [
+            `auth:${userId}`,
             "table:safety_incidents",
             "table:breakdowns",
             "table:machines",
@@ -81,7 +83,12 @@ async function getDashboardCounts(
     },
     {
       revalidate: 300,
-      tags: ["table:safety_incidents", "table:breakdowns", "table:machines"],
+      tags: [
+        `auth:${userId}`,
+        "table:safety_incidents",
+        "table:breakdowns",
+        "table:machines",
+      ],
     },
   );
 }
@@ -96,10 +103,11 @@ const FALLBACK_TREND_DATA: TrendDataPoint[] = [
 ];
 
 async function getProductionTrendData(
+  userId: string,
   cookieList: Array<{ name: string; value: string }>,
 ): Promise<TrendDataPoint[]> {
   return cachedRSC(
-    ["hub", "production-trend"],
+    ["hub", "production-trend", userId],
     async () => {
       return withCache(
         async () => {
@@ -169,31 +177,31 @@ async function getProductionTrendData(
         },
         {
           category: CacheCategory.METRICS,
-          keyParts: ["hub", "production-trend"],
-          tags: ["table:daily_logs", "table:production_logs"],
+          keyParts: ["hub", "production-trend", userId],
+          tags: [`auth:${userId}`, "table:daily_logs", "table:production_logs"],
         },
       );
     },
     {
       revalidate: 300,
-      tags: ["table:daily_logs", "table:production_logs"],
+      tags: [`auth:${userId}`, "table:daily_logs", "table:production_logs"],
     },
   );
 }
 
 async function getRecentAlertEvents(
   today: string,
+  userId: string,
   cookieList: Array<{ name: string; value: string }>,
 ): Promise<AlertEvent[]> {
   return cachedRSC(
-    ["hub", "alerts", today],
+    ["hub", "alerts", userId, today],
     async () => {
       return withCache(
         async () => {
           const db = await createReadReplicaClient(cookieList);
           const events: AlertEvent[] = [];
 
-          // Fetch recent open safety incidents with actual severity levels
           const { data: incidents } = await db
             .from("safety_incidents")
             .select(
@@ -243,7 +251,6 @@ async function getRecentAlertEvents(
             }
           }
 
-          // Fetch recent active breakdowns
           const { data: breakdownsData } = await db
             .from("breakdowns")
             .select(
@@ -270,7 +277,6 @@ async function getRecentAlertEvents(
             }
           }
 
-          // Sort by timestamp descending and limit to 8 total
           return events
             .sort(
               (a, b) =>
@@ -281,14 +287,18 @@ async function getRecentAlertEvents(
         },
         {
           category: CacheCategory.METRICS,
-          keyParts: ["hub", "alerts", today],
-          tags: ["table:safety_incidents", "table:breakdowns"],
+          keyParts: ["hub", "alerts", userId, today],
+          tags: [
+            `auth:${userId}`,
+            "table:safety_incidents",
+            "table:breakdowns",
+          ],
         },
       );
     },
     {
       revalidate: 300,
-      tags: ["table:safety_incidents", "table:breakdowns"],
+      tags: [`auth:${userId}`, "table:safety_incidents", "table:breakdowns"],
     },
   );
 }
@@ -358,10 +368,10 @@ export default async function HubPage() {
     tools,
     alertEvents,
   ] = await Promise.all([
-    getDashboardCounts(today, cookieList),
+    getDashboardCounts(today, userId, cookieList),
     getEmployeeDepartments(userId, cookieList),
     getTools(),
-    getRecentAlertEvents(today, cookieList),
+    getRecentAlertEvents(today, userId, cookieList),
   ]);
 
   const departments =
@@ -579,6 +589,9 @@ export default async function HubPage() {
 async function ProductionTrendSection() {
   const cookieStore = await cookies();
   const cookieList = cookieStore.getAll();
-  const productionTrendData = await getProductionTrendData(cookieList);
+  const supabase = await createServerSupabaseClient();
+  const user = await getUserSafely(supabase);
+  const userId = user?.id ?? "anonymous";
+  const productionTrendData = await getProductionTrendData(userId, cookieList);
   return <ProductionTrend data={productionTrendData} />;
 }

@@ -1,0 +1,1 @@
+Authenticated Next.js App Router segment that renders the central hub dashboard, executive KPI page, and shared layout/error/loading shells for the portal.

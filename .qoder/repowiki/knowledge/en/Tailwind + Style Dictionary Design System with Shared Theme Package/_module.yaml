@@ -1,0 +1,15 @@
+schema_version: 1
+module_path: frontend_style
+title: Tailwind + Style Dictionary Design System with Shared Theme Package
+scope: []
+source_files:
+    - packages/theme/package.json
+    - packages/ui/package.json
+    - apps/portal/tailwind.config.ts
+    - apps/overview/tailwind.config.ts
+    - packages/ui/tailwind.config.ts
+    - packages/ui/src/globals.css
+    - apps/overview/app/globals.css
+    - apps/cms/app/(payload)/custom.css
+depends_on: []
+related_to: []

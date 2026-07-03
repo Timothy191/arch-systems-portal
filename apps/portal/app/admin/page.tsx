@@ -4,6 +4,7 @@ import {
   getUserSafely,
 } from "@repo/supabase/server";
 import { AdminTabsClient } from "~/features/admin/components/AdminTabsClient";
+import { Suspense } from "react";
 import { UsersTab } from "~/features/admin/tabs/UsersTab";
 import { DepartmentsTab } from "~/features/admin/tabs/DepartmentsTab";
 import { FleetTab } from "~/features/admin/tabs/FleetTab";
@@ -59,15 +60,23 @@ export default async function AdminPage({
       </header>
 
       <main className="p-6 max-w-7xl mx-auto">
-        <AdminTabsClient activeTab={activeTab}>
-          {activeTab === "users" && <UsersTab />}
-          {activeTab === "departments" && <DepartmentsTab />}
-          {activeTab === "fleet" && <FleetTab />}
-          {activeTab === "sites" && <SitesTab />}
-          {activeTab === "webhooks" && <WebhooksTab />}
-          {activeTab === "audit-logs" && <AuditLogsTab />}
-          {activeTab === "settings" && <SettingsTab />}
-        </AdminTabsClient>
+        <Suspense
+          fallback={
+            <div className="h-64 flex items-center justify-center animate-pulse text-[var(--text-muted)]">
+              Loading administration panel...
+            </div>
+          }
+        >
+          <AdminTabsClient activeTab={activeTab}>
+            {activeTab === "users" && <UsersTab />}
+            {activeTab === "departments" && <DepartmentsTab />}
+            {activeTab === "fleet" && <FleetTab />}
+            {activeTab === "sites" && <SitesTab />}
+            {activeTab === "webhooks" && <WebhooksTab />}
+            {activeTab === "audit-logs" && <AuditLogsTab />}
+            {activeTab === "settings" && <SettingsTab />}
+          </AdminTabsClient>
+        </Suspense>
       </main>
     </div>
   );

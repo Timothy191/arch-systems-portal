@@ -1,4 +1,4 @@
-import { getRedisClient } from "./client";
+import { getRedisClient } from "./client.js";
 
 interface CacheStatsSnapshot {
   hits: number;

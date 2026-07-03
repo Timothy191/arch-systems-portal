@@ -1,0 +1,8 @@
+schema_version: 1
+module_path: apps/portal/feature_domains/admin
+title: Admin Portal Feature (Multi-Tab Management Console)
+scope:
+    - apps/portal/features/admin/
+source_files: []
+depends_on: []
+related_to: []

@@ -5,8 +5,8 @@ import {
   normalizeRole,
   isTokenExpiredError,
   isValidRedirect,
-  middleware,
-} from "./middleware";
+  proxy,
+} from "./proxy";
 import { NextRequest } from "next/server";
 
 jest.mock("@repo/supabase/middleware", () => ({
@@ -189,13 +189,13 @@ describe("isValidRedirect", () => {
   });
 });
 
-describe("middleware", () => {
+describe("proxy", () => {
   beforeEach(() => jest.clearAllMocks());
 
   it("passes through static file requests", async () => {
     buildMiddlewareMock();
     const req = makeRequest("/logo.png");
-    const res = await middleware(req);
+    const res = await proxy(req);
     expect(res).toBeDefined();
     expect(res.status).not.toBe(307);
   });
@@ -204,7 +204,7 @@ describe("middleware", () => {
     buildMiddlewareMock({ user: { id: "auth-1" } });
     const req = makeRequest("/login");
     req.cookies.set("sb-access-token", "mock-token");
-    const res = await middleware(req);
+    const res = await proxy(req);
     expect(res.status).toBe(307);
     expect(res.headers.get("location")).toContain("/");
   });
@@ -212,14 +212,14 @@ describe("middleware", () => {
   it("passes /login through for unauthenticated users", async () => {
     buildMiddlewareMock({ user: null });
     const req = makeRequest("/login");
-    const res = await middleware(req);
+    const res = await proxy(req);
     expect(res.status).not.toBe(307);
   });
 
   it("redirects unauthenticated users to /login with redirect param", async () => {
     buildMiddlewareMock({ user: null });
     const req = makeRequest("/drilling");
-    const res = await middleware(req);
+    const res = await proxy(req);
     expect(res.status).toBe(307);
     expect(res.headers.get("location")).toContain("/login");
   });
@@ -233,7 +233,7 @@ describe("middleware", () => {
       },
     });
     const req = makeRequest("/admin");
-    const res = await middleware(req);
+    const res = await proxy(req);
     expect(res.status).toBe(307);
     expect(res.headers.get("location")).toContain("unauthorized_department");
   });
@@ -248,7 +248,7 @@ describe("middleware", () => {
     });
     (cacheGet as jest.Mock).mockResolvedValue(null);
     const req = makeRequest("/admin");
-    const res = await middleware(req);
+    const res = await proxy(req);
     expect(res.status).not.toBe(307);
   });
 
@@ -261,7 +261,7 @@ describe("middleware", () => {
       },
     });
     const req = makeRequest("/control-room");
-    const res = await middleware(req);
+    const res = await proxy(req);
     expect(res.status).toBe(307);
     expect(res.headers.get("location")).toContain("unauthorized_department");
   });
@@ -277,7 +277,7 @@ describe("middleware", () => {
     });
     (cacheGet as jest.Mock).mockResolvedValue(null);
     const req = makeRequest("/control-room");
-    const res = await middleware(req);
+    const res = await proxy(req);
     expect(res.status).not.toBe(307);
   });
 
@@ -292,7 +292,7 @@ describe("middleware", () => {
     });
     (cacheGet as jest.Mock).mockResolvedValue(null);
     const req = makeRequest("/drilling");
-    const res = await middleware(req);
+    const res = await proxy(req);
     expect(res.status).toBe(307);
     expect(res.headers.get("location")).toContain("unknown_department");
   });
@@ -308,7 +308,7 @@ describe("middleware", () => {
     });
     (cacheGet as jest.Mock).mockResolvedValue(null);
     const req = makeRequest("/drilling");
-    const res = await middleware(req);
+    const res = await proxy(req);
     expect(res.status).toBe(307);
     expect(res.headers.get("location")).toContain("unauthorized_department");
   });
@@ -332,7 +332,7 @@ describe("middleware", () => {
       return Promise.resolve(null);
     });
     const req = makeRequest("/drilling");
-    const res = await middleware(req);
+    const res = await proxy(req);
     expect(res.status).not.toBe(307);
   });
 
@@ -347,7 +347,7 @@ describe("middleware", () => {
     });
     (cacheGet as jest.Mock).mockResolvedValue(null);
     const req = makeRequest("/drilling");
-    const res = await middleware(req);
+    const res = await proxy(req);
     expect(res.status).not.toBe(307);
   });
 
@@ -362,7 +362,7 @@ describe("middleware", () => {
     });
     (cacheGet as jest.Mock).mockResolvedValue(null);
     const req = makeRequest("/drilling/tools");
-    const res = await middleware(req);
+    const res = await proxy(req);
     expect(res.status).toBe(307);
     expect(res.headers.get("location")).toContain("unauthorized_department");
   });
@@ -377,7 +377,7 @@ describe("middleware", () => {
 
     const req = makeRequest("/drilling");
     req.cookies.set("sb-access-token", "expired-token");
-    const res = await middleware(req);
+    const res = await proxy(req);
 
     expect(supabase.auth.signOut).toHaveBeenCalled();
     expect(res.status).toBe(307);
@@ -394,7 +394,7 @@ describe("middleware", () => {
 
     const req = makeRequest("/login");
     req.cookies.set("sb-access-token", "expired-token");
-    const res = await middleware(req);
+    const res = await proxy(req);
 
     expect(supabase.auth.signOut).toHaveBeenCalled();
     expect(res).toBe(mockResponse);

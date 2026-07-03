@@ -1,0 +1,16 @@
+schema_version: 1
+module_path: configuration_system
+title: Zod-Validated Environment Configuration with Docker/Compose Overlay
+scope: []
+source_files:
+    - apps/portal/lib/env.ts
+    - apps/portal/.env.example
+    - apps/portal/.env.production.example
+    - apps/portal/next.config.mjs
+    - apps/cms/payload.config.ts
+    - docker-compose.production.yml
+    - config/nginx.conf
+    - config/prometheus.yml
+    - nx.json
+depends_on: []
+related_to: []

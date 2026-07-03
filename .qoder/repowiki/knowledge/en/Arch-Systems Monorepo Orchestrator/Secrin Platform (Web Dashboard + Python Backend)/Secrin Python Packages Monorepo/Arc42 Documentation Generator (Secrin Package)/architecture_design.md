@@ -1,0 +1,8 @@
+Layered Python package with a clear separation of concerns:
+- Entry points: `cli/commands.py` (Click CLI), `api.py` (FastAPI server exposing `/jobs`, `/health`), and `jobs.py` (RQ worker task) are the three public faces.
+- Core pipeline: `core/orchestrator.Orchestrator` coordinates `CodebaseAnalyzer` → `Arc42Generator` (12 section methods) → `OutputFormatter`; `core/generator.py` delegates LLM calls through `providers/factory.create_llm_provider` which instantiates one of `AnthropicProvider`/`GeminiProvider`/`OllamaProvider` implementing `BaseLLMProvider`.
+- Language parsing: `parsers/` provides a `BaseParser` plus language-specific implementations (`python_parser`, `javascript_parser`, `typescript_parser`) selected by `CodebaseAnalyzer`.
+- Content generators: sibling packages `diagrams/c4_generator.py`, `diataxis/generator.py`, `citation/`, `feedback/`, `maintenance/`, `metrics/`, `planning/`, `publishing/`, `editing/`, `research/` each own a focused responsibility and consume the shared `models/` data layer (`Config`, `AnalysisResult`, `Module`, `Arc42Document`).
+- Prompt templates live under `templates/prompts/` organized by domain (`arc42/section_*.txt`, `c4/level_*.txt`, `diataxis/*.txt`, `citation/grounded.txt`) and are loaded at runtime via `templates/loader.py`.
+- Dependency direction is strictly inward: CLI/API/jobs depend on core; core depends on providers/parsers/models/utils; feature packages (diagrams/diataxis/citation/...) depend on core + models but never on each other.
+- Async execution: FastAPI enqueues `jobs.generate_and_commit` into an RQ queue backed by Redis; the job function re-implements the full pipeline locally in a temp dir, then commits generated MDX files to a GitHub docs repo via PyGithub.

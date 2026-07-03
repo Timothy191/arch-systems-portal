@@ -1,0 +1,1 @@
+Client-side React dashboard that composes Sentinel-1 InSAR, Sentinel-2 hyperspectral, high-resolution imagery, LiDAR and COG raster panels around a shared map for mine-site deformation monitoring.

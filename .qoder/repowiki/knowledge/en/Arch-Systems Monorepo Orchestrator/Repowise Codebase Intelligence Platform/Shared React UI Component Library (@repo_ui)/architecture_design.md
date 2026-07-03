@@ -1,0 +1,7 @@
+Single npm package (`@repo/ui`) published as a private workspace dependency. Source is split into three layers under `src/`:
+- `components/ui/` — low-level shadcn primitives (button, dialog, tabs, etc.) generated via the `shadcn` CLI configured in `components.json`, all styled with Tailwind + class-variance-authority variants.
+- `components/motion*` — animation wrappers around `animejs` and `framer-motion` plus MagicUI primitives (border-trail, glow-effect, spotlight) re-exported for consumers.
+- `components/*.tsx` — higher-level composite components (WorkflowBuilder, GlassCard, MacMenuBar, KPI, FormFields) that compose primitives and Radix primitives (`@xyflow/react` for the flow editor).
+- `lib/utils.ts` exposes the shared `cn()` helper (`clsx` + `tailwind-merge`).
+
+Styling is delegated to the sibling `@repo/theme` package: `tailwind.config.ts` re-exports its default config and `globals.css` is the single CSS entry point. The package's `package.json` `exports` map flattens the internal directory tree into flat top-level imports (e.g. `@repo/ui/Button`, `@repo/ui/nodes/PluginNode`) so consumers never reference the internal `src/components/` layout. Peer dependency on `react ^19.2.6` keeps it aligned with Next.js 16 RSC; dev-only deps include `next`, `postcss`, `stylelint`, and `eslint`.

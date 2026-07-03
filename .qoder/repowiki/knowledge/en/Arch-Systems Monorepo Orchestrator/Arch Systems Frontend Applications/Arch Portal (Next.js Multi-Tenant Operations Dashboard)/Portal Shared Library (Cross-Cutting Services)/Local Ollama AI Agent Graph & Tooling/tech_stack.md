@@ -1,0 +1,1 @@
+Native Node `fetch` against a local Ollama HTTP server (no OpenAI/Groq SDKs); Zod schemas drive both tool parameter validation and Ollama function-call definitions; streaming uses `ReadableStream` with SSE `text/event-stream` responses; vector dimensionality is hard-coded to 768 for `nomic-embed-text:latest`.

@@ -1,0 +1,1 @@
+React client components that compose a department control-room dashboard showing live SCADA, machine alerts, activity feed, shift coverage, and dozer roll entry.

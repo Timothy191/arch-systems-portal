@@ -1,0 +1,9 @@
+schema_version: 1
+module_path: apps/portal/admin_routes
+title: Admin Dashboard (Multi-Tab Management Console)
+scope:
+    - apps/portal/app/admin/
+    - apps/portal/features/admin/
+source_files: []
+depends_on: []
+related_to: []

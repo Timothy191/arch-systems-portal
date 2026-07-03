@@ -1,0 +1,11 @@
+schema_version: 1
+module_path: e2e
+title: End-to-End & Visual Regression Tests (Playwright)
+scope:
+    - e2e/visual/
+    - e2e/data-entry.spec.ts
+    - e2e/login.spec.ts
+    - e2e/navigation.spec.ts
+source_files: []
+depends_on: []
+related_to: []

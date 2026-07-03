@@ -2,6 +2,7 @@ import "@repo/ui/globals.css";
 import { ArchThemeProvider } from "@repo/theme/react";
 import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
+import Script from "next/script";
 import ClientProviders from "./ClientProviders";
 import { OfflineBanner } from "@/components/OfflineBanner";
 import { FocusModeProvider } from "@/components/FocusModeProvider";
@@ -92,8 +93,15 @@ export default function RootLayout({
           rel="dns-prefetch"
           href={process.env.NEXT_PUBLIC_SUPABASE_URL || "https://*.supabase.co"}
         />
-        <script
+      </head>
+      <body
+        suppressHydrationWarning
+        className="text-[var(--text-heading)] min-h-screen font-sans antialiased selection:bg-[var(--accent-blue)]/30 selection:text-[var(--accent-blue)] relative overflow-x-hidden bg-transparent"
+      >
+        <Script
+          id="speculationrules"
           type="speculationrules"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               prerender: [
@@ -125,11 +133,6 @@ export default function RootLayout({
             }),
           }}
         />
-      </head>
-      <body
-        suppressHydrationWarning
-        className="text-[var(--text-heading)] min-h-screen font-sans antialiased selection:bg-[var(--accent-blue)]/30 selection:text-[var(--accent-blue)] relative overflow-x-hidden bg-transparent"
-      >
         {/* Skip navigation link for keyboard users */}
         <a href="#main-content" className="skip-link">
           Skip to main content

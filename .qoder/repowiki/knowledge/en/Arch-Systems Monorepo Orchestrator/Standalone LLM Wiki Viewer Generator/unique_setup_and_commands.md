@@ -1,0 +1,1 @@
+Requires Node.js installed. Run `./view.sh` from `tools/wiki-viewer/` to regenerate and open the browser, or run `node generate.js` manually and open `viewer.html` directly. The script hard-codes `WIKI_ROOT` and `OUT_FILE` paths under `/home/timothy/Project/Arch-Mk2/` so it must be executed from this repository root context.

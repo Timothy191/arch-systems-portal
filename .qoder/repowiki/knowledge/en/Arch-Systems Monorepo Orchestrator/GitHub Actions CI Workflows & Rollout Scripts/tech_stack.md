@@ -1,0 +1,1 @@
+GitHub Actions runners (`ubuntu-latest`), Node 22 via `actions/setup-node@v4`, pnpm + Turbo for task-graph analysis, `ts-node` to execute `packages/predictive-warmup/src/cli.ts`, and `kubectl` for Kubernetes rollouts.

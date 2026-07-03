@@ -11,6 +11,10 @@ interface ShiftCoverageWidgetProps {
   departmentSlug: string;
   today: string;
   currentShift: "day" | "night";
+  initialData?: {
+    machines: MachineWithOp[];
+    isClosed: boolean;
+  };
 }
 
 interface MachineWithOp {
@@ -26,14 +30,18 @@ export function ShiftCoverageWidget({
   departmentSlug,
   today,
   currentShift,
+  initialData,
 }: ShiftCoverageWidgetProps) {
-  const [machines, setMachines] = useState<MachineWithOp[]>([]);
-  const [isClosed, setIsClosed] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [machines, setMachines] = useState<MachineWithOp[]>(
+    initialData?.machines ?? [],
+  );
+  const [isClosed, setIsClosed] = useState(initialData?.isClosed ?? false);
+  const [loading, setLoading] = useState(!initialData);
   const [error, setError] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
+    if (initialData) return;
     let cancelled = false;
     const supabase = createBrowserSupabaseClient();
 
@@ -104,7 +112,7 @@ export function ShiftCoverageWidget({
     return () => {
       cancelled = true;
     };
-  }, [departmentId, today, currentShift]);
+  }, [departmentId, today, currentShift, initialData]);
 
   const reportedCount = machines.filter((m) => m.has_entry).length;
 

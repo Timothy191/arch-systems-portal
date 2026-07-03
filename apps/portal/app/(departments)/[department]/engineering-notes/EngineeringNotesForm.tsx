@@ -29,6 +29,7 @@ interface EngineeringNotesFormProps {
   departmentId: string;
   machines: Machine[];
   breakdownDrafts?: BreakdownDraft[];
+  initialShift?: "day" | "night";
 }
 
 const ISSUE_TYPES = [
@@ -82,6 +83,7 @@ export function EngineeringNotesForm({
   departmentId,
   machines,
   breakdownDrafts = [],
+  initialShift,
 }: EngineeringNotesFormProps) {
   const router = useRouter();
   const supabase = createBrowserSupabaseClient();
@@ -90,7 +92,7 @@ export function EngineeringNotesForm({
     issueType: "",
     severity: "",
     machineId: "",
-    shiftType: getCurrentShift(),
+    shiftType: initialShift ?? "day",
     description: "",
     actionTaken: "",
     requiresFollowUp: false,

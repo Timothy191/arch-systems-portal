@@ -1,0 +1,8 @@
+schema_version: 1
+module_path: apps/portal/lib
+title: Portal Shared Library (Cross-Cutting Services)
+scope:
+    - apps/portal/lib/
+source_files: []
+depends_on: []
+related_to: []

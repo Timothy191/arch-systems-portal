@@ -55,6 +55,32 @@ const nextConfig = {
     inlineCss: true,
     webVitalsAttribution: ["CLS", "LCP", "FCP", "TTFB", "INP"],
   },
+  // Strangler fig: proxy migrated API routes to NestJS backend
+  async rewrites() {
+    const apiUrl = process.env.API_URL ?? "http://localhost:3001";
+    return [
+      { source: "/api/health", destination: `${apiUrl}/api/health` },
+      { source: "/api/health/:path*", destination: `${apiUrl}/api/health/:path*` },
+      { source: "/api/auth/:path*", destination: `${apiUrl}/api/auth/:path*` },
+      { source: "/api/weather", destination: `${apiUrl}/api/weather` },
+      { source: "/api/csp-violations", destination: `${apiUrl}/api/csp-violations` },
+      { source: "/api/metrics", destination: `${apiUrl}/api/metrics` },
+      { source: "/api/tools/:path*", destination: `${apiUrl}/api/tools/:path*` },
+      { source: "/api/admin/:path*", destination: `${apiUrl}/api/admin/:path*` },
+      { source: "/api/webhooks", destination: `${apiUrl}/api/webhooks` },
+      { source: "/api/webhooks/:path*", destination: `${apiUrl}/api/webhooks/:path*` },
+      { source: "/api/control-room/:path*", destination: `${apiUrl}/api/control-room/:path*` },
+      { source: "/api/c66", destination: `${apiUrl}/api/c66` },
+      { source: "/api/export/:path*", destination: `${apiUrl}/api/export/:path*` },
+      { source: "/api/telemetry/:path*", destination: `${apiUrl}/api/telemetry/:path*` },
+      { source: "/api/sync/:path*", destination: `${apiUrl}/api/sync/:path*` },
+      { source: "/api/plugins/rust-telemetry", destination: `${apiUrl}/api/plugins/rust-telemetry` },
+      { source: "/api/ai/:path*", destination: `${apiUrl}/api/ai/:path*` },
+      { source: "/api/inngest", destination: `${apiUrl}/api/inngest` },
+      { source: "/api/inngest/:path*", destination: `${apiUrl}/api/inngest/:path*` },
+      // Add more migrated routes here as they are moved to NestJS
+    ];
+  },
   async headers() {
     return [
       {
@@ -85,14 +111,14 @@ const nextConfig = {
                 {
                   key: "Content-Security-Policy",
                   value:
-                    "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://*.supabase.co https://*.supabase.in; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.supabase.in wss://*.supabase.in; frame-src 'self' http://localhost:* https://*.ngrok-free.app; frame-ancestors 'none';",
+                    "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://*.supabase.co https://*.supabase.in; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.supabase.in wss://*.supabase.in; frame-src 'self' http://localhost:* https://*.ngrok-free.app; frame-ancestors 'none';",
                 },
               ]
             : [
                 {
                   key: "Content-Security-Policy-Report-Only",
                   value:
-                    "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://*.supabase.co https://*.supabase.in; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.supabase.in wss://*.supabase.in; frame-src 'self' http://localhost:* https://*.ngrok-free.app; frame-ancestors 'none'; report-uri /api/csp-violations;",
+                    "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://*.supabase.co https://*.supabase.in; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.supabase.in wss://*.supabase.in; frame-src 'self' http://localhost:* https://*.ngrok-free.app; frame-ancestors 'none'; report-uri /api/csp-violations;",
                 },
               ]),
         ],

@@ -1,0 +1,11 @@
+schema_version: 1
+module_path: tools_memex/graph/cluster_runner
+title: Cluster Engine & Runner (Leiden-based Module Grouping)
+scope:
+    - tools/memex/memex/graph/cluster.py
+    - tools/memex/memex/graph/cluster_overrides.py
+    - tools/memex/memex/graph/cluster_runner.py
+    - tools/memex/memex/graph/cluster_summary.py
+source_files: []
+depends_on: []
+related_to: []

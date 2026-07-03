@@ -1,0 +1,8 @@
+schema_version: 1
+module_path: tools_sense
+title: Sense — MCP Codebase Context Server
+scope:
+    - tools/sense/
+source_files: []
+depends_on: []
+related_to: []

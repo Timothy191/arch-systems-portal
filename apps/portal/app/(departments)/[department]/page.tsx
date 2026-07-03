@@ -1,8 +1,11 @@
 import { Suspense } from "react";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import { GlassCard } from "@repo/ui/GlassCard";
 import { getDepartmentContext } from "~/lib/dept-context";
 import { getCurrentShift } from "@repo/utils";
+import { cachedRSC } from "@/lib/server-cache";
+import { withCache } from "@/lib/cache-utils";
 
 const ScadaPanel = dynamic(
   () =>
@@ -156,24 +159,24 @@ export default async function DepartmentDashboard({
 
           {/* Quick Actions */}
           <div className="flex flex-wrap gap-3">
-            <a
+            <Link
               href={`/${deptSlug}/machine-operations`}
               className="px-4 py-2 bg-[var(--accent-blue)] hover:bg-[var(--accent-blue)]/90 text-white font-medium rounded-lg transition-all duration-200 text-sm hover:scale-[1.02] active:scale-[0.98]"
             >
               + Log Operation
-            </a>
-            <a
+            </Link>
+            <Link
               href={`/${deptSlug}/operational-delays`}
               className="px-4 py-2 bg-white/70 backdrop-blur-md border border-black/[0.08] hover:bg-white/90 text-[var(--text-secondary)] hover:text-[var(--text-heading)] font-medium rounded-lg transition-all duration-200 text-sm hover:scale-[1.02] active:scale-[0.98]"
             >
               + Log Delay
-            </a>
-            <a
+            </Link>
+            <Link
               href={`/${deptSlug}/hourly-loads`}
               className="px-4 py-2 bg-white/70 backdrop-blur-md border border-black/[0.08] hover:bg-white/90 text-[var(--text-secondary)] hover:text-[var(--text-heading)] font-medium rounded-lg transition-all duration-200 text-sm hover:scale-[1.02] active:scale-[0.98]"
             >
               Update Loads
-            </a>
+            </Link>
           </div>
 
           <Suspense
@@ -256,28 +259,32 @@ async function ControlRoomSummaryGrid({
   today: string;
 }) {
   const supabase = await createServerSupabaseClient();
-  const [todayOperations, todayDelays, todayLoads, machines] =
-    await Promise.all([
-      supabase
-        .from("machine_operations")
-        .select("hours_worked, end_time")
-        .eq("department_id", deptId)
-        .eq("shift_date", today),
-      supabase
-        .from("operational_delays")
-        .select("delay_minutes, status")
-        .eq("department_id", deptId)
-        .eq("delay_date", today),
-      supabase
-        .from("hourly_loads")
-        .select("total_loads")
-        .eq("department_id", deptId)
-        .eq("load_date", today),
-      supabase
-        .from("machines")
-        .select("*", { count: "exact", head: true })
-        .eq("active", true),
-    ]);
+  const [todayOperations, todayDelays, todayLoads, machines] = await cachedRSC(
+    ["dept", deptId, "summary", today],
+    async () => withCache(async () => {
+      return Promise.all([
+        supabase
+          .from("machine_operations")
+          .select("hours_worked, end_time")
+          .eq("department_id", deptId)
+          .eq("shift_date", today),
+        supabase
+          .from("operational_delays")
+          .select("delay_minutes, status")
+          .eq("department_id", deptId)
+          .eq("delay_date", today),
+        supabase
+          .from("hourly_loads")
+          .select("total_loads")
+          .eq("department_id", deptId)
+          .eq("load_date", today),
+        supabase
+          .from("machines")
+          .select("*", { count: "exact", head: true })
+          .eq("active", true),
+      ]);
+    }, { tags: ["table:machine_operations", "table:operational_delays", "table:hourly_loads", "table:machines"] })
+  );
 
   const totalHours =
     todayOperations.data?.reduce(

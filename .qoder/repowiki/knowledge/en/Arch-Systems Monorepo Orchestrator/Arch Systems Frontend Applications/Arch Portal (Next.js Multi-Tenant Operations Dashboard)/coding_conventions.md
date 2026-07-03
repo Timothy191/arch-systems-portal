@@ -1,0 +1,5 @@
+- Route groups are prefixed with parentheses — `(auth)`, `(hub)`, `(departments)` — so they share layouts without appearing in URLs.
+- Feature code is split between `app/<group>/<path>/page.tsx` (route shell) and `features/<domain>/components/...` (reusable UI), keeping route files thin.
+- Server-only helpers live under `lib/` and are imported by both route handlers and Server Components rather than being colocated with pages.
+- Each page or form is paired with a sibling `*.test.tsx` / `*.test.ts` file using Jest + testing-library.
+- API route handlers under `app/api/` follow the Next.js Route Handler pattern and read authentication from the shared middleware session.

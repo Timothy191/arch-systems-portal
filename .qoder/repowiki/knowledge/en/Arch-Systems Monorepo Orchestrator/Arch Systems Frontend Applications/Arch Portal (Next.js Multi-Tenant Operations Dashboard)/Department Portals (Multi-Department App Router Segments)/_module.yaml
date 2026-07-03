@@ -1,0 +1,8 @@
+schema_version: 1
+module_path: apps/portal/departments_routes
+title: Department Portals (Multi-Department App Router Segments)
+scope:
+    - apps/portal/app/(departments)/
+source_files: []
+depends_on: []
+related_to: []

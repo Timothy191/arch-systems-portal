@@ -1,0 +1,8 @@
+schema_version: 1
+module_path: tools_repowise/scripts_and_docker
+title: Dev, Deployment & Operations Scripts
+scope:
+    - scripts/
+source_files: []
+depends_on: []
+related_to: []

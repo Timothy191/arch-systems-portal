@@ -1,0 +1,5 @@
+Two-layer plugin split inside one directory:
+- `src/main.rs` — standalone Rust binary (`rust-telemetry-engine`) with no external crates; parses `--hours`, `--temp`, `--rpm` CLI flags, applies linear fatigue + thermal + kinetic stress formulas plus a sigmoid logistic regression to derive `wearIndex`, `probability`, `rulHours`, and a `status` enum, then prints a single JSON line to stdout for a Node FFI bridge.
+- `index.tsx` — React client component registered as an `ArchPlugin` (id `rust-telemetry-engine`) exposing a dashboard card widget and a workflow node. It POSTs sensor inputs to the portal's `/api/plugins/rust-telemetry` route and falls back to simulated data when the native engine is unavailable, marking results via `isNative: boolean`.
+- `Cargo.toml` pins edition 2021 and a release profile with LTO, single codegen unit, and `panic = "abort"` to guarantee sub-second compile times and minimal runtime overhead.
+The dependency direction is one-way: the TSX layer invokes the compiled Rust binary through the portal's plugin API; the Rust side has no knowledge of the host framework.

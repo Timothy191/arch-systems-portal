@@ -1,0 +1,1 @@
+Pure bash (POSIX + GNU extensions) plus one Python 3 stdlib-only script; Docker Compose v2 plugin preferred over legacy `docker-compose`, BuildKit enabled via `DOCKER_BUILDKIT=1`/`COMPOSE_BAKE=true`; Supabase CLI (`pnpx supabase`) drives local DB migrations and container lifecycle.

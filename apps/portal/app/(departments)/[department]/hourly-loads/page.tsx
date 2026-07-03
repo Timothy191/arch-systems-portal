@@ -15,27 +15,26 @@ export default async function HourlyLoadsPage({
     department,
   });
 
-  // Fetch dump trucks with bin_factor (centralised fleet)
-  const { data: machines } = await supabase
-    .from("machines")
-    .select("id, name, machine_type, bin_factor, site_id, sites(name)")
-    .eq("machine_type", "Dump Truck")
-    .eq("active", true)
-    .order("name");
-
-  // Fetch today's hourly loads
-  const { data: hourlyLoads } = await supabase
-    .from("hourly_loads")
-    .select("*")
-    .eq("department_id", deptId)
-    .eq("load_date", today);
-
-  // Fetch active sites
-  const { data: sites } = await supabase
-    .from("sites")
-    .select("id, name, site_code")
-    .eq("active", true)
-    .order("name");
+  // Fetch all data in parallel
+  const [{ data: machines }, { data: hourlyLoads }, { data: sites }] =
+    await Promise.all([
+      supabase
+        .from("machines")
+        .select("id, name, machine_type, bin_factor, site_id, sites(name)")
+        .eq("machine_type", "Dump Truck")
+        .eq("active", true)
+        .order("name"),
+      supabase
+        .from("hourly_loads")
+        .select("*")
+        .eq("department_id", deptId)
+        .eq("load_date", today),
+      supabase
+        .from("sites")
+        .select("id, name, site_code")
+        .eq("active", true)
+        .order("name"),
+    ]);
 
   // Calculate totals
   const loadsByMachine = new Map();

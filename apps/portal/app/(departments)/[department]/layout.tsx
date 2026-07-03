@@ -9,7 +9,7 @@ export default async function DepartmentRootLayout({
   params,
 }: {
   children: React.ReactNode;
-  params: Promise<any>;
+  params: Promise<{ department: string }>;
 }) {
   const { department } = await params;
   const dept = DEPARTMENTS.find((d) => d.name === department);

@@ -1,0 +1,1 @@
+Next.js app that hosts the Payload CMS admin UI and REST API, modeling users, departments, and documents backed by PostgreSQL.

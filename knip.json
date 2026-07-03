@@ -9,7 +9,6 @@
     "@typescript-eslint/parser",
     "eslint-import-resolver-typescript",
     "@eslint/js",
-    "@nx/eslint-plugin",
     "globals",
     "lint-staged",
     "typescript-eslint"

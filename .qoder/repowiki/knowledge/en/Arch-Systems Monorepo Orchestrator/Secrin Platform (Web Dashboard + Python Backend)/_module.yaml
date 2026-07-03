@@ -1,0 +1,8 @@
+schema_version: 1
+module_path: tools_secrin
+title: Secrin Platform (Web Dashboard + Python Backend)
+scope:
+    - tools/secrin/
+source_files: []
+depends_on: []
+related_to: []

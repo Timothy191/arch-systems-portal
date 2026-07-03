@@ -1,0 +1,6 @@
+- Every component file starts with the `'use client'` directive, marking it as a Next.js client component.
+- Supabase access uses `createBrowserSupabaseClient()` from `@repo/supabase/client` rather than importing a Node client.
+- Realtime subscriptions are scoped per-department by filtering on `department_id=eq.${departmentId}` and are torn down in the effect cleanup via `supabase.removeChannel(channel)`.
+- Live data arrays are stored with `useThrottledState<T[]>([])` from `@/hooks/useThrottledState` instead of plain `useState` to avoid render storms on high-frequency DB events.
+- UI panels are wrapped in `GlassCard` from `@repo/ui/GlassCard` and styled exclusively with Tailwind utility classes referencing design-token variables (e.g. `var(--text-heading)`, `accent-green`).
+- Server-hydrated components accept an optional `initialData` prop and short-circuit their `useEffect` when present, falling back to a client-side fetch otherwise.

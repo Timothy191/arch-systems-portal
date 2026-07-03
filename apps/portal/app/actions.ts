@@ -83,6 +83,10 @@ export async function generateMonthlyReport(
     throw new Error("Unauthorized");
   }
 
+  if (employee?.role === "manager" && departmentId && departmentId !== employee.department_id) {
+    throw new Error("Forbidden: Managers cannot generate reports for other departments");
+  }
+
   try {
     const { pdf } = await import("@react-pdf/renderer");
     const { ReportTemplate } = await import(

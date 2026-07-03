@@ -1,0 +1,12 @@
+schema_version: 1
+module_path: logging_system
+title: Error-Centric Logging with Sentry and OpenTelemetry
+scope: []
+source_files:
+    - apps/portal/lib/errors/error-logger.ts
+    - apps/portal/instrumentation.ts
+    - apps/portal/sentry.server.config.ts
+    - apps/portal/sentry.client.config.ts
+    - apps/portal/lib/observability/metrics.ts
+depends_on: []
+related_to: []

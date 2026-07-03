@@ -139,17 +139,50 @@ allOk &= writeOrCheck(
   generateJson({ capabilities: intentMap })
 );
 
-const depConstraints = DEPENDENCY_RULES.map((r) => {
-  const targetTag = r.targetTag;
-  if (r.allowed) {
-    return {
-      sourceTag: r.sourceTag,
-      onlyDependOnLibsWithTags: [targetTag],
-    };
+const sourceToFiles = {
+  'scope:app': 'apps/**/*',
+  'scope:package:ui': 'packages/ui/**/*',
+  'scope:package:theme': 'packages/theme/**/*',
+  'scope:tool': 'tools/**/*',
+  'scope:package': 'packages/**/*'
+};
+
+const targetToPatterns = {
+  'scope:package:db-internal': ['@repo/database', '@repo/database/*'],
+  'scope:package:db': ['@repo/database', '@repo/database/*'],
+  'scope:package:supabase': ['@repo/supabase', '@repo/supabase/*'],
+  'scope:package:ui': ['@repo/ui', '@repo/ui/*'],
+  'scope:app': ['apps/*']
+};
+
+const overridesMap = {};
+
+for (const rule of DEPENDENCY_RULES) {
+  if (rule.allowed) continue;
+  
+  const files = sourceToFiles[rule.sourceTag];
+  const patterns = targetToPatterns[rule.targetTag] || [];
+  
+  if (!files || patterns.length === 0) continue;
+  
+  if (!overridesMap[files]) {
+    overridesMap[files] = [];
   }
+  
+  for (const pattern of patterns) {
+    overridesMap[files].push({
+      group: pattern,
+      message: rule.reason
+    });
+  }
+}
+
+const overrides = Object.entries(overridesMap).map(([files, patterns]) => {
   return {
-    sourceTag: r.sourceTag,
-    notDependOnLibsWithTags: [targetTag],
+    files: [files],
+    rules: {
+      'no-restricted-imports': ['error', { patterns }]
+    }
   };
 });
 
@@ -157,19 +190,7 @@ const eslintContent = `// GENERATED FROM tools/policy-definitions.ts — DO NOT 
 // Run 'pnpm policy:gen' to regenerate.
 
 module.exports = {
-  plugins: ['@nx'],
-  rules: {
-    '@nx/enforce-module-boundaries': [
-      'error',
-      {
-        enforceBuildableLibDependency: true,
-        allowCircularSelfDependency: false,
-        banTransitiveDependencies: true,
-        checkDynamicDependenciesExceptions: ['^@repo/.*$'],
-        depConstraints: ${JSON.stringify(depConstraints, null, 2)},
-      },
-    ],
-  },
+  overrides: ${JSON.stringify(overrides, null, 2).replace(/"/g, "'")}
 };
 `;
 

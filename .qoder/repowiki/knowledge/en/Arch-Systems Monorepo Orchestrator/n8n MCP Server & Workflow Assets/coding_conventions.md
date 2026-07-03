@@ -1,0 +1,4 @@
+- Every MCP tool declares both a `ListToolsRequestSchema` entry (with typed `inputSchema`) and a matching `case` branch inside the single `CallToolRequestSchema` switch, keeping tool metadata and implementation co-located.
+- All user-supplied path segments are passed through `sanitizePathSegment` (rejecting `..`, `/`, `\`, and non-alphanumeric characters) before being interpolated into n8n REST URLs.
+- HTTP interactions are funneled through `n8nFetch`, which centralizes cookie injection, 50-minute expiry with a 5-minute margin, configurable timeout via `AbortController`, and automatic re-login on 401 responses.
+- Workflow JSON files under `workflows/` follow a zero-padded numeric prefix naming scheme (e.g. `01-tool-batcher.json`, `02-function-orchestrator.json`) to enforce deterministic import order.
