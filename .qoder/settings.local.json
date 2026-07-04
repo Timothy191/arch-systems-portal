@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir:*)",
+      "Bash(echo '{\"tool_name\":\"Edit\",\"tool_input\":{\"file_path\":\"/home/timothy/Documents/Arch-Mk2/AGENTS.md\"}}' | jq -r '.tool_input.file_path' | { read -r f; npx prettier --write \"$f\"; } 2>&1)",
+      "Bash(jq -e . /home/timothy/Documents/Arch-Mk2/.qoder/settings.json && echo \"Valid JSON\")",
+      "Bash(which gh 2>/dev/null && gh --version | head -1 || echo \"gh not found\")",
+      "Bash(node:*)",
+      "Bash(pnpm dev:*)",
+      "Bash(sleep 15 && curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000 2>/dev/null || echo \"portal not ready\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://127.0.0.1:54321/rest/v1/ 2>/dev/null || echo \"supabase not reachable\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3001/health 2>/dev/null || echo \"api not reachable\")",
+      "Bash(redis-cli ping 2>/dev/null || echo \"redis not reachable\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3004/api/health/live 2>/dev/null || echo \"api not on 3004\")",
+      "Bash(tail -30 /home/timothy/Documents/Arch-Mk2/api.log 2>/dev/null || echo \"no api.log\")",
+      "Bash(cd /home/timothy/Documents/Arch-Mk2/apps/api && PORT=3004 pnpm dev > /tmp/api-test.log 2>&1 &\necho $!)",
+      "Bash(sleep 10 && curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3004/api/health/live 2>/dev/null || echo \"still not ready\")",
+      "Bash(cat /tmp/api-test.log 2>/dev/null | tail -50)",
+      "Bash(cd /home/timothy/Documents/Arch-Mk2 && pnpm add -D @swc/cli @swc/core --filter api)"
+    ]
+  }
+}

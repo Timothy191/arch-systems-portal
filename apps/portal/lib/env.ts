@@ -60,6 +60,10 @@ const envSchema = z.object({
   NEXT_PUBLIC_FUXA_URL: z.string().url().optional(),
   NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID: z.string().optional(),
 
+  // ── Backend NestJS API (optional — defaults to dev orchestration port) ─
+  API_BASE_URL: z.string().url().optional(),
+  NEXT_PUBLIC_API_URL: z.string().url().optional(),
+
   // ── Feature flags ──────────────────────────────────────────────────
   ENABLE_LOAD_ADAPTIVE_TEST: z
     .string()
@@ -142,6 +146,8 @@ function parseEnv(): EnvVars {
     NEXT_PUBLIC_FUXA_URL: process.env.NEXT_PUBLIC_FUXA_URL,
     NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID:
       process.env.NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID,
+    API_BASE_URL: process.env.API_BASE_URL,
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
     ENABLE_LOAD_ADAPTIVE_TEST: process.env.ENABLE_LOAD_ADAPTIVE_TEST,
     DISABLE_RATE_LIMIT: process.env.DISABLE_RATE_LIMIT,
     RATE_LIMIT_IP_WHITELIST: process.env.RATE_LIMIT_IP_WHITELIST,

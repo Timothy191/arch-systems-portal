@@ -69,6 +69,48 @@ wait_for() {
   return 1
 }
 
+wait_for_port() {
+  local port="$1" label="$2" max="${3:-30}" delay="${4:-1}"
+  for i in $(seq 1 "$max"); do
+    if ss -tlnH 2>/dev/null | grep -qE ":${port} "; then
+      return 0
+    fi
+    sleep "$delay"
+  done
+  echo -e "  ${FAIL} ${label} timed out waiting for port ${port}"
+  return 1
+}
+
+ensure_redis() {
+  if [ "$START_TOOLS" = "true" ]; then
+    check "Redis" "skip" "managed by --tools compose"
+    return 0
+  fi
+
+  if ss -tlnH 2>/dev/null | grep -qE ":6379 "; then
+    if docker ps --format '{{.Names}}' 2>/dev/null | grep -q "^plantcor-redis$"; then
+      check "Redis" "pass" "plantcor-redis running"
+    else
+      check "Redis" "pass" "already listening on 6379"
+    fi
+    return 0
+  fi
+
+  echo -e "  ${INFO} Starting Redis container..."
+  if docker ps -a --format '{{.Names}}' 2>/dev/null | grep -q "^plantcor-redis$"; then
+    docker start plantcor-redis > /dev/null 2>&1
+  else
+    docker run -d --name plantcor-redis -p 6379:6379 redis:7 > /dev/null 2>&1
+  fi
+
+  if wait_for_port 6379 "Redis" 30; then
+    check "Redis" "pass" "plantcor-redis started"
+  else
+    check "Redis" "fail" "could not start Redis on 6379"
+    return 1
+  fi
+}
+
 detect_compose_cmd() {
   if docker compose version > /dev/null 2>&1; then
     echo "docker compose"
@@ -138,6 +180,10 @@ pstat="\033[0;31mOFFLINE\033[0m"
 curl -fs http://localhost:PORT_PLACEHOLDER > /dev/null 2>&1 && pstat="\033[0;32mRUNNING\033[0m"
 echo -e "  Portal      $pstat    http://localhost:PORT_PLACEHOLDER"
 
+apistat="\033[0;31mOFFLINE\033[0m"
+curl -fs http://localhost:API_PORT_PLACEHOLDER/api/health/live > /dev/null 2>&1 && apistat="\033[0;32mRUNNING\033[0m"
+echo -e "  API         $apistat   http://localhost:API_PORT_PLACEHOLDER/api"
+
 sstat="\033[0;31mOFFLINE\033[0m"
 curl -fs http://127.0.0.1:54321/rest/v1/ > /dev/null 2>&1 && sstat="\033[0;32mRUNNING\033[0m"
 echo -e "  Supabase    $sstat    http://localhost:54321"
@@ -169,7 +215,7 @@ echo -e "\033[0;35m────────────────────�
 echo -e "\033[0;36mPress Enter to close this window...\033[0m"
 read
 STATUSEOF
-  sed -i "s|PORT_PLACEHOLDER|$PORT|g; s|LOG_PLACEHOLDER|$REPO_ROOT/portal.log|g" "$script"
+  sed -i "s|PORT_PLACEHOLDER|$PORT|g; s|API_PORT_PLACEHOLDER|$API_PORT|g; s|LOG_PLACEHOLDER|$REPO_ROOT/portal.log|g" "$script"
   chmod +x "$script"
 
   local term
@@ -194,6 +240,9 @@ show_results() {
   echo
   echo -e "  ${BOLD}Login:${NC}    ${CYAN}http://localhost:$PORT/login${NC}"
   echo -e "  ${BOLD}Portal:${NC}   ${CYAN}http://localhost:$PORT${NC}"
+  if [ "$START_API" = "true" ]; then
+    echo -e "  ${BOLD}API:${NC}      ${CYAN}http://localhost:$API_PORT/api${NC}"
+  fi
   if [ "$START_CMS" = "true" ]; then
     echo -e "  ${BOLD}CMS:${NC}      ${CYAN}http://localhost:3001${NC}"
   fi
@@ -201,7 +250,7 @@ show_results() {
     echo -e "  ${BOLD}Overview:${NC}  ${CYAN}http://localhost:3002${NC}"
   fi
   echo -e "  ${BOLD}Studio:${NC}   ${CYAN}http://localhost:54323${NC}"
-  echo -e "  ${BOLD}API:${NC}      ${CYAN}http://localhost:54321${NC}"
+  echo -e "  ${BOLD}Supabase:${NC} ${CYAN}http://localhost:54321${NC}"
   echo
   echo -e "  ${DIM}Stop with Ctrl+C${NC}"
   echo
@@ -210,7 +259,7 @@ show_results() {
 cleanup() {
   echo
   echo -e "  ${YELLOW}Shutting down...${NC}"
-  for pidfile in .portal.pid .cms.pid .overview.pid; do
+  for pidfile in .portal.pid .api.pid .cms.pid .overview.pid; do
     [ -f "$REPO_ROOT/$pidfile" ] && kill "$(cat "$REPO_ROOT/$pidfile")" 2>/dev/null || true
     rm -f "$REPO_ROOT/$pidfile"
   done
@@ -239,6 +288,8 @@ START_TOOLS=false
 QUICK_MODE=false
 START_CMS=false
 START_OVERVIEW=false
+START_API=true
+API_PORT="${API_PORT:-3004}"
 while [ $# -gt 0 ]; do
   case "$1" in
     --force|-f) FORCE_KILL=true; shift ;;
@@ -247,6 +298,7 @@ while [ $# -gt 0 ]; do
     --cms)      START_CMS=true; shift ;;
     --overview) START_OVERVIEW=true; shift ;;
     --all)      START_CMS=true; START_OVERVIEW=true; shift ;;
+    --no-api)   START_API=false; shift ;;
     *) shift ;;
   esac
 done
@@ -463,6 +515,9 @@ else
   check_and_fix_port 6379 "Redis" "redis-server"
   check_and_fix_port 54321 "Supabase API" ""
   check_and_fix_port 8000 "Kong Gateway" ""
+  if [ "$START_API" = "true" ]; then
+    check_and_fix_port "$API_PORT" "NestJS API" ""
+  fi
 fi
 
 # 1c. Check & Fix Environment files
@@ -480,6 +535,19 @@ if [ ! -f "$REPO_ROOT/apps/portal/.env" ] && [ ! -f "$REPO_ROOT/apps/portal/.env
   fi
 else
   check "Environment file" "pass" "exists"
+fi
+
+# 1c-ii. Keep apps/api/.env in sync with local Supabase/Redis config.
+if [ "$START_API" = "true" ]; then
+  if API_PORT_OUTPUT=$(API_PORT="$API_PORT" node "$REPO_ROOT/scripts/generate-api-env.mjs" 2>&1); then
+    API_PORT=$(echo "$API_PORT_OUTPUT" | grep '^API_PORT=' | cut -d= -f2)
+    check "API environment" "pass" "apps/api/.env"
+  else
+    check "API environment" "fail" "$API_PORT_OUTPUT"
+    env_pass=false
+  fi
+else
+  check "API environment" "skip" "--no-api"
 fi
 
 if [ -d "$REPO_ROOT/node_modules" ]; then
@@ -529,6 +597,9 @@ else
     check "Database" "warn" "API up but unexpected response"
   fi
 
+  # 2a. Redis dependency (NestJS API + portal rate-limiting)
+  ensure_redis || exit 1
+
   # 2b. Optional Tools
   if [ "$START_TOOLS" = "true" ]; then
     if [ -f "$REPO_ROOT/docker-compose.tools.yml" ]; then
@@ -557,6 +628,27 @@ else
     else
       check "Docker Tools" "skip" "compose file missing"
     fi
+  fi
+
+  # 2c. Backend API (NestJS on Fastify)
+  if [ "$START_API" = "true" ]; then
+    phase "2c" "Backend API"
+    cd "$REPO_ROOT/apps/api"
+    PORT="$API_PORT" pnpm dev > "$REPO_ROOT/api.log" 2>&1 &
+    echo $! > "$REPO_ROOT/.api.pid"
+    cd "$REPO_ROOT"
+    echo -e "  ${INFO} Starting NestJS API on port ${API_PORT}..."
+
+    if wait_for "http://localhost:$API_PORT/api/health/live" "NestJS API" 60; then
+      check "NestJS API" "pass" "http://localhost:$API_PORT/api/health/live"
+    else
+      check "NestJS API" "fail"
+      echo -e "\n  ${RED}Last 20 lines of api.log:${NC}"
+      tail -20 "$REPO_ROOT/api.log" 2>/dev/null | sed 's/^/  /'
+      exit 1
+    fi
+  else
+    check "NestJS API" "skip" "--no-api"
   fi
 
   # Studio check
@@ -645,11 +737,22 @@ fi
 # ── Phase 4: Smoke Tests ─────────────────────────────────
 phase 4 "Smoke Tests"
 
-# 4a. Health endpoint
+# 4a. Portal health endpoint
 if curl -fs "http://localhost:$PORT/api/health" > /dev/null 2>&1; then
-  check "Health API" "pass" "/api/health"
+  check "Portal health API" "pass" "/api/health"
 else
-  check "Health API" "warn" "no /api/health endpoint"
+  check "Portal health API" "warn" "no /api/health endpoint"
+fi
+
+# 4a-ii. Backend API health endpoint
+if [ "$START_API" = "true" ]; then
+  if curl -fs "http://localhost:$API_PORT/api/health/live" > /dev/null 2>&1; then
+    check "Backend API health" "pass" "/api/health/live"
+  else
+    check "Backend API health" "warn"
+  fi
+else
+  check "Backend API health" "skip" "--no-api"
 fi
 
 # 4b. Login page loads

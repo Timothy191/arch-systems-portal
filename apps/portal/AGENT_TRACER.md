@@ -86,3 +86,14 @@ This file maintains a record of AI agent interventions, context hand-offs, and a
   - `next.config.mjs`: Added `serverExternalPackages` for all 7 OTel packages (`@opentelemetry/sdk-node`, `@opentelemetry/auto-instrumentations-node`, `@opentelemetry/exporter-trace-otlp-http`, `@opentelemetry/resources`, `@opentelemetry/semantic-conventions`, `@opentelemetry/otlp-transformer`, `@opentelemetry/api`). These are excluded from Turbopack's module graph — they're only used via dynamic `await import()` in `instrumentation.ts`, gated behind `OTEL_EXPORTER_OTLP_ENDPOINT`.
 - **OS fix**: `sudo sysctl fs.inotify.max_user_watches=524288` + persist in `/etc/sysctl.conf`.
 - **Next Agent**: If adding more server-only Node packages, add them to `serverExternalPackages` to keep Turbopack from trying to resolve ESM internals. The inotify fix is a one-time environment config.
+
+## 2026-07-04 Unified local dev wiring with the NestJS API
+
+- **Agent**: Claude Code
+- **Purpose**: Wire `apps/api` into the unified `pnpm dev` flow and give the portal a same-origin path to the backend.
+- **Changes**:
+  - `apps/portal/.env` and `apps/portal/.env.example`: added `API_BASE_URL` and `NEXT_PUBLIC_API_URL` for the NestJS API backend.
+  - `apps/portal/lib/env.ts`: added optional `API_BASE_URL` and `NEXT_PUBLIC_API_URL` to the Zod env schema.
+  - `apps/portal/app/api/backend/[[...slug]]/route.ts`: new catch-all proxy that forwards `/api/backend/*` to `env.API_BASE_URL` (default `http://localhost:3004/api`), preserving auth headers/cookies and streaming bodies.
+  - `scripts/dev.sh`: now starts Redis if missing, generates `apps/api/.env`, starts the NestJS API before the portal, health-checks it, and tears it down on exit.
+- **Next Agent**: The backend is reachable directly at `http://localhost:3004/api` and proxied through the portal at `/api/backend/*`. The API env is generated from the portal env by `scripts/generate-api-env.mjs`; prefer changing `API_PORT` env var over editing `apps/api/.env` directly.
