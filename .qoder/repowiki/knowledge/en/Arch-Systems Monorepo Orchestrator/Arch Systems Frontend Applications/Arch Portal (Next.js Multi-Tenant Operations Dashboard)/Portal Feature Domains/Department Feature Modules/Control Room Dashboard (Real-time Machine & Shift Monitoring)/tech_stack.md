@@ -1,1 +1,0 @@
-Next.js App Router client components + Supabase JS client with Postgres Realtime `postgres_changes` subscriptions; Zod for form validation; Tailwind CSS with design tokens (`--text-heading`, `--bg-primary`, `accent-*`) and glassmorphism cards from `@repo/ui`.

@@ -1,0 +1,1 @@
+`pip install memex-mcp[all]` (or `uv pip install memex-mcp[all]`) installs the CLI entrypoint `memex`; `memex serve --repo <path>` starts the MCP server, `memex watch --repo <path>` runs the indexer daemon, and `memex doctor` validates config. Docker compose lives at `docker/docker-compose.yml` to spin up Neo4j alongside the service.

@@ -3,6 +3,7 @@
 import { cacheInvalidateTags } from "@repo/redis";
 import { createServerSupabaseClient } from "@repo/supabase/server";
 import { revalidatePath } from "next/cache";
+import { revalidateSitesCache } from "@/lib/cache/revalidate";
 
 async function assertAdmin() {
   const supabase = await createServerSupabaseClient();
@@ -48,6 +49,7 @@ export async function adminAddSite(data: {
   if (error) return { error: "Failed to add site" };
 
   await cacheInvalidateTags(["table:sites"]);
+  await revalidateSitesCache();
   revalidatePath("/admin");
   return { success: true };
 }
@@ -84,6 +86,7 @@ export async function adminUpdateSite(
   if (error) return { error: "Failed to update site" };
 
   await cacheInvalidateTags(["table:sites"]);
+  await revalidateSitesCache();
   revalidatePath("/admin");
   return { success: true };
 }

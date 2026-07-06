@@ -22,6 +22,8 @@ module.exports = {
     ],
   },
   moduleNameMapper: {
+    "^(\\./.*)\\.js$": "$1",
+    "^(\\.\\./.*)\\.js$": "$1",
     "^@/(.*)$": "<rootDir>/$1",
     "^~/(.*)$": "<rootDir>/$1",
     "^@repo/supabase/(.*)$": "<rootDir>/../../packages/supabase/src/$1",

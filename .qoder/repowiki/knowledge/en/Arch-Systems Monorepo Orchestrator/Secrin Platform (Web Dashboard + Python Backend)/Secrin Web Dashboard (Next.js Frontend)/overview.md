@@ -1,1 +1,0 @@
-Next.js 16 web dashboard providing GitHub-based authentication, project onboarding, and a chat/graph UI that calls the Secrin backend via REST.

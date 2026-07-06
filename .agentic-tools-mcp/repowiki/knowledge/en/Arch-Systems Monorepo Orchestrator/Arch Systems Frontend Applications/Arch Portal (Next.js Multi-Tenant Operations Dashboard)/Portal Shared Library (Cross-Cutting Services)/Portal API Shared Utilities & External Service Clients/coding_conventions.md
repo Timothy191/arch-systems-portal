@@ -1,0 +1,4 @@
+- Every incoming JSON body is validated through `validateBody(request, schema)` from `response.ts` against a schema exported from `schemas.ts`, so endpoint handlers never parse untrusted input directly.
+- Rate-limit behavior is configured centrally in `rate-limit-config.ts` keyed by URL prefix (`/api/ai/`, `/api/auth/`, `/api/export/`, `/api/admin/`, `/api/webhooks/`, `/api/c66`, default `general`) rather than per-endpoint.
+- External service calls use native `fetch` with a `next.revalidate` option to leverage Next.js ISR, and non-OK responses are wrapped in the project's `APIError` class (weather) or returned as empty arrays (monitoring) instead of throwing.
+- Domain constants that drive behavior (WMO weather codes, deformation alert thresholds per area type, WMTS tile URLs, layer metadata) are declared as top-level `Record<string, ...>` maps at module scope and referenced by lookup functions.

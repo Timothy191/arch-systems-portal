@@ -1,1 +1,0 @@
-Built on `pydantic-settings` (`BaseSettings`, `SettingsConfigDict`) for typed config loading from `.env`/environment variables, and `pydantic.BaseModel` for feature-flag configuration models.

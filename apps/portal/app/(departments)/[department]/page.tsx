@@ -6,6 +6,8 @@ import { getDepartmentContext } from "~/lib/dept-context";
 import { getCurrentShift } from "@repo/utils";
 import { cachedRSC } from "@/lib/server-cache";
 import { withCache } from "@/lib/cache-utils";
+import { CacheCategory } from "@repo/redis";
+import { CACHE_TAGS } from "@/lib/cache/tags";
 
 const ScadaPanel = dynamic(
   () =>
@@ -261,29 +263,50 @@ async function ControlRoomSummaryGrid({
   const supabase = await createServerSupabaseClient();
   const [todayOperations, todayDelays, todayLoads, machines] = await cachedRSC(
     ["dept", deptId, "summary", today],
-    async () => withCache(async () => {
-      return Promise.all([
-        supabase
-          .from("machine_operations")
-          .select("hours_worked, end_time")
-          .eq("department_id", deptId)
-          .eq("shift_date", today),
-        supabase
-          .from("operational_delays")
-          .select("delay_minutes, status")
-          .eq("department_id", deptId)
-          .eq("delay_date", today),
-        supabase
-          .from("hourly_loads")
-          .select("total_loads")
-          .eq("department_id", deptId)
-          .eq("load_date", today),
-        supabase
-          .from("machines")
-          .select("*", { count: "exact", head: true })
-          .eq("active", true),
-      ]);
-    }, { tags: ["table:machine_operations", "table:operational_delays", "table:hourly_loads", "table:machines"] })
+    async () =>
+      withCache(
+        async () => {
+          return Promise.all([
+            supabase
+              .from("machine_operations")
+              .select("hours_worked, end_time")
+              .eq("department_id", deptId)
+              .eq("shift_date", today),
+            supabase
+              .from("operational_delays")
+              .select("delay_minutes, status")
+              .eq("department_id", deptId)
+              .eq("delay_date", today),
+            supabase
+              .from("hourly_loads")
+              .select("total_loads")
+              .eq("department_id", deptId)
+              .eq("load_date", today),
+            supabase
+              .from("machines")
+              .select("*", { count: "exact", head: true })
+              .eq("active", true),
+          ]);
+        },
+        {
+          category: CacheCategory.DEPARTMENT,
+          keyParts: ["control-room-summary", deptId, today],
+          tags: [
+            "table:machine_operations",
+            "table:operational_delays",
+            "table:hourly_loads",
+            "table:machines",
+          ],
+        },
+      ),
+    {
+      tags: [
+        CACHE_TAGS.machineOperations,
+        CACHE_TAGS.operationalDelays,
+        CACHE_TAGS.hourlyLoads,
+        CACHE_TAGS.machines,
+      ],
+    },
   );
 
   const totalHours =
@@ -350,18 +373,23 @@ async function NonControlRoomSummaryGrid({
   today: string;
 }) {
   const supabase = await createServerSupabaseClient();
-  const [todayLogs, machines] = await Promise.all([
-    supabase
-      .from("daily_logs")
-      .select("id, log_date, shift")
-      .eq("department_id", deptId)
-      .eq("log_date", today)
-      .order("shift"),
-    supabase
-      .from("machines")
-      .select("*", { count: "exact", head: true })
-      .eq("active", true),
-  ]);
+  const [todayLogs, machines] = await cachedRSC(
+    ["dept", deptId, "non-cr-summary", today],
+    async () =>
+      Promise.all([
+        supabase
+          .from("daily_logs")
+          .select("id, log_date, shift")
+          .eq("department_id", deptId)
+          .eq("log_date", today)
+          .order("shift"),
+        supabase
+          .from("machines")
+          .select("*", { count: "exact", head: true })
+          .eq("active", true),
+      ]),
+    { tags: [CACHE_TAGS.dailyLogs, CACHE_TAGS.machines] },
+  );
 
   const shiftCount = todayLogs.data?.length ?? 0;
   const latestShift = todayLogs.data?.[shiftCount - 1]?.shift;
@@ -410,12 +438,19 @@ async function ShiftCoverageSection({
   today: string;
 }) {
   const supabase = await createServerSupabaseClient();
-  const { data: todayLogs } = await supabase
-    .from("daily_logs")
-    .select("id, log_date, shift")
-    .eq("department_id", deptId)
-    .eq("log_date", today)
-    .order("shift");
+  const { data: todayLogs } = await cachedRSC(
+    ["dept", deptId, "shift-coverage", today],
+    async () => {
+      const result = await supabase
+        .from("daily_logs")
+        .select("id, log_date, shift")
+        .eq("department_id", deptId)
+        .eq("log_date", today)
+        .order("shift");
+      return result;
+    },
+    { tags: [CACHE_TAGS.dailyLogs] },
+  );
 
   const shiftCount = todayLogs?.length ?? 0;
   const latestShift = todayLogs?.[shiftCount - 1]?.shift;

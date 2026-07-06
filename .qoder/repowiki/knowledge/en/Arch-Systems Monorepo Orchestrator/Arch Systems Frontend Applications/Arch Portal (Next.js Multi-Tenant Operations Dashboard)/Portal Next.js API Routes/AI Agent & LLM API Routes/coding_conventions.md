@@ -1,6 +1,0 @@
-- Every route exports `dynamic = "force-dynamic"` so Next.js does not cache the handler at build time.
-- Request handling is split into a top-level `POST(req)` that composes `withBodyLimit` → `withRateLimit` → an inner `handleXxxRequest` function, keeping auth/validation/logic separated from middleware plumbing.
-- Auth failures and all error responses are returned through `applyCors(req, NextResponse.json(...))` rather than bare `NextResponse.json`, ensuring CORS headers are always attached.
-- LLM calls go exclusively through the shared `chat(messages, { model: DEFAULT_MODEL, temperature, maxTokens })` helper instead of invoking providers directly.
-- Structured-output routes embed a `SYSTEM_PROMPT` constant that forces the model to respond with valid JSON matching a Zod schema defined in `@/lib/ai/schemas`, which is then used to parse and validate the raw response before returning.
-- Errors are logged via `logError(error instanceof Error ? error : new Error(String(err)), { context: '<feature>' })` with a feature-specific context tag for traceability.

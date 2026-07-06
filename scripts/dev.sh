@@ -243,12 +243,7 @@ show_results() {
   if [ "$START_API" = "true" ]; then
     echo -e "  ${BOLD}API:${NC}      ${CYAN}http://localhost:$API_PORT/api${NC}"
   fi
-  if [ "$START_CMS" = "true" ]; then
-    echo -e "  ${BOLD}CMS:${NC}      ${CYAN}http://localhost:3001${NC}"
-  fi
-  if [ "$START_OVERVIEW" = "true" ]; then
-    echo -e "  ${BOLD}Overview:${NC}  ${CYAN}http://localhost:3002${NC}"
-  fi
+  echo -e "  ${BOLD}Studio:${NC}   ${CYAN}http://localhost:54323${NC}"
   echo -e "  ${BOLD}Studio:${NC}   ${CYAN}http://localhost:54323${NC}"
   echo -e "  ${BOLD}Supabase:${NC} ${CYAN}http://localhost:54321${NC}"
   echo
@@ -259,7 +254,7 @@ show_results() {
 cleanup() {
   echo
   echo -e "  ${YELLOW}Shutting down...${NC}"
-  for pidfile in .portal.pid .api.pid .cms.pid .overview.pid; do
+  for pidfile in .portal.pid .api.pid; do
     [ -f "$REPO_ROOT/$pidfile" ] && kill "$(cat "$REPO_ROOT/$pidfile")" 2>/dev/null || true
     rm -f "$REPO_ROOT/$pidfile"
   done
@@ -286,8 +281,6 @@ clean_dir_cache() {
 FORCE_KILL=false
 START_TOOLS=false
 QUICK_MODE=false
-START_CMS=false
-START_OVERVIEW=false
 START_API=true
 API_PORT="${API_PORT:-3004}"
 while [ $# -gt 0 ]; do
@@ -295,9 +288,6 @@ while [ $# -gt 0 ]; do
     --force|-f) FORCE_KILL=true; shift ;;
     --tools|-t) START_TOOLS=true; shift ;;
     --quick|-q) QUICK_MODE=true; shift ;;
-    --cms)      START_CMS=true; shift ;;
-    --overview) START_OVERVIEW=true; shift ;;
-    --all)      START_CMS=true; START_OVERVIEW=true; shift ;;
     --no-api)   START_API=false; shift ;;
     *) shift ;;
   esac
@@ -378,9 +368,6 @@ if [ "$FORCE_RESTART" = "true" ]; then
   fi
   
   clean_dir_cache "$REPO_ROOT/deployment-logs" "Deployment logs directory"
-  clean_dir_cache "$REPO_ROOT/apps/portal/.next/cache" "Next.js portal cache"
-  clean_dir_cache "$REPO_ROOT/apps/cms/.next/cache" "Next.js CMS cache"
-  clean_dir_cache "$REPO_ROOT/apps/overview/.next/cache" "Next.js overview cache"
   clean_dir_cache "$REPO_ROOT/packages/eval/.pytest_cache" "Pytest cache"
   
   # Remove __pycache__ folders project-wide
@@ -445,7 +432,7 @@ check_and_fix_port() {
   local port="$1" name="$2" service="$3"
   if ss -tlnH | grep -q -E ":$port "; then
     # If the port is mapped by a running Docker container, it's fine
-    if docker ps --format '{{.Ports}}' 2>/dev/null | grep -q -E "(0\.0\.0\.0|\[::\]|localhost):$port->"; then
+    if docker ps --format '{{.Ports}}' 2>/dev/null | grep -q -E "(0\.0\.0\.0|\[::\]|localhost|127\.0\.0\.1):$port->"; then
       return 0
     fi
 
@@ -606,7 +593,7 @@ else
       echo -e "  ${INFO} Starting Docker Tools..."
       $COMPOSE_CMD -f "$REPO_ROOT/docker-compose.tools.yml" up -d > /dev/null 2>&1
 
-      local services=("plantcor-redis" "plantcor-n8n" "plantcor-flowise" "plantcor-langfuse-db" "plantcor-langfuse" "plantcor-qdrant")
+      local services=("plantcor-redis" "plantcor-n8n" "plantcor-flowise" "plantcor-langfuse-db" "plantcor-langfuse" "plantcor-qdrant" "plantcor-surrealdb" "plantcor-kestra" "plantcor-memgraph")
       for service in "${services[@]}"; do
         printf "  ${CYAN}⏳${NC} Gating on $service health... "
         local attempts=0
@@ -718,21 +705,7 @@ start_extra_app() {
   fi
 }
 
-if [ "$START_CMS" = "true" ]; then
-  start_extra_app \
-    "cms" "$REPO_ROOT/apps/cms" "3001" \
-    "$REPO_ROOT/cms.log" "$REPO_ROOT/.cms.pid" "CMS"
-fi
-
-if [ "$START_OVERVIEW" = "true" ]; then
-  start_extra_app \
-    "overview" "$REPO_ROOT/apps/overview" "3002" \
-    "$REPO_ROOT/overview.log" "$REPO_ROOT/.overview.pid" "Overview"
-fi
-
-if [ "$START_CMS" != "true" ] && [ "$START_OVERVIEW" != "true" ]; then
-  check "Extra apps" "skip" "use --cms, --overview, or --all"
-fi
+  check "Extra apps" "skip" "disabled"
 
 # ── Phase 4: Smoke Tests ─────────────────────────────────
 phase 4 "Smoke Tests"

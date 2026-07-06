@@ -1,0 +1,54 @@
+{
+  "hooks": {
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "command": "sense hook pre-compact",
+            "timeout": 5000,
+            "type": "command"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "command": "sense hook pre-tool-use",
+            "timeout": 5000,
+            "type": "command"
+          }
+        ],
+        "matcher": "Grep|Glob|Agent|Bash"
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "command": "sense hook session-start",
+            "timeout": 5000,
+            "type": "command"
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [
+      {
+        "hooks": [
+          {
+            "command": "sense hook subagent-start",
+            "timeout": 5000,
+            "type": "command"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allow": [
+      "mcp__sense__*"
+    ]
+  }
+}

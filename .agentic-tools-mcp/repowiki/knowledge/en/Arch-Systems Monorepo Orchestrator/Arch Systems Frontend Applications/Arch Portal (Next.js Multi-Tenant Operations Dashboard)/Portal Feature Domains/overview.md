@@ -1,0 +1,1 @@
+Feature-sliced collection of Next.js client components that implement the portal's hub landing, admin console, analytics export, department dashboards and cross-cutting UI primitives.

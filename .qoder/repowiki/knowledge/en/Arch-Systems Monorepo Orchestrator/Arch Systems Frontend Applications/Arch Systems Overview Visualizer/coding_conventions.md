@@ -1,4 +1,0 @@
-- Each tab's heavy section is defined in its own `app/sections/*.tsx` file and loaded lazily via `React.lazy(() => import(...))` with a uniform `<Suspense fallback={<SectionLoader />}>` wrapper.
-- Static domain data (departments, navigation graph, tech stack, DB schema) is kept in `lib/data.ts` as exported constants and consumed by multiple sections instead of being duplicated inline.
-- UI building blocks follow a shadcn-style pattern: small composable components in `components/ui/` wrapping Radix primitives and styled with Tailwind + class-variance-authority, then composed by feature pages.
-- Tailwind color tokens are applied through arbitrary values using the project green accent `#3ecf8e` and dark palette (`#0f0f0f`, `#171717`, `#363636`, `#b4b4b4`) consistently across layout, header, footer, and active-tab states.

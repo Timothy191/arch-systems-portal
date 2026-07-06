@@ -1,6 +1,0 @@
-- Server actions mark themselves with the `'use server'` directive at the top of the file and resolve identity via `supabase.auth.getUser()` before any business logic.
-- Errors are thrown as typed subclasses from `@/lib/errors/error-classes` (`AuthError`, `NotFoundError`, `ForbiddenError`, `DatabaseError`) rather than plain `Error`, and are accompanied by `logError` calls with a `context` field.
-- Expensive reads are wrapped in Redis caches using either `cacheWrap(key, fn, ttl)` for simple TTL keys or `withCache({ category, keyParts, tags })` for tag-based invalidation across multiple tables.
-- DB column selections are explicitly enumerated (never `select('*')`) and mapped to narrow local interfaces so downstream code stays strongly typed.
-- Route-scoped data fetching uses `react.cache` around async functions (e.g. `getDepartmentContext`) to deduplicate identical calls within a single render.
-- Machine-type-to-form classification is driven by keyword lists (`DUMPER_KEYWORDS`, `DOZER_KEYWORDS`, `EXCAVATOR_KEYWORDS`) matched case-insensitively against `machine_type`, keeping form assignment declarative.

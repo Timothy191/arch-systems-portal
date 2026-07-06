@@ -1,4 +1,0 @@
-Two-layer CI surface under `ci/`:
-- `workflows/*.yml`: GitHub Actions workflows. `pr-cache-warmup.yml` triggers on PR open/synchronize, builds a dependency graph via `pnpm turbo run build --dry-run=json`, feeds it to `packages/predictive-warmup/src/cli.ts` (Node 22) to emit cache targets, then POSTs them to an internal `cache-agent.internal/api/warmup` endpoint. `policy-evaluation.yml` is a placeholder gate on `main` pushes that currently stubs out circular-tag and telemetry checks.
-- `scripts/rollback.sh`: standalone bash entry point (`set -e`) that issues `kubectl rollout undo` against the `cache-agent` and `policy-engine` deployments.
-Dependency direction is one-way: workflows call into repo-scoped Node tooling (`ts-node`, `turbo`) and external cluster APIs; the script depends only on `kubectl` in the runner environment.

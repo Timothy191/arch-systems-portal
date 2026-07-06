@@ -1,4 +1,0 @@
-- Every mutation action starts with an assertAdmin() helper that re-validates the caller's employees.role === 'admin' against Supabase before performing any write, returning { error, status } objects instead of throwing.
-- After each successful mutation, actions invalidate both Redis tags via cacheInvalidateTags(["table:*", "table:equipment"]) and Next.js cache via revalidateTag / revalidatePath("/admin"), wrapped in try/catch so test runs do not crash.
-- Each tab feature is a single-file, self-contained "use client" component that owns its own createBrowserSupabaseClient(), local state, and inline form/dialog — tabs never import each other.
-- Tab identity is declared once in two places (app/admin/page.tsx TABS array and components/AdminTabs.tsx TABS config) and validated at the server route level before rendering, ensuring the URL stays in sync with available tabs.

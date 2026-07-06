@@ -19,6 +19,9 @@ export class AccessControlController {
     @Headers("x-scanner-token") token: string | null,
   ) {
     this.accessControlService.validateScannerAuth(source, token);
-    return this.accessControlService.processBadgeScan(body, source ?? "unknown");
+    return this.accessControlService.processBadgeScan(
+      body,
+      source ?? "unknown",
+    );
   }
 }

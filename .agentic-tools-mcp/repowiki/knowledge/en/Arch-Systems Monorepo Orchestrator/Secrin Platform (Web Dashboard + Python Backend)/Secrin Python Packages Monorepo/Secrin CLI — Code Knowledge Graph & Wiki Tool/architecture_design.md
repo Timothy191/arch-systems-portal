@@ -1,0 +1,7 @@
+Entry point `main.py` registers all subcommands with a single `typer.Typer(name='secrin')`, delegating grouped commands (`graph`, `analyze`, `domains`) to nested Typer apps defined in `commands/<cmd>.py`. Each command is thin: it validates options via Typer decorators, resolves repo paths (remote URL → clone via `core/cloner`, or local path), loads runtime settings from `packages.config.settings.Settings` (env-driven), then calls into feature packages:
+
+- `core/` — shared infrastructure: `config.py` (.secrin/config.yaml dataclass persistence), `parser.py` (tree-sitter AST extraction for .py/.ts/.tsx/.js/.jsx producing `ParsedFile`/`ParsedNode`), `cloner.py`, `writer.py`, `analyser.py`, `secrin_yml.py`.
+- `graph/` — Neo4j layer: `neo4j_client.py` wraps connection lifecycle, `schema.py` defines constraints/indexes, `builder.py` inserts nodes/relationships, `diff.py` computes incremental changes.
+- `search/` — hybrid retrieval: `vector_search.py` (embeddings) + `graph_search.py` (Cypher) composed by `hybrid.py`.
+- `agents/` — LLM orchestration: `llm_client.py` abstracts provider, `summarizer.py` + `wiki_writer.py` consume embeddings, `domain_extractor.py` runs domain prompts under `agents/prompts/`.
+  Dependency direction is strictly one-way: `commands` → `core` / `graph` / `search` / `agents`; no cross-imports between sibling feature packages.

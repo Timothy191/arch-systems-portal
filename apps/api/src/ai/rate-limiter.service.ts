@@ -2,7 +2,7 @@ import { Injectable, Inject, Logger } from "@nestjs/common";
 import { REDIS_CLIENT } from "../redis/redis.constants";
 import type { RedisClientType } from "redis";
 
-export interface AiRateLimitResult {
+interface AiRateLimitResult {
   allowed: boolean;
   remaining: number;
   resetTime: number;
@@ -11,11 +11,12 @@ export interface AiRateLimitResult {
 @Injectable()
 export class AiRateLimiterService {
   private readonly logger = new Logger(AiRateLimiterService.name);
-  private readonly inMemoryCounters = new Map<string, { count: number; resetTime: number }>();
+  private readonly inMemoryCounters = new Map<
+    string,
+    { count: number; resetTime: number }
+  >();
 
-  constructor(
-    @Inject(REDIS_CLIENT) private readonly redis: RedisClientType,
-  ) {}
+  constructor(@Inject(REDIS_CLIENT) private readonly redis: RedisClientType) {}
 
   async check(
     category: string,
@@ -35,7 +36,10 @@ export class AiRateLimiterService {
     return { allowed, remaining, resetTime };
   }
 
-  private async increment(key: string, windowMs: number): Promise<{ count: number; resetTime: number }> {
+  private async increment(
+    key: string,
+    windowMs: number,
+  ): Promise<{ count: number; resetTime: number }> {
     try {
       if (this.redis?.isOpen) {
         const now = Date.now();
@@ -53,7 +57,10 @@ export class AiRateLimiterService {
     return this.inMemoryIncrement(key, windowMs);
   }
 
-  private inMemoryIncrement(key: string, windowMs: number): { count: number; resetTime: number } {
+  private inMemoryIncrement(
+    key: string,
+    windowMs: number,
+  ): { count: number; resetTime: number } {
     const now = Date.now();
     const entry = this.inMemoryCounters.get(key);
 

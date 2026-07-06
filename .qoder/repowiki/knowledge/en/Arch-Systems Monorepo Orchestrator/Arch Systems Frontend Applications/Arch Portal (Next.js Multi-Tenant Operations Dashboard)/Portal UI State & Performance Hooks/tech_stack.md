@@ -1,1 +1,0 @@
-Zustand stores (with `persist` middleware for focus mode); `requestAnimationFrame`-based FPS sampling; `Intl.DateTimeFormat` with `timeZone: 'Africa/Johannesburg'` for SAST clock; `navigator.onLine` for connectivity.

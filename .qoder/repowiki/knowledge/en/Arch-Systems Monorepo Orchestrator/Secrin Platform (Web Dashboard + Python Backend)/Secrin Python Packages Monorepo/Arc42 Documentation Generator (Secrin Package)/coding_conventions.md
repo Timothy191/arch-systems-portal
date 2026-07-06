@@ -1,6 +1,0 @@
-- Each feature area lives in its own top-level subpackage with a minimal `__init__.py` that only re-exports the public class/function, keeping the package namespace flat.
-- LLM provider selection uses a factory function (`providers/factory.create_llm_provider`) keyed on a lowercase string from config, with provider-specific imports done lazily inside the if/elif branches to avoid hard dependencies.
-- Configuration flows through a single `models.config.Config` object built from YAML or dict via `Config.from_yaml()` / `Config.from_dict()`, validated with a `validate()` method returning a list of error strings.
-- CLI commands follow a uniform pattern: parse options, load `Config.from_yaml(config_path)` (falling back to a default dict when missing), check `cfg.llm.api_key` against `get_api_key_env_var()`, then delegate to the relevant orchestrator/generator.
-- Long-running steps report progress by writing `.arc42gen-status.json` (local CLI) or updating `job.meta` fields `progress`/`current_step`/`status` (RQ worker), both consumed by a `status` command.
-- Generated Markdown content is wrapped with MDX frontmatter via a shared `add_mdx_frontmatter(content, title, description)` helper before being committed to the docs repository.

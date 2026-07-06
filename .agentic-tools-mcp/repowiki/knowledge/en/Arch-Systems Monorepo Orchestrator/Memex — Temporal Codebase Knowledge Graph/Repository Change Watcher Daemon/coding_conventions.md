@@ -1,0 +1,5 @@
+- Every handler wraps its body in try/except and calls `health.record(repo_canon, ...)` on failure so `memex status`/`doctor` can surface errors per repo and per handler name.
+- Repo paths are normalized through `canonical_repo_path` before being used as graph join keys, ensuring consistency between write-side watchers and read-side queries.
+- Async I/O that invokes external processes uses `run_git_command` (via `asyncio.create_subprocess_exec`) rather than blocking calls, keeping the event loop responsive.
+- Per-repo state files live under `<repo>/.memex/` (e.g. `daemon.pid`, `pending_commit.json`, `paused`) and are written atomically via a `.tmp` rename pattern.
+- Handlers are registered declaratively on the `EventRouter` instance (`router.on_file_change(...)`, `router.on_commit(...)`) instead of subclassing, keeping routing configuration centralized in `daemon.run_daemon`.

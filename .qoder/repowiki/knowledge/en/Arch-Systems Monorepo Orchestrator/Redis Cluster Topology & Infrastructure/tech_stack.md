@@ -1,1 +1,0 @@
-Redis 7 Alpine images in cluster mode for local dev; AWS ElastiCache with the `default.redis7.cluster.on` parameter group for managed clusters; Terraform AWS provider for infrastructure-as-code.

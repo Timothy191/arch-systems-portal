@@ -6,8 +6,37 @@ import { getShiftCompleteness } from "@/lib/shift-completeness";
 import { CopyReportButton } from "./CopyReportButton";
 import { ExportButton } from "@/features/analytics/components/ExportButton";
 import { PDFDownloadButton } from "@/features/analytics/components/PDFDownloadButton";
+import SuspenseOnSearchParams from "@/components/SuspenseOnSearchParams";
 
 export default async function ReportsPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ department: string }>;
+  searchParams: Promise<{ from?: string; to?: string }>;
+}) {
+  return (
+    <SuspenseOnSearchParams
+      fallback={
+        <div className="space-y-6">
+          <div className="h-8 w-48 animate-pulse bg-[var(--bg-tertiary)] rounded-lg" />
+          <div className="grid grid-cols-4 gap-4">
+            <div className="h-24 animate-pulse bg-[var(--bg-tertiary)] rounded-2xl" />
+            <div className="h-24 animate-pulse bg-[var(--bg-tertiary)] rounded-2xl" />
+            <div className="h-24 animate-pulse bg-[var(--bg-tertiary)] rounded-2xl" />
+            <div className="h-24 animate-pulse bg-[var(--bg-tertiary)] rounded-2xl" />
+          </div>
+          <div className="h-16 animate-pulse bg-[var(--bg-tertiary)] rounded-2xl" />
+          <div className="h-96 animate-pulse bg-[var(--bg-tertiary)] rounded-2xl" />
+        </div>
+      }
+    >
+      <ReportsContent params={params} searchParams={searchParams} />
+    </SuspenseOnSearchParams>
+  );
+}
+
+async function ReportsContent({
   params,
   searchParams,
 }: {

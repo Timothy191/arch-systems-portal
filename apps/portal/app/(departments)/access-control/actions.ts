@@ -3,6 +3,7 @@
 import { cacheInvalidateTags, CacheCategory } from "@repo/redis";
 import { createServerSupabaseClient } from "@repo/supabase/server";
 import { revalidatePath } from "next/cache";
+import { revalidateBadgesCache } from "@/lib/cache/revalidate";
 import {
   AuthError,
   DatabaseError,
@@ -390,6 +391,7 @@ async function _revokeBadge(
   }
 
   await cacheInvalidateTags(["table:badges", `dept:${employee.department_id}`]);
+  await revalidateBadgesCache();
   revalidatePath("/access-control/badges");
   return { success: true };
 }

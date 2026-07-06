@@ -1,0 +1,1 @@
+Install with `pnpm install` inside `docs/`, then `pnpm dev` starts the VitePress server on port 5173 serving the `wiki/` directory; `pnpm build` emits to `.vitepress/dist` for deployment to GitHub Pages.

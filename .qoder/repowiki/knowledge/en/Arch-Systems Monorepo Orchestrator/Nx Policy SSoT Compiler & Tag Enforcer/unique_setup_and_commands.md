@@ -1,1 +1,0 @@
-Run `pnpm policy:gen` to regenerate all five files under `tools/policy/`; run `pnpm policy:check` (which invokes the same script with `--check`) to fail CI if any generated artifact drifted from what the compiler would produce. After adding/removing projects, re-run `tools/apply-project-tags.cjs` to refresh `scope:*` tags in each `project.json`.

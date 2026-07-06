@@ -1,0 +1,57 @@
+{
+  "symbol": "User#email_verified?",
+  "risk": "medium",
+  "risk_factors": [
+    "hub node",
+    "4 direct callers",
+    "touches auth + admin"
+  ],
+  "direct_callers": [
+    {
+      "symbol": "SessionsController#create",
+      "file": "app/controllers/sessions_controller.rb"
+    },
+    {
+      "symbol": "RegistrationMailer#welcome",
+      "file": "app/mailers/registration_mailer.rb"
+    },
+    {
+      "symbol": "User::Onboarding#complete",
+      "file": "app/models/user/onboarding.rb"
+    },
+    {
+      "symbol": "Admin::UsersController#index",
+      "file": "app/controllers/admin/users_controller.rb"
+    }
+  ],
+  "indirect_callers": [
+    {
+      "symbol": "OrdersController#new",
+      "via": "SessionsController#create",
+      "hops": 2
+    }
+  ],
+  "affected_tests": [
+    "test/models/user_test.rb",
+    "test/controllers/sessions_controller_test.rb",
+    "test/mailers/registration_mailer_test.rb",
+    "test/models/user/onboarding_test.rb",
+    "test/controllers/admin/users_controller_test.rb",
+    "test/controllers/orders_controller_test.rb"
+  ],
+  "affected_symbols": 11,
+  "affected_files": 10,
+  "graph_edges_traversed": 91,
+  "total_affected": 11,
+  "affected_subclasses": [],
+  "affected_via_composition": [],
+  "affected_via_includes": [],
+  "references": {
+    "count": 0,
+    "examples": []
+  },
+  "tests_affected_count": 0,
+  "production_affected": 5,
+  "test_affected": 6,
+  "next_steps": []
+}

@@ -1,5 +1,0 @@
-- Each concrete error class exposes dual constructor overloads — `(message, code?, statusCode?)` and `(message, options)` — resolved through a shared `resolveOptions` helper so call sites can pass either positional args or a single options bag.
-- Domain subclasses default their `code` to a constant string (e.g. `API_ERROR`, `AUTH_ERROR`, `VALIDATION_ERROR`) when the caller passes `APP_ERROR`, and map a default `500` status to a semantic HTTP code (401/400/404/409/403) unless overridden.
-- Unknown extra keys on the options bag are spread into `context` at construction time, letting callers attach ad-hoc fields without declaring new properties on the error class.
-- Type guards are exported for every public subclass using `instanceof` checks, giving callers a safe narrowing primitive instead of property-detection.
-- The logger detects AppError instances by duck-typing (`'code' in error && 'statusCode' in error && ...`) rather than importing the class, keeping the logger independent of the error-class module.

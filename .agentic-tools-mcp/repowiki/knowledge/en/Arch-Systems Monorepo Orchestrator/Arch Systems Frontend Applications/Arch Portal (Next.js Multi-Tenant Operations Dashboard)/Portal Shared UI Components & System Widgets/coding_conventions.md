@@ -1,0 +1,6 @@
+- Every component file starts with the `"use client"` directive and is exported as a named function component rather than a default export.
+- Styling uses Tailwind utility classes combined with the `cn()` helper from `@repo/ui/lib/utils` to conditionally merge class strings; colors are applied via CSS variables (`var(--accent-green)`, `var(--text-muted)`, etc.) instead of hardcoded hex values.
+- Icons are selected at render time by assigning a `lucide-react` icon component to a local variable (e.g. `const ConnIcon = !online ? WifiOff : Wifi`) and rendering it as `<ConnIcon className={...} />`.
+- Client-side side effects (network polling, browser APIs like Battery/NetworkConnection, localStorage persistence) are encapsulated in dedicated `useXxxStatus` / `useXxx` hooks defined alongside the component that consumes them, with cleanup performed in the effect return.
+- Each component has a co-located `*.test.tsx` file using Vitest and `@testing-library/react`, with test targets referenced via `data-testid` attributes on rendered elements.
+- External popovers and glass-morphism cards are composed through Radix `Popover.Root/Trigger/Portal/Content` and `@repo/ui/GlassCard` rather than ad-hoc implementations.

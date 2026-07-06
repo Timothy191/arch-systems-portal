@@ -1,4 +1,0 @@
-- Every component file starts with the `"use client"` directive, marking it as a Next.js client component.
-- External, browser-only libraries (UniverJS) are imported lazily via `dynamic(() => import(...), { ssr: false })` rather than top-level imports.
-- Shared data shapes (`ToolStatus`, `ToolsPageClientProps`) are re-declared locally at the top of each file instead of being exported/imported between sibling components.
-- UI uses Tailwind utility classes combined with CSS custom properties from `var(--text-heading)`, `var(--bg-primary)`, etc., rather than raw hex values for theme tokens.

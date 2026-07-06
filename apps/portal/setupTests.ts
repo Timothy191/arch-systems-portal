@@ -30,9 +30,29 @@ global.Response =
     }
   };
 
+global.fetch = jest.fn().mockImplementation((url, options) => {
+  let responseData: any = {};
+  const urlStr = String(url);
+
+  if (urlStr.includes("/api/auth/pin/verify")) {
+    const body = options?.body ? JSON.parse(String(options.body)) : {};
+    responseData = { valid: body.pin === "1234" };
+  } else if (urlStr.includes("/api/auth/pin/hash")) {
+    responseData = { hash: "hashed-pin" };
+  } else if (urlStr.includes("/api/jobs/embeddings")) {
+    responseData = { success: true };
+  } else if (urlStr.includes("/api/export/monthly-report")) {
+    responseData = { success: true, url: "http://signed-url" };
+  }
+
+  return Promise.resolve({
+    ok: true,
+    json: () => Promise.resolve(responseData),
+  } as any);
+});
+
 // Global mock for redis to avoid database connection timeout/hangs in tests
 jest.mock("@repo/redis", () => {
-  const actual = jest.requireActual("@repo/redis");
   const mockCache = new Map<string, string>();
   const mockRedisClient = {
     get: jest.fn(async (key: string) => mockCache.get(key) ?? null),
@@ -47,17 +67,15 @@ jest.mock("@repo/redis", () => {
       mockCache.set(key, val.toString());
       return val;
     }),
-    // AGENT-TRACE: Mock expire function - parameters prefixed with underscore to fix ESLint warnings
-    // These are unused in the mock implementation but required for interface compatibility
     expire: jest.fn(async (_key: string, _seconds: number) => {
       return true;
     }),
     isOpen: true,
   };
   return {
-    ...actual,
     getRedisClient: jest.fn(async () => mockRedisClient),
     closeRedis: jest.fn(async () => {}),
+    cacheInvalidateTags: jest.fn(async () => {}),
   };
 });
 

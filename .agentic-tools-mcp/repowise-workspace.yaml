@@ -1,0 +1,12 @@
+version: 1
+default_repo: arch-mk2
+repos:
+- path: .
+  alias: arch-mk2
+  is_primary: true
+  indexed_at: '2026-07-06T15:53:12.871811+00:00'
+  last_commit_at_index: 23e7da689d09e166cc0c56e3b38cee9df10737bb
+- path: tools/repowise
+  alias: repowise
+  indexed_at: '2026-07-03T10:28:22.863648+00:00'
+  last_commit_at_index: 0a835a1421eb08f0af6cb0fc277582d7108aa22d

@@ -1,0 +1,25 @@
+[project]
+name = "ai-agents"
+version = "0.1.0"
+description = "Arch-Systems Agentic Workflows Microservice"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "crewai>=0.28.8",
+    "langgraph>=0.0.39",
+    "langchain>=0.1.16",
+    "fastapi>=0.111.0",
+    "uvicorn>=0.29.0",
+    "neo4j>=5.20.0"
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra -q"
+testpaths = [
+    "tests",
+]

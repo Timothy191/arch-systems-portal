@@ -1,0 +1,1 @@
+Three sibling packages: a zero-dependency SQL migration bundle for the shared Postgres schema, a React/Tailwind component library built on Radix and Framer Motion, and a typed Supabase client layer with Kysely access.

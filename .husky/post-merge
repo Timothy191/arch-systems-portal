@@ -1,0 +1,5 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo "Updating Repowise codebase intelligence index after merge..."
+./.aistack/tools/repowise/.venv/bin/repowise update -w --index-only || true

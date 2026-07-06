@@ -1,6 +1,0 @@
-- Next.js App Router entry at `app/page.tsx` (marked `'use client'`) hosts four tabs: System Architecture, Department Breakdown, Tech Stack, Database Schema.
-- Each tab's content is a separate file under `app/sections/` (`SystemArchitecture.tsx`, `DepartmentBreakdown.tsx`, `TechStack.tsx`, `DatabaseSchema.tsx`) imported via React `lazy()` and wrapped in `<Suspense fallback={<SectionLoader />}>` so each section bundles independently.
-- Shared UI primitives live in `components/ui/` (`badge.tsx`, `card.tsx`, `tabs.tsx`) built on Radix UI (`@radix-ui/react-tabs`) with Tailwind + class-variance-authority; they are consumed by both the page shell and the sections.
-- All static documentation data (7 departments with routes/roles, navigation graph nodes+edges for XYFlow, tech-stack categories, and the PostgreSQL schema) is centralized in `lib/data.ts`; sections read from this single source rather than fetching APIs.
-- Styling is global via `app/globals.css` plus per-app Tailwind config (`tailwind.config.ts`, `postcss.config.mjs`); the app depends on the workspace package `@repo/theme` for shared theme tokens.
-- The app runs standalone on port 3002 (`next dev -p 3002`) and ships its own `deploy.sh` / `project.json` for Turborepo integration.

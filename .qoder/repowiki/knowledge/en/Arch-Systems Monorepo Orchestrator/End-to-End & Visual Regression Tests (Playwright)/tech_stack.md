@@ -1,1 +1,0 @@
-@playwright/test with its native snapshot comparison; snapshots are platform-tagged per Chromium on Linux (`*-chromium-linux.png`).

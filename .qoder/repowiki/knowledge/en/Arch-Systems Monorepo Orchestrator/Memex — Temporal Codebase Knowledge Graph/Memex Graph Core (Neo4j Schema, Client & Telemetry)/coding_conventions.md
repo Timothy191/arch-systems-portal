@@ -1,5 +1,0 @@
-- Every persistent node is a Pydantic `BaseModel` with `model_config = ConfigDict(extra="ignore")` plus the v0.3.0 cross-node fields `write_policy`, `access_count`, `last_reinforced_at`.
-- Node-level validation uses `@field_validator` classmethods (e.g. clamping `confidence` to [0,1], rejecting null bytes) rather than runtime checks in callers.
-- Write mutations go through `schema.check_write_policy(node_type, caller, owner)` before any Neo4j write, enforcing the `locked/open/self` ACL from `WRITE_POLICIES`.
-- Neo4j access is always via the `graph.client.GraphClient.get_instance()` singleton; children must not instantiate Graphiti directly.
-- Token usage and decision confidence are reported through `telemetry.record_tool_call` / `otel.record_token_metrics` so both SQLite and OTel receive identical signals.

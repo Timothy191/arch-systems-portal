@@ -1,1 +1,0 @@
-Python MCP SDK (`mcp.server`, `mcp.types.Tool`, `mcp.server.sse.SseServerTransport`, `mcp.server.streamable_http.StreamableHTTPServerTransport`) over stdio and HTTP; FastAPI+uvicorn for the HTTP transport; Neo4j driver for persistence; OpenTelemetry spans per tool call.

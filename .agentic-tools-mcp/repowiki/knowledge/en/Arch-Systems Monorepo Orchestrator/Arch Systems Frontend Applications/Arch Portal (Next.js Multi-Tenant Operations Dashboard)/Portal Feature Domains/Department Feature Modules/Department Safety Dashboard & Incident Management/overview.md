@@ -1,0 +1,1 @@
+Per-department safety dashboard that surfaces LTI-free and incident-free KPIs, charts, and a client-side form for logging safety incidents into the `safety_incidents` table.

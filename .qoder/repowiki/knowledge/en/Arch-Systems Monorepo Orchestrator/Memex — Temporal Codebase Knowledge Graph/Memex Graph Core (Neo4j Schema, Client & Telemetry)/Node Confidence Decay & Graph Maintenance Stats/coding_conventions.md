@@ -1,5 +1,0 @@
-- Constants governing decay behaviour (lambda rates, floors, caps, thresholds) are declared as module-level uppercase names in `confidence.py` and re-imported by `decay.py` so the Cypher expression stays numerically identical to the Python formula.
-- Node fields are read through the generic `_get(node, key, default)` helper that transparently supports both dict rows (Cypher results) and attribute-style objects, avoiding repeated `isinstance` checks at call sites.
-- Timestamps arriving from Neo4j are normalised via `_as_datetime` (handling native `datetime`, `to_native()`, and ISO strings with trailing Z) before any arithmetic, and `_ensure_aware` guarantees UTC-aware datetimes.
-- Long-running synchronous work (SQLite queries in `stats.py`) is dispatched off the event loop with `asyncio.to_thread`, keeping the async API surface non-blocking.
-- External subsystem imports (`memex.graph.archive`, `memex.watcher.registry`) are performed inside the task body rather than at module top, allowing graceful fallback when those optional dependencies are unavailable.

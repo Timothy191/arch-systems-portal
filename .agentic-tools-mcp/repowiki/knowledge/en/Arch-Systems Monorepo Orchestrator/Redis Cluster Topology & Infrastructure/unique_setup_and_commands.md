@@ -1,0 +1,1 @@
+Local cluster: `docker compose -f redis-topology/docker-compose/redis-cluster.yml up`. Production: `terraform init && terraform apply -var 'subnet_ids=[...]' -var 'security_group_ids=[...]'` in `redis-topology/terraform/`.

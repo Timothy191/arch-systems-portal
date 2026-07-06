@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 
-export interface Chunk {
+interface Chunk {
   text: string;
   index: number;
   startChar: number;
@@ -17,7 +17,15 @@ export class ChunkingService {
   chunkText(text: string, maxChunkSize = DEFAULT_MAX_TOKENS): Chunk[] {
     const maxChars = maxChunkSize * CHARS_PER_TOKEN;
     if (text.length <= maxChars) {
-      return [{ text, index: 0, startChar: 0, endChar: text.length, tokenEstimate: Math.ceil(text.length / CHARS_PER_TOKEN) }];
+      return [
+        {
+          text,
+          index: 0,
+          startChar: 0,
+          endChar: text.length,
+          tokenEstimate: Math.ceil(text.length / CHARS_PER_TOKEN),
+        },
+      ];
     }
 
     const chunks: Chunk[] = [];

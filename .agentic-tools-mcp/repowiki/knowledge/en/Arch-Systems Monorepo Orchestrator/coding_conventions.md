@@ -1,0 +1,4 @@
+- All JS/TS children declare themselves in `pnpm-workspace.yaml` and inherit shared versions from the root `catalog:` / `react19` catalog rather than pinning duplicates.
+- Cross-project dependencies are enforced at lint time via `eslint.boundaries.cjs`, whose `depConstraints` are regenerated from `tools/policy-definitions.ts` instead of hand-edited.
+- Build graphs go through Nx: apps depend on `^build` and `^codegen` so `@repo/ui` and Kysely type generation run before any app build.
+- Runtime services are composed by layering docker-compose files (base tools → production overrides → monitoring/security) rather than one monolithic compose file.

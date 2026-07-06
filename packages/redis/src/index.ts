@@ -1,4 +1,4 @@
-export { getRedisClient, closeRedis } from "./client";
+export { getRedisClient, closeRedis } from "./client.js";
 export {
   cacheGet,
   cacheGetWithStats,
@@ -11,17 +11,17 @@ export {
   cacheInvalidatePrefixes,
   cacheEvictL1ByPrefix,
   clearMemoryCache,
-} from "./cache";
+} from "./cache.js";
 export {
   CacheCategory,
   CACHE_TTL_REGISTRY,
   buildCacheKey,
   type CacheTtlConfig,
-} from "./registry";
+} from "./registry.js";
 export {
   recordCacheHit,
   recordCacheMiss,
   recordRedisError,
   getCacheStats,
   resetCacheStats,
-} from "./stats";
+} from "./stats.js";

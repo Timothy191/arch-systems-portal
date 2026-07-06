@@ -51,7 +51,12 @@ jest.mock("@repo/ui/AnimatedButton", () => ({
   ),
 }));
 
+jest.mock("./actions", () => ({
+  loginAction: jest.fn(),
+}));
+
 const { useRouter, useSearchParams } = jest.requireMock("next/navigation");
+const { loginAction } = jest.requireMock("./actions");
 
 describe("LoginForm", () => {
   const mockPush = jest.fn();
@@ -66,7 +71,10 @@ describe("LoginForm", () => {
     useSearchParams.mockReturnValue({
       get: jest.fn(() => null),
     });
-    global.fetch = jest.fn();
+    loginAction.mockReset();
+    global.fetch = jest
+      .fn()
+      .mockResolvedValue({ ok: true, json: async () => ({}) });
   });
 
   afterEach(() => {
@@ -92,10 +100,9 @@ describe("LoginForm", () => {
   });
 
   it("submits form and redirects on success", async () => {
-    (global.fetch as jest.Mock).mockResolvedValueOnce({
-      ok: true,
-      status: 200,
-      json: jest.fn().mockResolvedValue({}),
+    loginAction.mockResolvedValueOnce({
+      success: true,
+      user: { id: "user-123" },
     });
 
     render(<LoginForm />);
@@ -109,13 +116,10 @@ describe("LoginForm", () => {
     fireEvent.submit(screen.getByTestId("login-form"));
 
     await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith(
-        "/api/auth/login",
-        expect.objectContaining({
-          method: "POST",
-          body: JSON.stringify({ email: "PC-12345", password: "testpass" }),
-        }),
-      );
+      expect(loginAction).toHaveBeenCalledWith({
+        email: "PC-12345",
+        password: "testpass",
+      });
     });
 
     await waitFor(() => {
@@ -125,10 +129,9 @@ describe("LoginForm", () => {
   });
 
   it("displays error when sign in fails", async () => {
-    (global.fetch as jest.Mock).mockResolvedValueOnce({
-      ok: false,
-      status: 401,
-      json: jest.fn().mockResolvedValue({ error: "Invalid credentials" }),
+    loginAction.mockResolvedValueOnce({
+      success: false,
+      error: "Invalid credentials",
     });
 
     render(<LoginForm />);
@@ -149,9 +152,7 @@ describe("LoginForm", () => {
   });
 
   it("shows network error when fetch throws", async () => {
-    (global.fetch as jest.Mock).mockRejectedValueOnce(
-      new Error("Network failure"),
-    );
+    loginAction.mockRejectedValueOnce(new Error("Network failure"));
 
     render(<LoginForm />);
 
@@ -171,18 +172,18 @@ describe("LoginForm", () => {
   });
 
   it("disables button while submitting", async () => {
-    let resolveFetch: (_value: {
-      ok: boolean;
-      json: () => Promise<unknown>;
+    let resolveAction: (_value: {
+      success: boolean;
+      user: Record<string, unknown>;
     }) => void;
-    const fetchPromise = new Promise<{
-      ok: boolean;
-      json: () => Promise<unknown>;
+    const actionPromise = new Promise<{
+      success: boolean;
+      user: Record<string, unknown>;
     }>((resolve) => {
-      resolveFetch = resolve;
+      resolveAction = resolve;
     });
 
-    (global.fetch as jest.Mock).mockReturnValueOnce(fetchPromise);
+    loginAction.mockReturnValueOnce(actionPromise);
 
     render(<LoginForm />);
 
@@ -201,7 +202,7 @@ describe("LoginForm", () => {
       ).toBeDisabled();
     });
 
-    resolveFetch!({ ok: true, json: jest.fn().mockResolvedValue({}) });
+    resolveAction!({ success: true, user: {} });
 
     // After resolution, button should be enabled again
     await waitFor(() => {
@@ -217,10 +218,9 @@ describe("LoginForm", () => {
       get: jest.fn((key: string) => (key === "redirect" ? "/dashboard" : null)),
     });
 
-    (global.fetch as jest.Mock).mockResolvedValueOnce({
-      ok: true,
-      status: 200,
-      json: jest.fn().mockResolvedValue({}),
+    loginAction.mockResolvedValueOnce({
+      success: true,
+      user: { id: "user-123" },
     });
 
     render(<LoginForm />);
@@ -290,10 +290,9 @@ describe("LoginForm", () => {
   it("rejects invalid page redirects (external or static files) and defaults to '/'", async () => {
     const { useSearchParams } = jest.requireMock("next/navigation");
 
-    (global.fetch as jest.Mock).mockResolvedValue({
-      ok: true,
-      status: 200,
-      json: async () => ({}),
+    loginAction.mockResolvedValue({
+      success: true,
+      user: {},
     });
 
     const testRedirect = async (path: string, expectedTarget: string) => {

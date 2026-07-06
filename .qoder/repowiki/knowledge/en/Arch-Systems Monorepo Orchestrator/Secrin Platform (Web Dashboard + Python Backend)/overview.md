@@ -1,1 +1,0 @@
-Monorepo that wires a Next.js dashboard, a FastAPI backend with RQ workers, and shared Python packages behind a single Poetry distribution.

@@ -1,0 +1,28 @@
+{
+  "symbols": [
+    {
+      "name": "DefaultExports",
+      "qualified": "DefaultExports",
+      "kind": "function",
+      "visibility": "public",
+      "line_start": 1,
+      "line_end": 7
+    }
+  ],
+  "edges": [
+    {
+      "source": "DefaultExports",
+      "target": "TestAvatarLambda",
+      "kind": "calls",
+      "line": 4,
+      "confidence": 1
+    },
+    {
+      "source": "DefaultExports",
+      "target": "TestProfileKappa",
+      "kind": "calls",
+      "line": 3,
+      "confidence": 1
+    }
+  ]
+}

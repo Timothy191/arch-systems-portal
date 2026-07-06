@@ -13,11 +13,11 @@
       ],
       "env": {
         "N8N_URL": "http://localhost:5678",
-        "N8N_EMAIL": "your-n8n-email-here",
-        "N8N_PASSWORD": "your-n8n-password-here"
+        "N8N_EMAIL": "${N8N_EMAIL}",
+        "N8N_PASSWORD": "${N8N_PASSWORD}"
       }
     },
-    "codebase-memory": {
+    "codebase-memory-mcp": {
       "command": "codebase-memory-mcp",
       "args": []
     },
@@ -32,11 +32,16 @@
         ".",
         "--transport",
         "stdio"
-      ]
+      ],
+      "description": "repowise: codebase intelligence — docs, graph, git signals, dead code, decisions"
     },
     "sense-mcp": {
+      "alwaysLoad": true,
       "command": "tools/sense/bin/sense",
-      "args": []
+      "args": [
+        "mcp"
+      ],
+      "serverInstructions": "When Sense is available and indexed, prefer Sense tools over grep, glob, and file-walking agents for structural and semantic code questions. Sense provides pre-indexed results that are faster and more complete.\n\nWHEN TO USE SENSE TOOLS:\n- Symbol relationships, callers, dependencies → sense_graph\n- \"What would break if I changed X?\", impact analysis → sense_blast\n- Conceptual/semantic code search (not exact string match) → sense_search\n- Project patterns and conventions → sense_conventions\n- Index health, what's indexed → sense_status\n\nWORKFLOWS:\n- Orientation (new to the codebase?) → sense_search with broad concepts + sense_conventions\n- Impact analysis (changing something?) → sense_blast\n- Dependency tracing (who calls what?) → sense_graph\n- Debugging (where does X happen?) → sense_search\n- Refactoring (what patterns exist?) → sense_conventions + sense_graph\n\nWHEN NOT TO USE SENSE TOOLS:\n- Exact text/string search → use grep\n- Reading file contents → use your file reading tool\n- Editing code → Sense is read-only"
     },
     "memex-mcp": {
       "command": "uv",
@@ -48,10 +53,10 @@
         "serve"
       ],
       "env": {
-        "NEO4J_URI": "bolt://localhost:7687",
-        "NEO4J_USER": "neo4j",
-        "NEO4J_PASSWORD": "memex-local",
-        "GEMINI_API_KEY": "your-gemini-api-key-here"
+        "NEO4J_URI": "${NEO4J_URI:-bolt://localhost:7687}",
+        "NEO4J_USER": "${NEO4J_USER:-neo4j}",
+        "NEO4J_PASSWORD": "${NEO4J_PASSWORD}",
+        "GEMINI_API_KEY": "${GEMINI_API_KEY}"
       }
     },
     "deepgraph-nextjs": {
@@ -89,7 +94,7 @@
         "ghcr.io/github/github-mcp-server"
       ],
       "env": {
-        "GITHUB_PERSONAL_ACCESS_TOKEN": "<your-github-token>"
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PERSONAL_ACCESS_TOKEN}"
       }
     },
     "redis": {
@@ -100,7 +105,7 @@
         "redis-mcp-server"
       ],
       "env": {
-        "REDIS_URL": "<your-redis-url>"
+        "REDIS_URL": "redis://localhost:6379"
       }
     },
     "trace-mcp": {
@@ -108,6 +113,50 @@
       "args": [
         "serve"
       ]
+    },
+    "agentic-tools-mcp": {
+      "command": "node",
+      "args": [
+        ".aistack/packages/agentic-tools-mcp/src/server.js"
+      ],
+      "description": "Project memory and task store"
+    },
+    "token-optimizer-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "token-optimizer-mcp"
+      ]
+    },
+    "shadcn-ui-mcp-server": {
+      "command": "npx",
+      "args": ["-y", "shadcn-ui-mcp-server"],
+      "description": "shadcn/ui component access and code generation"
+    },
+    "world-intel-mcp": {
+      "command": "npx",
+      "args": ["-y", "world-intel-mcp"],
+      "description": "Real-time global intelligence across 30+ domains with 109 MCP tools"
+    },
+    "mcp-graphql-forge": {
+      "command": "npx",
+      "args": ["-y", "mcp-graphql-forge"],
+      "description": "Configuration-driven MCP server exposing curated GraphQL queries as modular tools"
+    },
+    "memory-mcp": {
+      "command": "npx",
+      "args": ["-y", "memory-mcp"],
+      "description": "Memory management and context window caching for LLM interactions"
+    },
+    "rn-debug-mcp": {
+      "command": "npx",
+      "args": ["-y", "rn-debug-mcp"],
+      "description": "React Native debug — see, understand, and interact with RN apps on emulator/device"
+    },
+    "vscode-mcp-server": {
+      "command": "npx",
+      "args": ["-y", "vscode-mcp-server"],
+      "description": "VS Code extension allowing MCP clients to interact with the editor"
     }
   }
 }

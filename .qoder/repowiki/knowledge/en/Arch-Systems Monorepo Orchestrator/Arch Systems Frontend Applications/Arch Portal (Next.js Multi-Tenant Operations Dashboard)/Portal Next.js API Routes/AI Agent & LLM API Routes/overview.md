@@ -1,1 +1,0 @@
-Next.js App Router endpoints exposing authenticated AI capabilities: a multi-turn agent chat, shift handoff summarization, predictive maintenance risk assessment, and safety compliance analysis.

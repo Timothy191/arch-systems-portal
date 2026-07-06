@@ -1,3 +1,0 @@
-- Lazy-evaluated singletons exposed via a Proxy (env) or module-level Map (activePortalFetches) so initialization happens only on first use.
-- Graceful degradation pattern: when an external dependency (Redis, database) fails, fall back to an in-memory default or retry L1 rather than crashing the request.
-- Tag-based cache invalidation pairs a Redis cacheInvalidateTags call with a Next.js revalidateTag call, each wrapped in its own try/catch so one failure does not break the other.

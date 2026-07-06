@@ -1,6 +1,0 @@
-Flat `components/` package of independent, single-responsibility client components with no internal sub-packages:
-- `ProductionTrendChartWrapper.tsx` is a thin Next.js dynamic-import wrapper (`next/dynamic`, `ssr: false`) around the heavy chart library in `ProductionTrendChart.tsx`, exposing a loading skeleton while keeping server bundles small.
-- `ExportButton.tsx` offers CSV (local Blob download) and Excel (`@repo/utils/client.exportToExcel`, dynamically imported) via a dropdown menu; it owns its own click-outside dismissal logic.
-- `PDFDownloadButton.tsx` calls the server action `generateMonthlyReport` from `@/app/actions`, opens the returned URL in a new tab, and surfaces errors through `sonner.toast`.
-- `ReportTemplate.tsx` is a pure `@react-pdf/renderer` document (no React DOM deps) that renders an A4 page with KPI cards and a table; it is consumed by the server action pipeline rather than rendered on the client.
-Dependency direction is one-way: chart → nothing, export buttons → server actions / shared utils, PDF template → `@react-pdf/renderer`. No cross-component imports exist between sibling files.

@@ -1,0 +1,11 @@
+Flat collection of independent server utilities under `apps/portal/lib/` with no internal sub-packages. Responsibilities are split by concern:
+
+- `departments.ts` — pure static configuration (`DEPARTMENTS`, per-department tab arrays) plus a `getDepartmentTabs` dispatcher; no I/O.
+- `dept-context.ts` — React Server Component helper wrapping `createServerSupabaseClient`, resolving a slug to a UUID via Supabase + Redis cache, returning `{ dept, deptId, supabase, today }`; also exports `requireDepartment` for route-level allow-listing.
+- `employee.ts` — resolves an `employees.id` from a Supabase Auth user id, preferring the `x-auth-employee-id` request header when available.
+- `shift-completeness.ts` — orchestrates five parallel DB queries (`machines`, `machine_operations`, `excavator_activity`, `dozer_rolls`, `hourly_loads`) and classifies each machine into one of four required forms (`machine-operations`, `excavator-activity`, `roll-over`, `hourly-loads`) based on keyword matching against `machine_type`; wrapped in `withCache` keyed by `[deptId, date, shift]` with Redis tag invalidation.
+- `shift-closeout.ts` — mutable server actions (`setPin`, `verifyPin`, `closeShift`) that enforce supervisor/admin role checks, bcrypt PIN hashing/comparison, shift-state guards (`shift_status`), audit logging, and Next.js path revalidation.
+- `dashboard-service.ts` — single `getMonolithizedDashboard` server action that calls the Postgres RPC `get_monolithized_department_dashboard_payload` and wraps it in a 15-second Redis cache via `cacheWrap`.
+- `shift-calculation.test.ts` — unit tests for the external `@repo/utils.getThreeShift` utility (A/B/C three-shift schedule).
+
+Dependency direction is outward-only: this module depends on `@repo/supabase/server`, `@repo/redis`, `@repo/utils`, and shared error classes in `@/lib/errors/*`; nothing inside the module imports from UI components or route handlers.

@@ -99,35 +99,7 @@ export const scannerBadgeSchema = z.object({
 // Control Room
 // ---------------------------------------------------------------------------
 
-export const shiftCompletenessSchema = z.object({
-  deptId: uuidSchema,
-  deptSlug: nonEmptyString.max(100),
-  date: dateSchema,
-  shift: z.enum(["day", "night"]),
-});
-
 // ---------------------------------------------------------------------------
-// AI Chat
-// ---------------------------------------------------------------------------
-
-export const aiChatSchema = z.object({
-  messages: z
-    .array(
-      z.object({
-        id: z.string().min(1).max(128),
-        role: z.enum(["user", "assistant", "system"]),
-        content: z.string().max(32768),
-        parts: z
-          .array(z.object({ type: z.string(), text: z.string().optional() }))
-          .optional(),
-      }),
-    )
-    .min(1, "At least one message required")
-    .max(50, "Too many messages"),
-  context: z.string().max(4096).optional(),
-  sessionId: z.string().min(1).max(256).optional(),
-  model: z.string().max(128).optional(),
-});
 
 export const aiSafetySchema = z.object({
   logData: z.string().min(1).max(50000),
@@ -170,11 +142,4 @@ export const safetyExportQuerySchema = z.object({
 export const adminDataUpdateSchema = z.object({
   id: z.string().min(1, "Record id is required"),
   data: z.record(z.string(), z.unknown()),
-});
-
-export const adminDataQuerySchema = z.object({
-  limit: z.coerce.number().int().min(1).max(200).optional().default(50),
-  offset: z.coerce.number().int().min(0).optional().default(0),
-  order_by: z.string().max(100).optional().default("created_at"),
-  order_dir: z.enum(["asc", "desc"]).optional().default("desc"),
 });

@@ -1,1 +1,0 @@
-Next.js App Router Route Groups (`(hub)`), Server Components with `dynamic = 'force-dynamic'`, Supabase PostgREST via `@repo/supabase/server` + `@repo/supabase/read-replica`, Redis-backed RSC cache (`@repo/redis` CacheCategory) layered over `cachedRSC`/`withCache`, lucide-react icons, and Tailwind CSS design tokens (`--text-heading`, `--text-muted`, `--accent-*`).

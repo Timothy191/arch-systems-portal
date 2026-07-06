@@ -1,1 +1,0 @@
-Kubernetes Deployment manifest and Prometheus/Grafana observability assets for the AMCA cache-agent service.

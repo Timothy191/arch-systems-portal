@@ -1,1 +1,0 @@
-Node.js ES module + `@modelcontextprotocol/sdk` ^1.8.0 for the MCP stdio transport; system service via systemd (`n8n.service`); workflow import uses bash + curl + python3 one-liners.

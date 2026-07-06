@@ -1,1 +1,0 @@
-Supabase CLI v2 (Postgres 15, transaction pooler, edge runtime); Supabase JS client v2 + `@supabase/ssr` for cookie-based sessions; Kysely v0.28 with `pg` for type-safe raw SQL; React 19 + Next 16; Tailwind v3 with shadcn/Radix primitives, Framer Motion 12 and animejs for animations.

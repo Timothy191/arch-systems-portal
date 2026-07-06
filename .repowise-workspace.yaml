@@ -1,11 +1,1 @@
-version: 1
-default_repo: arch-mk2
-repos:
-- path: .
-  alias: arch-mk2
-  is_primary: true
-  indexed_at: '2026-07-03T10:24:24.201713+00:00'
-- path: tools/repowise
-  alias: repowise
-  indexed_at: '2026-07-03T10:28:22.863648+00:00'
-  last_commit_at_index: d27a19b9e27a2374c02bebb6b29a628a9472e09d
+.agentic-tools-mcp/repowise-workspace.yaml

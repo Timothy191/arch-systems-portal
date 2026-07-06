@@ -1,6 +1,0 @@
-- Every tool handler follows a try/except pattern that logs at ERROR and returns a human-readable error string rather than raising, so MCP clients always get a TextContent response.
-- Read-tool functions accept an optional `repo: Optional[str] = None` parameter and pass it through to every `get_graph_client()` / query call, letting callers scope results to a specific repository.
-- Optional numeric arguments are coerced with `int(...)/float(...)` inside try/except blocks that fall back to a documented default, keeping argument validation local to the handler.
-- Write operations acquire a per-`(repo_path, module)` `asyncio.Lock` from `_problem_write_locks` / `_decision_write_locks` around the dedup-check + write path to prevent concurrent duplicate entries.
-- After successful formatting, read tools emit telemetry via `from memex.graph.telemetry import record_tool_call` wrapped in a best-effort try/except so observability failures never break the tool.
-- All Neo4j mutations go through `client.driver.execute_query` with explicit Cypher and named parameters (never f-strings) and use `elementId(n) = $id OR n.uuid = $id` dual-match patterns to support both legacy and UUID-backed nodes.

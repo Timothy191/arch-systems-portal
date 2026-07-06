@@ -1,0 +1,1 @@
+Typer-based CLI that clones repos, builds a Neo4j code knowledge graph from Python/TypeScript/JS ASTs, and drives LLM-powered summarization, search, chat, and wiki generation.

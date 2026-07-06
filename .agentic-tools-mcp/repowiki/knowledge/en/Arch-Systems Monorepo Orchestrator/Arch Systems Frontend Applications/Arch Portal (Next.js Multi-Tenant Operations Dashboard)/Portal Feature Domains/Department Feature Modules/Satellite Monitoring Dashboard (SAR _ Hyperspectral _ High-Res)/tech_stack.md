@@ -1,0 +1,1 @@
+Next.js App Router client components (`"use client"`) with `next/dynamic` for SSR-disabled lazy loading of Kepler.gl, Lidar, and COG raster layers; Tailwind CSS for styling; STAC Item typed data from `@/lib/monitoring-api` representing Copernicus Sentinel-1/Sentinel-2 assets.

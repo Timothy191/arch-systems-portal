@@ -1,0 +1,29 @@
+{
+  "symbols": [
+    {
+      "name": "Button",
+      "qualified": "Button",
+      "kind": "function",
+      "visibility": "public",
+      "line_start": 7,
+      "line_end": 9
+    },
+    {
+      "name": "ButtonProps",
+      "qualified": "ButtonProps",
+      "kind": "interface",
+      "visibility": "public",
+      "line_start": 3,
+      "line_end": 5
+    },
+    {
+      "name": "Greeting",
+      "qualified": "Greeting",
+      "kind": "function",
+      "visibility": "public",
+      "line_start": 11,
+      "line_end": 13
+    }
+  ],
+  "edges": []
+}

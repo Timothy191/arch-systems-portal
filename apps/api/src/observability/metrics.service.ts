@@ -14,12 +14,18 @@ export class MetricsService {
   private readonly jobMetrics = new Map<string, MetricEntry>();
   private readonly dbMetrics = new Map<string, MetricEntry>();
 
-  constructor(
-    @Inject(REDIS_CLIENT) private readonly redis: RedisClientType,
-  ) {}
+  constructor(@Inject(REDIS_CLIENT) private readonly redis: RedisClientType) {}
 
-  recordJobExecution(jobId: string, durationMs: number, success: boolean): void {
-    const entry = this.jobMetrics.get(jobId) || { count: 0, errors: 0, totalDurationMs: 0 };
+  recordJobExecution(
+    jobId: string,
+    durationMs: number,
+    success: boolean,
+  ): void {
+    const entry = this.jobMetrics.get(jobId) || {
+      count: 0,
+      errors: 0,
+      totalDurationMs: 0,
+    };
     entry.count++;
     if (!success) entry.errors++;
     entry.totalDurationMs += durationMs;
@@ -32,13 +38,24 @@ export class MetricsService {
       if (!success) {
         this.redis.hIncrBy(key, "errors", 1).catch(() => {});
       }
-      this.redis.hIncrByFloat(key, "totalDurationMs", durationMs).catch(() => {});
+      this.redis
+        .hIncrByFloat(key, "totalDurationMs", durationMs)
+        .catch(() => {});
     }
   }
 
-  recordDbQuery(tableName: string, operation: string, durationMs: number, success: boolean): void {
+  recordDbQuery(
+    tableName: string,
+    operation: string,
+    durationMs: number,
+    success: boolean,
+  ): void {
     const key = `${tableName}:${operation}`;
-    const entry = this.dbMetrics.get(key) || { count: 0, errors: 0, totalDurationMs: 0 };
+    const entry = this.dbMetrics.get(key) || {
+      count: 0,
+      errors: 0,
+      totalDurationMs: 0,
+    };
     entry.count++;
     if (!success) entry.errors++;
     entry.totalDurationMs += durationMs;
@@ -51,11 +68,16 @@ export class MetricsService {
       if (!success) {
         this.redis.hIncrBy(redisKey, "errors", 1).catch(() => {});
       }
-      this.redis.hIncrByFloat(redisKey, "totalDurationMs", durationMs).catch(() => {});
+      this.redis
+        .hIncrByFloat(redisKey, "totalDurationMs", durationMs)
+        .catch(() => {});
     }
   }
 
-  async getMetrics(): Promise<{ jobMetrics: Map<string, MetricEntry>; dbMetrics: Map<string, MetricEntry> }> {
+  async getMetrics(): Promise<{
+    jobMetrics: Map<string, MetricEntry>;
+    dbMetrics: Map<string, MetricEntry>;
+  }> {
     const mergedJobs = new Map<string, MetricEntry>(this.jobMetrics);
     const mergedDb = new Map<string, MetricEntry>(this.dbMetrics);
 
@@ -63,7 +85,10 @@ export class MetricsService {
       if (this.redis?.isOpen) {
         // Fetch job keys from Redis
         const jobKeys: string[] = [];
-        for await (const key of this.redis.scanIterator({ MATCH: "metrics:job:*", COUNT: 100 })) {
+        for await (const key of this.redis.scanIterator({
+          MATCH: "metrics:job:*",
+          COUNT: 100,
+        })) {
           jobKeys.push(key);
         }
         for (const key of jobKeys) {
@@ -80,7 +105,10 @@ export class MetricsService {
 
         // Fetch db keys from Redis
         const dbKeys: string[] = [];
-        for await (const key of this.redis.scanIterator({ MATCH: "metrics:db:*", COUNT: 100 })) {
+        for await (const key of this.redis.scanIterator({
+          MATCH: "metrics:db:*",
+          COUNT: 100,
+        })) {
           dbKeys.push(key);
         }
         for (const key of dbKeys) {

@@ -1,1 +1,0 @@
-Server-side library layer that wires the Portal app's domain services, plugin system, AI agent, background jobs, and API clients around shared env, cache, audit, and error infrastructure.

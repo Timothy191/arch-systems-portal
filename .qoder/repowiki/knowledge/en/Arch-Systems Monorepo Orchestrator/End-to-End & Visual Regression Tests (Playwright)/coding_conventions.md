@@ -1,5 +1,0 @@
-- Protected routes are asserted by navigating to them unauthenticated and expecting a redirect to `/login` whose URL contains the URL-encoded original path as a `redirect=` query parameter.
-- Login form assertions consistently locate inputs via both semantic selectors (`input[type='email']`, `input[type='password']`) and stable IDs (`input#email`, `input#password`), and submit through `button[type='submit']` inside `form[data-testid='login-form']`.
-- Design-system token compliance is enforced by scanning `page.content()` for forbidden raw Tailwind classes (e.g. `shadow-sm`, `bg-white/5`, `text-white/70`) and asserting they do not appear in the rendered HTML.
-- Visual regression tests hide non-deterministic visuals (canvas, video, `.animate-pulse`) via injected styles in a `test.beforeEach`, then apply a uniform 0.02 threshold and mask dynamic widgets using `page.locator('[data-testid=...]')`.
-- Cross-environment resilience is expressed with try/catch around assertions that may fail in unseeded dev environments, falling back to a less strict expectation (e.g. staying on `/login` instead of requiring a hub redirect).

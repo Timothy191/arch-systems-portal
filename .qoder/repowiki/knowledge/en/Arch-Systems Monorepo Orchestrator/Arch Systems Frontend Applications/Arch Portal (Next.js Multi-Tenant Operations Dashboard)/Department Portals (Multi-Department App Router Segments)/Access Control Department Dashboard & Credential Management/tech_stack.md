@@ -1,1 +1,0 @@
-Next.js App Router with Server Components + `'use server'` actions; Supabase client (`createServerSupabaseClient`) for Postgres RPCs and relational selects; Redis-backed caching via `@repo/redis` (`withCache`, `cacheInvalidateTags`, `CacheCategory.METRICS`); custom error classes (`AuthError`, `DatabaseError`, `ForbiddenError`) from `@/lib/errors/error-classes`.

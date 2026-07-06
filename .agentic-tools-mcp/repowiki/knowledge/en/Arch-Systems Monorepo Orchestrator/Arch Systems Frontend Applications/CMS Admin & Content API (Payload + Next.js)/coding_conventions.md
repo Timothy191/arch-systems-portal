@@ -1,0 +1,3 @@
+- Payload collections are defined declaratively in `payload.config.ts` with `slug`, `fields`, and optional `admin.useAsTitle` rather than through separate schema files.
+- Route handlers under `app/(payload)` import the shared `payload.config` via relative paths and pass it explicitly into Payload factory functions (`RootLayout`, `RootPage`, `REST_*`) instead of relying on global configuration.
+- Environment-sensitive values (database connection string, signing secret) are read from `process.env` with empty-string fallbacks inside `payload.config.ts`.

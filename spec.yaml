@@ -1,0 +1,17 @@
+version: '1.0'
+project:
+  name: Arch-Mk2
+  description: AI Stack Kit workspace
+  author: ''
+client:
+  type: copilot
+  features:
+    - skills
+    - hooks
+skills: []
+modules: []
+settings:
+  cacheDir: ~/aistack/cache
+  lockFile: .aistack/lock.yaml
+  autoSync: false
+  verifyChecksums: true

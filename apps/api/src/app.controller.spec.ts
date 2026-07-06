@@ -1,19 +1,33 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import { ConfigModule } from "@nestjs/config";
 import { HealthController } from "./health/health.controller";
+import { HealthCheckService } from "@nestjs/terminus";
+import { SupabaseHealthIndicator } from "./health/indicators/supabase.health";
+import { RedisHealthIndicator } from "./health/indicators/redis.health";
 
 describe("HealthController", () => {
   let controller: HealthController;
 
+  const mockHealthCheckService = {
+    check: jest.fn().mockResolvedValue({ status: "ok" }),
+  };
+  const mockSupabaseHealthIndicator = {
+    isHealthy: jest.fn().mockResolvedValue({ supabase: { status: "up" } }),
+  };
+  const mockRedisHealthIndicator = {
+    isHealthy: jest.fn().mockResolvedValue({ redis: { status: "up" } }),
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [
-        ConfigModule.forRoot({
-          isGlobal: true,
-          envFilePath: [".env.test", ".env.local", ".env"],
-        }),
-      ],
       controllers: [HealthController],
+      providers: [
+        { provide: HealthCheckService, useValue: mockHealthCheckService },
+        {
+          provide: SupabaseHealthIndicator,
+          useValue: mockSupabaseHealthIndicator,
+        },
+        { provide: RedisHealthIndicator, useValue: mockRedisHealthIndicator },
+      ],
     }).compile();
 
     controller = module.get<HealthController>(HealthController);

@@ -1,0 +1,120 @@
+{
+  "symbols": [
+    {
+      "name": "DynamicModel",
+      "qualified": "DynamicModel",
+      "kind": "class",
+      "line_start": 23,
+      "line_end": 28
+    },
+    {
+      "name": "setup",
+      "qualified": "DynamicModel#setup",
+      "kind": "method",
+      "visibility": "public",
+      "parent": "DynamicModel",
+      "line_start": 25,
+      "line_end": 27
+    },
+    {
+      "name": "Order",
+      "qualified": "Order",
+      "kind": "class",
+      "line_start": 1,
+      "line_end": 7
+    },
+    {
+      "name": "Product",
+      "qualified": "Product",
+      "kind": "class",
+      "line_start": 9,
+      "line_end": 12
+    },
+    {
+      "name": "TopicViewSerializer",
+      "qualified": "TopicViewSerializer",
+      "kind": "class",
+      "line_start": 15,
+      "line_end": 19
+    }
+  ],
+  "edges": [
+    {
+      "source": "DynamicModel#setup",
+      "target": "self.has_many",
+      "kind": "calls",
+      "line": 26,
+      "confidence": 1
+    },
+    {
+      "source": "Order",
+      "target": "Fulfillment::Depot",
+      "kind": "composes",
+      "line": 3,
+      "confidence": 0.9
+    },
+    {
+      "source": "Order",
+      "target": "Invoice",
+      "kind": "composes",
+      "line": 5,
+      "confidence": 0.9
+    },
+    {
+      "source": "Order",
+      "target": "LineItem",
+      "kind": "composes",
+      "line": 4,
+      "confidence": 0.9
+    },
+    {
+      "source": "Order",
+      "target": "Tag",
+      "kind": "composes",
+      "line": 6,
+      "confidence": 0.9
+    },
+    {
+      "source": "Order",
+      "target": "User",
+      "kind": "composes",
+      "line": 2,
+      "confidence": 0.9
+    },
+    {
+      "source": "Product",
+      "target": "ProductCategory",
+      "kind": "composes",
+      "line": 10,
+      "confidence": 0.9
+    },
+    {
+      "source": "Product",
+      "target": "Variant",
+      "kind": "composes",
+      "line": 11,
+      "confidence": 0.9
+    },
+    {
+      "source": "TopicViewSerializer",
+      "target": "PostStreamSerializer",
+      "kind": "composes",
+      "line": 17,
+      "confidence": 0.9
+    },
+    {
+      "source": "TopicViewSerializer",
+      "target": "SuggestedCategorySerializer",
+      "kind": "composes",
+      "line": 18,
+      "confidence": 0.9
+    },
+    {
+      "source": "TopicViewSerializer",
+      "target": "TopicViewDetailsSerializer",
+      "kind": "composes",
+      "line": 16,
+      "confidence": 0.9
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "symbol": {
+    "name": "Orphan",
+    "qualified": "App::Orphan",
+    "file": "app/models/orphan.rb",
+    "line_start": 1,
+    "line_end": 3,
+    "kind": "class",
+    "ref": "app/models/orphan.rb:1"
+  },
+  "edges": {
+    "calls": [],
+    "called_by": [],
+    "inherits": [],
+    "inherited_by": [],
+    "composes": [],
+    "composed_by": [],
+    "includes": [],
+    "imports": [],
+    "tests": [],
+    "temporal": []
+  },
+  "next_steps": []
+}

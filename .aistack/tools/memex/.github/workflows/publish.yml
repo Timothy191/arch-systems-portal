@@ -1,0 +1,158 @@
+name: Publish to PyPI and npm
+
+on:
+  push:
+    tags:
+      - 'v*'
+  # Manual trigger so the pipeline can be re-run against an already-published
+  # version — e.g. to (re)register on the MCP Registry after a manual npm/PyPI
+  # publish. The publish jobs are idempotent (skip-if-exists), so this is safe.
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: astral-sh/setup-uv@v7
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        # --all-extras pulls graspologic + hdbscan + scikit-learn so the
+        # v0.3.1 cluster engine tests can collect and run.
+        run: uv sync --all-extras
+
+      - name: Run tests
+        env:
+          NEO4J_URI: "bolt://localhost:7687"
+          NEO4J_USER: "neo4j"
+          NEO4J_PASSWORD: "fakepassword"
+          GEMINI_API_KEY: "dummy"
+        # Excluded suites require a live Neo4j / Gemini backend that CI
+        # doesn't provision. They run locally via `docker compose up`
+        # and against staging. The remaining tests cover the public
+        # surface; coverage stays above 90%.
+        run: |
+          uv run pytest tests/ -v \
+            --ignore=tests/test_corroboration.py \
+            --ignore=tests/test_bidirectional.py \
+            --ignore=tests/test_mcp_queries_integration.py \
+            --ignore=tests/test_http_transport.py \
+            --ignore=tests/test_phase1_e2e.py \
+            --ignore=tests/test_phase2_e2e.py \
+            --ignore=tests/test_pipeline_e2e.py \
+            -m "not integration"
+
+  publish-pypi:
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: astral-sh/setup-uv@v7
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Build package
+        run: uv run python -m build
+
+      - name: Check package metadata
+        run: uv run twine check dist/*
+
+      - name: Publish to PyPI
+        # --skip-existing makes re-runs (and manual pre-publishes) idempotent:
+        # a version already on PyPI is skipped instead of 400-ing the job.
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API }}
+        run: uv run twine upload --skip-existing dist/*
+
+  publish-npm:
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      # OIDC trusted publishing — no NPM token/2FA. Requires a one-time
+      # "Trusted Publisher" config on npmjs.com for `stifler-memex-mcp`
+      # (org STiFLeR7, repo memex, workflow publish.yml). See README/AUDIT.
+      id-token: write
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          registry-url: "https://registry.npmjs.org"
+          # never cache in release builds
+          package-manager-cache: false
+
+      - name: Upgrade npm for OIDC trusted publishing
+        # Trusted publishing requires npm >= 11.5.1; Node 22 ships an older npm.
+        run: npm install -g npm@latest
+
+      - name: Copy README and LICENSE into npm package
+        run: |
+          cp README.md npm/README.md
+          cp LICENSE npm/LICENSE
+
+      - name: Publish to npm (OIDC, skip if already published)
+        working-directory: npm
+        # No NODE_AUTH_TOKEN: authentication is via OIDC trusted publishing.
+        # Skip-if-exists keeps re-runs and manual pre-publishes idempotent.
+        run: |
+          NAME=$(jq -r .name package.json)
+          VER=$(jq -r .version package.json)
+          if npm view "$NAME@$VER" version >/dev/null 2>&1; then
+            echo "$NAME@$VER already published — skipping"
+          else
+            npm publish --access public
+          fi
+
+  # Lists the server on the official MCP Registry
+  # (registry.modelcontextprotocol.io). Gated on both package jobs because the
+  # registry validates each server.json package's ownership marker
+  # (npm: package.json `mcpName`; PyPI: README `mcp-name:` comment) against the
+  # live published artifact. Because the publish jobs are now idempotent, this
+  # runs cleanly whether the version was published by CI or manually
+  # beforehand. Auth is GitHub OIDC — no stored secret; the workflow's OIDC
+  # identity (STiFLeR7/memex) authorizes the io.github.stifler7/* namespace.
+  publish-registry:
+    needs: [publish-pypi, publish-npm]
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write   # required for `mcp-publisher login github-oidc`
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Sync server.json versions to the package version
+        # Source of truth is npm/package.json so this works for both a tag
+        # push and a manual workflow_dispatch (no tag ref required).
+        run: |
+          VERSION=$(jq -r .version npm/package.json)
+          jq --arg v "$VERSION" '.version = $v | (.packages[].version) = $v' \
+            server.json > server.tmp && mv server.tmp server.json
+          cat server.json
+
+      - name: Install mcp-publisher
+        run: |
+          curl -L "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/').tar.gz" | tar xz mcp-publisher
+
+      - name: Authenticate to MCP Registry (GitHub OIDC)
+        run: ./mcp-publisher login github-oidc
+
+      - name: Publish to MCP Registry
+        run: ./mcp-publisher publish

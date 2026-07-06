@@ -1,1 +1,0 @@
-MCP server that exposes read/write graph tools over stdio and HTTP so LLM agents can query memex decisions, problems, symbols and record new ones.

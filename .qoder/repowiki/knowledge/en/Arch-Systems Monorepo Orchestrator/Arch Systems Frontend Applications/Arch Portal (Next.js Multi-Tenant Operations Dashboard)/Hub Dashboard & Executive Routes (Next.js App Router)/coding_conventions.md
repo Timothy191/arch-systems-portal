@@ -1,5 +1,0 @@
-- Every data-fetching helper is wrapped in `cachedRSC(key, fn, { revalidate, tags })` which internally calls `withCache({ category, keyParts, tags })` against `@repo/redis`, and keys always include `auth:${userId}` plus `table:<name>` tags for scoped invalidation.
-- Database reads are performed through `createReadReplicaClient(cookieList)` (not the write client) so that per-request Supabase session cookies are forwarded to the read replica.
-- Auth is enforced at the top of every server component by calling `getUserSafely(supabase)` and `redirect('/login')` when no user is present before any data work begins.
-- Slow or heavy sub-trees are isolated into their own async server component and rendered inside a `<Suspense fallback={<GlassSkeleton .../>}>` boundary so the hub shell paints first.
-- Route-level UI is built from `@repo/ui` primitives (`GlassCard`, `KPIGrid`, `KPICard`, `SecondaryButton`, `GlassSkeleton`) rather than inline style blocks, keeping visual consistency across hub pages.

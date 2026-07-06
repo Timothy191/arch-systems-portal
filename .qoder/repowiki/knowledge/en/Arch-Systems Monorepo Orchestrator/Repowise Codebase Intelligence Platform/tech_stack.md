@@ -1,1 +1,0 @@
-Python 3.11+ with setuptools namespace packages publishing a single `repowise` wheel; tree-sitter-based multi-language ingestion, NetworkX/SciPy graph analytics, SQLAlchemy+Alembic persistence, FastAPI+MCP server, Click CLI, and an npm workspaces frontend (Next.js + React + shadcn).

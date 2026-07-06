@@ -1,0 +1,5 @@
+- Every handler wraps its exported HTTP function with `withRateLimit(request, () => ...)` and returns `applyCors(request, response)`.
+- Authentication and authorization are performed inline by fetching the caller's `employees` row and branching on `role !== 'admin'` against `department_id` / `accessible_departments` before each DB write.
+- Route handlers separate the business logic into an internal `handle*` async function that returns `NextResponse`, while the exported `GET/PUT/DELETE/POST` only wires middleware and CORS.
+- Soft deletes use an `updated_at` timestamp plus setting `deleted_at` rather than hard deletion, and all read queries filter out soft-deleted rows via `.is('deleted_at', null)`.
+- After any mutating operation the handler calls `revalidatePath('/admin/tools')` and `revalidatePath('/[department]/tools')` to invalidate cached pages.

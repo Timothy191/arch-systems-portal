@@ -1,1 +1,0 @@
-Python asyncio event loop with `watchdog` for filesystem events; git hooks invoked via `subprocess` to bridge post-commit/post-merge into the daemon; Pydantic models for the JSON registry under `~/.memex/registry.json`.

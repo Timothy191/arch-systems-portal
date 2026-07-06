@@ -1,0 +1,139 @@
+# ----------------------------------------------------------------------------
+# Private workspace
+# ----------------------------------------------------------------------------
+# Design docs, pitches, and decisions live outside the public repo.
+.doc/
+doc/
+
+# AI assistant workspace (kept local, never pushed)
+.claude/
+CLAUDE.md
+# Exception: bench/global/docker/**/CLAUDE.md are baked into docker images
+# at build time, not the user's local AI context.
+!bench/global/docker/**/CLAUDE.md
+.claude.json
+.mcp.json
+.opencode/
+.cursor/
+.cursorrules
+.cursorignore
+.opencode/
+opencode.json
+.codex/
+.aider*
+.continue/
+.windsurf/
+AGENTS.md
+
+# ----------------------------------------------------------------------------
+# Editor / IDE
+# ----------------------------------------------------------------------------
+.vscode/
+.idea/
+.ruby-lsp/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ----------------------------------------------------------------------------
+# Go
+# ----------------------------------------------------------------------------
+# Build artifacts
+/sense
+/bin/
+/dist/
+/mcpb-dist/
+/cmd/sense/sense
+*.exe
+*.test
+*.out
+coverage.html
+coverage.txt
+
+# Go workspace files
+go.work
+go.work.sum
+
+# Python bytecode caches — regenerated on every run, version-specific
+__pycache__/
+*.pyc
+
+# ----------------------------------------------------------------------------
+# Local config, secrets, runtime data
+# ----------------------------------------------------------------------------
+*.env
+.env
+.env.*
+!.env.example
+sense.yml
+/data/
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+*.log
+.env.local
+
+# ----------------------------------------------------------------------------
+# Sense index (local per checkout, rebuild with `sense scan`)
+# ----------------------------------------------------------------------------
+.sense/
+
+# ----------------------------------------------------------------------------
+# Embedding models (downloaded on first build)
+# ----------------------------------------------------------------------------
+/models/
+*.onnx
+
+# ----------------------------------------------------------------------------
+# Test fixtures
+# ----------------------------------------------------------------------------
+/testdata/.sense/
+/assets
+
+# ----------------------------------------------------------------------------
+# Bench harness (per-run results)
+# ----------------------------------------------------------------------------
+bench/improvement-loop/results/
+bench/analysis/
+bench/tools/
+bench/CHANGELOG.md
+/.council
+
+# Host-built sense indexes staged into the docker build context by
+# bench/global/build-prescan.sh. Each one is ~350MB (nextjs.sense) and is
+# regenerated on demand from $SENSE_BENCH_ROOT/sense/<repo>/.sense.
+bench/global/docker/sense/preindex/
+
+# Local-only bench result snapshots (manual backups before full sweeps).
+bench/results.snapshot-*/
+bench/results/report-*.md
+bench/results/report-for-humans-*.md
+
+# Per-repo variance reports are temporary, model-shared scratch (runs-variance.sh
+# overwrites <repo>.md per run); not durable evidence, so kept out of git.
+bench/verticals/**/variance/
+# Raw codex JSONL is the pre-normalized intermediate (parse-codex-result.py turns
+# it into the canonical transcript.json); large, redundant, embeds local paths.
+bench/**/codex-raw*.jsonl
+bench/drivers/bench-sense-local.sh
+/bench/embed-recall
+
+# Per-machine index build-state (built_at timestamps + symbol/edge counts +
+# fingerprints), rewritten on every local rescan, so two contributors conflict.
+# Untracked: rely on `sense status` for the live fingerprint.
+bench/index-state.json
+
+# Local scratch: Python coverage DB and scenario backups taken while
+# reworking a seam (e.g. forem.embed.yaml.bak before the reaction rewrite).
+bench/lib/.coverage
+bench/scenarios/*.bak
+.local/
+bench/RESCAN-TIMINGS.md
+bench/verticals/ruby-rails/results/variance/
+/bench/results/loopA-gaps
+
+# vertical-loop.sh per-repo phase state (working artifact)
+bench/verticals/**/.loop-state.json

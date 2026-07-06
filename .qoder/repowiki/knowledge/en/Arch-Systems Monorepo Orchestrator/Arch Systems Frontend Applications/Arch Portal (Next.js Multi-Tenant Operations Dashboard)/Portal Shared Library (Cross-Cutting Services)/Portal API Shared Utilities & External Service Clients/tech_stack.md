@@ -1,1 +1,0 @@
-Zod schemas for request validation, Redis-backed distributed rate limiting via `@repo/redis` with an in-memory fallback, Next.js `next/server` `NextResponse` for all HTTP primitives, and free public APIs (Open-Meteo, EOX WMTS, Copernicus STAC) accessed through native `fetch` with ISR caching.

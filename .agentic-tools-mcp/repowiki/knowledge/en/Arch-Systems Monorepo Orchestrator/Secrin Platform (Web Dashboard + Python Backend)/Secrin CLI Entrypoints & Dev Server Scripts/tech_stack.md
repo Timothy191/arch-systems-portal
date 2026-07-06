@@ -1,0 +1,1 @@
+FastAPI + uvicorn for HTTP servers; RQ with redis-backed job queue (using `rq.SimpleWorker`); Pydantic Settings via `pydantic-settings`; Neo4j driver via `neo4j`; tree-sitter parsers for Python/JS/TS; Anthropic & Google Generative AI SDKs; Poetry 2.x build backend.

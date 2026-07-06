@@ -1,0 +1,66 @@
+{
+  "symbols": [
+    {
+      "name": "Dispatcher",
+      "qualified": "Dispatcher",
+      "kind": "class",
+      "line_start": 1,
+      "line_end": 12
+    },
+    {
+      "name": "bare",
+      "qualified": "Dispatcher#bare",
+      "kind": "method",
+      "visibility": "public",
+      "parent": "Dispatcher",
+      "line_start": 9,
+      "line_end": 11
+    },
+    {
+      "name": "dynamic",
+      "qualified": "Dispatcher#dynamic",
+      "kind": "method",
+      "visibility": "public",
+      "parent": "Dispatcher",
+      "line_start": 2,
+      "line_end": 7
+    }
+  ],
+  "edges": [
+    {
+      "source": "Dispatcher#bare",
+      "target": "self.invisible",
+      "kind": "calls",
+      "line": 10,
+      "confidence": 0.7
+    },
+    {
+      "source": "Dispatcher#dynamic",
+      "target": "bar",
+      "kind": "calls",
+      "line": 4,
+      "confidence": 0.7
+    },
+    {
+      "source": "Dispatcher#dynamic",
+      "target": "baz",
+      "kind": "calls",
+      "line": 5,
+      "confidence": 0.7
+    },
+    {
+      "source": "Dispatcher#dynamic",
+      "target": "foo",
+      "kind": "calls",
+      "line": 3,
+      "confidence": 0.7
+    },
+    {
+      "source": "Dispatcher#dynamic",
+      "target": "self.other",
+      "kind": "calls",
+      "line": 6,
+      "confidence": 0.7
+    }
+  ]
+}

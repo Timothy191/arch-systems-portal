@@ -1,0 +1,9 @@
+Built as a Next.js App Router route group under `app/(departments)/access-control/`. The root `layout.tsx` wraps every child route in the shared `DepartmentLayout`, registers the `access-control` tab via `getDepartmentTabs`, and injects an `AIAssistantWrapper`. The root `page.tsx` is the KPI dashboard: it runs with `dynamic = 'force-dynamic'`, resolves the current department via `getDepartmentContext({ department: 'access-control' })`, then fans out five parallel server calls (`getAccessControlMetrics`, `getRecentAccessActivity`, `getEntityBadgeStatus`, `getHourlyAccessStats`, `getBadgeStatusDistribution`) from `actions.ts` and renders them into four dynamically imported chart/KPI components under `components/` (each wrapped in `nextDynamic` with a `<Skeleton>` fallback).
+
+Sub-routes mirror this pattern:
+
+- `badges/page.tsx` — credential registry table + QR preview placeholder.
+- `visitors/page.tsx` — visitor registration form + today's check-in table.
+- `access-logs/page.tsx` — paginated scan-event log table.
+
+All data mutations and reads go through `actions.ts`, which is marked `'use server'`. A single `assertAccessControlRole()` helper enforces that the caller has an `admin` or `access_control` role before any DB call; violations throw `ForbiddenError` / `AuthError` from `@/lib/errors/error-classes`. Read-heavy endpoints are wrapped in `withCache(...)` from `@/lib/cache-utils` using `CacheCategory.METRICS` and Redis tags like `dept:${deptId}` and `table:*`; mutating `_revokeBadge` invalidates those tags via `cacheInvalidateTags` and triggers `revalidatePath('/access-control/badges')`. Database access is exclusively through Supabase RPCs (`get_access_control_metrics_jsonb`) and typed `.select(...)` joins on `access_logs`, `badges`, `personnel`, `fleet`, `equipment`, and `visitors` tables. UI primitives come from `@repo/ui` (`GlassCard`, `DepartmentLayout`, `Table`, `Button`, `Input`, `Skeleton`).

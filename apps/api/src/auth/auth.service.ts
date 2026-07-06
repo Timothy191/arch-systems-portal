@@ -1,8 +1,5 @@
-import {
-  Injectable,
-  Inject,
-  UnauthorizedException,
-} from "@nestjs/common";
+import { Injectable, Inject, UnauthorizedException } from "@nestjs/common";
+import bcrypt from "bcryptjs";
 import { SUPABASE_CLIENT } from "../supabase/supabase.constants";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
@@ -61,5 +58,24 @@ export class AuthService {
       .single();
 
     return data ?? null;
+  }
+
+  async hashPin(pin: string) {
+    if (!pin || pin.length < 4) {
+      throw new UnauthorizedException("PIN must be at least 4 characters");
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(pin, salt);
+    return { hash };
+  }
+
+  async verifyPin(pin: string, hash: string) {
+    if (!pin || !hash) {
+      return { valid: false };
+    }
+
+    const valid = await bcrypt.compare(pin, hash);
+    return { valid };
   }
 }

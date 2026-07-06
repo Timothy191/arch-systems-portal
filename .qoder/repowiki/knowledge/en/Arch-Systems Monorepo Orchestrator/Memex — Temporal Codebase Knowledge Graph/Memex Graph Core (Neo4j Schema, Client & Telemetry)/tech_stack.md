@@ -1,1 +1,0 @@
-Pydantic v2 models for the canonical Neo4j node schema; Graphiti-core as the single Neo4j driver (with a patched `FixedGeminiEmbedder`); optional OpenTelemetry SDK for live spans/metrics; SQLite (WAL) at `~/.memex/telemetry.db` for persisted call logs.

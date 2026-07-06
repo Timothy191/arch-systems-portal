@@ -1,0 +1,1 @@
+A zero-dependency Rust CLI that computes multi-variable stress-fatigue metrics (wear index, failure probability, RUL) and is surfaced as a Next.js plugin widget.

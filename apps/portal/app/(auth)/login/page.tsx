@@ -10,7 +10,7 @@ import Image from "next/image";
 
 const PORTAL_VERSION = process.env.PORTAL_VERSION ?? "2.0.0.1";
 
-export const dynamic = "force-dynamic";
+// Removed force-dynamic segment config to comply with cacheComponents
 
 export default async function LoginPage() {
   const cookieStore = await cookies();

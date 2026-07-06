@@ -16,8 +16,9 @@ import { ControlRoomModule } from "./control-room/control-room.module";
 import { AccessControlModule } from "./access-control/access-control.module";
 import { ExportsModule } from "./exports/exports.module";
 import { TelemetryModule } from "./telemetry/telemetry.module";
-import { AiModule } from "./ai/ai.module";
 import { JobsModule } from "./jobs/jobs.module";
+import { AiBridgeModule } from "./ai-bridge/ai-bridge.module";
+import { AiModule } from "./ai/ai.module";
 
 @Module({
   imports: [
@@ -53,8 +54,9 @@ import { JobsModule } from "./jobs/jobs.module";
     AccessControlModule,
     ExportsModule,
     TelemetryModule,
-    AiModule,
     JobsModule,
+    AiBridgeModule,
+    AiModule,
   ],
 })
 export class AppModule {}

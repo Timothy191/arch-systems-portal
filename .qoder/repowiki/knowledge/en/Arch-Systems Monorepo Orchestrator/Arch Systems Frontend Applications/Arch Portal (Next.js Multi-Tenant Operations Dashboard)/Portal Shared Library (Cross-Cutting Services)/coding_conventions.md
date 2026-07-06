@@ -1,4 +1,0 @@
-- Environment access goes exclusively through the `env` proxy from `@/lib/env`; no direct `process.env` reads in feature code.
-- External service calls wrap failures with `AppError` from `@/lib/errors` and log via the shared structured logger rather than throwing raw errors.
-- Database reads use `createReadReplicaClient()` from `@repo/supabase/read-replica` instead of the write client, applied consistently across tools, departments, and jobs.
-- Optional external dependencies (weather, satellite, Ollama, Redis) follow a fail-open pattern: fall back to constants or cached defaults instead of crashing the route.

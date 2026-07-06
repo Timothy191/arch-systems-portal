@@ -1,0 +1,1 @@
+Go 1.25 with `modernc.org/sqlite` (pure-Go SQLite, no CGO), `tree-sitter/go-tree-sitter` plus one native parser per supported language (Ruby, Python, Go, Rust, TS/JS, C/C++, Java, Kotlin, PHP, Scala, C#), `yalue/onnxruntime_go` for the bundled bi-encoder embedding model, `mark3labs/mcp-go` for the MCP stdio transport, and `fsnotify` for filesystem watching.

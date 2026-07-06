@@ -19,6 +19,8 @@ jest.mock("bcryptjs", () => ({
 
 jest.mock("next/cache", () => ({
   revalidatePath: jest.fn(),
+  revalidateTag: jest.fn(),
+  updateTag: jest.fn(),
 }));
 
 jest.mock("./audit", () => ({
@@ -35,6 +37,9 @@ function buildSupabaseMock(overrides: Record<string, unknown> = {}) {
     auth: {
       getUser: jest.fn().mockResolvedValue({
         data: { user: { id: "auth-user-1" } },
+      }),
+      getSession: jest.fn().mockResolvedValue({
+        data: { session: { access_token: "token-123" } },
       }),
     },
     from: jest.fn(),

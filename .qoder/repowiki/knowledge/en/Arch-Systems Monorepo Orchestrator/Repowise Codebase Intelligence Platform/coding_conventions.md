@@ -1,3 +1,0 @@
-- All Python sub-packages live under `packages/<pkg>/src/repowise/<pkg>/` and are exposed as `repowise.<pkg>` namespace packages via `[tool.setuptools.package-dir]` rather than separate distributions.
-- CLI commands and MCP tools are registered through `repowise.core.registry.register_command` / `register_mcp_tool` instead of direct monkey-patching, enabling third-party extensions.
-- Frontend packages share types via the `packages/types` workspace and UI primitives via `@repo/ui`, referenced through npm workspace aliases rather than relative paths.

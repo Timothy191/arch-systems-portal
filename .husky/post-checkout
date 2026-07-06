@@ -1,0 +1,6 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Automatically update Repowise index on commit
+echo "Updating Repowise codebase intelligence index..."
+./.aistack/tools/repowise/.venv/bin/repowise update -w --index-only || true

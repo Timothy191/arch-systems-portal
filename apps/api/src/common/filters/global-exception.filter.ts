@@ -1,4 +1,11 @@
-import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus, Logger } from "@nestjs/common";
+import {
+  ExceptionFilter,
+  Catch,
+  ArgumentsHost,
+  HttpException,
+  HttpStatus,
+  Logger,
+} from "@nestjs/common";
 import type { FastifyReply } from "fastify";
 
 /**
@@ -21,27 +28,34 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 
     try {
       // Dynamic import to avoid hard dependency when Sentry is not installed
-      import("@sentry/node").then((Sentry) => {
-        Sentry.init({
-          dsn,
-          environment: process.env.NODE_ENV ?? "development",
-          tracesSampleRate: parseFloat(process.env.SENTRY_TRACES_SAMPLE_RATE ?? "0.1"),
-          beforeSend(event: any) {
-            // Filter out expected errors (4xx)
-            if (event.exception?.values?.[0]) {
-              const value = event.exception.values[0];
-              if (value.type === "HttpException" || value.type === "BadRequestException") {
-                return null;
+      import("@sentry/node")
+        .then((Sentry) => {
+          Sentry.init({
+            dsn,
+            environment: process.env.NODE_ENV ?? "development",
+            tracesSampleRate: parseFloat(
+              process.env.SENTRY_TRACES_SAMPLE_RATE ?? "0.1",
+            ),
+            beforeSend(event: any) {
+              // Filter out expected errors (4xx)
+              if (event.exception?.values?.[0]) {
+                const value = event.exception.values[0];
+                if (
+                  value.type === "HttpException" ||
+                  value.type === "BadRequestException"
+                ) {
+                  return null;
+                }
               }
-            }
-            return event;
-          },
+              return event;
+            },
+          });
+          this.sentryInitialized = true;
+          this.logger.log("Sentry initialized for API server");
+        })
+        .catch(() => {
+          this.logger.warn("@sentry/node not installed — Sentry disabled");
         });
-        this.sentryInitialized = true;
-        this.logger.log("Sentry initialized for API server");
-      }).catch(() => {
-        this.logger.warn("@sentry/node not installed — Sentry disabled");
-      });
     } catch {
       // Sentry not available, continue without it
     }
@@ -87,17 +101,25 @@ export class GlobalExceptionFilter implements ExceptionFilter {
         exception instanceof Error ? exception.stack : undefined,
       );
     } else if (status >= 400) {
-      this.logger.warn(`[${request.method}] ${request.url} ${status}: ${message}`);
+      this.logger.warn(
+        `[${request.method}] ${request.url} ${status}: ${message}`,
+      );
     }
 
     // Report to Sentry for 5xx errors
     if (status >= 500 && this.sentryInitialized && exception instanceof Error) {
-      import("@sentry/node").then((Sentry) => {
-        Sentry.captureException(exception, {
-          tags: { method: request.method, url: request.url, status: String(status) },
-          extra: logEntry,
-        });
-      }).catch(() => {});
+      import("@sentry/node")
+        .then((Sentry) => {
+          Sentry.captureException(exception, {
+            tags: {
+              method: request.method,
+              url: request.url,
+              status: String(status),
+            },
+            extra: logEntry,
+          });
+        })
+        .catch(() => {});
     }
 
     if (!response.sent) {

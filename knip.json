@@ -48,18 +48,6 @@
         "lib/errors/error-classes.ts"
       ]
     },
-    "apps/cms": {
-      "entry": [".eslintrc.{js,cjs}"],
-      "project": ["app/**/*.{ts,tsx}"]
-    },
-    "apps/overview": {
-      "entry": [".eslintrc.{js,cjs}"],
-      "project": [
-        "app/**/*.{ts,tsx}",
-        "components/**/*.{ts,tsx}",
-        "lib/**/*.{ts,tsx}"
-      ]
-    },
     "packages/theme": {
       "entry": ["src/tokens/*.ts", "src/react/*.tsx", ".eslintrc.{js,cjs}"],
       "project": ["src/**/*.{ts,tsx,css}"],

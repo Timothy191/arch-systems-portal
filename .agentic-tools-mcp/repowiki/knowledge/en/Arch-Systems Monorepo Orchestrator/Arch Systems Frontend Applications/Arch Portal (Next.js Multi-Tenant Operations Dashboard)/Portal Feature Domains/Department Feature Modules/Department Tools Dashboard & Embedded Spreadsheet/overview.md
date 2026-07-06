@@ -1,0 +1,1 @@
+Client-side dashboard that embeds an UniverJS spreadsheet and lists external department tools with live health checks, inline iframe embedding, and status badges.

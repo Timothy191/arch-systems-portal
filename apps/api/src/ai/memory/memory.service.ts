@@ -3,9 +3,9 @@ import { SUPABASE_CLIENT } from "../../supabase/supabase.constants";
 import { OllamaService } from "../ollama/ollama.service";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-export type MemoryType = "episodic" | "semantic";
+type MemoryType = "episodic" | "semantic";
 
-export interface MemoryEntry {
+interface MemoryEntry {
   id: string;
   sessionId: string;
   userId: string;
@@ -66,20 +66,26 @@ export class MemoryService {
     try {
       const embedding = await this.generateEmbedding(options.query);
 
-      const { data, error } = await this.supabase.rpc("search_memories_hybrid", {
-        query_embedding: embedding,
-        query_text: options.query,
-        p_user_id: options.userId,
-        p_session_id: options.sessionId ?? null,
-        p_memory_type: options.memoryType ?? null,
-        match_count: options.limit ?? 10,
-        semantic_weight: 0.6,
-        keyword_weight: 0.2,
-        temporal_weight: 0.2,
-      });
+      const { data, error } = await this.supabase.rpc(
+        "search_memories_hybrid",
+        {
+          query_embedding: embedding,
+          query_text: options.query,
+          p_user_id: options.userId,
+          p_session_id: options.sessionId ?? null,
+          p_memory_type: options.memoryType ?? null,
+          match_count: options.limit ?? 10,
+          semantic_weight: 0.6,
+          keyword_weight: 0.2,
+          temporal_weight: 0.2,
+        },
+      );
 
       if (error) {
-        this.logger.warn("Hybrid search failed, falling back to semantic", error.message);
+        this.logger.warn(
+          "Hybrid search failed, falling back to semantic",
+          error.message,
+        );
         return this.retrieveSemanticMemories(options);
       }
 
@@ -105,11 +111,14 @@ export class MemoryService {
     limit = 20,
   ): Promise<MemoryEntry[]> {
     try {
-      const { data, error } = await this.supabase.rpc("get_conversation_history", {
-        p_session_id: sessionId,
-        p_user_id: userId,
-        message_limit: limit,
-      });
+      const { data, error } = await this.supabase.rpc(
+        "get_conversation_history",
+        {
+          p_session_id: sessionId,
+          p_user_id: userId,
+          message_limit: limit,
+        },
+      );
 
       if (error || !data) {
         const { data: fallbackData } = await this.supabase
@@ -142,7 +151,8 @@ export class MemoryService {
 
     const lines = memories.map((m) => {
       const timestamp = new Date(m.createdAt).toLocaleString();
-      const prefix = m.memoryType === "episodic" ? `[${timestamp}]` : `[${m.memoryType}]`;
+      const prefix =
+        m.memoryType === "episodic" ? `[${timestamp}]` : `[${m.memoryType}]`;
       return `${prefix} ${m.content}`;
     });
 
@@ -158,14 +168,17 @@ export class MemoryService {
   }): Promise<MemoryEntry[]> {
     try {
       const embedding = await this.generateEmbedding(options.query);
-      const { data, error } = await this.supabase.rpc("search_memories_semantic", {
-        query_embedding: embedding,
-        p_user_id: options.userId,
-        p_session_id: options.sessionId ?? null,
-        p_memory_type: options.memoryType ?? null,
-        match_count: options.limit ?? 10,
-        similarity_threshold: 0.7,
-      });
+      const { data, error } = await this.supabase.rpc(
+        "search_memories_semantic",
+        {
+          query_embedding: embedding,
+          p_user_id: options.userId,
+          p_session_id: options.sessionId ?? null,
+          p_memory_type: options.memoryType ?? null,
+          match_count: options.limit ?? 10,
+          similarity_threshold: 0.7,
+        },
+      );
 
       if (error) return [];
 
@@ -186,7 +199,9 @@ export class MemoryService {
 
   private async generateEmbedding(text: string): Promise<number[]> {
     try {
-      const vectors = await this.ollamaService.embed(text, { model: "nomic-embed-text:latest" });
+      const vectors = await this.ollamaService.embed(text, {
+        model: "nomic-embed-text:latest",
+      });
       return vectors[0] ?? [];
     } catch {
       return [];

@@ -8,17 +8,23 @@ describe("ExportsService", () => {
     from: jest.fn().mockReturnValue({
       select: jest.fn().mockReturnValue({
         eq: jest.fn().mockReturnValue({
-          single: jest.fn().mockResolvedValue({ data: { id: "dept-1" }, error: null }),
+          single: jest
+            .fn()
+            .mockResolvedValue({ data: { id: "dept-1" }, error: null }),
         }),
         gte: jest.fn().mockReturnValue({
           lte: jest.fn().mockReturnValue({
             order: jest.fn().mockReturnValue({
-              range: jest.fn().mockResolvedValue({ data: [], error: null, count: 0 }),
+              range: jest
+                .fn()
+                .mockResolvedValue({ data: [], error: null, count: 0 }),
             }),
           }),
         }),
         order: jest.fn().mockReturnValue({
-          range: jest.fn().mockResolvedValue({ data: [], error: null, count: 0 }),
+          range: jest
+            .fn()
+            .mockResolvedValue({ data: [], error: null, count: 0 }),
         }),
       }),
     }),

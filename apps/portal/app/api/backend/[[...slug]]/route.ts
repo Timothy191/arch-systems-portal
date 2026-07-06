@@ -9,7 +9,10 @@ export const runtime = "nodejs";
 
 const IDEMPOTENT_METHODS = new Set(["GET", "HEAD", "OPTIONS"]);
 
-async function proxy(request: NextRequest, context: { params: Promise<{ slug?: string[] }> }) {
+async function proxy(
+  request: NextRequest,
+  context: { params: Promise<{ slug?: string[] }> },
+) {
   const { slug = [] } = await context.params;
   const base = env.API_BASE_URL ?? "http://localhost:3004/api";
   const upstream = new URL(base);

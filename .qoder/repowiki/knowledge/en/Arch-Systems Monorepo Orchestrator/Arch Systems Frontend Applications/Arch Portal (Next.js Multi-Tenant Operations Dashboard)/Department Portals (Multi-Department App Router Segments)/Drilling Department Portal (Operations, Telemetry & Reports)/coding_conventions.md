@@ -1,6 +1,0 @@
-- Each route directory follows the Next.js App Router convention of `layout.tsx` + `loading.tsx` + `page.tsx`, with the layout composing `DepartmentLayout` and `AIAssistantWrapper` once for the subtree.
-- Server components declare `export const dynamic = 'force-dynamic'` and fetch data directly against Supabase tables or RPCs; client components are kept minimal and marked with the `'use client'` directive at the top of the file.
-- Data access uses a consistent pattern: authenticate first via `createServerSupabaseClient().auth.getUser()` and `redirect('/login')` if unauthenticated, then resolve the drilling department id by querying `departments WHERE name = 'drilling'` before issuing domain queries.
-- Parallel database reads are batched with `Promise.all([...])` so each page issues one round-trip containing multiple `.from(...).select(...)` calls.
-- User-facing numbers are normalized through small helpers (`numOrNull`, `formatNumber`, `fmt`) rather than ad-hoc formatting, and numeric fields are explicitly cast back to `number | null` before upserting to avoid string coercion.
-- Inline-editable cells follow a draft-on-change / commit-on-blur pattern: values live in a `draft` map keyed by `${machineId}:${shift}:${field}`, and `commitField` parses, persists via `upsert`, clears the draft, shows a transient saved indicator, then calls `router.refresh()`.

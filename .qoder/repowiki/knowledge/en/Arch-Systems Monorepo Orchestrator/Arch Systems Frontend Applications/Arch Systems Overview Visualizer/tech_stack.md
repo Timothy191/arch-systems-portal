@@ -1,1 +1,0 @@
-Next.js 16 (App Router, client components), React 19, Tailwind CSS 3, Radix UI Tabs, @xyflow/react for the architecture graph, Lucide icons, class-variance-authority + clsx + tailwind-merge for component styling, and the monorepo `@repo/theme` package.

@@ -1,5 +1,0 @@
-- Service modules expose a single exported object (e.g. `ProjectService`, `GitHubService`) whose methods return typed promises via `ApiClient.get/post<T>()`.
-- Route handlers follow the Next.js App Router convention of exporting named `GET`/`POST` handlers from a `route.ts` file colocated with the URL segment.
-- Feature domains are mirrored across three sibling folders — `services/<feature>/`, `types/<feature>/`, and `constants/<feature>/` — keeping API contracts co-located with their callers.
-- External API calls go exclusively through the `ApiClient` class rather than direct `axios` or `fetch` usage, centralizing base URL and error normalization.
-- Auth state is propagated from the Prisma-backed User model into the next-auth JWT via custom `jwt`/`session` callbacks (e.g. `isNew`), then read in middleware to enforce onboarding.

@@ -260,6 +260,80 @@ services:
     networks:
       - plantcor-tools
 
+  surrealdb:
+    image: surrealdb/surrealdb:latest
+    container_name: plantcor-surrealdb
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    command: start --user root --pass root file:/var/lib/surrealdb/data.db
+    volumes:
+      - surrealdb_data:/var/lib/surrealdb
+    healthcheck:
+      test: ["CMD", "/usr/bin/bash", "-c", ":> /dev/tcp/127.0.0.1/8000"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - plantcor-tools
+
+  kestra:
+    image: kestra/kestra:latest
+    container_name: plantcor-kestra
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    command: server local
+    volumes:
+      - kestra_data:/app/storage
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:8080/api/v1/health > /dev/null 2>&1 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - plantcor-tools
+
+  memgraph:
+    image: memgraph/memgraph:latest
+    container_name: plantcor-memgraph
+    restart: unless-stopped
+    ports:
+      - "7687:7687"
+      - "7444:7444"
+    volumes:
+      - memgraph_data:/var/lib/memgraph
+    healthcheck:
+      test: ["CMD", "/usr/bin/bash", "-c", ":> /dev/tcp/127.0.0.1/7687"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - plantcor-tools
+
+  firecrawl:
+    image: mendableai/firecrawl:latest
+    container_name: plantcor-firecrawl
+    restart: unless-stopped
+    ports:
+      - "3002:3002"
+    environment:
+      - PORT=3002
+      - USE_DB_AUTHENTICATION=false
+    networks:
+      - plantcor-tools
+
+  ragflow:
+    image: infiniflow/ragflow:latest
+    container_name: plantcor-ragflow
+    restart: unless-stopped
+    ports:
+      - "9380:80"
+    environment:
+      - TZ=UTC
+    networks:
+      - plantcor-tools
+
 volumes:
   flowise_data:
   redis_data:
@@ -268,6 +342,9 @@ volumes:
   prometheus_data:
   fuxa_data:
   clickhouse_data:
+  surrealdb_data:
+  kestra_data:
+  memgraph_data:
 
 networks:
   plantcor-tools:

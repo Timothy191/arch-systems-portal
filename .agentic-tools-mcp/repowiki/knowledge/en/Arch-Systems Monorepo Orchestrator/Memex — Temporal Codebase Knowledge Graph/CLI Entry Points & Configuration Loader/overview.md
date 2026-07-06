@@ -1,0 +1,1 @@
+Python entry points and argparse-based CLI that dispatches memex subcommands (init, watch, serve, doctor, keys, cluster, …) to the watcher, MCP server, and graph tools, plus a Pydantic config loader.

@@ -1,0 +1,6 @@
+- Each route exports `dynamic = "force-dynamic"` so the handler runs at request time rather than being statically prerendered.
+- Every handler wraps its body in `withRateLimit(req, () => handleExportRequest(req))` and returns all responses through `applyCors(req, ...)`.
+- Authentication is performed by creating a Supabase client and calling `supabase.auth.getUser()`, returning 401 when no user is present.
+- Query parameters are parsed via a shared Zod schema's `.safeParse()` and rejected with a 400 `{ error, details }` payload on failure.
+- CSV output is selected by inspecting `req.headers.get("accept")` for `text/csv`, and every cell is passed through a local `sanitizeCsvCell` helper that quotes values starting with `=`, `+`, `-`, `@`, tab, or carriage return.
+- Optional department filtering resolves the department name to an id via a separate `departments` lookup before applying `.eq("department_id", deptRow.id)` to the main query.

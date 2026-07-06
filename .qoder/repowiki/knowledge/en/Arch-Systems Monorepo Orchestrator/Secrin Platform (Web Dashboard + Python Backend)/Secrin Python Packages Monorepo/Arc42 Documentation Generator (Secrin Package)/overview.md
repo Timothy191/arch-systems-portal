@@ -1,1 +1,0 @@
-AI-powered documentation generator that analyzes source codebases and produces Arc42 architecture docs, C4 diagrams, Diataxis guides, and citation-backed MDX output via Anthropic/Gemini/Ollama.

@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Input } from "@repo/ui/Input";
 import { AnimatedButton } from "@repo/ui/AnimatedButton";
 import { Eye, EyeOff, Lock } from "lucide-react";
+import { loginAction } from "./actions";
 
 /**
  * Validates whether a redirect path is internal to the application to prevent open redirects.
@@ -65,7 +66,7 @@ export function LoginForm() {
   const [capsLock, setCapsLock] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
 
-  // TODO: Consider converting to a Server Action for improved performance and security
+  // Auth action is now handled securely via Server Action
 
   function handleCapsLockKey(e: React.KeyboardEvent) {
     setCapsLock(e.getModifierState("CapsLock"));
@@ -90,19 +91,13 @@ export function LoginForm() {
     };
 
     try {
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: employeeId,
-          password,
-        }),
+      const result = await loginAction({
+        email: employeeId,
+        password,
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        setError(data.error || "Sign in failed. Please try again.");
+      if (!result.success) {
+        setError(result.error || "Sign in failed. Please try again.");
         setPassword("");
 
         // Record Sentry breadcrumb (avoid PII)
@@ -111,7 +106,7 @@ export function LoginForm() {
             message: "Auth failed",
             category: "auth",
             level: "error",
-            data: { reason: data.error || "Unknown error" },
+            data: { reason: result.error || "Unknown error" },
           });
           // eslint-disable-next-line no-empty
         } catch {}
@@ -123,7 +118,6 @@ export function LoginForm() {
         return;
       }
 
-      // Success - the API route sets HttpOnly cookies via Supabase
       // Success telemetry + breadcrumb (no PII)
       try {
         Sentry.addBreadcrumb({

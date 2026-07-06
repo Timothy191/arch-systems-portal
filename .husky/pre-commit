@@ -1,0 +1,41 @@
+#!/bin/sh
+
+# Arch-Mk2 Pre-Commit Policy Enforcement
+# Validates skills, agents, and critical file integrity before commit
+
+echo "Running pre-commit validation..."
+
+# 1. Validate skill structure (must have SKILL.md with name + description)
+for skill_dir in .agentic-tools-mcp/agents/skills/*/ .github/skills/*/; do
+  [ -d "$skill_dir" ] || continue
+  skill_file="${skill_dir}SKILL.md"
+  if [ -f "$skill_file" ]; then
+    if ! grep -q '^name:' "$skill_file" 2>/dev/null; then
+      echo "ERROR: $skill_file missing 'name:' frontmatter"
+      exit 1
+    fi
+    if ! grep -q '^description:' "$skill_file" 2>/dev/null; then
+      echo "ERROR: $skill_file missing 'description:' frontmatter"
+      exit 1
+    fi
+  else
+    echo "WARNING: $skill_dir has no SKILL.md (optional)"
+  fi
+done
+
+# 2. Validate agent files have required frontmatter
+for agent_file in .github/agents/*.md; do
+  [ -f "$agent_file" ] || continue
+  if ! grep -q '^name:' "$agent_file" 2>/dev/null; then
+    echo "ERROR: $agent_file missing 'name:' frontmatter"
+    exit 1
+  fi
+done
+
+# 3. For staged changes in agentic-tools-mcp, require checksum update marker
+STAGED=$(git diff --cached --name-only | grep -c '\.agentic-tools-mcp/')
+if [ "$STAGED" -gt 0 ]; then
+  echo "INFO: Agentic tools changed — updating checksums recommended post-commit"
+fi
+
+echo "Pre-commit validation passed."

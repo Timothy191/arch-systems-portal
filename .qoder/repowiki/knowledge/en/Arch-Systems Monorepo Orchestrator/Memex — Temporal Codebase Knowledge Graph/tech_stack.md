@@ -1,1 +1,0 @@
-Python 3.11+ on uv/hatchling; Neo4j via `neo4j` driver plus `graphiti-core` for entity extraction; MCP over stdio via `mcp>=1.27`; FastAPI+uvicorn for the HTTP surface; tree-sitter-language-pack for symbol extraction; optional cluster extras (`graspologic`, `hdbscan`, `scikit-learn`) gated behind `[cluster]`; OpenTelemetry extras gated behind `[otel]`.

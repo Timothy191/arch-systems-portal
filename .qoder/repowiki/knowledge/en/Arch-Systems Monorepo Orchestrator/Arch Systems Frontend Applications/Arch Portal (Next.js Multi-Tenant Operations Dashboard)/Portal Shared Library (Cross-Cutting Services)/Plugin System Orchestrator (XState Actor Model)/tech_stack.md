@@ -1,1 +1,0 @@
-XState v5 actor model (`setup`, `assign`, `fromPromise`, `interpret`) for deterministic lifecycle management; dynamic ES-module imports (`import('../../plugins/${pluginName}/index')`) for zero-config plugin discovery.

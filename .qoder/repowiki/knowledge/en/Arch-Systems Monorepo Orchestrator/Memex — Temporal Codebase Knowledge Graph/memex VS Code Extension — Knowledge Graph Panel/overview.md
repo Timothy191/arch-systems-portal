@@ -1,1 +1,0 @@
-VS Code extension that spawns the local memex server, polls its HTTP/SSE endpoints, and renders an interactive D3 force-graph of codebase knowledge in a side-panel webview.

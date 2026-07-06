@@ -1,4 +1,0 @@
-- Every mutating operation follows the same guard pattern: call `_route(path)` first, then short-circuit with `_graph_zone_redirect` when the zone is not `scratch`, before delegating to `self._scratch.*`.
-- HTTP endpoints construct command objects via `BetaMemoryTool20250818XxxCommand.model_construct(...)` rather than parsing from JSON, keeping request/response schemas separate from the SDK command types.
-- Path validation is centralized in `validate_memory_path` from `safety.py`; callers never perform their own traversal checks and instead catch `PathTraversalError` / raise `ToolError` uniformly.
-- Output formatting helpers (`_format_dir_listing`, `_format_file_view`) are `@staticmethod`s that reproduce the Anthropic reference impl's exact text layout, including the numbered-line width constant imported from `scratch.LINE_NUMBER_WIDTH`.

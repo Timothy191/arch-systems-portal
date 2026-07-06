@@ -9,7 +9,6 @@ import { ToolDispatchService } from "./tools/tool-dispatch.service";
 import { ToolCacheService } from "./tools/tool-cache.service";
 import { CostTrackerService } from "./cost-tracker.service";
 import { AiRateLimiterService } from "./rate-limiter.service";
-import { AgentGraphService } from "./agent-graph/agent-graph.service";
 
 @Module({
   controllers: [AiController],
@@ -23,7 +22,6 @@ import { AgentGraphService } from "./agent-graph/agent-graph.service";
     ToolCacheService,
     CostTrackerService,
     AiRateLimiterService,
-    AgentGraphService,
   ],
   exports: [
     AiService,
@@ -32,7 +30,6 @@ import { AgentGraphService } from "./agent-graph/agent-graph.service";
     MemoryService,
     ToolDispatchService,
     CostTrackerService,
-    AgentGraphService,
   ],
 })
 export class AiModule {}

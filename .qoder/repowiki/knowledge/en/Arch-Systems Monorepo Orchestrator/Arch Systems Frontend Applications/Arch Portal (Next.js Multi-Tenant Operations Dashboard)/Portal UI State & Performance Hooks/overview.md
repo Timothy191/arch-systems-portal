@@ -1,1 +1,0 @@
-Custom React hooks that manage portal-wide UI state (focus mode, navigation, split-window tabs) and runtime performance/telemetry metrics for the Next.js portal app.

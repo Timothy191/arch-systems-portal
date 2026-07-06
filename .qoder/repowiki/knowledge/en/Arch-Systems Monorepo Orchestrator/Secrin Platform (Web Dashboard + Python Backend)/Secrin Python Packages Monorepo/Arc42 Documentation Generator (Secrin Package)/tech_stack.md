@@ -1,1 +1,0 @@
-Python package using Click for CLI, FastAPI (+CORSMiddleware) for HTTP API, RQ + Redis for async job queues, PyGithub for committing generated docs, and pluggable LLM backends via Anthropic SDK, Google Generative AI, and Ollama.

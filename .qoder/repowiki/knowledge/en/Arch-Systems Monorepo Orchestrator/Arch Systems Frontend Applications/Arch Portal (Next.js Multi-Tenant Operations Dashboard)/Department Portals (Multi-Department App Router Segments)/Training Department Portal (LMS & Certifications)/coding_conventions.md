@@ -1,5 +1,0 @@
-- Each route segment pairs a `layout.tsx` (often a pass-through) with a `page.tsx` that is an async component reading `searchParams` directly from props.
-- Shared list/filter pages compose a `SearchForm` and `FilterTabs` component together inside a `GlassCard`, passing `hiddenParams` to preserve cross-filter state across navigation.
-- UI components accept optional `value`/`currentValue` props paired with `hiddenParams: Record<string,string>` so they can forward complementary query parameters without owning routing logic.
-- Styling consistently uses Tailwind utility classes combined with CSS custom properties (`var(--text-heading)`, `var(--text-muted)`, `var(--accent-blue)`) instead of hard-coded colors.
-- Mock data is declared as plain TypeScript interfaces and const arrays at module scope, then filtered locally on the server component before rendering.

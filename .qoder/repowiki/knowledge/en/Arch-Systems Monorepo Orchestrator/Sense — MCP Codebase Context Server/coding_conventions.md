@@ -1,5 +1,0 @@
-- Each CLI subcommand exposes a `Run<Name>(args []string, io IO) int` function returning a pinned exit code (0 success, 1 general error, 2 symbol issue, 3 missing index, 4 corrupt index) so scripts can switch on status without reading source.
-- Tests are colocated with production code in `_test.go` files within the same package, using table-driven cases and `testdata/` fixtures rather than external golden files.
-- Language extractors follow a uniform shape: a `harvest.go` entry point calling language-specific walkers under `internal/extract/<lang>/` that emit symbols and edges consumed by the shared `internal/scan` pipeline.
-- MCP tool handlers and CLI runners marshal through `internal/mcpio` types so the documented JSON contract is identical across both surfaces, verified by cross-cutting tests like `contract_test.go`.
-- Build-tagged platform variants live in sibling files (e.g. `ortlib_darwin_amd64.go` vs `ortlib_linux_arm64.go`) sharing a common interface, keeping OS-specific CGO out of core logic.

@@ -1,1 +1,0 @@
-Next.js App Router client components, Tailwind CSS with design tokens from `@repo/ui`, Framer Motion for carousel transitions, lucide-react icons, and dynamic `next/dynamic` imports to keep chart bundles off the initial server render.

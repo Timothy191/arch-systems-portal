@@ -93,22 +93,31 @@ describe("actions", () => {
     });
 
     it("generates embedding for valid text when user is authenticated", async () => {
+      const mockFetch = jest.spyOn(global, "fetch").mockResolvedValue({
+        ok: true,
+        json: jest.fn().mockResolvedValue({ success: true }),
+      } as any);
+
       createServerSupabaseClient.mockResolvedValue({
         auth: {
           getUser: jest.fn().mockResolvedValue({
             data: { user: { id: "user-123" } },
           }),
+          getSession: jest.fn().mockResolvedValue({
+            data: { session: { access_token: "token-123" } },
+          }),
         },
       });
 
       await speculativeEmbedShiftLog("valid log entry");
-      expect(inngest.send).toHaveBeenCalledWith({
-        name: "ai/generate-embedding",
-        data: {
-          text: "valid log entry",
-          userId: "user-123",
-        },
-      });
+      expect(mockFetch).toHaveBeenCalledWith(
+        expect.stringContaining("/api/jobs/embeddings"),
+        expect.objectContaining({
+          method: "POST",
+          body: JSON.stringify({ text: "valid log entry" }),
+        }),
+      );
+      mockFetch.mockRestore();
     });
   });
 
@@ -117,6 +126,7 @@ describe("actions", () => {
       createServerSupabaseClient.mockResolvedValue({
         auth: {
           getUser: jest.fn().mockResolvedValue({ data: { user: null } }),
+          getSession: jest.fn().mockResolvedValue({ data: { session: null } }),
         },
       });
 
@@ -138,6 +148,9 @@ describe("actions", () => {
           getUser: jest.fn().mockResolvedValue({
             data: { user: { id: "user-123" } },
           }),
+          getSession: jest.fn().mockResolvedValue({
+            data: { session: { access_token: "token-123" } },
+          }),
         },
         from: jest.fn().mockReturnValue({ select: mockSelect }),
       } as any);
@@ -148,6 +161,13 @@ describe("actions", () => {
     });
 
     it("generates report and returns signed URL for authorized users", async () => {
+      const mockFetch = jest.spyOn(global, "fetch").mockResolvedValue({
+        ok: true,
+        json: jest
+          .fn()
+          .mockResolvedValue({ success: true, url: "http://signed-url" }),
+      } as any);
+
       const mockSingle = jest.fn().mockResolvedValue({
         data: { role: "admin", department_id: "dept-1" },
         error: null,
@@ -155,34 +175,22 @@ describe("actions", () => {
       const mockEq = jest.fn().mockReturnValue({ single: mockSingle });
       const mockSelect = jest.fn().mockReturnValue({ eq: mockEq });
 
-      const mockUpload = jest.fn().mockResolvedValue({ data: {}, error: null });
-      const mockCreateSignedUrl = jest.fn().mockResolvedValue({
-        data: { signedUrl: "http://signed-url" },
-        error: null,
-      });
-
-      const mockStorage = {
-        from: jest.fn().mockReturnValue({
-          upload: mockUpload,
-          createSignedUrl: mockCreateSignedUrl,
-        }),
-      };
-
       createServerSupabaseClient.mockResolvedValue({
         auth: {
           getUser: jest.fn().mockResolvedValue({
             data: { user: { id: "user-123" } },
           }),
+          getSession: jest.fn().mockResolvedValue({
+            data: { session: { access_token: "token-123" } },
+          }),
         },
         from: jest.fn().mockReturnValue({ select: mockSelect }),
-        storage: mockStorage,
       } as any);
 
       const res = await generateMonthlyReport({ title: "Test" }, "dept-1");
       expect(res.success).toBe(true);
       expect(res.url).toBe("http://signed-url");
-      expect(mockUpload).toHaveBeenCalled();
-      expect(mockCreateSignedUrl).toHaveBeenCalled();
+      mockFetch.mockRestore();
     });
   });
 });

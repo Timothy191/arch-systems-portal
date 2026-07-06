@@ -1,1 +1,0 @@
-`pnpm dev` starts the server on port 3002 (`next dev -p 3002`); build via `next build`; lint with `eslint . --cache --cache-location node_modules/.cache/.eslintcache --max-warnings 0`; type-check with `tsc --noEmit`. Requires Node 20.17.0+ as declared in the tech-stack data.

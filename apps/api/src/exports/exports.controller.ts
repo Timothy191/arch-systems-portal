@@ -1,8 +1,17 @@
-import { Controller, Get, Query, Req, Res, Header, BadRequestException } from "@nestjs/common";
-import { ApiTags, ApiOperation, ApiQuery } from "@nestjs/swagger";
-import { ExportsService } from "./exports.service";
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  Post,
+  Query,
+  Req,
+  Res,
+} from "@nestjs/common";
+import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import type { FastifyReply, FastifyRequest } from "fastify";
 import { exportQuerySchema, safetyExportQuerySchema } from "../common/schemas";
-import type { FastifyRequest, FastifyReply } from "fastify";
+import { ExportsService } from "./exports.service";
 
 @ApiTags("export")
 @Controller("export")
@@ -20,17 +29,33 @@ export class ExportsController {
     @Req() req?: FastifyRequest,
     @Res() res?: FastifyReply,
   ) {
-    const parsed = exportQuerySchema.safeParse({ from, to, dept, limit, offset });
+    const parsed = exportQuerySchema.safeParse({
+      from,
+      to,
+      dept,
+      limit,
+      offset,
+    });
     if (!parsed.success) throw new BadRequestException(parsed.error.flatten());
 
     const result = await this.exportsService.exportFuelLogs(parsed.data);
-    const isCsv = req?.headers.accept?.includes("text/csv");
-
-    if (isCsv) {
-      const headers = ["id", "log_date", "shift", "department_id", "machine_id", "machine_name", "machine_type", "diesel_litres"];
+    if (req?.headers.accept?.includes("text/csv")) {
+      const headers = [
+        "id",
+        "log_date",
+        "shift",
+        "department_id",
+        "machine_id",
+        "machine_name",
+        "machine_type",
+        "diesel_litres",
+      ];
       const csv = this.exportsService.toCsv(headers, result.rows);
       res?.header("Content-Type", "text/csv");
-      res?.header("Content-Disposition", `attachment; filename="fuel-logs-${result.fromDate}-${result.toDate}.csv"`);
+      res?.header(
+        "Content-Disposition",
+        `attachment; filename="fuel-logs-${result.fromDate}-${result.toDate}.csv"`,
+      );
       return res?.send(csv);
     }
 
@@ -50,10 +75,18 @@ export class ExportsController {
     if (!parsed.success) throw new BadRequestException(parsed.error.flatten());
 
     const result = await this.exportsService.exportMachines(parsed.data);
-    const isCsv = req?.headers.accept?.includes("text/csv");
-
-    if (isCsv) {
-      const keys = ["id", "name", "machine_type", "serial_number", "bin_factor", "active", "department_id", "site_id", "created_at"];
+    if (req?.headers.accept?.includes("text/csv")) {
+      const keys = [
+        "id",
+        "name",
+        "machine_type",
+        "serial_number",
+        "bin_factor",
+        "active",
+        "department_id",
+        "site_id",
+        "created_at",
+      ];
       const csv = this.exportsService.toCsv(keys, result.data);
       res?.header("Content-Type", "text/csv");
       res?.header("Content-Disposition", 'attachment; filename="machines.csv"');
@@ -74,17 +107,31 @@ export class ExportsController {
     @Req() req?: FastifyRequest,
     @Res() res?: FastifyReply,
   ) {
-    const parsed = exportQuerySchema.safeParse({ from, to, dept, limit, offset });
+    const parsed = exportQuerySchema.safeParse({
+      from,
+      to,
+      dept,
+      limit,
+      offset,
+    });
     if (!parsed.success) throw new BadRequestException(parsed.error.flatten());
 
     const result = await this.exportsService.exportProduction(parsed.data);
-    const isCsv = req?.headers.accept?.includes("text/csv");
-
-    if (isCsv) {
-      const headers = ["log_date", "shift", "department_id", "coal_tonnes", "waste_tonnes", "total_tonnes"];
+    if (req?.headers.accept?.includes("text/csv")) {
+      const headers = [
+        "log_date",
+        "shift",
+        "department_id",
+        "coal_tonnes",
+        "waste_tonnes",
+        "total_tonnes",
+      ];
       const csv = this.exportsService.toCsv(headers, result.rows);
       res?.header("Content-Type", "text/csv");
-      res?.header("Content-Disposition", `attachment; filename="production-${result.fromDate}-${result.toDate}.csv"`);
+      res?.header(
+        "Content-Disposition",
+        `attachment; filename="production-${result.fromDate}-${result.toDate}.csv"`,
+      );
       return res?.send(csv);
     }
 
@@ -101,20 +148,52 @@ export class ExportsController {
     @Req() req?: FastifyRequest,
     @Res() res?: FastifyReply,
   ) {
-    const parsed = safetyExportQuerySchema.safeParse({ month, dept, limit, offset });
+    const parsed = safetyExportQuerySchema.safeParse({
+      month,
+      dept,
+      limit,
+      offset,
+    });
     if (!parsed.success) throw new BadRequestException(parsed.error.flatten());
 
     const result = await this.exportsService.exportSafetyIncidents(parsed.data);
-    const isCsv = req?.headers.accept?.includes("text/csv");
-
-    if (isCsv) {
-      const keys = ["id", "incident_date", "incident_type", "severity", "status", "department_id", "description"];
+    if (req?.headers.accept?.includes("text/csv")) {
+      const keys = [
+        "id",
+        "incident_date",
+        "incident_type",
+        "severity",
+        "status",
+        "department_id",
+        "description",
+      ];
       const csv = this.exportsService.toCsv(keys, result.data);
       res?.header("Content-Type", "text/csv");
-      res?.header("Content-Disposition", `attachment; filename="safety-incidents-${result.from}-${result.to}.csv"`);
+      res?.header(
+        "Content-Disposition",
+        `attachment; filename="safety-incidents-${result.from}-${result.to}.csv"`,
+      );
       return res?.send(csv);
     }
 
     return result;
+  }
+
+  @Post("monthly-report")
+  @ApiOperation({ summary: "Generate and upload a monthly PDF report" })
+  async generateMonthlyReport(
+    @Body() body: { reportData: any; departmentId: string },
+    @Req() req: FastifyRequest,
+  ) {
+    const userId = (req as any).user?.id;
+    if (!userId) throw new BadRequestException("Missing authenticated user");
+    if (!body.departmentId)
+      throw new BadRequestException("Department ID is required");
+
+    return this.exportsService.generateMonthlyReport({
+      reportData: body.reportData,
+      departmentId: body.departmentId,
+      userId,
+    });
   }
 }

@@ -1,1 +1,0 @@
-Next.js App Router route group providing the login, password-reset, and password-update pages for the Arch portal, each paired with a client-side form component.

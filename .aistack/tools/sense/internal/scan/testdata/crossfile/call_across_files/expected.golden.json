@@ -1,0 +1,20 @@
+{
+  "edges": [
+    {
+      "source": "Caller#start",
+      "source_file": "caller.rb",
+      "target": "Callee",
+      "target_file": "callee.rb",
+      "kind": "references",
+      "confidence": 1
+    },
+    {
+      "source": "Caller#start",
+      "source_file": "caller.rb",
+      "target": "Callee.run",
+      "target_file": "callee.rb",
+      "kind": "calls",
+      "confidence": 1
+    }
+  ]
+}

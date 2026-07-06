@@ -1,0 +1,125 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  ci:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-latest
+            os: linux
+            arch: amd64
+          - runner: macos-latest
+            os: darwin
+            arch: arm64
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+
+      - name: Install ripgrep
+        run: |
+          if command -v rg &>/dev/null; then exit 0; fi
+          if [ "${{ matrix.os }}" = "linux" ]; then
+            sudo apt-get update -qq && sudo apt-get install -y -qq ripgrep
+          else
+            brew install ripgrep
+          fi
+
+      - name: Cache dependencies (model + ORT)
+        uses: actions/cache@v6
+        with:
+          path: internal/embed/bundle
+          key: sense-deps-${{ matrix.os }}-${{ matrix.arch }}-${{ hashFiles('scripts/fetch-deps.sh') }}
+
+      - name: Fetch dependencies (model + ORT)
+        run: ./scripts/fetch-deps.sh --local
+
+      - name: Build
+        run: make build
+
+      - name: Test & coverage gate
+        # Single definition of "tests pass": the same `make cover` a contributor
+        # runs locally (go test -race -coverpkg=./... + a total-% floor). Remote
+        # CI can no longer disagree with `make ci` about what green means.
+        # `make cover` sets the onnx_integration tag, so this step also runs the
+        # ONNX integration test against the deps fetched above — exercising the
+        # CGO embedding shell for real, and failing loud (never skipping) if the
+        # bundled model or runtime is missing.
+        run: make cover
+
+      - name: Hermetic unit tests (offline)
+        # Goal 5 proof: the hermetic package set must pass with no network,
+        # no ONNX, and no external binary. The set ratchets per-package as
+        # 27-02→04 inject seams (fully on by 27-04). No-ONNX/no-external-binary
+        # is structural (the set imports neither embed nor os/exec). The network
+        # bite is added via an UNPRIVILEGED network namespace (unshare -rn,
+        # which preserves the build/module cache and env, no sudo). We probe
+        # the capability first and fall back to a plain run if the runner
+        # restricts unprivileged userns, so the sandbox never reds CI for
+        # infrastructure reasons — depguard already forbids net/os-exec/syscall
+        # in every package currently in the set, so the compile-time guarantee
+        # holds even where the runtime netns is unavailable.
+        run: |
+          if unshare -rn true 2>/dev/null; then
+            unshare -rn make test-hermetic
+          else
+            echo "note: unprivileged netns unavailable; depguard enforces no-network for the current set"
+            make test-hermetic
+          fi
+
+      - name: Upload coverage
+        if: matrix.os == 'linux'
+        uses: codecov/codecov-action@v7
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: coverage.txt
+
+      - name: Smoke
+        run: make smoke
+
+      - name: Lint
+        # Same `make lint` a contributor runs locally — golangci-lint is pinned
+        # in the Makefile (GOLANGCI_VERSION), so the v2 formatters: block and the
+        # gocyclo/gocognit thresholds are reproducible and cannot drift from CI.
+        run: make lint
+
+  stdout-hygiene:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Complexity ledger is non-increasing
+        # The inline //nolint:gocyclo/gocognit ledger is tracked debt the
+        # 27-05→12 pitches retire. This fails if it grows past LEDGER_MAX —
+        # new complexity must be decomposed, not suppressed. Exit condition
+        # for cycle 27: LEDGER_MAX = 0 by 27-12.
+        run: make ledger
+
+      - name: No bare fmt.Print in internal/ (except MCP transport)
+        run: |
+          # Grep for fmt.Print / fmt.Println / fmt.Printf (not fmt.Fprint*)
+          # in internal/ excluding the MCP transport package and test files.
+          # These would corrupt the stdio JSON-RPC channel when running as
+          # an MCP server. Use fmt.Fprint(writer, ...) instead.
+          hits=$(grep -rn 'fmt\.Print\b\|fmt\.Println\b\|fmt\.Printf\b' \
+            internal/ \
+            --include='*.go' \
+            --exclude-dir='mcpserver' \
+            | grep -v '_test\.go' \
+            | grep -v 'fmt\.Fprint' || true)
+          if [ -n "$hits" ]; then
+            echo "ERROR: bare fmt.Print* found (use fmt.Fprint* with an io.Writer):"
+            echo "$hits"
+            exit 1
+          fi

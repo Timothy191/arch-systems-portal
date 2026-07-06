@@ -1,1 +1,0 @@
-Top-level workspace grouping three Next.js applications — the CMS admin, a static overview visualizer, and the multi-tenant portal — each independently built and deployed.

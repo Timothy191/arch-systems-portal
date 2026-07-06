@@ -13,7 +13,10 @@ describe("AuthService", () => {
           useValue: {
             auth: {
               signInWithPassword: jest.fn().mockResolvedValue({
-                data: { user: { id: "user-1", email: "test@test.com" }, session: { access_token: "token-123" } },
+                data: {
+                  user: { id: "user-1", email: "test@test.com" },
+                  session: { access_token: "token-123" },
+                },
                 error: null,
               }),
               getUser: jest.fn().mockResolvedValue({

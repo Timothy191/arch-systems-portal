@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "generated_at": "2026-07-06T15:53:12.903230+00:00",
+  "nodes": [],
+  "edges": [],
+  "diagnostics": {
+    "total_providers": 0,
+    "total_consumers": 0,
+    "total_links": 0,
+    "weak_link_count": 0,
+    "repo_breakdown": [],
+    "unmatched_consumers": [],
+    "unmatched_by_reason": {},
+    "orphan_providers": []
+  }
+}

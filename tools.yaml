@@ -1,0 +1,60 @@
+# =============================================================================
+# MCP Toolbox for Databases - tools.yaml
+# =============================================================================
+# Each source is a separate YAML document (delimited by ---).
+# IMPORTANT: toolbox validates connections at startup — every uncommented
+# source must be reachable or the server won't start.
+#
+# sqlite is the only source that works without a running database server.
+# Enable others by uncommenting their blocks (the leading `---` is already
+# in place for each commented-out source).
+#
+# Usage:  toolbox --config tools.yaml --stdio
+# =============================================================================
+
+kind: source
+name: sqlite-local
+type: sqlite
+database: ${SQLITE_PATH:/tmp/toolbox.db}
+
+---
+# kind: source
+# name: postgres-local
+# type: postgres
+# host: 127.0.0.1
+# port: 5432
+# database: postgres
+# user: ${PG_USER:postgres}
+# password: ${PG_PASSWORD:postgres}
+
+---
+# kind: source
+# name: mysql-local
+# type: mysql
+# host: 127.0.0.1
+# port: 3306
+# database: mysql
+# user: ${MYSQL_USER:root}
+# password: ${MYSQL_PASSWORD:mysql}
+
+---
+# kind: source
+# name: mongodb-local
+# type: mongodb
+# uri: mongodb://admin:admin@127.0.0.1:27017
+
+---
+# kind: source
+# name: redis-local
+# type: redis
+# address:
+#   - 127.0.0.1:6379
+
+---
+# kind: source
+# name: neo4j-local
+# type: neo4j
+# uri: bolt://localhost:7687
+# user: neo4j
+# password: neo4j
+# database: neo4j

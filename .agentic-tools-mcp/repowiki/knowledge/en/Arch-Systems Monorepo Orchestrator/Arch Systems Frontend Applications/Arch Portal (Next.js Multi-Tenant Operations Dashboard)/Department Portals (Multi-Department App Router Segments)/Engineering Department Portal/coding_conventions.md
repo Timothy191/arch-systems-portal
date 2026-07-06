@@ -1,0 +1,4 @@
+- Route pages are async server components marked with `export const dynamic = "force-dynamic"` so they can call `await getDepartmentContext` and perform live DB reads.
+- Database access goes exclusively through `createReadReplicaClient()` from `@repo/supabase/read-replica` rather than a write client.
+- UI cards use the shared `GlassCard` component from `@repo/ui` with Tailwind CSS variables (`var(--text-heading)`, `var(--accent-blue)`, etc.) instead of hardcoded colors.
+- Each route validates department membership by calling `getDepartmentContext({ department: "engineering" })` at the top of the page function before rendering content.

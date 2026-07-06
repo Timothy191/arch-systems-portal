@@ -91,7 +91,7 @@ export async function getUserSafely(
   try {
     const result = await supabase.auth.getUser();
     return result.data.user ?? null;
-  } catch (error) {
+  } catch (_error) {
     // Handle refresh token errors - treat as no user
     // This can happen when the access token is expired and refresh token is invalid/missing
     return null;

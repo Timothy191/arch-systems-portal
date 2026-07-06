@@ -31,16 +31,41 @@ export class InngestService {
     ];
   }
 
+  async queueEmbedding(input: {
+    text?: string;
+    texts?: string[];
+    userId: string;
+  }) {
+    const hasText = typeof input.text === "string" && input.text.trim() !== "";
+    const hasTexts = Array.isArray(input.texts) && input.texts.length > 0;
+
+    if (!hasText && !hasTexts) {
+      return { success: true, queued: false, reason: "empty_text" };
+    }
+
+    await inngest.send({
+      name: aiGenerateEmbeddingEvent,
+      data: {
+        text: input.text,
+        texts: input.texts,
+        userId: input.userId,
+      },
+    });
+
+    return { success: true, queued: true };
+  }
+
   private createSyncPlaybackFunction(): InngestFunction.Any {
     return inngest.createFunction(
       { id: "sync-playback", triggers: [{ event: syncPlaybackEvent }] },
       async ({ event }) => {
-        const { idempotencyKey, actionType, payload, departmentId } = event.data as {
-          idempotencyKey: string;
-          actionType: string;
-          payload: Record<string, any>;
-          departmentId: string;
-        };
+        const { idempotencyKey, actionType, payload, departmentId } =
+          event.data as {
+            idempotencyKey: string;
+            actionType: string;
+            payload: Record<string, any>;
+            departmentId: string;
+          };
         const start = performance.now();
         let success = true;
 
@@ -76,7 +101,9 @@ export class InngestService {
               .update({
                 status: "completed",
                 date_out: new Date().toISOString().split("T")[0],
-                time_out: new Date().toLocaleTimeString("en-US", { hour12: false }),
+                time_out: new Date().toLocaleTimeString("en-US", {
+                  hour12: false,
+                }),
                 sync_status: "synced",
               })
               .eq("id", payload.id);
@@ -94,17 +121,19 @@ export class InngestService {
 
             if (existing) return { success: true, bypassed: true };
 
-            const { error } = await this.supabase.from("safety_incidents").insert({
-              department_id: departmentId,
-              incident_date: payload.incidentDate,
-              shift_type: payload.shiftType,
-              incident_type: payload.incidentType,
-              description: payload.description,
-              location: payload.location,
-              status: "open",
-              idempotency_key: idempotencyKey,
-              sync_status: "synced",
-            });
+            const { error } = await this.supabase
+              .from("safety_incidents")
+              .insert({
+                department_id: departmentId,
+                incident_date: payload.incidentDate,
+                shift_type: payload.shiftType,
+                incident_type: payload.incidentType,
+                description: payload.description,
+                location: payload.location,
+                status: "open",
+                idempotency_key: idempotencyKey,
+                sync_status: "synced",
+              });
 
             if (error) throw error;
             return { success: true };
@@ -135,10 +164,16 @@ export class InngestService {
           return { error: `Unknown action type: ${actionType}` };
         } catch (err) {
           success = false;
-          this.logger.error("sync_playback_job", err instanceof Error ? err.stack : String(err));
+          this.logger.error(
+            "sync_playback_job",
+            err instanceof Error ? err.stack : String(err),
+          );
           throw err;
         } finally {
-          this.logger.debug(`sync-playback job took ${performance.now() - start}ms`, { success });
+          this.logger.debug(
+            `sync-playback job took ${performance.now() - start}ms`,
+            { success },
+          );
         }
       },
     );
@@ -146,7 +181,10 @@ export class InngestService {
 
   private createGenerateReportFunction(): InngestFunction.Any {
     return inngest.createFunction(
-      { id: "generate-shift-report", triggers: [{ event: generateReportEvent }] },
+      {
+        id: "generate-shift-report",
+        triggers: [{ event: generateReportEvent }],
+      },
       async ({ event }) => {
         const { departmentId, dateFrom, dateTo } = event.data as {
           departmentId: string;
@@ -182,16 +220,24 @@ export class InngestService {
             generated_at: new Date().toISOString(),
           };
 
-          const { error } = await this.supabase.from("generated_reports").insert(reportData);
+          const { error } = await this.supabase
+            .from("generated_reports")
+            .insert(reportData);
           if (error) throw error;
 
           return { success: true, report: reportData };
         } catch (err) {
           success = false;
-          this.logger.error("generate_report_job", err instanceof Error ? err.stack : String(err));
+          this.logger.error(
+            "generate_report_job",
+            err instanceof Error ? err.stack : String(err),
+          );
           throw err;
         } finally {
-          this.logger.debug(`generate-shift-report job took ${performance.now() - start}ms`, { success });
+          this.logger.debug(
+            `generate-shift-report job took ${performance.now() - start}ms`,
+            { success },
+          );
         }
       },
     );
@@ -199,8 +245,11 @@ export class InngestService {
 
   private createGenerateEmbeddingFunction(): InngestFunction.Any {
     return inngest.createFunction(
-      { id: "generate-embedding", triggers: [{ event: aiGenerateEmbeddingEvent }] },
-      async ({ event }) => {
+      {
+        id: "generate-embedding",
+        triggers: [{ event: aiGenerateEmbeddingEvent }],
+      },
+      async ({ _event }) => {
         const start = performance.now();
         let success = true;
 
@@ -208,14 +257,22 @@ export class InngestService {
           // Embedding generation depends on the Ollama provider pipeline.
           // For the API migration, this job remains a no-op logger until the
           // embedding pipeline is shared across portal and API.
-          this.logger.warn("generate_embedding_job invoked without embedding pipeline");
+          this.logger.warn(
+            "generate_embedding_job invoked without embedding pipeline",
+          );
           return { success: true };
         } catch (err) {
           success = false;
-          this.logger.error("generate_embedding_job", err instanceof Error ? err.stack : String(err));
+          this.logger.error(
+            "generate_embedding_job",
+            err instanceof Error ? err.stack : String(err),
+          );
           throw err;
         } finally {
-          this.logger.debug(`generate-embedding job took ${performance.now() - start}ms`, { success });
+          this.logger.debug(
+            `generate-embedding job took ${performance.now() - start}ms`,
+            { success },
+          );
         }
       },
     );
@@ -242,27 +299,35 @@ export class InngestService {
             return { success: true, skipped: "already_stored" };
           }
 
-          const { data: recentMemories, error: queryError } = await this.supabase
-            .from("memory_embeddings")
-            .select("id, content, memory_type, created_at")
-            .eq("session_id", sessionId)
-            .eq("user_id", userId)
-            .order("created_at", { ascending: false })
-            .limit(5);
+          const { data: recentMemories, error: queryError } =
+            await this.supabase
+              .from("memory_embeddings")
+              .select("id, content, memory_type, created_at")
+              .eq("session_id", sessionId)
+              .eq("user_id", userId)
+              .order("created_at", { ascending: false })
+              .limit(5);
 
           if (queryError) {
-            throw new Error(`Failed to query session memories: ${queryError.message}`);
+            throw new Error(
+              `Failed to query session memories: ${queryError.message}`,
+            );
           }
 
           const assistantMemories = (recentMemories ?? []).filter(
-            (m) => m.memory_type === "episodic" && m.content.startsWith("Assistant:"),
+            (m) =>
+              m.memory_type === "episodic" &&
+              m.content.startsWith("Assistant:"),
           );
 
           if (assistantMemories.length === 0) {
-            this.logger.warn("Assistant response not persisted — stream may have been terminated early", {
-              sessionId,
-              userId,
-            });
+            this.logger.warn(
+              "Assistant response not persisted — stream may have been terminated early",
+              {
+                sessionId,
+                userId,
+              },
+            );
             return { success: true, recovered: false };
           }
 
@@ -273,10 +338,16 @@ export class InngestService {
           };
         } catch (err) {
           success = false;
-          this.logger.error("memory_persist_job", err instanceof Error ? err.stack : String(err));
+          this.logger.error(
+            "memory_persist_job",
+            err instanceof Error ? err.stack : String(err),
+          );
           throw err;
         } finally {
-          this.logger.debug(`memory-persist job took ${performance.now() - start}ms`, { success });
+          this.logger.debug(
+            `memory-persist job took ${performance.now() - start}ms`,
+            { success },
+          );
         }
       },
     );

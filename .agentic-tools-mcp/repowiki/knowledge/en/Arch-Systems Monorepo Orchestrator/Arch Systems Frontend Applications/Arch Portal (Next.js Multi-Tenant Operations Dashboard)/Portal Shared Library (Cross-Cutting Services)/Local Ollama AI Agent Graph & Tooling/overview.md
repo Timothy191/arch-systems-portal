@@ -1,0 +1,1 @@
+Server-side orchestration layer that runs a state-machine agent over a local Ollama instance, dispatching tools and persisting hybrid semantic/episodic memory.

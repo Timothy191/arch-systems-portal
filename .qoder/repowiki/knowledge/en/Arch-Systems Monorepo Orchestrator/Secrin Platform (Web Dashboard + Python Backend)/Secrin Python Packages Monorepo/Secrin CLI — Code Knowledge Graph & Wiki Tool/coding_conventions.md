@@ -1,4 +1,0 @@
-- Each top-level CLI verb lives in its own file under `commands/` and exposes either a plain function decorated with `@app.command(...)` or a nested `typer.Typer` app registered via `app.add_typer(...)`.
-- Long-running operations raise `typer.Exit(code=1)` after printing an `[error] ...` message via `typer.echo(..., err=True)` rather than propagating raw exceptions to the caller.
-- External services (Neo4j, LLM providers) are configured through a singleton `Settings()` loaded from `.env`, never via module-level globals or direct env reads inside business logic.
-- Language-specific parsers share a common `ParsedFile` / `ParsedNode` dataclass model so callers treat Python, TypeScript, and JavaScript uniformly regardless of source grammar.

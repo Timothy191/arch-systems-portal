@@ -1,0 +1,1 @@
+Requires `NEXT_PUBLIC_FUXA_URL` in `apps/portal/.env` pointing at a running FUXA SCADA instance (default `http://localhost:1881`); without it the iframe shows an error overlay with retry.

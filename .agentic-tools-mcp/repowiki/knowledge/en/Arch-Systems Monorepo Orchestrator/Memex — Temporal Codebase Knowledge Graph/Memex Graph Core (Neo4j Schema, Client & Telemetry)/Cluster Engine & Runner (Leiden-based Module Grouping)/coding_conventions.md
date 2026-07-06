@@ -1,0 +1,5 @@
+- Heavy optional dependencies (`networkx`, `graspologic`, `google.genai`) are imported lazily inside functions rather than at module top, so the package can be imported without the cluster extras installed.
+- All Neo4j reads/writes go through `client.driver.execute_query` with positional Cypher parameters (`$repo`, `$now`, …) instead of string formatting, and every write path wraps its call in try/except that logs a warning and continues rather than raising.
+- Module identifiers are normalised to POSIX slash paths via `_normalise_module_path` before any comparison or storage, guarding against Windows backslash variance.
+- User-pinned clusters are assigned negative IDs starting at `-1000` and decrementing, keeping them disjoint from Leiden's positive IDs and the isolated-node negative IDs produced by `cluster_modules`.
+- Graph entities are identified by the composite key `(type, name, repo_path)` and updated with `MERGE ... ON CREATE SET ... SET ... last_reinforced_at = $now` to support idempotent re-clustering.

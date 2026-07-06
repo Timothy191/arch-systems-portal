@@ -19,6 +19,8 @@ jest.mock("@repo/supabase/server", () => ({
 
 jest.mock("next/cache", () => ({
   revalidatePath: jest.fn(),
+  revalidateTag: jest.fn(),
+  updateTag: jest.fn(),
 }));
 
 jest.mock("@/lib/audit", () => ({

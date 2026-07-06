@@ -20,13 +20,20 @@ export class ControlRoomController {
     @Query("shift") shift: string,
   ) {
     if (!deptId || !deptSlug || !date || !shift) {
-      throw new BadRequestException("Missing required params: deptId, deptSlug, date, shift");
+      throw new BadRequestException(
+        "Missing required params: deptId, deptSlug, date, shift",
+      );
     }
 
     if (shift !== "day" && shift !== "night") {
       throw new BadRequestException("Shift must be 'day' or 'night'");
     }
 
-    return this.controlRoomService.getShiftCompleteness(deptId, deptSlug, date, shift);
+    return this.controlRoomService.getShiftCompleteness(
+      deptId,
+      deptSlug,
+      date,
+      shift,
+    );
   }
 }

@@ -1,0 +1,1 @@
+React 19 + Next.js 16 (RSC), shadcn/ui primitives built on Radix UI, Tailwind CSS 3 with `class-variance-authority` for variant props, `@xyflow/react` for the node/edge flow editor, `animejs` + `framer-motion` for animations, `lucide-react` icons, `@revolist/react-datagrid` for tabular data, and `@magicui.design` registry for decorative primitives.

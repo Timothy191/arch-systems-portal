@@ -1,4 +1,12 @@
-import { Injectable, Inject, Logger, UnauthorizedException, ForbiddenException, BadRequestException, NotFoundException } from "@nestjs/common";
+import {
+  Injectable,
+  Inject,
+  Logger,
+  UnauthorizedException,
+  ForbiddenException,
+  BadRequestException,
+  NotFoundException,
+} from "@nestjs/common";
 import { SUPABASE_CLIENT } from "../supabase/supabase.constants";
 import { ConfigService } from "@nestjs/config";
 import { scannerBadgeSchema } from "../common/schemas";
@@ -15,7 +23,10 @@ export class AccessControlService {
     private readonly configService: ConfigService,
   ) {
     this.expectedToken = this.configService.get("SCANNER_API_KEY");
-    this.allowedScannerSources = (this.configService.get("ALLOWED_SCANNER_SOURCES") ?? "C66-HARDWARE,C66-SCANNER,GATE-TERMINAL")
+    this.allowedScannerSources = (
+      this.configService.get("ALLOWED_SCANNER_SOURCES") ??
+      "C66-HARDWARE,C66-SCANNER,GATE-TERMINAL"
+    )
       .split(",")
       .map((s: string) => s.trim());
   }
@@ -57,12 +68,22 @@ export class AccessControlService {
       .single();
 
     if (badgeError || !badge) {
-      await this.logAccess(null, "UNKNOWN", "DENIED - Unrecognized Badge", source);
+      await this.logAccess(
+        null,
+        "UNKNOWN",
+        "DENIED - Unrecognized Badge",
+        source,
+      );
       throw new NotFoundException("Unrecognized Badge");
     }
 
     if (!badge.is_active) {
-      await this.logAccess(badge.id, badge.entity_type, "DENIED - Badge Revoked", source);
+      await this.logAccess(
+        badge.id,
+        badge.entity_type,
+        "DENIED - Badge Revoked",
+        source,
+      );
       throw new ForbiddenException("Revoked Badge");
     }
 
@@ -100,7 +121,13 @@ export class AccessControlService {
     }
 
     // 3. Log the Access event
-    await this.logAccess(badge.id, badge.entity_type, isAuthorized ? null : denialReason, source, isAuthorized);
+    await this.logAccess(
+      badge.id,
+      badge.entity_type,
+      isAuthorized ? null : denialReason,
+      source,
+      isAuthorized,
+    );
 
     return {
       success: isAuthorized,

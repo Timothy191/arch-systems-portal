@@ -1,4 +1,11 @@
-import { Injectable, Inject, Logger, NotFoundException, ForbiddenException, BadRequestException } from "@nestjs/common";
+import {
+  Injectable,
+  Inject,
+  Logger,
+  NotFoundException,
+  ForbiddenException,
+  BadRequestException,
+} from "@nestjs/common";
 import { SUPABASE_CLIENT } from "../supabase/supabase.constants";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { adminDataUpdateSchema } from "../common/schemas";
@@ -76,7 +83,11 @@ export class AdminService {
     return { data, count, limit, offset };
   }
 
-  async updateData(table: string, body: { id: string; data: Record<string, unknown> }, employeeId: string) {
+  async updateData(
+    table: string,
+    body: { id: string; data: Record<string, unknown> },
+    employeeId: string,
+  ) {
     const parsed = adminDataUpdateSchema.safeParse(body);
     if (!parsed.success) {
       throw new BadRequestException(parsed.error.flatten());

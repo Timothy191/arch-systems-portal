@@ -1,0 +1,70 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Generate release notes
+        uses: orhun/git-cliff-action@v4
+        with:
+          args: --latest --strip header
+          output: release-notes.md
+
+      - name: Clean git-cliff artifacts
+        run: rm -rf git-cliff/
+
+      # Tree-sitter bindings require CGO, and we ship darwin + linux for both
+      # amd64 and arm64. goreleaser-cross bundles osxcross and the gcc
+      # cross-toolchains the .goreleaser.yml overrides reference (o64-clang,
+      # oa64-clang, x86_64-linux-gnu-gcc, aarch64-linux-gnu-gcc). The image
+      # tag tracks the Go version in go.mod — bump both together.
+      - name: Run GoReleaser (goreleaser-cross)
+        run: |
+          docker run --rm \
+            -e GITHUB_TOKEN \
+            -v "$PWD":/src \
+            -w /src \
+            ghcr.io/goreleaser/goreleaser-cross:v1.25.5 \
+            release --clean --release-notes release-notes.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build MCPB bundles
+        run: |
+          set -euo pipefail
+          sudo chown -R "$(id -u):$(id -g)" dist
+          VERSION="${GITHUB_REF_NAME#v}"
+          mkdir -p mcpb-dist
+          for combo in darwin_amd64 darwin_arm64 linux_amd64 linux_arm64; do
+            goos="${combo%_*}"
+            goarch="${combo#*_}"
+            archive="dist/sense_${VERSION}_${goos}_${goarch}.tar.gz"
+            if [ ! -f "$archive" ]; then
+              echo "missing archive: $archive" >&2
+              ls -la dist/ >&2
+              exit 1
+            fi
+            ./scripts/build-mcpb.sh "$archive" "$VERSION" "$goos" "$goarch" mcpb-dist
+          done
+          ls -la mcpb-dist/
+
+      - name: Upload MCPB bundles to release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload "$GITHUB_REF_NAME" mcpb-dist/*.mcpb --clobber

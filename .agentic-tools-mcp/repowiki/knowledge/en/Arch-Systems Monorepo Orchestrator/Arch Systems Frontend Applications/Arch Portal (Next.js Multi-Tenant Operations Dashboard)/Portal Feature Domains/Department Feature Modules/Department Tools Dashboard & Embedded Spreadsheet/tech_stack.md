@@ -1,0 +1,1 @@
+Next.js App Router client components (`"use client"`), `next/dynamic` for code-splitting, UniverJS preset-sheets-core for the embedded spreadsheet, lucide-react icons, and Tailwind CSS with design tokens from `@repo/ui/GlassCard`.

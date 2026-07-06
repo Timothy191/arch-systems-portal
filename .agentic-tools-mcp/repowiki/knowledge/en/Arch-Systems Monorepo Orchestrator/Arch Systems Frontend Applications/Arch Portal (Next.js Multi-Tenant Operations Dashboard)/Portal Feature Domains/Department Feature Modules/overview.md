@@ -1,0 +1,1 @@
+Per-department React feature packages that each expose a dashboard page and its client-side components, sharing the portal's route registration and layout conventions.

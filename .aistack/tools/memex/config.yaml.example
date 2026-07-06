@@ -1,0 +1,22 @@
+# Neo4j Configuration
+neo4j_uri: bolt://localhost:7687
+neo4j_user: neo4j
+neo4j_password: memex-local
+
+# Gemini Configuration
+gemini_api_key: your_gemini_api_key_here
+
+# Graphiti Configuration
+log_level: INFO
+
+# Harness configurations for different AI agents
+harnesses:
+  gemini-cli:
+    initial_decision_confidence: 0.6
+    corroboration_window_days: 14
+  claude-code:
+    initial_decision_confidence: 0.7
+    corroboration_window_days: 10
+  default:
+    initial_decision_confidence: 0.6
+    corroboration_window_days: 14

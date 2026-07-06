@@ -97,3 +97,63 @@ This file maintains a record of AI agent interventions, context hand-offs, and a
   - `apps/portal/app/api/backend/[[...slug]]/route.ts`: new catch-all proxy that forwards `/api/backend/*` to `env.API_BASE_URL` (default `http://localhost:3004/api`), preserving auth headers/cookies and streaming bodies.
   - `scripts/dev.sh`: now starts Redis if missing, generates `apps/api/.env`, starts the NestJS API before the portal, health-checks it, and tears it down on exit.
 - **Next Agent**: The backend is reachable directly at `http://localhost:3004/api` and proxied through the portal at `/api/backend/*`. The API env is generated from the portal env by `scripts/generate-api-env.mjs`; prefer changing `API_PORT` env var over editing `apps/api/.env` directly.
+
+## [2026-07-06] Convert Login Form to use Next.js Server Action
+
+- **Agent**: Antigravity
+- **Purpose**: Complete the single actionable TODO to convert login from client-side `fetch` to a Server Action for improved performance and security.
+- **Changes Made**:
+  - `apps/portal/app/(auth)/login/actions.ts`: Created a new Server Action `loginAction` using `"use server"` that initializes the server Supabase client (`createServerSupabaseClient`) and performs `signInWithPassword`.
+  - `apps/portal/app/(auth)/login/LoginForm.tsx`: Imported `loginAction` and replaced the client-side `fetch("/api/auth/login")` submission flow with a direct call to `loginAction`. Removed the TODO comment.
+  - `apps/portal/app/(auth)/login/LoginForm.test.tsx`: Updated Jest tests to mock and test `loginAction` instead of intercepting `global.fetch`.
+- **Context**: The authentication token/cookie storage (`sb-access-token` etc.) is handled automatically by the server-side `@supabase/ssr` cookies helper during the Server Action invocation. The client-side telemetry pushes remain unchanged. All 9 Jest unit tests pass successfully.
+
+## [2026-07-06] Refactor HourlyLoadsGrid to Reduce Cyclomatic Complexity
+
+- **Agent**: Antigravity
+- **Purpose**: Fix Recommendation 2: Refactor HourlyLoadsGrid.tsx to reduce extreme cyclomatic complexity (from 121) by extracting filtering, grid rendering, column config, and database operations.
+- **Changes Made**:
+  - `apps/portal/app/(departments)/[department]/hourly-loads/HourlyLoadsColumns.ts`: Extracted the complex RevoGrid column definitions (proportional column width calculations, select templates, buttons, material toggles, custom hyperscript templates).
+  - `apps/portal/app/(departments)/[department]/hourly-loads/useHourlyLoads.ts`: Created a custom Hook containing state (shift type, saving state, container size observer) and mutations (increment/decrement cell load values, toggle material type, update machine site, Excel import/export logic).
+  - `apps/portal/app/(departments)/[department]/hourly-loads/HourlyLoadsGrid.tsx`: Simplified the component into a clean wrapper that uses the new custom hook and column config generator.
+- **Context**: Reduces complexity of grid render logic down to simple configuration. No functionality was altered. All operations remain correct.
+
+## [2026-07-06] Audit (departments)/[department]/ and Extract useDepartmentForm hook
+
+- **Agent**: Antigravity
+- **Purpose**: Fix Recommendation 4: Audit department forms hotspot pattern and consider shared form hooks.
+- **Changes Made**:
+  - `apps/portal/hooks/useDepartmentForm.ts`: Extracted a shared `useDepartmentForm` Hook encapsulating form data state, submission states, validation gates, local storage drafts (auto-save and recover), error states, and router redirection.
+  - `apps/portal/hooks/useDepartmentForm.test.ts`: Added unit tests verifying initialize state, form change handlers, validation rules, and submission handlers.
+- **Context**: Solves the common boilerplate/logic hotspots found in the department forms with a clean, fully-tested hook abstraction. All 4 unit tests pass successfully.
+
+## [2026-07-06] Next.js Cache Architecture — tags + revalidation utilities
+
+- **Agent**: Antigravity
+- **Purpose**: Scan portal for nextjs-cache-architecture compliance and add missing pieces.
+- **Changes Made**:
+  - `apps/portal/next.config.mjs`: Added `cacheComponents: true` to `experimental` block (line 57).
+  - `apps/portal/lib/cache/tags.ts`: Created tag registry with collection tags for all major entities (departments, employees, machines, daily_logs, machine_operations, hourly_loads, operational_delays, excavator_activity, dozer_rolls, drill_operations, production_logs, fuel_logs, shift_status, safety_incidents, sites, badges, access_logs, visitors, breakdowns, delay_categories, engineering_notes, tire_management, certifications, courses, machine_hours, operators, weather, hub) plus entity-level factories for employee, machine, daily_log, safety_incident, shift_status_entry.
+  - `apps/portal/lib/cache/revalidate.ts`: Created revalidation utilities for every CACHE_TAGS entry — all `updateTag()` calls centralized here.
+- **Next Agent**: All cache invalidation must flow through `lib/cache/revalidate.ts`. Mutations should import from there, never call `updateTag()` directly. Update `lib/cache/tags.ts` when new data collections are added.
+
+## [2026-07-06] Cache Architecture — Phase 2: Data layer, SearchParams, Action wiring, Dashboard tags
+
+- **Agent**: Antigravity
+- **Purpose**: Full rollout of the nextjs-cache-architecture skill across the portal.
+- **Changes Made**:
+  - `components/SuspenseOnSearchParams.tsx`: Created client component that re-keys `<Suspense>` on searchParams changes, enabling proper fallback display during filter navigation.
+  - `lib/data/departments.ts`: Created `use cache` data fetching functions (`getDepartments`, `getDepartmentId`) using service-role client.
+  - `lib/data/machines.ts`: Created `use cache` data functions (`getActiveMachines`, `getActiveMachineCount`, `getMachine`, `getMachinesByDepartment`).
+  - `lib/data/operations.ts`: Created `use cache` data functions (`getMachineOperationsByDate`, `getHourlyLoadsByDate`, `getOperationalDelaysByDate`, `getDailyLogsByDate`, `getDailyLogsByDateRange`).
+  - `lib/data/safety.ts`: Created `use cache` data functions (`getSafetyIncidents`, `getSafetyIncident`).
+  - `app/(departments)/[department]/history/page.tsx`: Wrapped content in `<SuspenseOnSearchParams>`; extracted `HistoryContent` async component.
+  - `app/(departments)/[department]/reports/page.tsx`: Wrapped content in `<SuspenseOnSearchParams>`; extracted `ReportsContent` async component.
+  - `app/(departments)/drilling/reports/page.tsx`: Wrapped content in `<SuspenseOnSearchParams>`; extracted `DrillingReportsContent` async component.
+  - `features/departments/components/engineering/breakdowns/actions.ts`: Added `revalidateBreakdownsCache()` to all 4 mutations.
+  - `app/(departments)/access-control/actions.ts`: Added `revalidateBadgesCache()` to badge revocation.
+  - `features/admin/actions/fleet.ts`: Added `revalidateMachinesCache()` to add/update machine.
+  - `features/admin/actions/sites.ts`: Added `revalidateSitesCache()` to add/update site.
+  - `app/(departments)/[department]/page.tsx`: Added cache tags to `cachedRSC()` calls for ControlRoomSummaryGrid, NonControlRoomSummaryGrid, and ShiftCoverageSection.
+- **Context**: All lib/data functions use `createServiceRoleClient()` (no cookies), safe for `"use cache"`. The service-role client uses `SUPABASE_SERVICE_KEY` which bypasses RLS — appropriate for server-side read-only data. All action wiring is additive (keeps existing `cacheInvalidateTags` from `@repo/redis`).
+- **Next Agent**: To fully adopt `"use cache"` across the portal: (1) migrate remaining direct supabase queries in sub-pages to `lib/data/` functions, (2) add Suspense boundaries to sub-pages, (3) remove deprecated `cachedRSC` wrapper in favor of native `"use cache"` functions, (4) migrate away from `@repo/redis` `cacheInvalidateTags` to `updateTag()` in `revalidate.ts`.

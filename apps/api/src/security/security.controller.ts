@@ -1,4 +1,11 @@
-import { Controller, Post, Body, HttpCode, HttpStatus, Logger } from "@nestjs/common";
+import {
+  Controller,
+  Post,
+  Body,
+  HttpCode,
+  HttpStatus,
+  Logger,
+} from "@nestjs/common";
 import { ApiTags, ApiOperation } from "@nestjs/swagger";
 import { Public } from "../auth/decorators/public.decorator";
 
@@ -28,10 +35,15 @@ export class SecurityController {
   @ApiOperation({ summary: "Receive CSP violation reports" })
   report(@Body() raw: Record<string, any>) {
     try {
-      const report: CspReport | null = raw["csp-report"] ?? raw.cspReport ?? null;
+      const report: CspReport | null =
+        raw["csp-report"] ?? raw.cspReport ?? null;
       if (!report) return;
 
-      const { "violated-directive": directive, "blocked-uri": blocked, "document-uri": doc } = report;
+      const {
+        "violated-directive": directive,
+        "blocked-uri": blocked,
+        "document-uri": doc,
+      } = report;
       this.logger.warn(`CSP violation: ${directive}`, {
         directive,
         blockedUri: blocked,

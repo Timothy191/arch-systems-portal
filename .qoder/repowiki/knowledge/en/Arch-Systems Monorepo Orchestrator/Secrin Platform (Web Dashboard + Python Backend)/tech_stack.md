@@ -1,1 +1,0 @@
-Python 3.13 + Poetry monorepo (`pyproject.toml`) hosting both the FastAPI backend and the Next.js frontend; Redis/RQ for background jobs; Neo4j for the knowledge graph; PostgreSQL via Prisma for the web app's relational store.

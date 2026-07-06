@@ -1,1 +1,0 @@
-Next.js feature module that renders the admin console's tabbed UI for managing users, departments, fleet, sites, webhooks, audit logs and settings.

@@ -1,4 +1,0 @@
-- Every component starts with the `"use client"` directive, keeping all hub components strictly client-rendered.
-- Icon and color theming are driven by string-keyed lookup maps (`ICON_MAP`, `COLOR_MAP`) keyed on data values, with a fallback icon/color when the key is unknown.
-- Heavy third-party chart rendering is isolated behind a thin wrapper that uses `next/dynamic` with `ssr: false` and a skeleton loading placeholder.
-- Styling relies on Tailwind utility classes combined with `cn()` from `@repo/ui/lib/utils` and CSS custom properties (e.g. `--mac-yellow`, `--accent-blue`) instead of inline style objects.

@@ -1,1 +1,0 @@
-Next.js 16 (App Router) + React 19, next-auth v4 with Prisma adapter and JWT sessions, Prisma 7 against PostgreSQL (`@prisma/adapter-pg`), Axios for HTTP, Tailwind CSS v4 + Radix UI primitives, Octokit for GitHub integration, Neo4j driver and Three.js for graph rendering.

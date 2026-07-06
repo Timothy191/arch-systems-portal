@@ -1,1 +1,0 @@
-Next.js App Router sub-application for the Drilling department, providing a dashboard, per-shift operations log, machine telemetry viewer, and production reports.

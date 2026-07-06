@@ -1,5 +1,0 @@
-- Server actions are declared as top-level exported async functions marked with the `"use server"` directive at the top of `actions.ts`, each following the same auth-mutate-audit-invalidate-revalidate pattern.
-- Database mutations wrap Supabase errors into typed `DatabaseError` exceptions carrying `operation`, `table`, and `context` fields, while missing users are raised as `AuthError` with an `action` context key.
-- Every mutating server action records an audit event via `logAuditEvent` (with `oldData`/`newData` snapshots for updates/deletes) before calling `cacheInvalidateTags(["table:breakdowns"])` and `revalidatePath` on both `/engineering/breakdowns` and `/control-room/engineering-notes`.
-- Shared domain shapes live in `types.ts` and are imported by both client components and server actions, keeping the client-server contract centralized rather than duplicated.
-- Heavy chart rendering is isolated behind `next/dynamic` with `ssr: false` and a skeleton placeholder so the dashboard shell can render without blocking on the chart library.

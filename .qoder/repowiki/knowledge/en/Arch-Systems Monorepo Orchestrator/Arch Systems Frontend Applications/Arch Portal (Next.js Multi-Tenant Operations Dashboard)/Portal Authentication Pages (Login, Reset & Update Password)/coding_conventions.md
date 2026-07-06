@@ -1,4 +1,0 @@
-- Each route directory pairs an async server-component `page.tsx` (handling redirects, cookie/session checks) with a sibling `*Form.tsx` client component that owns all interactivity.
-- Supabase access goes through the shared `createServerSupabaseClient()` helper from `@repo/supabase/server` rather than instantiating clients inline.
-- Unauthenticated or invalid-session requests are handled by calling `redirect("/login")` from the server component instead of returning error UI.
-- The login page guards against backend outages by catching `getUserSafely` errors and swapping the card into a "System Unavailable" state rather than crashing.

@@ -2,178 +2,242 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Project
+## Repository Overview
 
-Arch-Systems (Plantcor) — industrial mining-operations portal. pnpm + Turborepo monorepo of four apps (three Next.js 16 / React 19, one NestJS 11) and shared packages.
+Arch-Systems (Plantcor) is an industrial mining-operations portal. It is a **pnpm + Nx/Turborepo monorepo** using Node `>=22` (Volta pins `24.15.0`) and pnpm `9.15.9`.
 
-| App / Package             | Port / Role                                            |
-| ------------------------- | ------------------------------------------------------ |
-| `apps/portal`               | `:3000` — main operations dashboard (Next.js App Router) |
-| `apps/api`                | configurable (`PORT`, default `:3004` in dev) — NestJS 11 backend API (Fastify) |
-| `apps/cms`                | `:3001` when started via `pnpm dev --cms` — Payload CMS v3 (Postgres) |
-| `apps/overview`           | `:3002` — architecture/flow viewer (`@xyflow/react`)     |
+| App / Package                                                                   | Role                                                 | Port / Notes                            |
+| ------------------------------------------------------------------------------- | ---------------------------------------------------- | --------------------------------------- |
+| `apps/portal`                                                                   | Next.js 16 operations dashboard (main app)           | `3000`, Turbopack dev                   |
+| `apps/api`                                                                      | NestJS 11 backend on Fastify 5                       | `3004` by default, global prefix `/api` |
+| `apps/cms`                                                                      | Payload CMS v3 on Next.js 16                         | `3001`                                  |
+| `apps/overview`                                                                 | Architecture / flow viewer (Next.js 16, React Flow)  | `3002`                                  |
+| `packages/supabase`                                                             | Data access layer: `@supabase/ssr`, Kysely, typed DB | consumed by apps                        |
+| `packages/database`                                                             | SQL migrations source of truth ONLY                  | not imported directly by apps           |
+| `packages/theme`                                                                | OKLCH design tokens + Tailwind preset                | source: `src/css/variables.css`         |
+| `packages/ui`                                                                   | shadcn-style presentational primitives               | no data-layer imports                   |
+| `packages/redis`                                                                | Redis client + caching helpers                       | used by portal proxy and API            |
+| `packages/rate-limiter`                                                         | Shared rate-limiting utilities                       |                                         |
+| `packages/agentic-tools-mcp`                                                    | Local MCP server for project memory/tasks            | stdio, no port                          |
+| `@repo/errors`, `@repo/utils`, `@repo/eslint-config`, `@repo/typescript-config` | Shared support                                       |                                         |
 
-`apps/api` is **started automatically by `pnpm dev`** on port `3004` so it no longer collides with the CMS dev port (`3001`) or the tools containers. Run `pnpm dev --no-api` to skip it, or set `API_PORT` to change the port.
+## Common Commands
 
-| Package                   | Purpose                                                |
-| ------------------------- | ------------------------------------------------------ |
-| `@repo/supabase`          | runtime data-access layer (server/client, Kysely, typed DB) |
-| `@repo/database`          | SQL migrations source of truth (`migrations/*.sql`)    |
-| `@repo/theme`             | OKLCH design tokens + Tailwind preset                  |
-| `@repo/ui`                | shadcn-style primitives (presentational only)          |
-| `@repo/redis`             | caching                                                |
-| `@repo/rate-limiter`      | rate limiting                                          |
-| `@repo/eval`              | Python LLM eval suite                                  |
-| `@repo/errors`, `@repo/utils`, `@repo/eslint-config`, `@repo/typescript-config` | shared support |
+Run everything from the repository root unless noted.
 
-## Toolchain
+| Task                                             | Command                                              |
+| ------------------------------------------------ | ---------------------------------------------------- |
+| Install dependencies                             | `pnpm install`                                       |
+| Full dev stack (Supabase + Redis + API + Portal) | `pnpm dev`                                           |
+| Portal only, no Docker/Supabase                  | `pnpm dev --quick`                                   |
+| Dev + CMS + Overview                             | `pnpm dev --all` (or `--cms` / `--overview`)         |
+| Dev without the NestJS API                       | `pnpm dev --no-api`                                  |
+| Build all apps/packages                          | `pnpm build`                                         |
+| Type-check all                                   | `pnpm type-check`                                    |
+| Lint all                                         | `pnpm lint`                                          |
+| Lint root workspace files only                   | `pnpm lint:root`                                     |
+| Unit tests all                                   | `pnpm test`                                          |
+| Run a single portal test                         | `pnpm --filter portal test -- path/to/file.test.tsx` |
+| Run a single API test                            | `pnpm --filter api test -- path/to/file.spec.ts`     |
+| E2E tests (Playwright)                           | `pnpm test:e2e`                                      |
+| Full quality gate                                | `pnpm quality`                                       |
+| Format all files                                 | `pnpm format`                                        |
+| Check formatting                                 | `pnpm format:check`                                  |
+| Run a script in one package                      | `pnpm --filter <package-name> <script>`              |
+| Regenerate policy/boundary rules                 | `pnpm policy:gen`                                    |
+| Audit RLS after migration changes                | `pnpm audit:rls`                                     |
+| Start agentic-tools MCP server                   | `pnpm agentic-tools`                                 |
+| Start agentic-tools daemon                       | `pnpm agentic-tools:daemon`                          |
+| Bootstrap env template                           | `pnpm agentic-tools:setup`                           |
 
-- **Package manager:** pnpm 9.15.9 (Volta pins Node `24.15.0`). Always use `pnpm`.
-- **Orchestration:** Turborepo (`turbo.json`). Use `pnpm --filter <pkg> <script>` or `pnpm exec turbo run <target> --filter=<pkg>` to scope work.
-- **Repo rules:** Conventional Commits (`commitlint`), Husky + lint-staged, ESLint boundary rules generated from `tools/policy-compiler.cjs`.
+Supabase helpers live in `packages/database/package.json` and `packages/supabase/package.json` (e.g. `pnpm --filter @repo/database supabase:start`, `supabase:reset`, `supabase:push`).
 
-## Common commands
+## High-Level Architecture
 
-Run from repo root unless noted.
+### Frontend: Portal (`apps/portal`)
 
-| Task | Command |
-| ---- | ------- |
-| Full quality gate | `pnpm quality` |
-| Build everything | `pnpm build` |
-| Dev (Supabase + Portal + API + health checks + browser) | `pnpm dev` |
-| Dev, portal only, no Docker/Supabase/API | `pnpm dev --quick` |
-| Dev with extra apps | `pnpm dev --cms`, `--overview`, or `--all` |
-| Dev with optional tool containers | `pnpm dev --tools` |
-| Dev without the NestJS API | `pnpm dev --no-api` |
-| Lint all | `pnpm lint` |
-| Lint root config/tooling only | `pnpm lint:root` |
-| Type-check all | `pnpm type-check` |
-| Unit tests all | `pnpm test` |
-| E2E (requires `pnpm dev` running) | `pnpm test:e2e` |
-| Format | `pnpm format` / `pnpm format:check` |
-| Markdown lint | `pnpm md:lint` / `pnpm md:fix` |
-| Dependency alignment | `pnpm deps:lint` / `pnpm deps:fix` |
-| Dead-code check | `pnpm knip` / `pnpm knip:fix` |
-| RLS audit | `pnpm audit:rls` |
-| Policy boundary check | `pnpm policy:check` / `pnpm policy:gen` |
-| Local deploy | `pnpm deploy:local` |
-| Clean local deploy | `pnpm fresh-start` |
-| UI package storybook | `pnpm ui` |
+- Next.js 16 App Router, React 19, Turbopack dev (`next dev --turbopack`).
+- **Next.js 16 convention:** the middleware file is named `proxy.ts`, not `middleware.ts`. `proxy.ts` runs on every request and handles auth/session refresh, department-based access control, and redirects.
+- Department routes live under `app/(departments)/[department]/`. Valid departments: `drilling`, `production`, `access-control`, `engineering`, `control-room`, `safety`, `training`, `satellite-monitoring`.
+- Server Actions are in `app/actions.ts` and per-route `actions.ts` files.
+- The portal proxies backend calls through `/api/backend/*` to `API_BASE_URL` (default `http://localhost:3004/api`). See `app/api/backend/[[...slug]]/route.ts`.
 
-## Running one project / one test
+### Backend: API (`apps/api`)
 
-- Target one workspace project: `pnpm --filter <pkg> <script>` (e.g. `pnpm --filter portal test`).
-- Portal unit tests use Jest: `pnpm --filter portal test -- <pattern>` (e.g. `-- shift-closeout`).
-- One Jest file: `pnpm --filter portal exec jest lib/shift-closeout.test.ts`.
-- Bypass Turborepo cache on a target: `pnpm exec turbo run portal:test --force`.
-- E2E single file: `pnpm exec playwright test e2e/login.spec.ts`.
+- NestJS 11 on Fastify 5 with global prefix `/api`.
+- Swagger docs at `/api/docs` in non-production environments.
+- Health checks at `/api/health/live`.
+- Feature modules: `auth`, `admin`, `ai`, `jobs`, `webhooks`, `control-room`, `access-control`, `exports`, `health`, `observability`, `security`, `telemetry`, `weather`.
+- Uses `@repo/supabase/service-role` for DB access and `@repo/redis` for caching/rate-limiting.
 
-### API app commands
+### Data Layer
 
-| Task | Command |
-| ---- | ------- |
-| Dev (NestJS watch) | `pnpm --filter api dev` |
-| Build | `pnpm --filter api build` |
-| Production start | `pnpm --filter api start:prod` |
-| Run tests | `pnpm --filter api test` |
-| Run one test file | `pnpm --filter api exec jest src/health/health.controller.spec.ts` |
-| Type-check | `pnpm --filter api type-check` |
+- **Apps must import from `@repo/supabase`, never from `@repo/database`.** `@repo/database` is only migrations and SQL scripts.
+- `@repo/supabase` exports: `.` (client), `./server`, `./client`, `./middleware`, `./kysely`, `./service-role`, `./read-replica`.
+- Row Level Security is **mandatory**. Every table created or modified in `packages/database/migrations/` must have `ALTER TABLE ... ENABLE ROW LEVEL SECURITY;`.
+- `employees` links Supabase auth users to role, `department_id`, and `accessible_departments`. Roles include `operator`, `supervisor`, `manager`, `admin`, `control_room_operator`, `access_control`.
 
-The API listens on `PORT` (default `3004` in dev to avoid CMS/tools collisions; `3001` in `docker-compose.portal.yml` production setup) and mounts under `/api` (e.g. `http://localhost:3004/api/health`). Swagger docs are served at `/api/docs` in non-production builds. The portal also proxies `/api/backend/*` to the API so browser clients can use a single origin.
+### Design Tokens
 
-## Architecture
+- Source of truth is `packages/theme/src/css/variables.css`. Generated tokens live in `packages/theme/src/tokens/generated.ts`.
+- Run `pnpm --filter @repo/theme codegen` to regenerate tokens; `pnpm --filter @repo/theme lint:tokens` to validate.
 
-### Apps
+### Module Boundaries
 
-`apps/portal` is the primary Next.js 16 App Router app. Its routes are grouped under:
+- Boundary rules are generated from `tools/policy/dependency.rules.json` and `tools/policy/intent-map.json` into `tools/policy/eslint-boundaries.generated.cjs`.
+- Run `pnpm policy:gen` after changing dependency intent or Nx tags.
+- Key enforced boundaries:
+  - Apps cannot import `packages/database` directly.
+  - `packages/ui` cannot import `packages/supabase` or `packages/database`.
+  - `packages/theme` cannot import `packages/ui`.
+  - `packages/*` cannot import `apps/*`.
+  - `tools/*` cannot import runtime apps or `packages/supabase`.
 
-- `(auth)/` — login & password management.
-- `(departments)/[department]/` — dynamic per-department dashboards.
-- `(hub)/` — central landing + executive view.
-- `api/` — AI, export, sync, tools, webhooks, Inngest, metrics.
+## Agentic Tools & MCP Environment
 
-Domain logic lives in `apps/portal/features/*` (access-control, admin, analytics, departments, hub, webhooks) and `apps/portal/lib/*` (AI, audit, cache, departments, employee, env, observability, sync, etc.).
+- `packages/agentic-tools-mcp` is the local MCP server that exposes the project's `.agentic-tools-mcp/` memory and task store. It replaces the external `@pimzino/agentic-tools-mcp` package.
+- Available tools: `agentic_list_memories`, `agentic_read_memory`, `agentic_search_memories`, `agentic_create_memory`, `agentic_update_memory`, `agentic_list_tasks`, `agentic_create_task`, `agentic_update_task`, `agentic_delete_task`.
+- Start it with `pnpm agentic-tools`. The companion daemon (`pnpm agentic-tools:daemon`) watches the store and logs active memory/task counts.
+- **Secrets are no longer stored in `.mcp.json` or `.vscode/*_mcp_settings`.** Those files now reference environment variables. Copy `.env.example` → `.env` at the repo root and fill in real values (`N8N_EMAIL`, `N8N_PASSWORD`, `GITHUB_PERSONAL_ACCESS_TOKEN`, `GEMINI_API_KEY`). Never commit `.env`.
 
-`apps/cms` is Payload CMS v3 on Postgres. `apps/overview` renders architecture diagrams with `@xyflow/react`.
+## Critical Rules
 
-### API app (`apps/api`)
+1. **Data access boundary:** Apps import `@repo/supabase`, not `@repo/database`.
+2. **RLS:** Every migration table must enable RLS. Run `pnpm audit:rls` after schema changes and inspect `.audit/rls-report.md`.
+3. **Next.js 16 proxy:** Use `apps/portal/proxy.ts`, not `middleware.ts`.
+4. **Agent tracing:** When modifying an app or package, append an entry to its `AGENT_TRACER.md` (timestamp, purpose, changes, next-agent context). Add inline `// AGENT-TRACE: ...` comments for non-obvious logic.
+5. **Conventional Commits:** use `feat:`, `fix:`, `refactor:`, `docs:`, etc.
+6. **Documentation sync:** When changing DB schemas, APIs, packages, deployment, or dev scripts, update the corresponding `.agentic-tools-mcp/repowiki/en/content/` docs (symlinked at `.qoder/repowiki`) and `.qoder/skills/` runners if applicable.
+7. **RepoWiki / Skills / Repowise / Sense:** Keep `.repowise` and `.repowise-workspace` synced with `./.aistack/tools/repowise/.venv/bin/repowise update -w --index-only` after significant changes. Maintain `AGENT_TRACER.md` files and the `.agentic-tools-mcp/` memory store.
 
-`apps/api` is a NestJS 11 application running on the Fastify adapter. It is a separate backend from the Next.js `api/` routes inside `apps/portal`.
+For workspace-wide agent rules (MCP servers, editor configs, monorepo orchestration), see `.agents/AGENTS.md`. For MCP server setup instructions, see `.vscode/README.md`.
 
-- **Entry:** `src/main.ts` bootstraps the Fastify server, sets global prefix `/api`, enables CORS from `CORS_ORIGIN`, registers a global `ValidationPipe`, and mounts Swagger at `/api/docs` when not in production.
-- **Root module:** `src/app.module.ts` wires infrastructure (`SupabaseModule`, `RedisModule`) and feature modules.
-- **Feature modules:** `access-control`, `admin`, `ai`, `auth`, `control-room`, `exports`, `health`, `jobs` (Inngest), `observability`, `security`, `supabase`, `telemetry`, `tools`, `weather`, `webhooks`.
-- **Auth:** `SupabaseAuthGuard` is registered globally via `AuthModule` and reads `Authorization: Bearer <token>` or an `sb-access-token` cookie, validating against the injected Supabase client. Use the `@Public()` decorator to skip auth on a route.
-- **Cross-cutting concerns:** `GlobalExceptionFilter` handles all unhandled exceptions, logs structured output, and reports 5xx errors to Sentry when `SENTRY_DSN` is set. `@nestjs/throttler` provides default rate limiting (100 req / 60s).
-- **Test setup:** Jest uses `@swc/jest` with decorator metadata enabled; module name mapping matches the API’s `tsconfig.json` paths (`@/*`, `@repo/*`).
+<!-- Add your custom instructions below. Repowise will never modify anything outside the REPOWISE markers. -->
 
-### Data layer
+<!-- REPOWISE:START — Do not edit below this line. Auto-generated by Repowise. -->
 
-`@repo/database` owns the migrations in `packages/database/migrations/*.sql` (numbered `NNN_name.sql`). It is the **schema source of truth**. `scripts/dev.sh` copies these migrations into `packages/supabase/supabase/migrations/` before booting local Supabase; do not hand-edit the copied files.
+## Workspace: Arch-Mk2 (2 repos)
 
-`@repo/supabase` is the **runtime data-access layer**. Apps and other packages talk to the DB through this package only. Key exports include `getUserSafely()` (server session helper that swallows stale-refresh-token errors), typed Supabase clients, Kysely builder, read-replica, service-role, and middleware clients.
+> Indexed by [Repowise](https://repowise.dev). Use `repo="all"` for workspace-wide queries, or `repo="alias"` for a specific repo.
 
-### Auth & authorization
+### Repositories
 
-- Server Components read the session with `getUserSafely()` from `@repo/supabase/server`.
-- `apps/portal/proxy.ts` (the Next.js 16 rename of `middleware.ts`) refreshes sessions and enforces role-based route restrictions.
-- The `employees` table is the source of truth for roles and department access; authorization decisions must route through it.
-- Row Level Security is mandatory: every table created in `packages/database/migrations/` must get an `ALTER TABLE … ENABLE ROW LEVEL SECURITY` somewhere in the migration chain. `pnpm audit:rls` statically enforces this and writes `.audit/rls-report.md`.
+| Repo       | Files | Symbols | Hotspots | Role    |
+| ---------- | ----- | ------- | -------- | ------- |
+| `arch-mk2` | 6924  | 37310   | 0        | default |
+| `repowise` | 2628  | 21815   | 0        |         |
 
-### AI orchestration
+### Cross-Repo API Contracts
 
-`apps/portal/lib/ai/` holds the agent system: `agent-graph.ts` / `agent-state.ts` (state machine), plus modules for chunking, embeddings, memory, tool dispatch, cost tracking, prompts, providers (including Ollama), and rate limiting.
+**By type:** http: 336, grpc: 6, topic: 16
+| Provider | Consumer | Type | Contract |
+|----------|----------|------|----------|
+| `arch-mk2:tools/repowise/packages/server/src/repowise/server/routers/chat.py` | `arch-mk2:tools/repowise/packages/api-client/src/chat.ts` | http | `http::GET::/api/repos/{param}/chat/conversations/{param}` |
+| `repowise:packages/server/src/repowise/server/routers/chat.py` | `arch-mk2:tools/repowise/packages/api-client/src/chat.ts` | http | `http::GET::/api/repos/{param}/chat/conversations/{param}` |
+| `arch-mk2:tools/repowise/packages/server/src/repowise/server/routers/git.py` | `arch-mk2:tools/repowise/packages/api-client/src/git.ts` | http | `http::GET::/api/repos/{param}/co-changes` |
+| `repowise:packages/server/src/repowise/server/routers/git.py` | `arch-mk2:tools/repowise/packages/api-client/src/git.ts` | http | `http::GET::/api/repos/{param}/co-changes` |
+| `repowise:packages/core/src/repowise/core/workspace/extractors/grpc/python.py` | `arch-mk2:tools/repowise/packages/core/src/repowise/core/workspace/extractors/grpc/python.py` | grpc | `grpc::AuthService/*` |
+| `repowise:packages/core/src/repowise/core/workspace/extractors/topic_extractor.py` | `arch-mk2:tools/repowise/packages/core/src/repowise/core/workspace/extractors/topic_extractor.py` | topic | `topic::orders` |
+| `repowise:packages/core/src/repowise/core/workspace/extractors/topic_extractor.py` | `arch-mk2:tools/repowise/packages/core/src/repowise/core/workspace/extractors/topic_extractor.py` | topic | `topic::queue` |
+| `repowise:packages/core/src/repowise/core/workspace/extractors/topic_extractor.py` | `arch-mk2:tools/repowise/packages/core/src/repowise/core/workspace/extractors/topic_extractor.py` | topic | `topic::events` |
+| `arch-mk2:tools/repowise/packages/server/src/repowise/server/routers/chat.py` | `repowise:packages/api-client/src/chat.ts` | http | `http::GET::/api/repos/{param}/chat/conversations/{param}` |
+| `repowise:packages/server/src/repowise/server/routers/chat.py` | `repowise:packages/api-client/src/chat.ts` | http | `http::GET::/api/repos/{param}/chat/conversations/{param}` |
+| `arch-mk2:tools/repowise/packages/server/src/repowise/server/routers/git.py` | `repowise:packages/api-client/src/git.ts` | http | `http::GET::/api/repos/{param}/co-changes` |
+| `repowise:packages/server/src/repowise/server/routers/git.py` | `repowise:packages/api-client/src/git.ts` | http | `http::GET::/api/repos/{param}/co-changes` |
+| `arch-mk2:tools/repowise/packages/server/src/repowise/server/routers/c4.py` | `arch-mk2:tools/repowise/packages/api-client/src/c4.ts` | http | `http::GET::/api/graph/{param}/c4/mermaid` |
+| `repowise:packages/server/src/repowise/server/routers/c4.py` | `arch-mk2:tools/repowise/packages/api-client/src/c4.ts` | http | `http::GET::/api/graph/{param}/c4/mermaid` |
+| `arch-mk2:tools/repowise/packages/server/src/repowise/server/routers/repos.py` | `arch-mk2:tools/repowise/packages/web/src/components/architecture/c4-view.tsx` | http | `http::GET::/api/repos/{param}/file-content` |
+| `repowise:packages/server/src/repowise/server/routers/repos.py` | `arch-mk2:tools/repowise/packages/web/src/components/architecture/c4-view.tsx` | http | `http::GET::/api/repos/{param}/file-content` |
+| `arch-mk2:tools/secrin/packages/arc42gen/api.py` | `arch-mk2:tools/secrin/apps/web/app/api/projects/[id]/regenerate/route.ts` | http | `http::POST::/jobs` |
+| `arch-mk2:tools/secrin/packages/arc42gen/api.py` | `arch-mk2:tools/secrin/apps/web/app/api/projects/[id]/regenerate/status/route.ts` | http | `http::GET::/jobs/{param}` |
+| `repowise:packages/server/src/repowise/server/routers/c4.py` | `repowise:packages/api-client/src/c4.ts` | http | `http::GET::/api/graph/{param}/c4/mermaid` |
+| `arch-mk2:tools/memex/memex/mcp_server/http.py` | `arch-mk2:apps/portal/components/system/SystemTray.tsx` | http | `http::GET::/api/health` |
+| `arch-mk2:tools/memex/memex/memory_tool/http.py` | `arch-mk2:apps/portal/components/system/SystemTray.tsx` | http | `http::GET::/api/health` |
+| `arch-mk2:tools/repowise/packages/server/src/repowise/server/routers/health.py` | `arch-mk2:apps/portal/components/system/SystemTray.tsx` | http | `http::GET::/api/health` |
+| `arch-mk2:tools/secrin/packages/arc42gen/api.py` | `arch-mk2:apps/portal/components/system/SystemTray.tsx` | http | `http::GET::/api/health` |
+| `repowise:packages/server/src/repowise/server/routers/health.py` | `arch-mk2:apps/portal/components/system/SystemTray.tsx` | http | `http::GET::/api/health` |
+| `arch-mk2:tools/memex/memex/mcp_server/http.py` | `arch-mk2:tools/repowise/packages/web/src/components/settings/provider-section.tsx` | http | `http::GET::/api/health` |
+| `arch-mk2:tools/memex/memex/memory_tool/http.py` | `arch-mk2:tools/repowise/packages/web/src/components/settings/provider-section.tsx` | http | `http::GET::/api/health` |
+| `arch-mk2:tools/repowise/packages/server/src/repowise/server/routers/health.py` | `arch-mk2:tools/repowise/packages/web/src/components/settings/provider-section.tsx` | http | `http::GET::/api/health` |
+| `arch-mk2:tools/secrin/packages/arc42gen/api.py` | `arch-mk2:tools/repowise/packages/web/src/components/settings/provider-section.tsx` | http | `http::GET::/api/health` |
+| `repowise:packages/server/src/repowise/server/routers/health.py` | `arch-mk2:tools/repowise/packages/web/src/components/settings/provider-section.tsx` | http | `http::GET::/api/health` |
 
-### Design system
+### Cross-Repo Co-Changes
 
-`@repo/theme` owns the design tokens. `src/css/variables.css` is the source of truth; `scripts/generate-tokens.mjs` compiles it to `src/tokens/generated.ts`; `scripts/validate-tokens.mjs` is the `lint:tokens` check. Tokens are OKLCH-based. The Tailwind preset (`src/tailwind/preset.ts`) is consumed by apps and `@repo/ui`. `@repo/ui` must stay presentational and must not import any data-layer packages.
+Files that frequently change together across repos — consider reviewing both when editing either.
 
-### Path aliases (portal)
+| Source                                            | Target                                            | Co-changes |
+| ------------------------------------------------- | ------------------------------------------------- | ---------- |
+| `arch-mk2:apps/portal/lib/ai/ollama.ts`           | `repowise:apps/portal/lib/ai/ollama.ts`           | 9          |
+| `arch-mk2:apps/portal/lib/ai/ollama.ts`           | `repowise:docs/AGENT_TRACER.md`                   | 9          |
+| `arch-mk2:docs/AGENT_TRACER.md`                   | `repowise:apps/portal/lib/ai/ollama.ts`           | 9          |
+| `arch-mk2:docs/AGENT_TRACER.md`                   | `repowise:docs/AGENT_TRACER.md`                   | 9          |
+| `arch-mk2:apps/portal/lib/ai/ollama.ts`           | `repowise:apps/portal/lib/ai/embeddings/index.ts` | 9          |
+| `arch-mk2:docs/AGENT_TRACER.md`                   | `repowise:apps/portal/lib/ai/embeddings/index.ts` | 9          |
+| `arch-mk2:apps/portal/lib/ai/embeddings/index.ts` | `repowise:apps/portal/lib/ai/ollama.ts`           | 9          |
+| `arch-mk2:apps/portal/lib/ai/embeddings/index.ts` | `repowise:docs/AGENT_TRACER.md`                   | 9          |
+| `arch-mk2:apps/portal/lib/ai/embeddings/index.ts` | `repowise:apps/portal/lib/ai/embeddings/index.ts` | 9          |
+| `arch-mk2:apps/portal/lib/ai/ollama.ts`           | `repowise:apps/portal/proxy.test.ts`              | 6          |
 
-`~/*` and `@/*` → `apps/portal/*`. Mapped sub-paths: `@/app/*`, `@/features/*`, `@/components/*`, `@/lib/*`, `@/hooks/*`.
+### Package Dependencies
 
-### Dependency & security boundaries
+- `arch-mk2` → `repowise` (dotnet_nuget_internal)
+- `repowise` → `arch-mk2` (dotnet_project_ref)
 
-`tools/policy-compiler.cjs` defines the single-source-of-truth for boundaries and intent→capability mapping. `pnpm policy:gen` compiles it into `tools/policy/*.json` and generated ESLint boundary rules; `pnpm policy:check` fails if the generated artifacts have drifted.
+### Per-Repo Entry Points
 
-Key rules:
+#### `arch-mk2` (default)
 
-- Apps must not import `@repo/database` internals; use `@repo/supabase` instead.
-- `@repo/ui` must stay presentational (no data layer).
-- `@repo/theme` must not depend on `@repo/ui`.
-- `tools/*` are build-time only and must not import runtime app code.
-- Packages must not depend on apps.
+_No entry points indexed._
 
-## Environment & local infra
+#### `repowise`
 
-- Portal env is `apps/portal/.env` (copied from `apps/portal/.env.example` by `scripts/dev.sh` if missing). It needs `SUPABASE_URL`, `SUPABASE_ANON_KEY`, etc.
-- Local Supabase stack (DB `:54322`, API `:54321`, Studio `:54323`) boots via `pnpm dev` (Docker).
-- Optional tooling containers (Redis, n8n, Flowise, Langfuse, Qdrant) via `pnpm dev --tools` and `docker-compose.tools.yml`.
-- Playwright E2E is pinned to `/usr/bin/google-chrome` and `http://localhost:3000` — keep the portal running on the default port.
-- Portal Jest coverage thresholds: 40% lines, 30% branches.
-- API env is `apps/api/.env` (copied from `apps/api/.env.example` if needed). It requires `SUPABASE_URL` / `SUPABASE_SERVICE_KEY`, `REDIS_URL`, optional `OLLAMA_URL`, `CORS_ORIGIN`, and observability keys (`SENTRY_DSN`, `OTEL_EXPORTER_OTLP_ENDPOINT`).
+_No entry points indexed._
 
-## Working conventions
+### Repowise MCP Tools
 
-These are project rules, not generic advice:
+These tools work across all repos in this workspace. Pass `repo="alias"` to scope, `repo="all"` for cross-repo queries, or omit for the default repo. Every response carries `_meta` with `index_age_days`, `indexed_commit`, and a `stale_warning` only when the index has diverged from HEAD.
 
-- **Data is sacred.** Before any DB schema migration, data-mutation logic (Server Actions / API routes), or RLS/auth change, halt, explain the data impact, and get explicit confirmation before proceeding.
-- **Tests passing ≠ the program works.** Frontend changes require live verification: start `pnpm dev`, navigate to the page, and interact. Do not claim “it works” without evidence.
-- **Production readiness.** Changes must pass `pnpm quality` and live verification. If a change breaks build/tests/critical functionality, revert it and rethink.
-- **Never invent values.** Authoritatively confirm paths, env vars, and IDs before using them. Remove orphaned imports/vars/functions after changes.
-- **Agent tracing.** When modifying a package/app, append to its `AGENT_TRACER.md` (timestamp, purpose, changes, what the next agent should know). For non-obvious architectural logic, leave inline `// AGENT-TRACE: …` comments.
-- **Commits** are conventional (`feat:`, `fix:`, `refactor:`, `docs:`, etc.). Husky + lint-staged run on commit.
+| Tool                                                 | What only this tool answers                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| ---------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `get_answer(question)`                               | Synthesised answer with verified citations and a calibrated `retrieval_quality`. First call for "how does X work" / "why is Y like this". On low confidence returns `best_guesses` with one-line justifications.                                                                                                                                                                                                                                      |
+| `get_context(targets=[...])`                         | Triage card for files/modules/symbols — title, summary, signatures, `hotspot` bit, `decision_records` titles, and `symbol_id`s to pipe into `get_symbol`. Use `include=[...]` to widen. NOT for source bytes.                                                                                                                                                                                                                                         |
+| `get_symbol("path/to/file.py::Name")`                | Raw source bytes for one indexed symbol with exact line bounds. Cheaper than `Read` + offset math.                                                                                                                                                                                                                                                                                                                                                    |
+| `search_codebase(query, mode?, kind?, symbol_kind?)` | Hybrid code search. `mode="auto"` routes by query shape: identifier → indexed symbol hits (pipe `symbol_id` into `get_symbol`), path → file pages (`get_context`), prose → semantic search. Force with `mode=symbol\|path\|concept\|hybrid`. Concept hits tag `search_method` (`embedding` vs `bm25`).                                                                                                                                                |
+| `get_why(query, targets?)`                           | Architectural decision archaeology — _why_ the code is shaped this way. Call before refactors. Falls back to git archaeology when no ADRs exist.                                                                                                                                                                                                                                                                                                      |
+| `get_risk(targets, changed_files?)`                  | What history says about touching these files. Pass `changed_files` for PR mode → returns a `directive` (`will_break`, `missing_cochanges`, `missing_tests`) plus cross-repo blast radius.                                                                                                                                                                                                                                                             |
+| `get_health(targets?, include?)`                     | Code-health scores + biomarker findings (defect / maintainability / performance). Self-check before a PR. Lean by default; opt in via `include`: `["accuracy"]` (precision@K + `lift`), `["signals"]` (per-file prior-defects / churn / owners / degree), `["churn_complexity"]` (danger-zone files), `["biomarkers"]` (all findings), or a dimension name `["performance"]` / `["defect"]` / `["maintainability"]` to filter findings to one pillar. |
+| `get_dead_code(...)`                                 | Tiered unreachable / unused-export / zombie-package findings; cross-repo consumer detection lowers confidence on shared exports.                                                                                                                                                                                                                                                                                                                      |
+| `get_overview(repo?)`                                | Architecture map. `repo="all"` returns cross-repo topology (co-changes, package deps, API contracts).                                                                                                                                                                                                                                                                                                                                                 |
 
-## Codebase intelligence
+**Composition tips:**
 
-This repository is indexed by Repowise. The Repowise MCP usage guide (when to call `get_answer`, `get_context`, `get_why`, `get_health`, etc.) lives in `.claude/CLAUDE.md`. Always verify indexed answers against the live source before making changes.
+- `get_answer` → on `confidence: medium/low`, follow `best_guesses[0].file` into `get_context`, then `get_symbol` for bytes.
+- `get_context` returns `hotspot: true` → call `get_risk` before editing.
+- PR review across repos → `get_risk(changed_files=[...])` picks up cross-repo consumers automatically.
 
-## Where to look further
+**Verify when:** `_meta.stale_warning` is present, `retrieval_quality` is `partial`/`weak`, or `search_method` is `bm25`. Otherwise trust the response.
 
-- `README.md` — one-page project overview.
-- `.agents/AGENTS.md` — workspace rules for all AI agents (RLS, commits, monorepo execution, editor configs).
-- `apps/portal/GEMINI.md` — portal-specific conventions (route groups, auth, AI, testing, agent tracing).
-- `packages/theme/README.md` — token pipeline and `GlassCard` API.
-- `packages/supabase/README.md` — local Supabase setup.
-- `docs/` — VitePress wiki (run from `/wiki`); runbooks in `docs/runbooks/`.
-- `LIQUID_GLASS_CHECKLIST.md` — UI/visual checklist.
+<!-- REPOWISE:END -->
+
+<!-- sense:start -->
+
+## Use the Sense index for codebase understanding
+
+Sense gives you structural understanding of the codebase (symbols, relationships, patterns) without reading dozens of files. Prefer it over grep, glob, and file-walking for any structural or semantic question.
+
+| Question                                | Tool              |
+| --------------------------------------- | ----------------- |
+| Who calls X? What does X call?          | sense_graph       |
+| Find code related to a concept          | sense_search      |
+| What breaks if I change X?              | sense_blast       |
+| What patterns does this project follow? | sense_conventions |
+| Index health, what's indexed            | sense_status      |
+
+**You MUST NOT** use grep/glob for symbol lookup, or skip Sense because its tools load on demand. **About to grep, rg, or find (including through Bash) to locate code?** Searching for a _name_ (a function, method, type, or constant; who calls it; what it touches) is a Sense call first: sense*graph, sense_search, or sense_blast. Searching for a \_literal* (an error string, log line, config key, TODO), grep is right, go ahead. One line: **grepping a name → Sense; grepping a string → grep.** For list outputs (dead code, blast radius, callers), spot-check a sample with grep before relying on them.
+
+**Cite from what Sense returns; don't re-open a file to recover a line it already gave you.** Sense results already carry exact locations: every symbol has a _ref_ (file:line) and graph/blast call sites include their own line. Those are authoritative, citable file:line — use them directly. After a sense*blast/sense_graph you already hold the dependent list \_with* locations; cite it, don't re-derive the same list by reading every file. Open a file only when you need its **content** (a method body to describe behaviour), never just to re-confirm a location Sense already pinned. Let Sense **replace** the exploration, not sit on top of it.
+
+**When NOT to use Sense** (use grep instead): exact text/string search, reading file contents, editing code (Sense is read-only).
+
+<!-- sense:end -->

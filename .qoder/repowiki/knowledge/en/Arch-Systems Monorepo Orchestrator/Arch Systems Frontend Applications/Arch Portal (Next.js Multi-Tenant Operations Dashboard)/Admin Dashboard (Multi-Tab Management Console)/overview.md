@@ -1,1 +1,0 @@
-Next.js App Router page and feature set that renders an admin-only dashboard with tabbed management for users, departments, fleet, sites, webhooks, audit logs, and settings.

@@ -1,9 +1,21 @@
 {
   "name": "@repo/errors",
   "version": "1.0.0",
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^22",
+    "jest": "^30.0.0",
+    "ts-jest": "^29.1.2",
+    "typescript": "^5.7.0"
+  },
   "exports": {
     ".": "./src/index.ts"
   },
   "main": "./src/index.ts",
+  "scripts": {
+    "test": "jest",
+    "type-check": "tsc --noEmit"
+  },
   "types": "./src/index.ts"
 }

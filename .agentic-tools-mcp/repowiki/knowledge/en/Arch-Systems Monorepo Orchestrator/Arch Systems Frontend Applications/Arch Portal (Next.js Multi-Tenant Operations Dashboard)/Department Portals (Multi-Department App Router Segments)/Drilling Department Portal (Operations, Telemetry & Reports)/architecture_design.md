@@ -1,0 +1,9 @@
+Organized as a Next.js App Router route group under `app/(departments)/drilling/` with one top-level layout that wires `DepartmentLayout`, `ActiveDepartmentSetter`, and `AIAssistantWrapper` around all drilling pages.
+
+- `layout.tsx` resolves the drilling department from `DEPARTMENTS` via `getDepartmentTabs('drilling')` and renders the shared chrome; it is the single entry point for the whole subtree.
+- `page.tsx` is the drill-down dashboard: server component using `createReadReplicaClient()` to read `daily_logs`, `machines`, `drill_operations`, and `operational_delays` in parallel and render KPI cards via `GlassCard`.
+- `drilling-operations/` implements an inline shift-log table. The page (`page.tsx`) is a server component that authenticates via `createServerSupabaseClient()`, fetches active rigs, operators, and today's `drill_operations`, then delegates rendering to the client component `DrillingOperationsTable.tsx`. That table manages local draft state keyed by `${machine_id}:${shift_type}`, commits on cell blur through `supabase.from('drill_operations').upsert(...)` with `onConflict='machine_id,operation_date,shift_type'`, and drives optimistic UI via `router.refresh()`.
+- `machine-telemetry/page.tsx` is a read-only analytics view: server component calling Supabase RPCs `get_telemetry_summary` and `get_drill_monthly_summary`, plus reads from `machine_telemetry_archive`, presenting daily aggregates, monthly availability/utilization tables, and archived-month listings.
+- `reports/page.tsx` builds a date-range report over `drill_operations` (with a join to `machines`), computes production/non-production/engineering delay totals, and offers a client-side CSV download generated from the fetched rows.
+
+Dependency direction is strictly inward: pages depend only on shared packages (`@repo/ui`, `@repo/supabase/*`, `@repo/utils`) and the portal's `~/lib/dept-context`; no cross-department imports exist inside this scope.

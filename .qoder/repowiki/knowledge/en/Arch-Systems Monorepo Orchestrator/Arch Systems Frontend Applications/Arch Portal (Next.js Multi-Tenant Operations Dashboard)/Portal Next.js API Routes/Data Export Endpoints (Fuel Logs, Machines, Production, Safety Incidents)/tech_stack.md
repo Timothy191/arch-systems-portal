@@ -1,1 +1,0 @@
-Next.js App Router Route Handlers + Supabase JS client (`@repo/supabase/server`) for Postgres queries; Zod schemas (`exportQuerySchema`, `safetyExportQuerySchema`) for parameter validation; CSV produced inline without a library using a local `sanitizeCsvCell` helper to prevent formula injection.

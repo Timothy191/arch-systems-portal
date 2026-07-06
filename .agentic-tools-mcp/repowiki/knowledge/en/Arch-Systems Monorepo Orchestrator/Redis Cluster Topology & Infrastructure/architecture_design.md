@@ -1,0 +1,6 @@
+Three complementary deployment targets share one logical topology:
+
+- `config/shard-map.json` is the single source of truth for namespace routing, declaring three namespaces (`default`, `turbo`, `telemetry`) each with a strategy (`consistent-hashing`, `hash-slot`, `single`) and an ordered node list.
+- `docker-compose/redis-cluster.yml` spins up a local 3-node Redis 7 cluster (ports 6371–6373) using `redis:7-alpine` in cluster mode and bootstraps it with a `cluster-init` helper that runs `redis-cli --cluster create ... --cluster-replicas 0` after a sleep.
+- `terraform/` declares the production equivalent on AWS: a subnet group plus an `aws_elasticache_replication_group` named `amca-cluster` with 3 node groups and 1 replica per group, driven by variables in `variables.tf` (region, node type, subnets, security groups) and exposing `configuration_endpoint_address` and port via `outputs.tf`.
+  Dependency direction is one-way: consumers read `shard-map.json` at runtime; the compose and terraform manifests are independent deployment artifacts targeting the same node addresses listed in the shard map.

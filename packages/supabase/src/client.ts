@@ -16,7 +16,7 @@ export function createBrowserSupabaseClient() {
         url.hostname = hostname;
         supabaseUrl = url.toString();
       }
-    } catch (e) {
+    } catch (_e) {
       // Ignore URL parsing errors
     }
   }

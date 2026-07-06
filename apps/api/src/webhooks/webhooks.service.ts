@@ -1,4 +1,11 @@
-import { Injectable, Inject, Logger, NotFoundException, ForbiddenException, BadRequestException } from "@nestjs/common";
+import {
+  Injectable,
+  Inject,
+  Logger,
+  NotFoundException,
+  ForbiddenException,
+  BadRequestException,
+} from "@nestjs/common";
 import { SUPABASE_CLIENT } from "../supabase/supabase.constants";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { createWebhookSchema, updateWebhookSchema } from "../common/schemas";
@@ -24,7 +31,11 @@ export class WebhooksService {
     return employee;
   }
 
-  async listWebhooks(employee: { department_id: string | null; role: string; accessible_departments: string[] | null }) {
+  async listWebhooks(employee: {
+    department_id: string | null;
+    role: string;
+    accessible_departments: string[] | null;
+  }) {
     let query = this.supabase
       .from("webhook_endpoints")
       .select("*")
@@ -33,7 +44,9 @@ export class WebhooksService {
     if (employee.role !== "admin") {
       const depts = employee.accessible_departments || [];
       if (depts.length > 0) {
-        query = query.or(`department_id.eq.${employee.department_id},department_id.in.(${depts.join(",")})`);
+        query = query.or(
+          `department_id.eq.${employee.department_id},department_id.in.(${depts.join(",")})`,
+        );
       } else {
         query = query.eq("department_id", employee.department_id);
       }
@@ -108,7 +121,9 @@ export class WebhooksService {
     if (employee.role !== "admin") {
       if (
         existingWebhook.department_id !== employee.department_id &&
-        !employee.accessible_departments?.includes(existingWebhook.department_id)
+        !employee.accessible_departments?.includes(
+          existingWebhook.department_id,
+        )
       ) {
         throw new ForbiddenException("Forbidden");
       }
@@ -150,7 +165,9 @@ export class WebhooksService {
     if (employee.role !== "admin") {
       if (
         existingWebhook.department_id !== employee.department_id &&
-        !employee.accessible_departments?.includes(existingWebhook.department_id)
+        !employee.accessible_departments?.includes(
+          existingWebhook.department_id,
+        )
       ) {
         throw new ForbiddenException("Forbidden");
       }
@@ -185,7 +202,9 @@ export class WebhooksService {
     if (employee.role !== "admin") {
       if (
         existingWebhook.department_id !== employee.department_id &&
-        !employee.accessible_departments?.includes(existingWebhook.department_id)
+        !employee.accessible_departments?.includes(
+          existingWebhook.department_id,
+        )
       ) {
         throw new ForbiddenException("Forbidden");
       }

@@ -1,6 +1,6 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { AdminService } from "./admin.service";
-import { NotFoundException, ForbiddenException, BadRequestException } from "@nestjs/common";
+import { NotFoundException } from "@nestjs/common";
 
 describe("AdminService", () => {
   let service: AdminService;
@@ -9,14 +9,23 @@ describe("AdminService", () => {
     from: jest.fn().mockReturnValue({
       select: jest.fn().mockReturnValue({
         eq: jest.fn().mockReturnValue({
-          single: jest.fn().mockResolvedValue({ data: { id: "emp-1", role: "admin" }, error: null }),
+          single: jest.fn().mockResolvedValue({
+            data: { id: "emp-1", role: "admin" },
+            error: null,
+          }),
         }),
         order: jest.fn().mockReturnValue({
-          range: jest.fn().mockResolvedValue({ data: [{ id: "1" }], error: null, count: 1 }),
+          range: jest
+            .fn()
+            .mockResolvedValue({ data: [{ id: "1" }], error: null, count: 1 }),
         }),
       }),
-      update: jest.fn().mockReturnValue({ eq: jest.fn().mockResolvedValue({ error: null }) }),
-      delete: jest.fn().mockReturnValue({ eq: jest.fn().mockResolvedValue({ error: null }) }),
+      update: jest
+        .fn()
+        .mockReturnValue({ eq: jest.fn().mockResolvedValue({ error: null }) }),
+      delete: jest
+        .fn()
+        .mockReturnValue({ eq: jest.fn().mockResolvedValue({ error: null }) }),
       insert: jest.fn().mockResolvedValue({ error: null }),
     }),
   };
@@ -42,7 +51,9 @@ describe("AdminService", () => {
   });
 
   it("should throw NotFoundException for unknown tables", () => {
-    expect(() => service.validateTable("unknown_table")).toThrow(NotFoundException);
+    expect(() => service.validateTable("unknown_table")).toThrow(
+      NotFoundException,
+    );
   });
 
   it("should assert admin role", async () => {

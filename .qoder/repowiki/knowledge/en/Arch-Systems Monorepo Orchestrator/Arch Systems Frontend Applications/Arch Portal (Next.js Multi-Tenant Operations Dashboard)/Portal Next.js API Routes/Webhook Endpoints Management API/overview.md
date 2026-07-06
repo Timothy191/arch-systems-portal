@@ -1,1 +1,0 @@
-Next.js Route Handlers for CRUD operations on webhook endpoints and their delivery logs, enforcing department-scoped RBAC over the Supabase `webhook_endpoints` table.

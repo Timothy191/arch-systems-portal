@@ -49,8 +49,9 @@ We have preconfigured the following Model Context Protocol (MCP) servers in `cli
 - **Environment Variables**:
   - `NEO4J_URI` (default: `bolt://localhost:7687`)
   - `NEO4J_USER` (default: `neo4j`)
-  - `NEO4J_PASSWORD` (default: `memex-local`)
+  - `NEO4J_PASSWORD`
   - `GEMINI_API_KEY` (Gemini API key for analytical processing)
+- **Setup**: copy `.env.example` → `.env` and fill in the real Neo4j/Gemini values.
 
 ### 7. DeepGraph MCP Servers (Next.js, React, TypeScript Code Graphs)
 
@@ -79,6 +80,12 @@ We have preconfigured the following Model Context Protocol (MCP) servers in `cli
 - **Command**: `npx -y trace-mcp@latest`
 - **Purpose**: Standard tracing and debugger logging MCP server.
 
+### 11. `agentic-tools-mcp` (Project Memory & Tasks)
+
+- **Command**: `node packages/agentic-tools-mcp/src/server.js`
+- **Purpose**: Local MCP server exposing the project's `.agentic-tools-mcp/` memory and task store.
+- **Tools**: `agentic_list_memories`, `agentic_read_memory`, `agentic_search_memories`, `agentic_create_memory`, `agentic_update_memory`, `agentic_list_tasks`, `agentic_create_task`, `agentic_update_task`, `agentic_delete_task`.
+
 ---
 
 ## Local Tooling & Database Setup (Neo4j)
@@ -88,13 +95,15 @@ Both `memex` and `secrin` utilize a Neo4j graph database to store codebase repre
 ### Start Database for Memex (Port 7687)
 
 ```bash
-docker run -d --name neo4j-memex -p 7687:7687 -p 7474:7474 -e NEO4J_AUTH=neo4j/memex-local neo4j:5.20.0
+# Set in .env or inline; do not hardcode real passwords in committed files.
+docker run -d --name neo4j-memex -p 7687:7687 -p 7474:7474 -e NEO4J_AUTH="${NEO4J_USER:-neo4j}/${NEO4J_PASSWORD}" neo4j:5.20.0
 ```
 
 ### Start Database for Secrin (Port 7688)
 
 ```bash
-docker run -d --name neo4j-secrin -p 7688:7687 -p 7475:7474 -e NEO4J_AUTH=neo4j/secrin-local neo4j:5.20.0
+# Set NEO4J_USER and NEO4J_PASSWORD_SECRIN in .env or inline; do not hardcode real passwords in committed files.
+docker run -d --name neo4j-secrin -p 7688:7687 -p 7475:7474 -e NEO4J_AUTH="${NEO4J_USER}/${NEO4J_PASSWORD_SECRIN}" neo4j:5.20.0
 ```
 
 ---
@@ -136,15 +145,18 @@ claude mcp add repowise-mcp uv --project tools/repowise repowise mcp .
 claude mcp add sense-mcp tools/sense/bin/sense
 
 # Add Memex MCP
-claude mcp add memex-mcp uv --project tools/memex memex serve --env NEO4J_URI="bolt://localhost:7687" --env NEO4J_USER="neo4j" --env NEO4J_PASSWORD="memex-local" --env GEMINI_API_KEY="your-gemini-key"
+claude mcp add memex-mcp uv --project tools/memex memex serve --env NEO4J_URI="${NEO4J_URI}" --env NEO4J_USER="${NEO4J_USER}" --env NEO4J_PASSWORD="${NEO4J_PASSWORD}" --env GEMINI_API_KEY="${GEMINI_API_KEY}"
 
 # Add DeepGraph MCPs
 claude mcp add deepgraph-nextjs npx -y mcp-code-graph@latest vercel/next.js
 claude mcp add deepgraph-react npx -y mcp-code-graph@latest facebook/react
 claude mcp add deepgraph-typescript npx -y mcp-code-graph@latest microsoft/TypeScript
 
+# Add Agentic Tools MCP (project memory/tasks)
+claude mcp add agentic-tools-mcp node packages/agentic-tools-mcp/src/server.js
+
 # Add GitHub Official
-claude mcp add github-official docker run -i --rm -e GITHUB_PERSONAL_ACCESS_TOKEN ghcr.io/github/github-mcp-server --env GITHUB_PERSONAL_ACCESS_TOKEN="your-token"
+claude mcp add github-official docker run -i --rm -e GITHUB_PERSONAL_ACCESS_TOKEN ghcr.io/github/github-mcp-server --env GITHUB_PERSONAL_ACCESS_TOKEN="${GITHUB_PERSONAL_ACCESS_TOKEN}"
 
 # Add Redis MCP
 claude mcp add redis uvx --from redis-mcp-server@latest redis-mcp-server --env REDIS_URL="redis://localhost:6379"

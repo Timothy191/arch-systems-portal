@@ -17,6 +17,14 @@
       "args": [
         "serve"
       ]
+    },
+    "agentic-tools-mcp": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        ".aistack/packages/agentic-tools-mcp/src/server.js"
+      ],
+      "description": "Project memory and task store"
     }
   }
 }

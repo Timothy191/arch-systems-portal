@@ -1,5 +1,0 @@
-- Server Actions are guarded by a local `assertAdmin()` helper that checks `employees.role === 'admin'` and returns `{ error, status }` objects consumed with an `if ('error' in auth)` check before proceeding.
-- Every mutating server action calls `cacheInvalidateTags([...])` from `@repo/redis` followed by `revalidatePath('/admin')` (and optionally `revalidateTag(...)`) to invalidate both Redis tags and Next.js cache after DB writes.
-- Each tab file is a self-contained client component that fetches its own data with `createBrowserSupabaseClient()` inside a `useEffect`, manages local loading/editing state with `useState`, and renders a table wrapped in `GlassCard`.
-- Form submission flows follow a uniform pattern: set `saving=true`, call the server action, branch on `result.error` to display a dialog-level error string, then refresh data and reset UI state.
-- UI styling uses Tailwind utility classes referencing CSS custom properties like `var(--bg-primary)`, `var(--text-heading)`, `var(--accent-emerald)`, etc., rather than hard-coded colours.

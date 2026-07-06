@@ -1,0 +1,6 @@
+- Every script derives `REPO_ROOT` with `$(cd "$(dirname "$0")/.." && pwd)` so it remains relocatable regardless of cwd.
+- Top-of-file `set -euo pipefail` is used consistently to fail fast on unset variables and pipeline errors.
+- Colorized output uses ANSI escape sequences stored in shell variables (`RED=\033[0;31m`, `GREEN=\033[0;32m`, …) and a shared `phase()` banner pattern to delimit numbered phases.
+- External commands are wrapped in a `run_if_not_dry` helper when `--dry-run` is set, so the same invocation path works for preview and execution.
+- Health checks follow a uniform `curl -fs <url>` loop with a configurable max-attempt/delay counter instead of ad-hoc waits.
+- Docker Compose command resolution goes through a `detect_compose_cmd()` helper that prefers `docker compose` (plugin) and falls back to `docker-compose`.

@@ -2,8 +2,31 @@ import { getDepartmentContext } from "~/lib/dept-context";
 import { GlassCard } from "@repo/ui/GlassCard";
 import { Input } from "@repo/ui/Input";
 import Link from "next/link";
+import SuspenseOnSearchParams from "@/components/SuspenseOnSearchParams";
 
 export default async function HistoryPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ department: string }>;
+  searchParams: Promise<{ from?: string; to?: string }>;
+}) {
+  return (
+    <SuspenseOnSearchParams
+      fallback={
+        <div className="space-y-6">
+          <div className="h-8 w-48 animate-pulse bg-[var(--bg-tertiary)] rounded-lg" />
+          <div className="h-16 animate-pulse bg-[var(--bg-tertiary)] rounded-2xl" />
+          <div className="h-96 animate-pulse bg-[var(--bg-tertiary)] rounded-2xl" />
+        </div>
+      }
+    >
+      <HistoryContent params={params} searchParams={searchParams} />
+    </SuspenseOnSearchParams>
+  );
+}
+
+async function HistoryContent({
   params,
   searchParams,
 }: {

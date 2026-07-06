@@ -1,0 +1,76 @@
+{
+  "$schema": "./specs/schema.json",
+  "$id": "https://arch-mk2.dev/specs/features",
+  "version": "1.0.0",
+  "last_updated": "2026-07-06",
+  "features": [
+    {
+      "id": "portal-core",
+      "name": "Portal Core Application",
+      "description": "Next.js 16 monorepo portal with department-based routing, real-time updates, and AI integration",
+      "status": "active",
+      "priority": "P0",
+      "domain": "frontend",
+      "owner": "platform",
+      "spec_path": "specs/portal-core.md",
+      "tasks_ref": "progress/portal-core.md",
+      "acceptance_criteria": [
+        "Department pages render with proper context",
+        "AI endpoints integrate with Groq/OpenRouter",
+        "Design tokens follow OKLCH specification"
+      ],
+      "created_at": "2026-07-06T15:37:00+02:00"
+    },
+    {
+      "id": "api-core",
+      "name": "API Core Services",
+      "description": "NestJS/Fastify API with Supabase integration, Redis caching, and Inngest background jobs",
+      "status": "active",
+      "priority": "P0",
+      "domain": "backend",
+      "owner": "platform",
+      "spec_path": "specs/api-core.md",
+      "tasks_ref": "progress/api-core.md",
+      "acceptance_criteria": [
+        "REST endpoints follow DTO patterns",
+        "Supabase RLS policies enforced",
+        "Health checks pass on startup"
+      ],
+      "created_at": "2026-07-06T15:37:00+02:00"
+    },
+    {
+      "id": "supabase-integration",
+      "name": "Supabase Database Layer",
+      "description": "Shared Supabase client, types, and database migrations with RLS enforcement",
+      "status": "active",
+      "priority": "P0",
+      "domain": "data",
+      "owner": "platform",
+      "spec_path": "specs/supabase-integration.md",
+      "tasks_ref": "progress/supabase-integration.md",
+      "acceptance_criteria": [
+        "All tables have RLS enabled",
+        "Server/client clients from @repo/supabase",
+        "Migrations pass audit:rls check"
+      ],
+      "created_at": "2026-07-06T15:37:00+02:00"
+    },
+    {
+      "id": "deepeval-integration",
+      "name": "DeepEval Quality Evaluation",
+      "description": "LLM evaluation framework for AI service quality and code-generation compliance",
+      "status": "planned",
+      "priority": "P1",
+      "domain": "testing",
+      "owner": "quality",
+      "spec_path": "specs/deepeval-integration.md",
+      "tasks_ref": "progress/deepeval-integration.md",
+      "acceptance_criteria": [
+        "AI service prompts pass hallucination/factual metrics",
+        "Code generation follows design system tokens",
+        "RLS policies validated by custom metrics"
+      ],
+      "created_at": "2026-07-06T15:37:00+02:00"
+    }
+  ]
+}

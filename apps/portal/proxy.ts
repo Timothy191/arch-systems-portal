@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createMiddlewareClient } from "@repo/supabase/middleware";
 import { cacheGet, cacheSet, cacheEvictL1ByPrefix } from "@repo/redis/cache";
-import { recordJobExecution } from "@/lib/observability/metrics";
 
 export function isValidRedirect(path: string): boolean {
   if (!path) return false;
@@ -177,11 +176,6 @@ async function signOutAndRedirectToRoot(
   request: NextRequest,
   client: MiddlewareClient,
 ): Promise<NextResponse> {
-  try {
-    recordJobExecution("auth.middleware.signout", 0, false);
-  } catch {
-    // Observability is best-effort; never block auth flow on metrics failure.
-  }
   await client.supabase.auth.signOut();
   return client.response;
 }
@@ -298,19 +292,9 @@ export async function proxy(request: NextRequest) {
     }
 
     if (user) {
-      try {
-        recordJobExecution("auth.middleware.check", 0, true);
-      } catch {
-        // best-effort metric
-      }
       return NextResponse.redirect(new URL("/", request.url));
     }
 
-    try {
-      recordJobExecution("auth.middleware.check", 0, false);
-    } catch {
-      // best-effort metric
-    }
     return client.response;
   }
 
@@ -373,4 +357,3 @@ export async function proxy(request: NextRequest) {
 
   return client.response;
 }
-

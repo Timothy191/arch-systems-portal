@@ -17,7 +17,7 @@ export class InngestController {
     });
   }
 
-  @All("*path")
+  @All("*")
   @Public()
   async handle(@Req() request: FastifyRequest, @Res() reply: FastifyReply) {
     await this.handler(request as any, reply as any);

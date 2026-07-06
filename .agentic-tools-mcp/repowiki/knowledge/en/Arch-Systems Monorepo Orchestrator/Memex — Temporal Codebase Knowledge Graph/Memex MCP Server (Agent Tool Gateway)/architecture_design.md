@@ -1,0 +1,10 @@
+Built on `mcp.server.Server` with two transport backends: stdio via `mcp.server.stdio.stdio_server` and HTTP via a FastAPI+uvicorn app in `http.py` that mounts an ASGI wrapper under `/mcp` (defaulting to Streamable HTTP; SSE is deprecated behind `MEMEX_MCP_TRANSPORT=sse`).
+
+Layering inside the package:
+
+- `server.py` — entry point (`__main__`), `create_server`/`run_server`, tool registry (`handle_list_tools`) and single dispatch router (`handle_call_tool`) that validates arguments, wraps each call in an OpenTelemetry `tool_span`, and returns `TextContent`.
+- `tools_read.py` / `tools_write.py` — business-layer handlers for the 12 registered tools. Read tools compose Cypher queries from `queries.py`, run optional Phase-7 conflict detection (`conflict.py`) and Phase-7 composite search (`reranker.py` + `queries.composite_search`), then render Markdown via `formatter.py`. Write tools enforce Layer A ACLs (`check_write_policy` re-exported from `memex.graph.schema`) and Layer B intent-confirmation deduplication before writing through `graph.client.add_episode` plus direct Cypher updates.
+- `tracing.py` — OTel helpers used by both layers; `telemetry.record_tool_call` is called best-effort after every read tool.
+- `http.py` — FastAPI app exposing `/health`, `/graph`, `/events` (SSE broadcast queue shared across requests), `/stats`, and the MCP transport mount; writes the active port into `<repo>/.memex/port` for co-process discovery.
+
+Dependency direction: `server → tools_{read,write} → {queries,formatter,conflict,reranker,tracing} → memex.graph.*` (Neo4j client, schema policies, telemetry). The HTTP layer depends only on `server.create_app(server)` and never touches the tool handlers directly.

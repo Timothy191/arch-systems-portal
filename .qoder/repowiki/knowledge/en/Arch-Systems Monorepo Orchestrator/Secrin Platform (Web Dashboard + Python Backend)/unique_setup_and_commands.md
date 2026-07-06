@@ -1,1 +1,0 @@
-`poetry install` installs the whole platform; then `poetry run server` boots the FastAPI dev server, `poetry run arc42gen-api` + `poetry run arc42gen-worker` start the documentation generator, and `cd apps/web && pnpm dev` runs the dashboard independently.

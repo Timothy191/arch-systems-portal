@@ -1,1 +1,0 @@
-pnpm workspaces + catalog for JS/TS dependency unification across `apps/*` and `packages/*`; Nx 22 for task orchestration and build caching; ESLint `@nx/enforce-module-boundaries` driven by generated constraints from `tools_policy`; Docker Compose layered overrides for local/dev/prod service composition; GitHub Actions + Vercel for CI/deploy hooks.

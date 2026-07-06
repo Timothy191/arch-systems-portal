@@ -1,0 +1,21 @@
+{
+  "name": "@repo/agentic-tools-mcp",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "agentic-tools-mcp": "./bin/agentic-tools-mcp.js"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "daemon": "node scripts/daemon.js",
+    "type-check": "echo 'No TypeScript files to check'"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "typescript": "^5.7.0"
+  }
+}

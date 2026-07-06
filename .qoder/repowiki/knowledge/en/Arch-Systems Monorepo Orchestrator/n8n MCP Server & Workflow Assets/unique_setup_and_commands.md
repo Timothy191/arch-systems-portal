@@ -1,1 +1,0 @@
-Requires `N8N_URL`, `N8N_EMAIL`, and `N8N_PASSWORD` env vars at process start (exits if missing). Import all bundled workflows into a running n8n instance with `./import-workflows.sh`; activation of newly imported workflows is automatic. The server listens on stdio and can be invoked directly via `node index.js` or through the Nx workspace via `project.json`.

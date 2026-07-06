@@ -1,1 +1,0 @@
-Next.js App Router server actions (`"use server"`), Supabase client for RLS-aware DB access, Redis-backed caching via `@repo/redis` (`cacheWrap`, `withCache` with tag-based invalidation), bcryptjs for PIN hashing, and Next.js `revalidatePath` for cache busting after mutations.

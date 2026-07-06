@@ -1,1 +1,0 @@
-Typer for CLI routing, Rich for console tables, tree-sitter (with `tree_sitter_python`, `tree_sitter_typescript`, `tree_sitter_javascript`) for language-agnostic AST parsing, Neo4j as the graph store, and an Anthropic Claude backend selected via `Config.llm_provider`.

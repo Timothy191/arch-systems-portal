@@ -1,6 +1,0 @@
-- Read-only dashboards are Server Components that fetch via `createServerSupabaseClient` and compute aggregates (counts, rolling windows) before passing plain arrays to child components.
-- Interactive forms and charts are marked with the `'use client'` directive at the top of the file and use `createBrowserSupabaseClient` instead of the server client.
-- Heavy third-party libraries (Tremor) are loaded lazily through a wrapper component that uses dynamic `import()`, keeping them out of the initial server bundle.
-- After mutating `safety_incidents`, the form calls `revalidateRSC(['table:safety_incidents'])` to invalidate Next.js RSC cache rather than navigating away.
-- External side effects (n8n alerts) are dispatched asynchronously via `import('@repo/utils').then(...)` so they do not block the submit response.
-- UI styling relies exclusively on Tailwind utility classes referencing design tokens (`var(--text-heading)`, `var(--bg-primary)`, `accent-green`, `#3ecf8e`) instead of custom CSS modules.

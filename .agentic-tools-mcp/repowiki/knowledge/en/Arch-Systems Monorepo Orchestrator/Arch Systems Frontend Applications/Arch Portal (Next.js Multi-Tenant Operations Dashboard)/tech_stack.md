@@ -1,0 +1,1 @@
+Next.js App Router with Route Groups for tenant scoping; React Server Components + Client Components co-located; Jest for unit tests; Tailwind + custom CSS themes; Sentry client/server configs; Inngest for background jobs; Rust compiled to a static binary consumed from a Next.js plugin.

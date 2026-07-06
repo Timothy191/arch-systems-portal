@@ -1,0 +1,1 @@
+Baseline screenshots must be regenerated before committing changes via `npx playwright test e2e/visual --update-snapshots`; subsequent runs compare against those baselines without the flag.

@@ -3,7 +3,7 @@ import {
   cacheInvalidateTags,
   cacheInvalidatePrefixes,
   indexCacheKeyByTags,
-} from "./invalidation";
+} from "./invalidation.js";
 
 // ------------------------------------------------------------------
 // L1 In-Memory Cache with TTL + LRU eviction

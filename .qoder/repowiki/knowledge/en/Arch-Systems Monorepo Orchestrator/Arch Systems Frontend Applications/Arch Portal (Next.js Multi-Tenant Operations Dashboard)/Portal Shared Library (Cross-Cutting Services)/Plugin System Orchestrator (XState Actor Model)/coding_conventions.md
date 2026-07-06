@@ -1,6 +1,0 @@
-- Each XState machine lives in its own file under `machines/` and is declared via `setup({ types:{...}, actions:{...}, guards:{...} }).createMachine({...})` with explicit `id`, `initial`, and typed `context`.
-- Child actors are spawned by the orchestrator using `spawn(pluginMachine, { input })` and stored in a `Map<string, ActorRefFrom<any>>` keyed by plugin name rather than by metadata.id.
-- Cross-machine communication uses string-literal event objects `{ type: '...' }` (e.g. `LOAD`, `RETRY`, `DISABLE`, `ENABLE`, `UNLOAD`) instead of function calls, keeping the machine graph decoupled from implementation.
-- Async side effects inside machines go through `fromPromise` actors invoked via `invoke`, with `onDone`/`onError` transitions handling success and error branches explicitly.
-- Retries are guarded by a `canRetry` guard comparing `retryCount < maxRetries` and a separate `isRetryableError` predicate that matches transient-error substrings before transitioning back to `loading`.
-- Public-facing classes expose a thin facade over the underlying actor (e.g. `PluginOrchestrator` delegates to `this.actor.send(...)`) while still returning plain values or throwing domain errors from `@/lib/errors/error-classes`.

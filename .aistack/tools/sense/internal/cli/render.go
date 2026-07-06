@@ -1,0 +1,243 @@
+package cli
+
+import (
+	"fmt"
+	"io"
+	"strings"
+
+	"github.com/luuuc/sense/internal/mcpio"
+)
+
+// RenderGraphHuman writes the opinionated single-column text
+// rendering of a GraphResponse — the shape shown in the pitch's
+// "Human output" example:
+//
+//	CheckoutService  (class)
+//	  app/services/checkout_service.rb:12-85
+//	  inherits  ApplicationService
+//	  calls     PaymentGateway#charge, Order#finalize, Beacon.track (0.9)
+//	  callers   OrdersController#create, CheckoutJob#perform
+//	  tests     test/services/checkout_service_test.rb (0.8)
+//
+// Group lines are suppressed when the corresponding edge slice is
+// empty so a symbol with only callers doesn't print "calls" and
+// "inherits" as ghost groups. Confidence annotations are inline,
+// shown only when <1.0 (the pitch's "Confidence shown when <1.0"
+// rule).
+func RenderGraphHuman(w io.Writer, resp mcpio.GraphResponse) {
+	_, _ = fmt.Fprintf(w, "%s  (%s)\n", resp.Symbol.Name, resp.Symbol.Kind)
+	_, _ = fmt.Fprintf(w, "  %s:%d-%d\n", resp.Symbol.File, resp.Symbol.LineStart, resp.Symbol.LineEnd)
+
+	const label = "  %-9s %s\n"
+
+	renderEdgeGroup(w, label, resp.Edges)
+	if ts := resp.TestCallerSummary; ts != nil && ts.Count > 0 {
+		_, _ = fmt.Fprintf(w, label, "test cal.", fmt.Sprintf("(%d in %s)", ts.Count, strings.Join(ts.Examples, ", ")))
+	}
+
+	for _, layer := range resp.Layers {
+		_, _ = fmt.Fprintf(w, "\n  ── depth %d ──\n", layer.Depth)
+		renderEdgeGroup(w, label, layer.Edges)
+	}
+	if resp.Truncated {
+		_, _ = fmt.Fprintf(w, "\n  (results truncated — per-hop limit reached)\n")
+	}
+}
+
+func renderEdgeGroup(w io.Writer, label string, edges mcpio.GraphEdges) {
+	if s := renderInherits(edges.Inherits); s != "" {
+		_, _ = fmt.Fprintf(w, label, "inherits", s)
+	}
+	if s := renderInherits(edges.InheritedBy); s != "" {
+		_, _ = fmt.Fprintf(w, label, "inherited by", s)
+	}
+	if s := renderComposes(edges.Composes); s != "" {
+		_, _ = fmt.Fprintf(w, label, "composes", s)
+	}
+	if s := renderIncludes(edges.Includes); s != "" {
+		_, _ = fmt.Fprintf(w, label, "includes", s)
+	}
+	if s := renderImports(edges.Imports); s != "" {
+		_, _ = fmt.Fprintf(w, label, "imports", s)
+	}
+	if s := renderCalls(edges.Calls); s != "" {
+		_, _ = fmt.Fprintf(w, label, "calls", s)
+	}
+	if s := renderCalls(edges.CalledBy); s != "" {
+		_, _ = fmt.Fprintf(w, label, "callers", s)
+	}
+	if s := renderTests(edges.Tests); s != "" {
+		_, _ = fmt.Fprintf(w, label, "tests", s)
+	}
+}
+
+// renderCalls joins call-edge entries as "sym, sym (0.9), sym". A
+// confidence annotation appears only when the edge's confidence is
+// strictly less than 1.0 — the pitch's visual signal that the edge
+// is heuristic rather than statically proven.
+func renderCalls(edges []mcpio.CallEdgeRef) string {
+	if len(edges) == 0 {
+		return ""
+	}
+	parts := make([]string, 0, len(edges))
+	for _, e := range edges {
+		parts = append(parts, withConfidence(e.Symbol, e.Confidence))
+	}
+	return strings.Join(parts, ", ")
+}
+
+// renderInherits joins inherits entries; inheritance has no
+// confidence on the wire (the schema omits it), so entries are
+// bare symbol names.
+func renderInherits(edges []mcpio.InheritEdgeRef) string {
+	if len(edges) == 0 {
+		return ""
+	}
+	parts := make([]string, 0, len(edges))
+	for _, e := range edges {
+		parts = append(parts, e.Symbol)
+	}
+	return strings.Join(parts, ", ")
+}
+
+func renderComposes(edges []mcpio.ComposeEdgeRef) string {
+	if len(edges) == 0 {
+		return ""
+	}
+	parts := make([]string, 0, len(edges))
+	for _, e := range edges {
+		parts = append(parts, e.Symbol)
+	}
+	return strings.Join(parts, ", ")
+}
+
+func renderIncludes(edges []mcpio.IncludeEdgeRef) string {
+	if len(edges) == 0 {
+		return ""
+	}
+	parts := make([]string, 0, len(edges))
+	for _, e := range edges {
+		parts = append(parts, e.Symbol)
+	}
+	return strings.Join(parts, ", ")
+}
+
+func renderImports(edges []mcpio.ImportEdgeRef) string {
+	if len(edges) == 0 {
+		return ""
+	}
+	parts := make([]string, 0, len(edges))
+	for _, e := range edges {
+		parts = append(parts, e.Symbol)
+	}
+	return strings.Join(parts, ", ")
+}
+
+// renderTests joins test-file entries with confidence annotation
+// rules matching renderCalls: show confidence only when <1.0.
+func renderTests(edges []mcpio.TestEdgeRef) string {
+	if len(edges) == 0 {
+		return ""
+	}
+	parts := make([]string, 0, len(edges))
+	for _, e := range edges {
+		parts = append(parts, withConfidence(e.File, e.Confidence))
+	}
+	return strings.Join(parts, ", ")
+}
+
+// withConfidence appends " (c)" when c < 1.0, else returns the
+// label unchanged. Confidence is formatted with the %g verb so
+// "0.9" stays "0.9" rather than the wire-canonical "0.9"; on the
+// human path the extra decimal is noise.
+func withConfidence(label string, c mcpio.Confidence) string {
+	if float64(c) >= 1.0 {
+		return label
+	}
+	return fmt.Sprintf("%s (%g)", label, float64(c))
+}
+
+// RenderSearchHuman writes the single-column search rendering:
+//
+//	PaymentGateway#rescue_charge_failure  (method)  0.92
+//	  app/services/payment_gateway.rb:45
+//	  def rescue_charge_failure(error)...
+func RenderSearchHuman(w io.Writer, resp mcpio.SearchResponse) {
+	if len(resp.Results) == 0 {
+		_, _ = fmt.Fprintln(w, "no results found")
+		return
+	}
+	for i, r := range resp.Results {
+		if i > 0 {
+			_, _ = fmt.Fprintln(w)
+		}
+		_, _ = fmt.Fprintf(w, "%s  (%s)  %.2f\n", r.Symbol, r.Kind, r.Score)
+		_, _ = fmt.Fprintf(w, "  %s:%d\n", r.File, r.Line)
+		if r.Snippet != "" {
+			_, _ = fmt.Fprintf(w, "  %s\n", r.Snippet)
+		}
+	}
+}
+
+// RenderBlastHuman writes the single-column blast rendering. Risk
+// factors inline into the subject line because they are always
+// short phrases ("hub node", "11 direct callers"); a dedicated
+// bullet list would repeat the caller count already shown in the
+// "Direct callers (N):" section header. Sections collapse when
+// empty so a symbol with no callers does not print empty headers.
+func RenderBlastHuman(w io.Writer, resp mcpio.BlastResponse) {
+	if len(resp.RiskFactors) > 0 {
+		_, _ = fmt.Fprintf(w, "%s  risk: %s  (%s)\n", resp.Symbol, resp.Risk,
+			strings.Join(resp.RiskFactors, ", "))
+	} else {
+		_, _ = fmt.Fprintf(w, "%s  risk: %s\n", resp.Symbol, resp.Risk)
+	}
+	if len(resp.DirectCallers) > 0 {
+		_, _ = fmt.Fprintf(w, "\nDirect callers (%d):\n", len(resp.DirectCallers))
+		for _, c := range resp.DirectCallers {
+			_, _ = fmt.Fprintf(w, "  %s  %s\n", c.Symbol, c.File)
+		}
+	}
+	if len(resp.IndirectCallers) > 0 {
+		_, _ = fmt.Fprintf(w, "\nIndirect callers (%d):\n", len(resp.IndirectCallers))
+		for _, c := range resp.IndirectCallers {
+			_, _ = fmt.Fprintf(w, "  %s  via %s (%d hops)\n", c.Symbol, c.Via, c.Hops)
+		}
+	}
+	if len(resp.AffectedSubclasses) > 0 {
+		_, _ = fmt.Fprintf(w, "\nAffected subclasses (%d):\n", len(resp.AffectedSubclasses))
+		for _, c := range resp.AffectedSubclasses {
+			_, _ = fmt.Fprintf(w, "  %s  %s\n", c.Symbol, c.File)
+		}
+	}
+	if len(resp.AffectedViaComposition) > 0 {
+		_, _ = fmt.Fprintf(w, "\nAffected via composition (%d):\n", len(resp.AffectedViaComposition))
+		for _, c := range resp.AffectedViaComposition {
+			_, _ = fmt.Fprintf(w, "  %s  %s\n", c.Symbol, c.File)
+		}
+	}
+	if len(resp.AffectedViaIncludes) > 0 {
+		_, _ = fmt.Fprintf(w, "\nAffected via includes (%d):\n", len(resp.AffectedViaIncludes))
+		for _, c := range resp.AffectedViaIncludes {
+			_, _ = fmt.Fprintf(w, "  %s  %s\n", c.Symbol, c.File)
+		}
+	}
+	if resp.References.Count > 0 {
+		_, _ = fmt.Fprintf(w, "\nReferences — tier 2 (%d):\n", resp.References.Count)
+		for _, ex := range resp.References.Examples {
+			_, _ = fmt.Fprintf(w, "  %s  %s\n", ex.Symbol, ex.File)
+		}
+		if resp.References.Count > len(resp.References.Examples) {
+			_, _ = fmt.Fprintf(w, "  ... and %d more\n", resp.References.Count-len(resp.References.Examples))
+		}
+	}
+	if resp.TestsAffectedCount > 0 {
+		_, _ = fmt.Fprintf(w, "\nTests affected: %d\n", resp.TestsAffectedCount)
+	} else if len(resp.AffectedTests) > 0 {
+		_, _ = fmt.Fprintf(w, "\nAffected tests (%d):\n", len(resp.AffectedTests))
+		for _, t := range resp.AffectedTests {
+			_, _ = fmt.Fprintf(w, "  %s\n", t)
+		}
+	}
+	_, _ = fmt.Fprintf(w, "\nAffected: %d symbols across %d files\n", resp.AffectedSymbols, resp.AffectedFiles)
+}

@@ -18,12 +18,16 @@ export class ObservabilitySdkModule implements OnModuleInit {
 
     try {
       const { NodeSDK } = await import("@opentelemetry/sdk-node");
-      const { OTLPTraceExporter } = await import("@opentelemetry/exporter-trace-otlp-http");
+      const { OTLPTraceExporter } = await import(
+        "@opentelemetry/exporter-trace-otlp-http"
+      );
 
       let resource: any;
       try {
         const resourcesMod = await import("@opentelemetry/resources");
-        if (typeof (resourcesMod as any).resourceFromAttributes === "function") {
+        if (
+          typeof (resourcesMod as any).resourceFromAttributes === "function"
+        ) {
           resource = (resourcesMod as any).resourceFromAttributes({
             "service.name": "arch-api",
             "service.version": process.env.npm_package_version ?? "1.0.0",
@@ -48,7 +52,9 @@ export class ObservabilitySdkModule implements OnModuleInit {
         sdk.shutdown().catch(() => {});
       });
     } catch {
-      this.logger.warn("@opentelemetry packages not installed — tracing disabled");
+      this.logger.warn(
+        "@opentelemetry packages not installed — tracing disabled",
+      );
     }
   }
 }

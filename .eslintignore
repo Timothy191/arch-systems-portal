@@ -18,10 +18,9 @@ Cargo.lock
 
 # Generated / vendored tooling
 .claude/
-.repowise/
-.repowise-workspace/
+.agentic-tools-mcp/repowise/
+.agentic-tools-mcp/repowise-workspace/
 ltm/
-report/
 scratch/
 tools/memex/**
 tools/repowise/**

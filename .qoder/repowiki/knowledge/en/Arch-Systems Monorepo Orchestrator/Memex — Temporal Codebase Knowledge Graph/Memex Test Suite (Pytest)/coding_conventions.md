@@ -1,4 +1,0 @@
-- External I/O (graph client, subprocess, filesystem) is isolated per-test by patching the import path under `memex.*` with `unittest.mock.patch(...)` rather than monkeypatching globals at module scope.
-- Async tests are decorated with `@pytest.mark.asyncio` and never call `asyncio.run` directly — they await coroutines or mock `asyncio.run` when testing CLI entry points.
-- Neo4j-dependent tests are marked `@pytest.mark.integration` and live in dedicated files (e.g. `test_mcp_queries_integration.py`) so they can be skipped by the default test run.
-- Per-test database/graph state is created through `tmp_path` fixtures instead of relying on the global `clean_registry_path` fixture, giving each test an isolated scratch directory.

@@ -1,0 +1,226 @@
+{
+  "findings": [
+    {
+      "qualified": "Account.__repr__",
+      "kind": "method",
+      "file": "payments.py",
+      "verdict": "possibly_dead",
+      "reason": "py_dunder"
+    },
+    {
+      "qualified": "Account.label",
+      "kind": "method",
+      "file": "payments.py",
+      "verdict": "possibly_dead",
+      "reason": "py_decorator"
+    },
+    {
+      "qualified": "Badge",
+      "kind": "function",
+      "file": "badge.tsx",
+      "verdict": "possibly_dead",
+      "reason": "ts_jsx"
+    },
+    {
+      "qualified": "Greeter::greet",
+      "kind": "method",
+      "file": "wallet.rs",
+      "verdict": "possibly_dead",
+      "reason": "rust_trait_impl"
+    },
+    {
+      "qualified": "LineItem#orphaned_private",
+      "kind": "method",
+      "file": "line_item.rb",
+      "verdict": "dead"
+    },
+    {
+      "qualified": "LineItem#subtotal",
+      "kind": "method",
+      "file": "line_item.rb",
+      "verdict": "possibly_dead",
+      "reason": "core_exported_api"
+    },
+    {
+      "qualified": "Money::clone",
+      "kind": "method",
+      "file": "wallet.rs",
+      "verdict": "possibly_dead",
+      "reason": "rust_derive"
+    },
+    {
+      "qualified": "Page",
+      "kind": "function",
+      "file": "app/page.tsx",
+      "verdict": "possibly_dead",
+      "reason": "ts_framework_route"
+    },
+    {
+      "qualified": "Registry",
+      "kind": "class",
+      "file": "wallet.rs",
+      "verdict": "possibly_dead",
+      "reason": "core_exported_api"
+    },
+    {
+      "qualified": "Robot::greet",
+      "kind": "method",
+      "file": "wallet.rs",
+      "verdict": "possibly_dead",
+      "reason": "rust_trait_impl"
+    },
+    {
+      "qualified": "TokenStore",
+      "kind": "class",
+      "file": "token_store.ts",
+      "verdict": "possibly_dead",
+      "reason": "ts_decorator"
+    },
+    {
+      "qualified": "Trackable#track_change",
+      "kind": "method",
+      "file": "trackable.rb",
+      "verdict": "possibly_dead",
+      "reason": "ruby_module_mixin"
+    },
+    {
+      "qualified": "User#full_name",
+      "kind": "method",
+      "file": "user.rb",
+      "verdict": "possibly_dead",
+      "reason": "core_exported_api"
+    },
+    {
+      "qualified": "_mentioned_private",
+      "kind": "function",
+      "file": "payments.py",
+      "verdict": "possibly_dead",
+      "reason": "core_name_mentioned"
+    },
+    {
+      "qualified": "_orphaned_helper",
+      "kind": "function",
+      "file": "payments.py",
+      "verdict": "dead"
+    },
+    {
+      "qualified": "configureTokens",
+      "kind": "function",
+      "file": "token_store.ts",
+      "verdict": "possibly_dead",
+      "reason": "core_exported_api"
+    },
+    {
+      "qualified": "exportedHelper",
+      "kind": "function",
+      "file": "widget.ts",
+      "verdict": "possibly_dead",
+      "reason": "core_exported_api"
+    },
+    {
+      "qualified": "health_check",
+      "kind": "function",
+      "file": "payments.py",
+      "verdict": "possibly_dead",
+      "reason": "py_route"
+    },
+    {
+      "qualified": "legacyEntry",
+      "kind": "function",
+      "file": "legacy.js",
+      "verdict": "possibly_dead",
+      "reason": "core_exported_api"
+    },
+    {
+      "qualified": "make_account",
+      "kind": "function",
+      "file": "payments.py",
+      "verdict": "possibly_dead",
+      "reason": "core_exported_api"
+    },
+    {
+      "qualified": "orphanedJs",
+      "kind": "function",
+      "file": "legacy.js",
+      "verdict": "possibly_dead",
+      "reason": "js_dynamic"
+    },
+    {
+      "qualified": "orphanedTs",
+      "kind": "function",
+      "file": "widget.ts",
+      "verdict": "dead"
+    },
+    {
+      "qualified": "orphaned_rust",
+      "kind": "function",
+      "file": "wallet.rs",
+      "verdict": "dead"
+    },
+    {
+      "qualified": "public_handler",
+      "kind": "function",
+      "file": "payments.py",
+      "verdict": "possibly_dead",
+      "reason": "core_exported_api"
+    },
+    {
+      "qualified": "registry",
+      "kind": "function",
+      "file": "payments.py",
+      "verdict": "possibly_dead",
+      "reason": "core_exported_api"
+    },
+    {
+      "qualified": "smoke.BaseService.Log",
+      "kind": "method",
+      "file": "service.go",
+      "verdict": "possibly_dead",
+      "reason": "core_exported_api"
+    },
+    {
+      "qualified": "smoke.CheckoutService",
+      "kind": "class",
+      "file": "checkout.go",
+      "verdict": "possibly_dead",
+      "reason": "core_exported_api"
+    },
+    {
+      "qualified": "smoke.Notifier.Notify",
+      "kind": "method",
+      "file": "service.go",
+      "verdict": "possibly_dead",
+      "reason": "go_interface"
+    },
+    {
+      "qualified": "smoke.PaymentGateway.Refund",
+      "kind": "method",
+      "file": "payment.go",
+      "verdict": "possibly_dead",
+      "reason": "core_exported_api"
+    },
+    {
+      "qualified": "smoke.ShippingService",
+      "kind": "class",
+      "file": "checkout.go",
+      "verdict": "possibly_dead",
+      "reason": "core_exported_api"
+    },
+    {
+      "qualified": "smoke.init",
+      "kind": "function",
+      "file": "ledger.go",
+      "verdict": "possibly_dead",
+      "reason": "go_init"
+    },
+    {
+      "qualified": "smoke.reconcileLedger",
+      "kind": "function",
+      "file": "ledger.go",
+      "verdict": "dead"
+    }
+  ],
+  "total_symbols": 61,
+  "dead_count": 5,
+  "possibly_dead_count": 27
+}

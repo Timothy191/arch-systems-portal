@@ -1,0 +1,59 @@
+version: "3.8"
+
+services:
+  ai-gateway:
+    image: node:22-alpine
+    container_name: arch_ai_gateway
+    working_dir: /app
+    volumes:
+      - ./apps/ai-gateway:/app
+    ports:
+      - "3000:3000"
+    command: npm run start:dev
+    networks:
+      - ai-network
+    depends_on:
+      - ai-agents
+      - surrealdb
+
+  ai-agents:
+    image: python:3.11-slim
+    container_name: arch_ai_agents
+    working_dir: /app
+    volumes:
+      - ./apps/ai-agents:/app
+    ports:
+      - "8001:8001"
+    command: >
+      bash -c "pip install -r requirements.txt && uvicorn src.main:app --host 0.0.0.0 --port 8001 --reload"
+    networks:
+      - ai-network
+
+  neo4j:
+    image: neo4j:5.19.0
+    container_name: arch_ai_neo4j
+    environment:
+      - NEO4J_AUTH=neo4j/password
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    networks:
+      - ai-network
+
+  surrealdb:
+    image: surrealdb/surrealdb:latest
+    container_name: arch_ai_surrealdb
+    ports:
+      - "8000:8000"
+    command: start --log trace --user root --pass root file://data/surreal.db
+    volumes:
+      - surreal_data:/data
+    networks:
+      - ai-network
+
+networks:
+  ai-network:
+    driver: bridge
+
+volumes:
+  surreal_data:

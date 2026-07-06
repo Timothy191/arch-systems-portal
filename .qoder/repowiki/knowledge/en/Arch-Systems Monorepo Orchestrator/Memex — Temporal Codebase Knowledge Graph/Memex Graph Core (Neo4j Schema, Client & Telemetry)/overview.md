@@ -1,1 +1,0 @@
-Shared graph layer that defines the Neo4j node schema, provides a singleton Graphiti client, and emits token/decision telemetry consumed by every other memex/graph child.

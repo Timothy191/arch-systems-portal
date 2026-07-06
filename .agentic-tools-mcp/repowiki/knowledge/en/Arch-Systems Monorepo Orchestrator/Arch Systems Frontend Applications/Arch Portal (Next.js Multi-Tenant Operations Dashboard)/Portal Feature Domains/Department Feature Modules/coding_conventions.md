@@ -1,0 +1,2 @@
+- Each feature is a self-contained directory with a client page, colocated components, and optional `actions.ts` / `types.ts`, following the Next.js App Router convention of exporting a default React component as the page entry.
+- Client-only features avoid server components and keep all data fetching in client-side actions or hooks, keeping the feature bundle loadable without SSR dependencies.

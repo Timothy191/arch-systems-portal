@@ -2,7 +2,7 @@ import { Injectable, Inject, Logger } from "@nestjs/common";
 import { SUPABASE_CLIENT } from "../supabase/supabase.constants";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-export interface TokenUsage {
+interface TokenUsage {
   inputTokens: number | undefined;
   outputTokens: number | undefined;
   totalTokens: number | undefined;
@@ -50,7 +50,11 @@ export class CostTrackerService {
     userId: string,
     startDate: Date,
     endDate: Date,
-  ): Promise<{ totalCostUsd: number; totalTokens: number; requestCount: number }> {
+  ): Promise<{
+    totalCostUsd: number;
+    totalTokens: number;
+    requestCount: number;
+  }> {
     const { data, error } = await this.supabase
       .from("ai_usage_logs")
       .select("estimated_cost_usd, total_tokens")
@@ -64,7 +68,10 @@ export class CostTrackerService {
 
     const rows = data ?? [];
     return {
-      totalCostUsd: rows.reduce((sum, r) => sum + (r.estimated_cost_usd ?? 0), 0),
+      totalCostUsd: rows.reduce(
+        (sum, r) => sum + (r.estimated_cost_usd ?? 0),
+        0,
+      ),
       totalTokens: rows.reduce((sum, r) => sum + (r.total_tokens ?? 0), 0),
       requestCount: rows.length,
     };

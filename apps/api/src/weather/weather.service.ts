@@ -1,5 +1,6 @@
 import { Injectable, Logger } from "@nestjs/common";
 
+/** @public */
 export interface WeatherData {
   temperature: number;
   feelsLike: number;
@@ -72,7 +73,10 @@ export class WeatherService {
       .slice(0, 5)
       .map((date: string, index: number) => {
         const code = data.daily.weather_code[index];
-        const info = weatherCodes[code] ?? { description: "Unknown", icon: "❓" };
+        const info = weatherCodes[code] ?? {
+          description: "Unknown",
+          icon: "❓",
+        };
         return {
           date,
           maxTemp: Math.round(data.daily.temperature_2m_max[index]),

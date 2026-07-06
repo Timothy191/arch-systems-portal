@@ -1,0 +1,1 @@
+FastAPI + uvicorn for the optional HTTP transport; Pydantic v2 models mirror Anthropic's `BetaMemoryTool20250818*Command` types; bearer-key stored at `.memex/memory_tool.key` with POSIX 0600 permissions.

@@ -1,0 +1,5 @@
+The module is a flat collection of independent custom hooks with no internal sub-packages. It splits into two concerns:
+
+- Global UI stores built on Zustand (`useFocusMode`, `useNavigationState`, `useSplitWindow`), each exporting a store created via `create<State>()`; `useFocusMode` additionally uses `zustand/middleware/persist` keyed by the storage name `arch-focus-mode` so its toggle survives page reloads.
+- Per-component or per-renderer hooks using native React primitives: `useThrottledState` wraps `useState` to batch rapid updates behind a configurable delay; `useAdaptivePerformance` drives a `requestAnimationFrame` loop measuring FPS over a sliding 1.5 s window and short-circuits when `useFocusMode.enabled` is true; `useSystemMetrics` polls SAST time and shift via `@repo/utils.getThreeShift` plus browser `online`/`offline` events.
+  Dependency direction is one-way: `useAdaptivePerformance` depends on `useFocusMode`; nothing in this folder imports from the rest of `apps/portal`. Client-only hooks are gated with the `'use client'` directive at the top of their files.

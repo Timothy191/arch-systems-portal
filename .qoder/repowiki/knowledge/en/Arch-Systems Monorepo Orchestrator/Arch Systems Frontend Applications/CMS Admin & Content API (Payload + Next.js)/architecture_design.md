@@ -1,6 +1,0 @@
-Single-tenant Next.js application using `@payloadcms/next` to serve both the admin panel and content API from one process.
-
-- Runtime entry points: `app/(payload)/layout.tsx` wraps the tree in Payload's `RootLayout` with a server function forwarding calls to `handleServerFunctions`; `app/(payload)/admin/[[...segments]]/page.tsx` renders the admin shell via `RootPage`, and `app/(payload)/api/[...slug]/route.ts` exposes standard REST handlers (`REST_GET/POST/PATCH/DELETE/OPTIONS`) for every collection.
-- Data model is declared centrally in `payload.config.ts` as three collections — `users` (auth-enabled), `departments`, and `documents` (with a relationship to `departments` and Lexical rich-text content) — and TypeScript types are emitted to `payload-types.ts` at build time.
-- Database layer uses `@payloadcms/db-postgres` configured against `DATABASE_URL`; editor defaults to `@payloadcms/richtext-lexical`. The admin UI is customized via `custom.css` and an `importMap` under `app/(payload)/admin/importMap.js`.
-- Bootstrap script `scripts/setup.ts` seeds an initial admin user and department fixtures via the Payload SDK; `next.config.mjs` only applies the `withPayload` wrapper, keeping the Next.js config minimal.

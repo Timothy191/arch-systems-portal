@@ -1,7 +1,6 @@
 "use server";
 
 import { createServerSupabaseClient } from "@repo/supabase/server";
-import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
 import { logAuditEvent } from "./audit";
 import {
@@ -14,6 +13,75 @@ import { logError } from "@/lib/errors/error-logger";
 import { getShiftCompleteness } from "./shift-completeness";
 
 type SupabaseClient = Awaited<ReturnType<typeof createServerSupabaseClient>>;
+
+function getApiUrl(): string {
+  return (process.env.API_URL ?? "http://localhost:3001").replace(/\/$/, "");
+}
+
+async function getAccessToken(supabase: SupabaseClient): Promise<string> {
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (!session?.access_token) {
+    throw new Error("Unauthorized");
+  }
+
+  return session.access_token;
+}
+
+async function postApi<T>(
+  supabase: SupabaseClient,
+  path: string,
+  body: unknown,
+): Promise<T> {
+  const token = await getAccessToken(supabase);
+  const response = await fetch(`${getApiUrl()}${path}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(body),
+    cache: "no-store",
+  });
+
+  if (!response.ok) {
+    const payload = await response.json().catch(() => ({}));
+    throw new Error(
+      payload.message ||
+        payload.error ||
+        `API request failed: ${response.status}`,
+    );
+  }
+
+  return response.json() as Promise<T>;
+}
+
+async function hashPinViaApi(
+  supabase: SupabaseClient,
+  pin: string,
+): Promise<string> {
+  const result = await postApi<{ hash: string }>(
+    supabase,
+    "/api/auth/pin/hash",
+    { pin },
+  );
+  return result.hash;
+}
+
+async function verifyPinViaApi(
+  supabase: SupabaseClient,
+  pin: string,
+  hash: string,
+): Promise<boolean> {
+  const result = await postApi<{ valid: boolean }>(
+    supabase,
+    "/api/auth/pin/verify",
+    { pin, hash },
+  );
+  return result.valid;
+}
 
 async function validateShiftData(
   supabase: SupabaseClient,
@@ -102,8 +170,7 @@ export async function setPin(employeeCode: string, pin: string) {
     });
   }
 
-  const salt = await bcrypt.genSalt(10);
-  const hash = await bcrypt.hash(pin, salt);
+  const hash = await hashPinViaApi(supabase, pin);
 
   const { error: updateError } = await supabase
     .from("employees")
@@ -138,7 +205,7 @@ export async function verifyPin(employeeCode: string, pin: string) {
     return { valid: false, employee: null };
   }
 
-  const valid = await bcrypt.compare(pin, employee.pin_hash);
+  const valid = await verifyPinViaApi(supabase, pin, employee.pin_hash);
 
   return {
     valid,
@@ -205,7 +272,7 @@ export async function closeShift(
     };
   }
 
-  const pinValid = await bcrypt.compare(pin, approver.pin_hash);
+  const pinValid = await verifyPinViaApi(supabase, pin, approver.pin_hash);
   if (!pinValid) {
     return { success: false, errors: ["Invalid supervisor PIN"] };
   }

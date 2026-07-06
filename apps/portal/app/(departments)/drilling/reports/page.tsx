@@ -3,6 +3,7 @@ import { GlassCard } from "@repo/ui/GlassCard";
 import { SecondaryButton } from "@repo/ui/SecondaryButton";
 import { Input } from "@repo/ui/Input";
 import { Drill, Clock, AlertTriangle, ClipboardList } from "lucide-react";
+import SuspenseOnSearchParams from "@/components/SuspenseOnSearchParams";
 
 export const dynamic = "force-dynamic";
 
@@ -12,6 +13,31 @@ interface DrillingReportsPageProps {
 }
 
 export default async function DrillingReportsPage({
+  params,
+  searchParams,
+}: DrillingReportsPageProps) {
+  return (
+    <SuspenseOnSearchParams
+      fallback={
+        <div className="space-y-6">
+          <div className="h-8 w-64 animate-pulse bg-[var(--bg-tertiary)] rounded-lg" />
+          <div className="grid grid-cols-4 gap-4">
+            <div className="h-24 animate-pulse bg-[var(--bg-tertiary)] rounded-2xl" />
+            <div className="h-24 animate-pulse bg-[var(--bg-tertiary)] rounded-2xl" />
+            <div className="h-24 animate-pulse bg-[var(--bg-tertiary)] rounded-2xl" />
+            <div className="h-24 animate-pulse bg-[var(--bg-tertiary)] rounded-2xl" />
+          </div>
+          <div className="h-16 animate-pulse bg-[var(--bg-tertiary)] rounded-2xl" />
+          <div className="h-96 animate-pulse bg-[var(--bg-tertiary)] rounded-2xl" />
+        </div>
+      }
+    >
+      <DrillingReportsContent params={params} searchParams={searchParams} />
+    </SuspenseOnSearchParams>
+  );
+}
+
+async function DrillingReportsContent({
   params,
   searchParams,
 }: DrillingReportsPageProps) {

@@ -1,1 +1,0 @@
-Defines the multi-namespace Redis cluster topology and provisions it locally via Docker Compose or on AWS ElastiCache through Terraform.

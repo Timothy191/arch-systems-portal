@@ -1,0 +1,65 @@
+version: 2
+
+before:
+  hooks:
+    - ./scripts/fetch-deps.sh
+
+builds:
+  - id: sense
+    main: ./cmd/sense
+    binary: sense
+    flags:
+      - -trimpath
+    env:
+      - CGO_ENABLED=1
+    ldflags:
+      - -s -w
+      - -X github.com/luuuc/sense/internal/version.Version={{.Version}}
+    goos:
+      - darwin
+      - linux
+    goarch:
+      - amd64
+      - arm64
+    overrides:
+      - goos: darwin
+        goarch: arm64
+        env:
+          - CC=oa64-clang
+          - CXX=oa64-clang++
+      - goos: darwin
+        goarch: amd64
+        env:
+          - CC=o64-clang
+          - CXX=o64-clang++
+      - goos: linux
+        goarch: amd64
+        env:
+          - CC=x86_64-linux-gnu-gcc
+          - CXX=x86_64-linux-gnu-g++
+      - goos: linux
+        goarch: arm64
+        env:
+          - CC=aarch64-linux-gnu-gcc
+          - CXX=aarch64-linux-gnu-g++
+
+archives:
+  - id: sense
+    ids: [sense]
+    formats: [tar.gz]
+    name_template: "sense_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+
+checksum:
+  name_template: "sense_{{ .Version }}_checksums.txt"
+
+changelog:
+  disable: true
+
+release:
+  github:
+    owner: luuuc
+    name: sense
+  prerelease: auto
+  make_latest: true
+  extra_files:
+    - glob: CHANGELOG.md

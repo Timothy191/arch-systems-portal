@@ -1,0 +1,6 @@
+Two Node scripts plus a generated artifacts directory form a small compiler pipeline:
+
+- `tools/policy-compiler.cjs` is the runtime (CommonJS, no TS build step) that reads the canonical definitions and emits five files under `tools/policy/`: `dependency.rules.json`, `architecture.rules.json`, `security.checks.json`, `intent-map.json`, and `eslint-boundaries.generated.cjs`. It supports two modes — write (`pnpm policy:gen`) and drift-check (`--check` via `pnpm policy:check`) by comparing JSON output against committed versions.
+- `tools/apply-project-tags.cjs` walks `apps/`, `packages/`, and selected `tools/*` directories, derives `scope:*` tags from path + package name, and writes them back into each project's `project.json` so the tag-based boundary rules in `eslint-boundaries.generated.cjs` can match.
+- `tools/policy/*.json` are the _generated_ artifacts consumed downstream by Nx linting and CI; they carry a `version`/`generatedAt` envelope stripped before comparison so only semantic drift is reported.
+  Dependency direction is one-way: both scripts read repo layout on disk and write config files; nothing in this module imports external packages beyond Node's `fs`/`path`.

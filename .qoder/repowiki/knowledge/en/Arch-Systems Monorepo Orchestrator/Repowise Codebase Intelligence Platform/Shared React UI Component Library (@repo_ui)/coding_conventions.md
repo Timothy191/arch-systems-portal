@@ -1,4 +1,0 @@
-- Primitives in `components/ui/` follow the shadcn pattern: define a `cva` variant map, export both the component and its `*Variants` type, accept `className` merged through the shared `cn()` helper, and support `asChild` via `@radix-ui/react-slot`.
-- Each exported component file declares a dedicated `Props` interface extending the underlying HTML element attributes plus any variant props, and uses `React.forwardRef` with an explicit `displayName`.
-- Client-side components opt into `'use client'` at the top of the file rather than relying on package-level settings, and import side-effect styles (e.g. `@xyflow/react/dist/style.css`) directly next to their usage.
-- Public surface is flattened through `package.json` `exports` entries mapping logical names (e.g. `./AnimatedButton`, `./nodes/PluginNode`) to source files, hiding the internal `src/components/` directory structure from consumers.

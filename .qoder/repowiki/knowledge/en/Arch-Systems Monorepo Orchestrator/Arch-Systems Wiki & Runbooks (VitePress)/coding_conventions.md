@@ -1,4 +1,0 @@
-- Architecture Decision Records are named `adr-NNN-<slug>.md` under `wiki/concepts/` and referenced in the sidebar with a stable link path.
-- Planned work and specs are timestamped filenames (`YYYY-MM-DD-<topic>.md`) under `docs/superpowers/plans/` and `specs/` to preserve chronological order without relying on filesystem sort.
-- How-to guides live under `wiki/queries/` with human-readable kebab-case names (`how-to-add-department`, `why-query-returns-empty`) that double as URL slugs.
-- Sidebar entries in `.vitepress/config.mjs` mirror the physical folder structure so the rendered navigation stays in sync with the file layout.

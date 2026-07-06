@@ -1,1 +1,0 @@
-Client-side dashboard for tracking machine breakdowns, booking machines in/out of repair, and querying historical breakdown data within an engineering department.

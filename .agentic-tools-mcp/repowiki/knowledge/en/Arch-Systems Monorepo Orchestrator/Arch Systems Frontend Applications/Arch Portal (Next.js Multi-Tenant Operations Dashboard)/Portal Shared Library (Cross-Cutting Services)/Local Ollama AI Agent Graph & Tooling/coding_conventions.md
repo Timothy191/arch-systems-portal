@@ -1,0 +1,5 @@
+- Every async operation is wrapped in try/catch that logs via `logError(err instanceof Error ? err : new Error(String(err)), { context: '<tag>' })` before rethrowing or returning a safe default.
+- Tool definitions follow the uniform `{ description, inputSchema: z.object({...}), execute }` shape, with optional parameters declared via `.optional().describe(...)` and required ones via plain `.string().describe(...)`.
+- Agent graph nodes are pure functions typed as `(state: AgentState) => Promise<Partial<AgentState>>` that return `nextNode` plus any fields to merge, rather than mutating state in place.
+- External dependencies are acquired lazily at the top of each request via `createServerSupabaseClient()` instead of being imported as singletons, avoiding stale connections across requests.
+- Streaming LLM responses are built by iterating an `AsyncIterable<string>` from `ollamaChatStream` and enquecing chunks as `0: <value>\n` lines on a `ReadableStream` with `Content-Type: text/event-stream`.

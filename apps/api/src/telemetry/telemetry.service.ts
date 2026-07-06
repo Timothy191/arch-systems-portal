@@ -25,7 +25,8 @@ export class TelemetryService {
     @Inject(REDIS_CLIENT) private readonly redis: RedisClientType,
     private readonly configService: ConfigService,
   ) {
-    this.fuxaUrl = this.configService.get("NEXT_PUBLIC_FUXA_URL") || "http://localhost:1881";
+    this.fuxaUrl =
+      this.configService.get("NEXT_PUBLIC_FUXA_URL") || "http://localhost:1881";
     this.fuxaApiKey = this.configService.get("FUXA_API_KEY");
   }
 
@@ -40,7 +41,9 @@ export class TelemetryService {
 
   private async setRedisLastValue(key: string, value: number): Promise<void> {
     try {
-      await this.redis.set(`telemetry:last:${key}`, String(value), { EX: 86400 });
+      await this.redis.set(`telemetry:last:${key}`, String(value), {
+        EX: 86400,
+      });
     } catch {
       // ignore
     }
@@ -60,7 +63,14 @@ export class TelemetryService {
         bit_depth,
       } = body.record;
 
-      const metrics = { engine_rpm, engine_temp, hydraulic_pressure, vibration_level, fuel_level, bit_depth };
+      const metrics = {
+        engine_rpm,
+        engine_temp,
+        hydraulic_pressure,
+        vibration_level,
+        fuel_level,
+        bit_depth,
+      };
       const results = [];
       const endpoint = `${this.fuxaUrl}/api/tag`;
 
@@ -71,7 +81,10 @@ export class TelemetryService {
           const cacheKey = scopedKey(deptId, tagName);
 
           // L1 Check
-          if (this.localLastValues.has(cacheKey) && this.localLastValues.get(cacheKey) === numValue) {
+          if (
+            this.localLastValues.has(cacheKey) &&
+            this.localLastValues.get(cacheKey) === numValue
+          ) {
             results.push({ tag: tagName, success: true, cached: true });
             continue;
           }
@@ -90,7 +103,9 @@ export class TelemetryService {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
-                ...(this.fuxaApiKey ? { Authorization: `Bearer ${this.fuxaApiKey}` } : {}),
+                ...(this.fuxaApiKey
+                  ? { Authorization: `Bearer ${this.fuxaApiKey}` }
+                  : {}),
               },
               body: JSON.stringify({ name: tagName, value: numValue }),
             });
@@ -102,7 +117,11 @@ export class TelemetryService {
               await this.setRedisLastValue(tagName, numValue);
             }
           } catch {
-            results.push({ tag: tagName, success: false, error: "Connection failed" });
+            results.push({
+              tag: tagName,
+              success: false,
+              error: "Connection failed",
+            });
           }
         }
       }
@@ -125,7 +144,10 @@ export class TelemetryService {
     const endpoint = `${this.fuxaUrl}/api/tag`;
 
     // L1 Check
-    if (this.localLastValues.has(cacheKey) && this.localLastValues.get(cacheKey) === numValue) {
+    if (
+      this.localLastValues.has(cacheKey) &&
+      this.localLastValues.get(cacheKey) === numValue
+    ) {
       return { success: true, synced: true, cached: true };
     }
 
@@ -141,13 +163,18 @@ export class TelemetryService {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          ...(this.fuxaApiKey ? { Authorization: `Bearer ${this.fuxaApiKey}` } : {}),
+          ...(this.fuxaApiKey
+            ? { Authorization: `Bearer ${this.fuxaApiKey}` }
+            : {}),
         },
         body: JSON.stringify({ name, value: numValue }),
       });
 
       if (!fuxaRes.ok) {
-        return { warning: `FUXA SCADA server returned status ${fuxaRes.status}`, synced: false };
+        return {
+          warning: `FUXA SCADA server returned status ${fuxaRes.status}`,
+          synced: false,
+        };
       }
 
       this.localLastValues.set(cacheKey, numValue);
@@ -163,15 +190,32 @@ export class TelemetryService {
     const t = temp ?? 55.0;
     const r = rpm ?? 1000.0;
 
-    const binaryPath = path.join(process.cwd(), "plugins", "rust-telemetry-engine", "target", "release", "rust-telemetry-engine");
+    const binaryPath = path.join(
+      process.cwd(),
+      "plugins",
+      "rust-telemetry-engine",
+      "target",
+      "release",
+      "rust-telemetry-engine",
+    );
 
     if (fs.existsSync(binaryPath)) {
       try {
-        const { stdout } = await execFileAsync(binaryPath, ["--hours", String(h), "--temp", String(t), "--rpm", String(r)]);
+        const { stdout } = await execFileAsync(binaryPath, [
+          "--hours",
+          String(h),
+          "--temp",
+          String(t),
+          "--rpm",
+          String(r),
+        ]);
         const rustResult = JSON.parse(stdout.trim());
         return { ...rustResult, isNative: true };
       } catch (err) {
-        this.logger.warn("Rust telemetry binary failed, using JS fallback", err);
+        this.logger.warn(
+          "Rust telemetry binary failed, using JS fallback",
+          err,
+        );
       }
     }
 

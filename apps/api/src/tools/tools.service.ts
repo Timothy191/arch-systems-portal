@@ -2,6 +2,7 @@ import { Injectable, Inject, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { REDIS_CLIENT } from "../redis/redis.constants";
 import { cacheWrap } from "@repo/redis/cache";
+import { WebFetchError } from "@repo/errors";
 import type { RedisClientType } from "redis";
 
 interface ExternalTool {
@@ -13,6 +14,7 @@ interface ExternalTool {
   color: string;
 }
 
+/** @public */
 export interface ToolStatus extends ExternalTool {
   status: "online" | "offline" | "unknown";
   responseTime?: number;
@@ -53,7 +55,9 @@ export class ToolsService {
     return cacheWrap(
       "tools:status",
       async () => {
-        return Promise.all(this.externalTools.map((tool) => this.checkToolHealth(tool)));
+        return Promise.all(
+          this.externalTools.map((tool) => this.checkToolHealth(tool)),
+        );
       },
       60,
     );
@@ -62,25 +66,54 @@ export class ToolsService {
   private async checkToolHealth(tool: ExternalTool): Promise<ToolStatus> {
     const start = Date.now();
     try {
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 3000);
-      const response = await fetch(tool.url, {
+      const response = await this.fetchWithTimeout(tool.url, {
         method: "HEAD",
-        signal: controller.signal,
+        timeoutMs: 3000,
       });
-      clearTimeout(timeout);
 
       return {
         ...tool,
         status: response.ok ? "online" : "offline",
         responseTime: Date.now() - start,
       };
-    } catch {
+    } catch (error) {
+      this.logger.warn(
+        `External tool health check failed: ${tool.url}`,
+        error,
+      );
+
       return {
         ...tool,
         status: "offline",
         responseTime: Date.now() - start,
       };
+    }
+  }
+
+  private async fetchWithTimeout(
+    url: string,
+    options: {
+      method?: string;
+      timeoutMs?: number;
+    } = {},
+  ): Promise<Response> {
+    const controller = new AbortController();
+    const timeoutMs = options.timeoutMs ?? 5000;
+
+    const timeout = setTimeout(() => controller.abort(), timeoutMs);
+
+    try {
+      return await fetch(url, {
+        method: options.method ?? "GET",
+        signal: controller.signal,
+      });
+    } catch (error) {
+      throw new WebFetchError(
+        error instanceof Error ? error.message : "External request failed",
+        { url, timeoutMs },
+      );
+    } finally {
+      clearTimeout(timeout);
     }
   }
 }

@@ -1,3 +1,0 @@
-- CLI arguments are parsed positionally by scanning `env::args()` for paired flag/value tokens (`--hours`, `--temp`, `--rpm`) rather than using a parser crate.
-- The Rust process communicates exclusively by printing a single JSON object to stdout, which the Node/TSX layer consumes as its contract.
-- Numeric outputs are formatted inline via `println!` format specifiers (`{:.2}`, `{:.1}`) instead of serializing through serde or any JSON library.

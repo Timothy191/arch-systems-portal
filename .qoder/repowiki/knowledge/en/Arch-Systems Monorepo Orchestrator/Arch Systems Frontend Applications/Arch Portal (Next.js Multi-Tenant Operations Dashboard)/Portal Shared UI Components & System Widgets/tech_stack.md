@@ -1,1 +1,0 @@
-Next.js App Router client components, Radix UI Popover for accessible overlays, Lucide React icons, Tailwind CSS with CSS custom properties, Vitest + @testing-library/react for co-located `.test.tsx` specs.

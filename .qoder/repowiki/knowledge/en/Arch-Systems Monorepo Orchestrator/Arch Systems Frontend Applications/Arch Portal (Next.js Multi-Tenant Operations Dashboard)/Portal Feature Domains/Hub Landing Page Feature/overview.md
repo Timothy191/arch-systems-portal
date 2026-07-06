@@ -1,1 +1,0 @@
-Client-side React feature that renders the portal hub landing page with a rotating hero, department cards, production trend charts, and promotional banners.

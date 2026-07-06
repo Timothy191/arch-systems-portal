@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Put, Delete, Param, Body } from "@nestjs/common";
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Param,
+  Body,
+} from "@nestjs/common";
 import { ApiTags, ApiOperation } from "@nestjs/swagger";
 import { WebhooksService } from "./webhooks.service";
 import { CurrentUser } from "../auth/decorators/current-user.decorator";
@@ -24,14 +32,21 @@ export class WebhooksController {
 
   @Put(":id")
   @ApiOperation({ summary: "Update a webhook endpoint" })
-  async updateWebhook(@Param("id") id: string, @Body() body: any, @CurrentUser("id") userId: string) {
+  async updateWebhook(
+    @Param("id") id: string,
+    @Body() body: any,
+    @CurrentUser("id") userId: string,
+  ) {
     const employee = await this.webhooksService.getEmployee(userId);
     return this.webhooksService.updateWebhook(id, employee, body);
   }
 
   @Delete(":id")
   @ApiOperation({ summary: "Delete a webhook endpoint (soft delete)" })
-  async deleteWebhook(@Param("id") id: string, @CurrentUser("id") userId: string) {
+  async deleteWebhook(
+    @Param("id") id: string,
+    @CurrentUser("id") userId: string,
+  ) {
     const employee = await this.webhooksService.getEmployee(userId);
     return this.webhooksService.deleteWebhook(id, employee);
   }

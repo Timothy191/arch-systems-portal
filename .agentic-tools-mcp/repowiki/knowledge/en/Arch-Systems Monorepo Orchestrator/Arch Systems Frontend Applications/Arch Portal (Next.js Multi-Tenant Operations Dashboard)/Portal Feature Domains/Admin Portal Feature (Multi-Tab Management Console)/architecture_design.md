@@ -1,0 +1,7 @@
+Organised as a Next.js App Router feature under `apps/portal/features/admin/` with three sub-packages:
+
+- `components/`: shared tab chrome — `AdminTabs.tsx` is a pure client component rendering `@repo/ui` tabs; `AdminTabsClient.tsx` wraps it and persists the active tab via the `?tab=` search param using `next/navigation`, keeping URL state in sync.
+- `tabs/`: one React Server Component per admin domain (`UsersTab`, `DepartmentsTab`, `FleetTab`, `SitesTab`, `WebhooksTab`, `AuditLogsTab`, `SettingsTab`). Each tab owns its own data fetching (via `createBrowserSupabaseClient`) and local state, and composes forms/dialogs inline.
+- `actions/`: Next.js Server Actions (`fleet.ts`, `sites.ts`) that mutate Supabase tables. Every action starts with a private `assertAdmin()` helper that resolves the current user through `@repo/supabase/server`, looks up the `employees` row by `auth_id`, and rejects non-admins with `{ error, status }`. Mutations call `cacheInvalidateTags([...])` from `@repo/redis` plus `revalidatePath("/admin")` / `revalidateTag(...)` to keep the cache coherent.
+
+Dependency direction: tabs → actions (write path), tabs → `@repo/supabase/client` (read path), components → `@repo/ui`; no cross-tab imports, so each tab is independently swappable.

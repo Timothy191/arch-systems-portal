@@ -1,12 +1,12 @@
 import { Injectable, Inject, Logger } from "@nestjs/common";
 import { SUPABASE_CLIENT } from "../../supabase/supabase.constants";
-import { OllamaService, DEFAULT_MODEL, type OllamaMessage } from "../ollama/ollama.service";
+import { OllamaService, type OllamaMessage } from "../ollama/ollama.service";
 import { systemPrompts } from "../prompts/prompt-registry.service";
 import { ToolCacheService } from "./tool-cache.service";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { z } from "zod";
 
-export interface ToolDispatchResult {
+interface ToolDispatchResult {
   tool: string | null;
   args: Record<string, unknown>;
   confidence: number;
@@ -53,7 +53,11 @@ export class ToolDispatchService {
     return null;
   }
 
-  async executeTool(userId: string, toolName: string, args: Record<string, unknown>): Promise<unknown> {
+  async executeTool(
+    userId: string,
+    toolName: string,
+    args: Record<string, unknown>,
+  ): Promise<unknown> {
     // Check cache first
     const cached = this.toolCacheService.get(userId, toolName, args);
     if (cached !== undefined) return cached;
@@ -70,7 +74,13 @@ export class ToolDispatchService {
       shiftLogs: 60_000,
       delays: 15_000,
     };
-    this.toolCacheService.set(userId, toolName, args, result, ttlMap[toolName] ?? 5_000);
+    this.toolCacheService.set(
+      userId,
+      toolName,
+      args,
+      result,
+      ttlMap[toolName] ?? 5_000,
+    );
 
     return result;
   }
@@ -87,9 +97,12 @@ export class ToolDispatchService {
   private buildToolDefinitions(): Record<string, AiToolDefinition> {
     return {
       machineStatus: {
-        description: "Get current status and details of machines in a department",
+        description:
+          "Get current status and details of machines in a department",
         inputSchema: z.object({
-          departmentName: z.string().describe("Department name to query machines for"),
+          departmentName: z
+            .string()
+            .describe("Department name to query machines for"),
         }),
         execute: async ({ departmentName }: { departmentName: string }) => {
           const { data: dept } = await this.supabase
@@ -106,12 +119,20 @@ export class ToolDispatchService {
         },
       },
       fleetStatus: {
-        description: "Get real-time operational status of the vehicle fleet including active breakdowns",
+        description:
+          "Get real-time operational status of the vehicle fleet including active breakdowns",
         inputSchema: z.object({
-          fleetCode: z.string().optional().describe("Specific fleet code to check. If omitted, returns overview of all active fleet."),
+          fleetCode: z
+            .string()
+            .optional()
+            .describe(
+              "Specific fleet code to check. If omitted, returns overview of all active fleet.",
+            ),
         }),
         execute: async ({ fleetCode }: { fleetCode?: string }) => {
-          let query = this.supabase.from("fleet").select("id, fleet_code, vehicle_type, status, make, model");
+          let query = this.supabase
+            .from("fleet")
+            .select("id, fleet_code, vehicle_type, status, make, model");
           if (fleetCode) query = query.eq("fleet_code", fleetCode);
           const { data: fleet, error: fleetError } = await query;
           if (fleetError) return { error: fleetError.message };
@@ -122,23 +143,38 @@ export class ToolDispatchService {
             .eq("status", "active")
             .is("deleted_at", null);
 
-          const breakdownMap = new Map((breakdowns ?? []).map((b) => [b.fleet_id, b]));
+          const breakdownMap = new Map(
+            (breakdowns ?? []).map((b) => [b.fleet_id, b]),
+          );
           const report = (fleet ?? []).map((v) => ({
             ...v,
             is_down: breakdownMap.has(v.fleet_code),
             breakdown_details: breakdownMap.get(v.fleet_code) || null,
           }));
 
-          return { timestamp: new Date().toISOString(), count: report.length, vehicles: report };
+          return {
+            timestamp: new Date().toISOString(),
+            count: report.length,
+            vehicles: report,
+          };
         },
       },
       shiftLogs: {
         description: "Get recent shift logs for a department",
         inputSchema: z.object({
           departmentName: z.string().describe("Department name"),
-          date: z.string().optional().describe("ISO date string, defaults to today"),
+          date: z
+            .string()
+            .optional()
+            .describe("ISO date string, defaults to today"),
         }),
-        execute: async ({ departmentName, date }: { departmentName: string; date?: string }) => {
+        execute: async ({
+          departmentName,
+          date,
+        }: {
+          departmentName: string;
+          date?: string;
+        }) => {
           const { data: dept } = await this.supabase
             .from("departments")
             .select("id")
@@ -158,9 +194,18 @@ export class ToolDispatchService {
         description: "Get operational delays for a department on a given date",
         inputSchema: z.object({
           departmentName: z.string().describe("Department name"),
-          date: z.string().optional().describe("ISO date string, defaults to today"),
+          date: z
+            .string()
+            .optional()
+            .describe("ISO date string, defaults to today"),
         }),
-        execute: async ({ departmentName, date }: { departmentName: string; date?: string }) => {
+        execute: async ({
+          departmentName,
+          date,
+        }: {
+          departmentName: string;
+          date?: string;
+        }) => {
           const { data: dept } = await this.supabase
             .from("departments")
             .select("id")
@@ -179,27 +224,9 @@ export class ToolDispatchService {
     };
   }
 
-  private async tryNativeDispatch(messageText: string): Promise<ToolDispatchResult | null> {
-    const toolDefs = Object.entries(this.tools).map(([name, tool]) => ({
-      type: "function" as const,
-      function: {
-        name,
-        description: tool.description,
-        parameters: {
-          type: "object",
-          properties: Object.fromEntries(
-            Object.entries(tool.inputSchema.shape).map(([key, schema]: [string, any]) => [
-              key,
-              { type: "string", description: schema._def?.description ?? "" },
-            ]),
-          ),
-          required: Object.entries(tool.inputSchema.shape)
-            .filter(([, schema]: [string, any]) => !schema.isOptional?.())
-            .map(([key]) => key),
-        },
-      },
-    }));
-
+  private async tryNativeDispatch(
+    messageText: string,
+  ): Promise<ToolDispatchResult | null> {
     const messages: OllamaMessage[] = [
       { role: "system", content: systemPrompts.chat() },
       { role: "user", content: messageText },
@@ -207,7 +234,6 @@ export class ToolDispatchService {
 
     try {
       const response = await this.ollamaService.chat(messages, {
-        model: DEFAULT_MODEL,
         temperature: 0.1,
         maxTokens: 512,
       });
@@ -218,12 +244,19 @@ export class ToolDispatchService {
 
       const parsed = JSON.parse(jsonMatch[0]);
       const tool = parsed.tool ?? null;
-      const confidence = typeof parsed.confidence === "number" ? parsed.confidence : 5;
+      const confidence =
+        typeof parsed.confidence === "number" ? parsed.confidence : 5;
       const reason = typeof parsed.reason === "string" ? parsed.reason : "";
-      const args = parsed.args && typeof parsed.args === "object" ? parsed.args : {};
+      const args =
+        parsed.args && typeof parsed.args === "object" ? parsed.args : {};
 
       if (tool !== null && !this.tools[tool]) {
-        return { tool: null, args: {}, confidence: 1, reason: `LLM requested unknown tool "${tool}"` };
+        return {
+          tool: null,
+          args: {},
+          confidence: 1,
+          reason: `LLM requested unknown tool "${tool}"`,
+        };
       }
 
       return { tool, args, confidence, reason };
@@ -232,7 +265,9 @@ export class ToolDispatchService {
     }
   }
 
-  private async tryJsonFallbackDispatch(messageText: string): Promise<ToolDispatchResult | null> {
+  private async tryJsonFallbackDispatch(
+    messageText: string,
+  ): Promise<ToolDispatchResult | null> {
     const messages: OllamaMessage[] = [
       { role: "system", content: systemPrompts.chat() },
       { role: "user", content: messageText },
@@ -240,7 +275,6 @@ export class ToolDispatchService {
 
     try {
       const response = await this.ollamaService.chat(messages, {
-        model: DEFAULT_MODEL,
         temperature: 0.1,
         maxTokens: 512,
       });
@@ -250,12 +284,19 @@ export class ToolDispatchService {
 
       const parsed = JSON.parse(jsonMatch[0]);
       const tool = parsed.tool ?? null;
-      const confidence = typeof parsed.confidence === "number" ? parsed.confidence : 5;
+      const confidence =
+        typeof parsed.confidence === "number" ? parsed.confidence : 5;
       const reason = typeof parsed.reason === "string" ? parsed.reason : "";
-      const args = parsed.args && typeof parsed.args === "object" ? parsed.args : {};
+      const args =
+        parsed.args && typeof parsed.args === "object" ? parsed.args : {};
 
       if (tool !== null && !this.tools[tool]) {
-        return { tool: null, args: {}, confidence: 1, reason: `LLM requested unknown tool "${tool}"` };
+        return {
+          tool: null,
+          args: {},
+          confidence: 1,
+          reason: `LLM requested unknown tool "${tool}"`,
+        };
       }
 
       return { tool, args, confidence, reason };

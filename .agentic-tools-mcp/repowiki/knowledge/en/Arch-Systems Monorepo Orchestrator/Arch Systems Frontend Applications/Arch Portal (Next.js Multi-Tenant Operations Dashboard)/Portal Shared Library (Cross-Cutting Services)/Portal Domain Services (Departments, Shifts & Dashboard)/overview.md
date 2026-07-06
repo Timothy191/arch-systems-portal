@@ -1,0 +1,1 @@
+Server-side domain helpers for the portal: department routing metadata, shift completeness/closure logic, employee auth mapping, and the monolithized dashboard RPC.

@@ -1,3 +1,0 @@
-- Each deployment target (compose, terraform) mirrors the three-node layout from `shard-map.json` so node names and ports stay in sync across environments.
-- Terraform resources are parameterized through `variables.tf` with explicit `type` and `description` fields rather than hard-coded values.
-- Cluster outputs expose only the configuration endpoint and port, hiding internal node details from callers.

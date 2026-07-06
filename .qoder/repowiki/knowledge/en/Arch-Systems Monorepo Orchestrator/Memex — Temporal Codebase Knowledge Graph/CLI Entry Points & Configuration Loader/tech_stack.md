@@ -1,1 +1,0 @@
-Standard-library `argparse` + `asyncio.run` for CLI orchestration; Pydantic v2 `BaseModel` for typed config; `python-dotenv` for `.env` loading; `pyyaml` for `config.yaml`; optional `google.genai` SDK probed by `doctor`.

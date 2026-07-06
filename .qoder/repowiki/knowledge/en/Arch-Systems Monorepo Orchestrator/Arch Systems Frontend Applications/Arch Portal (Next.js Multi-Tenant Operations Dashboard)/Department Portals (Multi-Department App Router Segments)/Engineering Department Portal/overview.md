@@ -1,1 +1,0 @@
-Next.js App Router segment for the Engineering department, providing a dashboard hub and a placeholder Tire Management sub-route with read-replica breakdowns data.

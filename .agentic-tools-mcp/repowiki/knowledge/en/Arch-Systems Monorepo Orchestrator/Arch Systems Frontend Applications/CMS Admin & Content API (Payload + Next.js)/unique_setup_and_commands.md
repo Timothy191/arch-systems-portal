@@ -1,0 +1,1 @@
+Seed data is created by running `node scripts/setup.ts` after setting `DATABASE_URL` and `PAYLOAD_SECRET` env vars; development runs via `pnpm dev` / `npm run dev` which invokes `next dev`.

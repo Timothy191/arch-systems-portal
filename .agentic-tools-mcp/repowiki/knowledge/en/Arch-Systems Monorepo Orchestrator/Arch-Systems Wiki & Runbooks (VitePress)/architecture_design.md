@@ -1,0 +1,7 @@
+Two complementary content trees under a single VitePress site:
+
+- `docs/wiki/` is the VitePress source root — `.vitepress/config.mjs` defines navigation, sidebar sections (Getting Started, Core Concepts, Database & Auth, Features, Architecture Decisions, Comparisons, How-To Guides, Operations), local search, edit-on-GitHub links, last-updated timestamps, and Mermaid support.
+- Content is organized by purpose rather than code location: `concepts/` holds ADRs (`adr-001*`) and domain concepts; `entities/` describes departments/systems; `comparisons/` documents technology trade-offs; `queries/` provides task-oriented how-tos; `raw/` and `derived/` separate draft vs published material; `breakdown/`, `logs/`, `wiki/archived/` are auxiliary.
+- `docs/runbooks/` and top-level markdown files (`AMCA-RUNBOOK.md`, `AGENT_TRACER.md`, `fuxa-integration-plan.md`, etc.) sit outside the VitePress build and serve as standalone operational references consumed by humans or agents.
+- `docs/superpowers/plans/` and `specs/` hold dated planning artifacts that are not part of the built site.
+- Dependency direction is one-way: the VitePress config reads Markdown from `wiki/`; nothing in `wiki/` imports the config at runtime.

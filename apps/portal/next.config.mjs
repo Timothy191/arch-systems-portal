@@ -50,10 +50,12 @@ const nextConfig = {
     },
   },
   reactStrictMode: true,
+  cacheComponents: true,
   experimental: {
     optimizePackageImports: ["lucide-react", "framer-motion", "@tremor/react"],
     inlineCss: true,
     webVitalsAttribution: ["CLS", "LCP", "FCP", "TTFB", "INP"],
+    cacheComponents: true,
   },
   // Strangler fig: proxy migrated API routes to NestJS backend
   async rewrites() {

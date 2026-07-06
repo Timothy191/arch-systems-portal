@@ -1,6 +1,0 @@
-- Every route page is an async function component that destructures `params` as `Promise<{ department: string }>` and awaits `await params.department` before any data fetch.
-- Data access goes through `getDepartmentContext({ department })` to obtain `deptId`, `supabase`, and `today`, rather than constructing Supabase clients or dates inline.
-- Independent database reads are batched with `Promise.all([...])` and each query filters by `department_id` and the `today` date column of its table.
-- Heavy or interactive child components are loaded lazily via `next/dynamic` with a matching skeleton placeholder (pulsing card or spinner) supplied as the `loading` option.
-- Server actions start with `'use server'`, call `createServerSupabaseClient` to resolve the current user, validate employee role + department ownership, then use `createServiceRoleClient` only for admin-only mutations.
-- Pages declare a sibling `loading.tsx` (and optionally `error.tsx`) so the route group can show per-route Suspense fallbacks and typed error UI.

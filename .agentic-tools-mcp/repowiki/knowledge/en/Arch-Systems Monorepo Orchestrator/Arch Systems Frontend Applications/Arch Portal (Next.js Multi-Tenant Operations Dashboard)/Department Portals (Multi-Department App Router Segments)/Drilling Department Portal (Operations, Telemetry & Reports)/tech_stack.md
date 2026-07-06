@@ -1,0 +1,1 @@
+Next.js App Router (React Server Components + client components via `'use client'`), Supabase JS SDK split into `createServerSupabaseClient` / `createBrowserSupabaseClient` / `createReadReplicaClient`, Lucide icons, Tailwind CSS with design tokens via CSS variables (`--text-heading`, `--accent-blue`, etc.), and `@repo/ui` primitives (`GlassCard`, `Table`, `Button`, `Input`).

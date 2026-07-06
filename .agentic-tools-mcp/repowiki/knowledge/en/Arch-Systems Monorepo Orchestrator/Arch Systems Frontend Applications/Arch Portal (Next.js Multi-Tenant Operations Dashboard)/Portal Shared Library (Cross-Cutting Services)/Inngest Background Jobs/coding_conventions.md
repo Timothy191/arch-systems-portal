@@ -1,0 +1,4 @@
+- Every handler wraps its body in try/catch/finally that calls `logError` on failure and `recordJobExecution(name, elapsed, success)` in finally to emit metrics.
+- Handlers are exported as named `*Fn` constants typed as `InngestFunction.Any` and registered through `inngest.createFunction({ id, triggers })` rather than inline definitions.
+- Database mutations use `createServerSupabaseClient()` from `@repo/supabase/server` and route cache invalidation via Next.js `revalidatePath` immediately after successful writes.
+- Idempotent write paths check for an existing row by `idempotency_key` before insert and return early with `{ bypassed: true }` when already present.

@@ -3,8 +3,52 @@
 import { createServerSupabaseClient } from "@repo/supabase/server";
 import { redirect } from "next/navigation";
 import { revalidateTag } from "next/cache";
-import { inngest, aiGenerateEmbeddingEvent } from "@repo/utils/inngest";
 import { logError } from "@/lib/errors/error-logger";
+
+function getApiUrl(): string {
+  return (process.env.API_URL ?? "http://localhost:3001").replace(/\/$/, "");
+}
+
+async function getAccessToken(
+  supabase: Awaited<ReturnType<typeof createServerSupabaseClient>>,
+): Promise<string> {
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (!session?.access_token) {
+    throw new Error("Unauthorized");
+  }
+
+  return session.access_token;
+}
+
+async function postApi<T>(
+  path: string,
+  token: string,
+  body: unknown,
+): Promise<T> {
+  const response = await fetch(`${getApiUrl()}${path}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(body),
+    cache: "no-store",
+  });
+
+  if (!response.ok) {
+    const payload = await response.json().catch(() => ({}));
+    throw new Error(
+      payload.message ||
+        payload.error ||
+        `API request failed: ${response.status}`,
+    );
+  }
+
+  return response.json() as Promise<T>;
+}
 
 export async function logout() {
   const supabase = await createServerSupabaseClient();
@@ -13,7 +57,6 @@ export async function logout() {
 }
 
 export async function speculativeEmbedShiftLog(text: string) {
-  // Validate that the user is authenticated (Always validate the user at the top)
   const supabase = await createServerSupabaseClient();
   const {
     data: { user },
@@ -26,13 +69,8 @@ export async function speculativeEmbedShiftLog(text: string) {
   if (!text || text.trim() === "") return;
 
   try {
-    await inngest.send({
-      name: aiGenerateEmbeddingEvent,
-      data: {
-        text,
-        userId: user.id,
-      },
-    });
+    const token = await getAccessToken(supabase);
+    await postApi("/api/jobs/embeddings", token, { text });
   } catch (err) {
     // Log error but do not fail the user's critical operation path
     logError(err instanceof Error ? err : new Error(String(err)), {
@@ -42,7 +80,6 @@ export async function speculativeEmbedShiftLog(text: string) {
 }
 
 export async function revalidateRSC(tags: string[]) {
-  // Always validate the user at the top
   const supabase = await createServerSupabaseClient();
   const {
     data: { user },
@@ -62,7 +99,6 @@ export async function generateMonthlyReport(
   reportData: any,
   departmentId?: string,
 ) {
-  // Validate that the user is authenticated (Always validate the user at the top)
   const supabase = await createServerSupabaseClient();
   const {
     data: { user },
@@ -72,7 +108,6 @@ export async function generateMonthlyReport(
     throw new Error("Unauthorized");
   }
 
-  // Validate user role is admin or manager
   const { data: employee } = await supabase
     .from("employees")
     .select("role, department_id")
@@ -83,50 +118,33 @@ export async function generateMonthlyReport(
     throw new Error("Unauthorized");
   }
 
-  if (employee?.role === "manager" && departmentId && departmentId !== employee.department_id) {
-    throw new Error("Forbidden: Managers cannot generate reports for other departments");
+  if (
+    employee?.role === "manager" &&
+    departmentId &&
+    departmentId !== employee.department_id
+  ) {
+    throw new Error(
+      "Forbidden: Managers cannot generate reports for other departments",
+    );
+  }
+
+  const deptId = departmentId || employee.department_id;
+  if (!deptId) {
+    throw new Error(
+      "Department ID is required to determine storage permissions",
+    );
   }
 
   try {
-    const { pdf } = await import("@react-pdf/renderer");
-    const { ReportTemplate } = await import(
-      "@/features/analytics/components/ReportTemplate"
+    const token = await getAccessToken(supabase);
+    return await postApi<{ success: true; url: string }>(
+      "/api/export/monthly-report",
+      token,
+      {
+        reportData,
+        departmentId: deptId,
+      },
     );
-    const React = await import("react");
-
-    // Use employee department ID as fallback for folder categorization
-    const deptId = departmentId || employee.department_id;
-    if (!deptId) {
-      throw new Error(
-        "Department ID is required to determine storage permissions",
-      );
-    }
-
-    const doc = React.createElement(ReportTemplate, { data: reportData });
-    const buffer = await pdf(doc as any).toBuffer();
-
-    const filename = `${deptId}/${user.id}/report-${Date.now()}.pdf`;
-
-    const { error: uploadError } = await supabase.storage
-      .from("documents")
-      .upload(filename, buffer, {
-        contentType: "application/pdf",
-        upsert: true,
-      });
-
-    if (uploadError) {
-      throw new Error(`Upload failed: ${uploadError.message}`);
-    }
-
-    const { data: signedData, error: signedError } = await supabase.storage
-      .from("documents")
-      .createSignedUrl(filename, 3600);
-
-    if (signedError) {
-      throw new Error(`Signed URL creation failed: ${signedError.message}`);
-    }
-
-    return { success: true, url: signedData.signedUrl };
   } catch (err) {
     logError(err instanceof Error ? err : new Error(String(err)), {
       context: "generate_monthly_report",

@@ -1,5 +1,0 @@
-- Each public class exposes a single responsibility and is instantiated once at extension activation, then disposed in `deactivate()` (client unsubscribe, statusBar.dispose, process.kill, interval clears).
-- HTTP requests are wrapped in Promises using Node's callback-style `http.get`, with explicit timeout handling and JSON parse errors surfaced as rejected Error objects rather than thrown.
-- SSE subscription is managed idempotently: `subscribeToEvents` calls `unsubscribe()` first to destroy any prior request before opening a new one, and `unsubscribe` nulls the handle after `destroy()`.
-- Host-to-webview communication uses a string-typed message bus (`type: 'updateGraph' | 'highlightActiveFile' | 'error' | 'ready' | 'openFile'`) dispatched via `postMessage` and handled in a `switch` on the receiver side.
-- User-facing configuration is read through `vscode.workspace.getConfiguration('memex')` with typed defaults (`serverPort` integer defaulting to 7463, `authToken` string defaulting to empty) rather than hard-coded constants.

@@ -1,0 +1,1 @@
+Next.js App Router client components with Framer Motion (`AnimatePresence`/`motion.div`) for tab transitions, Lucide icons, Supabase client for DB mutations, Redis cache invalidation via `@repo/redis`, and Next.js `revalidatePath` for cache busting.

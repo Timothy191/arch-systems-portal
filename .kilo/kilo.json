@@ -1,0 +1,219 @@
+{
+  "$schema": "https://app.kilo.ai/config.json",
+  "mcp": {
+    "preflight-mcp": {
+      "type": "local",
+      "command": [
+        "node",
+        "tools/preflight-mcp/index.js"
+      ]
+    },
+    "n8n-mcp": {
+      "type": "local",
+      "command": [
+        "node",
+        "tools/n8n-mcp/index.js"
+      ],
+      "environment": {
+        "N8N_URL": "http://localhost:5678",
+        "N8N_EMAIL": "${N8N_EMAIL}",
+        "N8N_PASSWORD": "${N8N_PASSWORD}"
+      }
+    },
+    "codebase-memory-mcp": {
+      "type": "local",
+      "command": [
+        "codebase-memory-mcp"
+      ]
+    },
+    "repowise-mcp": {
+      "type": "local",
+      "command": [
+        "uv",
+        "run",
+        "--project",
+        ".aistack/tools/repowise",
+        "repowise",
+        "mcp",
+        ".",
+        "--transport",
+        "stdio"
+      ]
+    },
+    "sense-mcp": {
+      "type": "local",
+      "command": [
+        ".aistack/tools/sense/bin/sense",
+        "mcp"
+      ]
+    },
+    "memex-mcp": {
+      "type": "local",
+      "command": [
+        "uv",
+        "run",
+        "--project",
+        ".aistack/tools/memex",
+        "memex",
+        "serve"
+      ],
+      "environment": {
+        "NEO4J_URI": "${NEO4J_URI:-bolt://localhost:7687}",
+        "NEO4J_USER": "${NEO4J_USER:-neo4j}",
+        "NEO4J_PASSWORD": "${NEO4J_PASSWORD}",
+        "GEMINI_API_KEY": "${GEMINI_API_KEY}"
+      }
+    },
+    "deepgraph-nextjs": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "mcp-code-graph@latest",
+        "vercel/next.js"
+      ]
+    },
+    "deepgraph-react": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "mcp-code-graph@latest",
+        "facebook/react"
+      ]
+    },
+    "deepgraph-typescript": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "mcp-code-graph@latest",
+        "microsoft/TypeScript"
+      ]
+    },
+    "github-official": {
+      "type": "local",
+      "command": [
+        "docker",
+        "run",
+        "-i",
+        "--rm",
+        "-e",
+        "GITHUB_PERSONAL_ACCESS_TOKEN",
+        "ghcr.io/github/github-mcp-server"
+      ],
+      "environment": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PERSONAL_ACCESS_TOKEN}"
+      }
+    },
+    "redis": {
+      "type": "local",
+      "command": [
+        "uvx",
+        "--from",
+        "redis-mcp-server@latest",
+        "redis-mcp-server"
+      ],
+      "environment": {
+        "REDIS_URL": "redis://localhost:6379"
+      }
+    },
+    "trace-mcp": {
+      "type": "local",
+      "command": [
+        "/home/timothy/.trace-mcp/bin/trace-mcp",
+        "serve"
+      ]
+    },
+    "agentic-tools-mcp": {
+      "type": "local",
+      "command": [
+        "node",
+        ".aistack/packages/agentic-tools-mcp/src/server.js"
+      ]
+    },
+    "mcp-toolbox": {
+      "type": "local",
+      "command": [
+        "toolbox",
+        "--config",
+        "tools.yaml",
+        "--stdio"
+      ]
+    },
+    "repowise": {
+      "type": "local",
+      "command": [
+        "repowise",
+        "mcp",
+        "/home/timothy/Documents/Arch-Mk2",
+        "--transport",
+        "stdio"
+      ]
+    },
+    "shadcn-ui-mcp-server": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "shadcn-ui-mcp-server"
+      ]
+    },
+    "token-optimizer-mcp": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "token-optimizer-mcp"
+      ]
+    },
+    "world-intel-mcp": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "world-intel-mcp"
+      ]
+    },
+    "mcp-graphql-forge": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "mcp-graphql-forge"
+      ]
+    },
+    "memory-mcp": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "memory-mcp"
+      ]
+    },
+    "rn-debug-mcp": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "rn-debug-mcp"
+      ]
+    },
+    "vscode-mcp-server": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "vscode-mcp-server"
+      ]
+    },
+    "sequentialthinking": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ]
+    }
+  }
+}

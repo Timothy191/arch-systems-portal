@@ -1,5 +1,0 @@
-- Each hook lives in its own file named `useXxx.ts` and exports a single default-named function or Zustand store without barrel re-exports.
-- Client-side hooks that touch `window` / `document` start with the `'use client'` directive and guard DOM access with `typeof window !== 'undefined'` checks inside effects.
-- Zustand stores declare an interface describing shape + setters, then call `create<Interface>()((set, get) => ({...}))` and expose only imperative setter methods rather than exposing raw state selectors.
-- Long-running timers and animation frames are always paired with cleanup functions in the effect's return value (`clearInterval`, `clearTimeout`, `cancelAnimationFrame`).
-- Unit tests accompany every hook as a sibling `<hook>.test.ts` file.

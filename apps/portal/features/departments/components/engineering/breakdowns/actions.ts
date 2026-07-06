@@ -3,6 +3,7 @@
 import { cacheInvalidateTags } from "@repo/redis";
 import { createServerSupabaseClient } from "@repo/supabase/server";
 import { revalidatePath } from "next/cache";
+import { revalidateBreakdownsCache } from "@/lib/cache/revalidate";
 import { logAuditEvent } from "@/lib/audit";
 import { AuthError, DatabaseError } from "@/lib/errors/error-classes";
 import { logError } from "@/lib/errors/error-logger";
@@ -56,6 +57,7 @@ export async function createBreakdown(
   });
 
   await cacheInvalidateTags(["table:breakdowns"]);
+  await revalidateBreakdownsCache();
   revalidatePath("/engineering/breakdowns");
   revalidatePath("/control-room/engineering-notes");
   return { success: true };
@@ -116,6 +118,7 @@ export async function bookOutBreakdown(
   });
 
   await cacheInvalidateTags(["table:breakdowns"]);
+  await revalidateBreakdownsCache();
   revalidatePath("/engineering/breakdowns");
   revalidatePath("/control-room/engineering-notes");
   return { success: true };
@@ -173,6 +176,7 @@ export async function directCheckout(
   });
 
   await cacheInvalidateTags(["table:breakdowns"]);
+  await revalidateBreakdownsCache();
   revalidatePath("/engineering/breakdowns");
   revalidatePath("/control-room/engineering-notes");
   return { success: true };
@@ -219,6 +223,7 @@ export async function softDeleteBreakdown(breakdownId: string) {
   });
 
   await cacheInvalidateTags(["table:breakdowns"]);
+  await revalidateBreakdownsCache();
   revalidatePath("/engineering/breakdowns");
   revalidatePath("/control-room/engineering-notes");
   return { success: true };

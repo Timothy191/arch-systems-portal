@@ -1,0 +1,40 @@
+name: Arch-Mk2 Quality Gate
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Full Quality Gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "pnpm"
+      - run: pnpm install --frozen-lockfile
+      - name: Run Parallel Quality Gate (MPC)
+        run: node tools/preflight-mcp/index.js --tool mpc_full_quality_gate --concurrency 4
+      - name: Checksum Verification
+        run: node tools/preflight-mcp/index.js --tool mpc_checksum_verify --directory .agentic-tools-mcp/memories
+      - name: Dependency Graph Analysis
+        run: node tools/preflight-mcp/index.js --tool mpc_dependency_graph --skills-dir .agentic-tools-mcp/agents/skills
+      - name: Lint
+        run: pnpm lint
+      - name: Type Check
+        run: pnpm type-check
+      - name: Test
+        run: pnpm test
+      - name: Format Check
+        run: pnpm format:check

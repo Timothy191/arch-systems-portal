@@ -1,0 +1,1 @@
+Next.js App Router Route Handlers; Prometheus/OpenMetrics text format v0.0.4 for `/api/metrics`; Redis-backed last-value deduplication for the telemetry push endpoint; Supabase client for DB readiness probing; external calls to Ollama (`OLLAMA_URL`) and FUXA SCADA (`NEXT_PUBLIC_FUXA_URL`).

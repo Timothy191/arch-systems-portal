@@ -20,9 +20,7 @@ async function bootstrap() {
     { bufferLogs: true },
   );
 
-  // Use pino logger
   const logger = new Logger("Bootstrap");
-  app.useLogger(app.get(Logger));
 
   // Global prefix
   app.setGlobalPrefix("api");
