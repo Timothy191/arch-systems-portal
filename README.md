@@ -82,6 +82,19 @@ git push origin main
 
 **Golden Rule:** Always remember to `git push` when you step away from the `HP Zbook`, and `git pull` when you sit down at the `Work-remote-server` (and vice versa).
 
+## AI Assistant Initialization Prompt
+
+When you clone this repository onto your new machine (`Work-remote-server`), copy and paste the following prompt into your Agentic AI (e.g., Antigravity, Claude Code, etc.) to immediately synchronize its codebase intelligence, rebuild the RepoWiki, and restore project memories without needing to push the large database cache files:
+
+> **System Initialization Request:**
+> Please initialize the local AI environment for this repository to match the primary workspace. 
+> 1. Run `pnpm install` if you haven't already.
+> 2. Rebuild the Repowise index and codebase intelligence graphs by executing the update command: `./.aistack/tools/repowise/.venv/bin/repowise update -w --index-only`.
+> 3. Review the `.agentic-tools-mcp/repowiki/` folder to absorb the central architecture, database structures, and development guidelines.
+> 4. Ensure you have read and are strictly following the rules defined in `.agents/AGENTS.md` and `CLAUDE.md`.
+> 5. Read the most recent entries in `.agentic-tools-mcp/memories/` to restore your working context.
+> 6. Provide a brief summary of the workspace state and confirm you are ready to continue coding.
+
 ## License
 
 MIT
