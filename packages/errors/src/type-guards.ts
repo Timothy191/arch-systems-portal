@@ -1,6 +1,6 @@
-import { AppError } from "./base";
-import { ValidationError } from "./domain";
-import { AuthError, NotFoundError } from "./http";
+import { AppError } from "./base.js";
+import { ValidationError } from "./domain.js";
+import { AuthError, NotFoundError } from "./http.js";
 
 export function isAppError(error: unknown): error is AppError {
   return error instanceof AppError;

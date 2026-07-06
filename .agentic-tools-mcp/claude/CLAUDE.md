@@ -11,16 +11,16 @@
 > (documentation, ownership, history, decisions). **Always verify against
 > actual source files before making changes** — the index may be stale.
 
-Last indexed: 2026-07-06 (commit 23e7da68). Confidence: 100%.
+Last indexed: 2026-07-06 (commit 6a4f5da0)
 ### Entry Points
+- `.ai/framework/__main__.py`
 - `packages/supabase/src/server.ts`
 - `apps/ai-agents/src/main.py`
 - `apps/api/src/main.ts`
-- `tools/secrin/scripts/server.py`
 - `.aistack/packages/agentic-tools-mcp/src/server.js`
 - `.aistack/apps/ai-gateway/src/main.ts`
 - `.aistack/tools/memex/memex/__main__.py`
-- `tools/secrin/packages/cli/main.py`
+- `.aistack/tools/memex/memex/memory_tool/server.py`
 ### Tech Stack
 **Languages:** Node.js, TypeScript
 
@@ -28,24 +28,24 @@ Last indexed: 2026-07-06 (commit 23e7da68). Confidence: 100%.
 **Infra:** Turborepo### Architectural Layers
 | Layer | Files | Purpose |
 |-------|-------|---------|
-| Application | 475 |  |
-| Utility | 135 |  |
-| CLI | 32 |  |
-| API | 79 |  |
-| Config | 9946 |  |
+| Application | 487 |  |
+| Config | 10517 |  |
+| API | 71 |  |
 | Middleware | 1 |  |
-| UI | 157 |  |
-| Types | 4 |  |
-| Data | 16 |  |
-| Service | 42 |  |
+| Data | 11 |  |
+| UI | 143 |  |
+| Utility | 54 |  |
+| Service | 22 |  |
+| Docs & Tooling | 44 |  |
+| Test | 1101 |  |
 
 ### Guided Tour (12 steps)
 1. `README.md`
 2. `server.ts`
-3. `supabase-auth.guard.ts`
+3. `memory.store.ts`
 4. `main.ts`
 5. `main.rs`
-6. `main.py`
+6. `supabase-auth.guard.ts`
 ... and 6 more steps
 ### Hotspots (High Churn)
 | File | Churn | 90d Commits | Owner |
@@ -55,22 +55,6 @@ Last indexed: 2026-07-06 (commit 23e7da68). Confidence: 100%.
 | `apps/portal/lib/shift-completeness.ts` | 99.9th %ile | 3 | Timothy191 |
 | `apps/portal/app/(departments)/[department]/page.tsx` | 99.9th %ile | 3 | Timothy191 |
 | `scripts/dev.sh` | 99.8th %ile | 3 | Timothy191 |
-
-## Code health
-Three signals: **defect risk** (the overall score), **maintainability** (smells that hurt readability/change-cost without predicting bugs), and **performance** (static performance RISK: I/O-in-loop / N+1 shapes that waste work, high-precision/low-recall). Maintainability and performance are co-equal views, never blended into the defect headline. See `docs/CODE_HEALTH.md`.
-
-Defect risk, Hotspot health: 8.25/10 (stable) ·
-Average: 9.36/10 ·
-Worst: 3.34/10 (`.aistack/tools/repowise/packages/core/src/repowise/core/providers/llm/anthropic.py`)
-Maintainability, Average: 9.44/10
-Performance risk, Average: 9.95/10
-
-### Critical biomarkers
-- `.aistack/tools/repowise/packages/ui/src/c4/store/use-architecture-store.ts` — brain method (devtools callback) — impact −1.0
-- `.aistack/tools/sense/internal/cli/e2e_test.go` — brain method (TestE2EGraphAndBlastOnSenseRepo) — impact −1.0
-- `.aistack/tools/sense/internal/mcpio/blast.go` — brain method (BuildBlastResponseSeen) — impact −1.0
-- `.aistack/tools/repowise/packages/cli/src/repowise/cli/commands/workspace_cmd.py` — brain method (_run_index_for_repo) — impact −0.7
-- `.aistack/tools/memex/memex/config.py` — brain method (load_config) — impact −0.6
 
 ### Repowise MCP Tools
 

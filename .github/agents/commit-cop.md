@@ -2,6 +2,7 @@
 name: commit-cop
 description: Commit Verification Assistant
 ---
+
 # Agent: Commit Cop
 
 ## Role

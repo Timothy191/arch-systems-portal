@@ -2,6 +2,7 @@
 name: template-agent
 description: Template for creating new agents
 ---
+
 # Agent: [Agent Name]
 
 ## Role

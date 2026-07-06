@@ -77,10 +77,7 @@ export class ToolsService {
         responseTime: Date.now() - start,
       };
     } catch (error) {
-      this.logger.warn(
-        `External tool health check failed: ${tool.url}`,
-        error,
-      );
+      this.logger.warn(`External tool health check failed: ${tool.url}`, error);
 
       return {
         ...tool,

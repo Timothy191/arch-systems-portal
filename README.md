@@ -57,7 +57,9 @@ pnpm format           # Format all files
 To work seamlessly between your two machines (`HP Zbook` and `Work-remote-server`), follow these steps to ensure both stay updated and push to `main` without conflicts:
 
 ### 1. Initial Setup on Work-remote-server
+
 On your `Work-remote-server`, open a terminal and clone the repository:
+
 ```bash
 git clone https://github.com/Timothy191/Project-One-Server.git
 cd Project-One-Server
@@ -65,7 +67,9 @@ pnpm install
 ```
 
 ### 2. Starting a Work Session (Any PC)
+
 **Always pull the latest changes** before you start coding to sync changes made from the other machine:
+
 ```bash
 git checkout main
 git pull origin main
@@ -73,7 +77,9 @@ pnpm install # (if dependencies were updated)
 ```
 
 ### 3. Ending a Work Session (Any PC)
+
 When you finish your coding session, commit and push your changes so the other machine can access them:
+
 ```bash
 git add .
 git commit -m "feat: your descriptive commit message"
@@ -87,7 +93,8 @@ git push origin main
 When you clone this repository onto your new machine (`Work-remote-server`), copy and paste the following prompt into your Agentic AI (e.g., Antigravity, Claude Code, etc.) to immediately synchronize its codebase intelligence, rebuild the RepoWiki, and restore project memories without needing to push the large database cache files:
 
 > **System Initialization Request:**
-> Please initialize the local AI environment for this repository to match the primary workspace. 
+> Please initialize the local AI environment for this repository to match the primary workspace.
+>
 > 1. Run `pnpm install` if you haven't already.
 > 2. Rebuild the Repowise index and codebase intelligence graphs by executing the update command: `./.aistack/tools/repowise/.venv/bin/repowise update -w --index-only`.
 > 3. Review the `.agentic-tools-mcp/repowiki/` folder to absorb the central architecture, database structures, and development guidelines.

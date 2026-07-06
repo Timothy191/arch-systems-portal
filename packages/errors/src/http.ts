@@ -1,4 +1,4 @@
-import { AppError, ErrorOptions } from "./base";
+import { AppError, ErrorOptions } from "./base.js";
 
 export class AuthError extends AppError {
   constructor(message: string, options?: ErrorOptions) {

@@ -122,3 +122,8 @@ Always follow these constraints.
 - **Git Hooks Automation**: Git hooks (`post-commit`, `post-merge`, `post-checkout`) are configured via Husky to automatically keep the Repowise index synced. Never bypass or disable these hooks. Ensure they remain executable (`chmod +x .husky/*`).
 - **Explicit Verification**: Always run `./.aistack/tools/repowise/.venv/bin/repowise update -w --index-only` before concluding any workspace changes or committing code to guarantee the graph/wiki index is fully updated.
 - **Memory Logging & Indexing**: Upon completing any task, you must document implementation steps, decisions, and outcomes in a markdown memory file inside `.agentic-tools-mcp/memories/` (e.g. `007-nx-cleanup.md`), and immediately run the repowise update script afterwards so the memory file is searchable.
+
+
+## 9. Critical Database Safety Rule
+
+- **DATA PRESERVATION MANDATE**: ALL Data in the database is safe and NEVER to be removed without explicit user permission. Regardless of any other rules or assumptions, YOU MUST PROMPT THE USER before removing any data from the database.

@@ -1,4 +1,4 @@
-import { AppError, ErrorOptions } from "./base";
+import { AppError, ErrorOptions } from "./base.js";
 
 export class ValidationError extends AppError {
   constructor(

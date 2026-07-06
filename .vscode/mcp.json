@@ -5,7 +5,7 @@
       "command": "repowise",
       "args": [
         "mcp",
-        "/home/timothy/Documents/Arch-Mk2",
+        "/home/arch/Applications/Arch-Mk2",
         "--transport",
         "stdio"
       ],

@@ -11,14 +11,29 @@
     "@eslint/js",
     "globals",
     "lint-staged",
-    "typescript-eslint"
+    "typescript-eslint",
+    "@nestjs/schematics",
+    "jsdom"
   ],
-  "ignoreBinaries": ["python3", "psql"],
-  "ignore": ["**/jest.config.*", "**/postcss.config.*", "pnpm-workspace.yaml"],
+  "ignoreBinaries": [
+    "python3",
+    "psql",
+    "ts-node"
+  ],
+  "ignore": [
+    "**/jest.config.*",
+    "**/postcss.config.*",
+    "pnpm-workspace.yaml"
+  ],
   "workspaces": {
     ".": {
-      "entry": ["scripts/**/*.{ts,js}", ".eslintrc.{js,cjs}"],
-      "project": ["scripts/**/*.{ts,js}"]
+      "entry": [
+        "scripts/**/*.{ts,js}",
+        ".eslintrc.{js,cjs}"
+      ],
+      "project": [
+        "scripts/**/*.{ts,js}"
+      ]
     },
     "apps/portal": {
       "entry": [
@@ -37,7 +52,11 @@
         "lib/**/*.{ts,tsx}",
         "plugins/**/*.{ts,tsx}"
       ],
-      "ignoreDependencies": ["autoprefixer", "postcss", "tailwindcss"],
+      "ignoreDependencies": [
+        "autoprefixer",
+        "postcss",
+        "tailwindcss"
+      ],
       "ignore": [
         "lib/observability/logger.ts",
         "lib/api/schemas.ts",
@@ -49,18 +68,37 @@
       ]
     },
     "packages/theme": {
-      "entry": ["src/tokens/*.ts", "src/react/*.tsx", ".eslintrc.{js,cjs}"],
-      "project": ["src/**/*.{ts,tsx,css}"],
-      "ignore": ["src/tokens/colors.ts", "src/tokens/motion.ts"]
+      "entry": [
+        "src/tokens/*.ts",
+        "src/react/*.tsx",
+        ".eslintrc.{js,cjs}"
+      ],
+      "project": [
+        "src/**/*.{ts,tsx,css}"
+      ],
+      "ignore": [
+        "src/tokens/colors.ts",
+        "src/tokens/motion.ts"
+      ]
     },
     "packages/database": {
-      "entry": [".eslintrc.{js,cjs}"],
-      "project": ["migrations/**/*.sql"],
-      "ignore": ["supabase/migrations/**"]
+      "entry": [
+        ".eslintrc.{js,cjs}"
+      ],
+      "project": [
+        "migrations/**/*.sql"
+      ],
+      "ignore": [
+        "supabase/migrations/**"
+      ]
     },
     "packages/eslint-config": {
-      "entry": ["*.js"],
-      "project": ["*.js"]
+      "entry": [
+        "*.js"
+      ],
+      "project": [
+        "*.js"
+      ]
     },
     "packages/supabase": {
       "entry": [
@@ -71,29 +109,59 @@
         "src/service-role.ts",
         ".eslintrc.{js,cjs}"
       ],
-      "project": ["src/**/*.ts"],
-      "ignore": ["src/database.types.ts"]
+      "project": [
+        "src/**/*.ts"
+      ],
+      "ignore": [
+        "src/database.types.ts"
+      ]
     },
     "packages/errors": {
-      "entry": ["src/index.ts", ".eslintrc.{js,cjs}"],
-      "project": ["src/**/*.ts"]
+      "entry": [
+        "src/index.ts",
+        ".eslintrc.{js,cjs}"
+      ],
+      "project": [
+        "src/**/*.ts"
+      ]
     },
     "packages/types": {
-      "entry": ["src/index.ts", ".eslintrc.{js,cjs}"],
-      "project": ["src/**/*.ts"]
+      "entry": [
+        "src/index.ts",
+        ".eslintrc.{js,cjs}"
+      ],
+      "project": [
+        "src/**/*.ts"
+      ]
     },
     "packages/typescript-config": {
-      "entry": ["*.json"],
-      "project": ["*.json"],
-      "ignoreDependencies": ["next"]
+      "entry": [
+        "*.json"
+      ],
+      "project": [
+        "*.json"
+      ],
+      "ignoreDependencies": [
+        "next"
+      ]
     },
     "packages/utils": {
-      "entry": ["src/index.ts", ".eslintrc.{js,cjs}"],
-      "project": ["src/**/*.ts"]
+      "entry": [
+        "src/index.ts",
+        ".eslintrc.{js,cjs}"
+      ],
+      "project": [
+        "src/**/*.ts"
+      ]
     },
     "packages/ui": {
-      "entry": ["src/**/*.tsx", ".eslintrc.{js,cjs}"],
-      "project": ["src/**/*.{ts,tsx,css}"],
+      "entry": [
+        "src/**/*.tsx",
+        ".eslintrc.{js,cjs}"
+      ],
+      "project": [
+        "src/**/*.{ts,tsx,css}"
+      ],
       "ignore": [
         "src/components/edges/FlowEdge.tsx",
         "src/components/nodes/PluginNode.tsx",
@@ -102,16 +170,30 @@
       ]
     },
     "packages/redis": {
-      "entry": ["src/index.ts", ".eslintrc.{js,cjs}"],
-      "project": ["src/**/*.ts"]
+      "entry": [
+        "src/index.ts",
+        ".eslintrc.{js,cjs}"
+      ],
+      "project": [
+        "src/**/*.ts"
+      ]
     },
     "packages/rate-limiter": {
-      "entry": ["src/index.ts", ".eslintrc.{js,cjs}"],
-      "project": ["src/**/*.ts"]
+      "entry": [
+        "src/index.ts",
+        ".eslintrc.{js,cjs}"
+      ],
+      "project": [
+        "src/**/*.ts"
+      ]
     },
     "packages/eval": {
-      "entry": ["tests/**/*.py"],
-      "project": ["**/*.{py,toml}"]
+      "entry": [
+        "tests/**/*.py"
+      ],
+      "project": [
+        "**/*.{py,toml}"
+      ]
     }
   },
   "rules": {
