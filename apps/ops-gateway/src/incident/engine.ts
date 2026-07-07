@@ -4,6 +4,7 @@ import { getLatestSnapshot } from "../poller/metrics-poller.js";
 import { getLatestAudit, runAuditCheck } from "../poller/audit-poller.js";
 import { opsClient } from "../ops-client.js";
 import { Logger } from "../logger.js";
+import { dispatchTask } from "../dispatcher/agent-dispatcher.js";
 import type { TriggerEvent } from "../subscriber/redis-subscriber.js";
 
 const logger = new Logger("incident-engine");
@@ -20,6 +21,9 @@ export interface Incident {
   resolvedAt: string | null;
   autoMitigated: boolean;
 }
+
+// Track incidents that have already triggered an agent dispatch
+const dispatchedIncidents = new Set<string>();
 
 // ── State ──────────────────────────────────────────────────
 
@@ -62,6 +66,15 @@ export async function handleTriggerEvent(
 
   // Attempt auto-mitigation for known incident types
   await attemptAutoMitigation(incident);
+
+  // Dispatch to TUI agent for critical and warning triggers
+  if (
+    config.enableEveDispatch &&
+    (incident.severity === "critical" || incident.severity === "warning")
+  ) {
+      /* dispatch is fire-and-forget */
+    });
+  }
 }
 
 // ── Periodic check (called by main loop) ───────────────────
@@ -165,7 +178,6 @@ async function attemptAutoMitigation(
         break;
       }
 
-
       case "DATA_INTEGRITY_ISSUE": {
         // Attempt auto-repair on orphaned rows and stale data — per-table
         const audit = getLatestAudit();
@@ -215,6 +227,83 @@ async function attemptAutoMitigation(
   }
 }
 
+// ── Agent dispatch helper ──────────────────────────────────
+
+async function dispatchToAgent(incident: Incident): Promise<void> {
+  // Build context payload for the agent
+  const health = getLatestHealth();
+  const metrics = getLatestSnapshot();
+  const audit = getLatestAudit();
+
+  const context: Record<string, unknown> = {
+    incident: {
+      type: incident.type,
+      severity: incident.severity,
+      message: incident.message,
+      ...incident.context,
+    },
+    health: health
+      ? {
+          status: health.status,
+          summary: health.summary,
+          timestamp: health.timestamp,
+        }
+      : undefined,
+    metrics: metrics
+      ? {
+          errorRate: metrics.errorRate,
+          recent5xx: metrics.recent5xx,
+          totalRequests: metrics.totalRequests,
+          cacheHits: metrics.cacheHits,
+          cacheMisses: metrics.cacheMisses,
+          snapshotAt: metrics.snapshotAt,
+        }
+      : undefined,
+    audit: audit
+      ? {
+          errorCount: audit.errorCount,
+          warningCount: audit.warningCount,
+          tables: audit.tablesByIssue,
+        }
+      : undefined,
+  };
+
+  const prompt = [
+    `## Ops-Gateway Incident: ${incident.type} (${incident.severity})`,
+    ``,
+    `${incident.message}`,
+    ``,
+    `### Context snapshot`,
+    `\`\`\`json`,
+    JSON.stringify(context, null, 2),
+    `\`\`\``,
+    ``,
+    `### Required actions`,
+    `1. Investigate the incident using available tools (database queries, log inspection)`,
+    `2. Determine root cause`,
+    `3. Apply fix if deterministic and safe`,
+    `4. Report findings back`,
+    ``,
+    `Project: ${config.projectRoot}`,
+  ].join("\n");
+
+  try {
+    const dispatch = await dispatchTask({
+      task: `Investigate and resolve ${incident.type}`,
+      prompt,
+      context,
+      triggeredBy: "incident",
+      triggerRef: incident.id,
+    });
+    logger.info(
+      `Dispatched to ${dispatch.agent} for incident ${incident.type} (${dispatch.id})`,
+    );
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    logger.warn(`Agent dispatch failed for ${incident.type}: ${message}`);
+  }
+}
+
 // ── Helpers ────────────────────────────────────────────────
 
 let incidentCounter = 0;
@@ -242,6 +331,13 @@ async function createOrUpdateIncident(
   knownIncidents.set(partial.type, id);
   logger.warn(`Incident created: ${incident.severity}/${incident.type}`);
 
+  // Dispatch to TUI agent for critical and warning incidents
+  if (config.enableEveDispatch && !dispatchedIncidents.has(incident.type)) {
+    dispatchedIncidents.add(incident.type);
+    dispatchToAgent(incident).catch(() => {
+      /* dispatch is fire-and-forget */
+    });
+  }
   // Attempt auto-mitigation for newly detected incidents
   await attemptAutoMitigation(incident);
 }

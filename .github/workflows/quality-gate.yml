@@ -127,6 +127,42 @@ jobs:
         working-directory: apps/portal
         run: npx jest --no-cache --forceExit --verbose --coverage lib/data/__tests__/ 2>&1 | tail -10
 
+  test-e2e:
+    name: E2E Tests
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      # Portal is started inline below; no external services needed for unauthenticated E2E tests
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: "9.15.9"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "pnpm"
+      - run: pnpm install --frozen-lockfile
+      - name: Install Playwright browsers
+        run: npx playwright install chromium --with-deps
+      - name: Start Portal (dev mode)
+        run: |
+          pnpm --filter portal dev &
+          for i in $(seq 1 30); do
+            curl -sf http://localhost:3000 > /dev/null && echo "Portal ready" && break
+            echo "Waiting for portal... ($i)"
+            sleep 2
+          done
+      - name: Run E2E tests
+        run: npx playwright test --reporter=list 2>&1
+      - name: Upload E2E artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-screenshots
+          path: test-results/
+
   build:
     name: Build Check
     needs: prepare

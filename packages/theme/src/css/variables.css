@@ -365,9 +365,15 @@
        ═══════════════════════════════════════════════════════════════ */
   --theme-transition-duration: 0ms;
 
-  /* Font variables (--font-sans, --font-mono, --font-anurati) are injected by
-     next/font in apps/portal/app/layout.tsx. Do not define static stacks here
-     or they will override the self-hosted, metric-optimized font families. */
+  /* Font variables — system-ui fallbacks.
+     These are overridden at runtime by next/font in apps/portal/app/layout.tsx.
+     Fallbacks are defined here so the token validator can find them,
+     and so Tailwind resolves correctly before the JS bundle loads. */
+  --font-anurati: "Anurati", system-ui, sans-serif;
+  --font-sans: system-ui, -apple-system, sans-serif;
+  --font-inter: "Inter", system-ui, sans-serif;
+  --font-outfit: "Outfit", system-ui, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Code", monospace;
 
   color-scheme: light;
 }

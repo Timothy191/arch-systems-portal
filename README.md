@@ -1,5 +1,8 @@
 # Arch-Systems (Plantcor)
 
+[![CI](https://github.com/Timothy191/Arch-Mk2/actions/workflows/quality-gate.yml/badge.svg)](https://github.com/Timothy191/Arch-Mk2/actions/workflows/quality-gate.yml)
+[![Tests](https://github.com/Timothy191/Arch-Mk2/actions/workflows/api-build-test.yml/badge.svg)](https://github.com/Timothy191/Arch-Mk2/actions/workflows/api-build-test.yml)
+
 Industrial mining-operations portal.
 
 A pnpm + Nx monorepo containing three Next.js 16 / React 19 apps and shared packages.
