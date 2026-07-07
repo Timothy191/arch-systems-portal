@@ -4,6 +4,13 @@ use thiserror::Error;
 use tracing::{debug, info, instrument, warn};
 use tokio::task::JoinSet;
 
+// Conditionally compile zen-engine integration
+#[cfg(feature = "zen")]
+pub mod zen;
+
+#[cfg(feature = "zen")]
+pub use zen::*;
+
 // ── Error Types ────────────────────────────────────────────
 
 #[derive(Error, Debug)]

@@ -25,6 +25,7 @@ const nextConfig = {
     "@repo/supabase",
     "@repo/utils",
     "@repo/theme",
+    "@arch/rust-bindings",
   ],
   serverExternalPackages: [
     "@opentelemetry/sdk-node",
@@ -34,6 +35,8 @@ const nextConfig = {
     "@opentelemetry/semantic-conventions",
     "@opentelemetry/otlp-transformer",
     "@opentelemetry/api",
+    "@arch/rust-bindings",
+    "@arch/rust-bindings-native",
   ],
   images: {
     formats: ["image/avif", "image/webp"],

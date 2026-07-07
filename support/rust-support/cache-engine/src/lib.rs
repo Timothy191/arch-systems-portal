@@ -3,6 +3,13 @@ use moka::future::Cache;
 use thiserror::Error;
 use tracing::{debug, error, info, instrument, warn};
 
+// Conditionally compile Redis L2 backend
+#[cfg(feature = "l2-redis")]
+pub mod l2_redis;
+
+#[cfg(feature = "l2-redis")]
+pub use l2_redis::*;
+
 // ── Error Types ────────────────────────────────────────────
 
 #[derive(Error, Debug)]

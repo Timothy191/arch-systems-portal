@@ -1,7 +1,11 @@
 [package]
 name = "logic-engine"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
+
+[features]
+default = []
+zen = ["zen-engine"]
 
 [dependencies]
 serde = { version = "1.0", features = ["derive"] }
@@ -11,3 +15,4 @@ tokio = { version = "1", features = ["full"] }
 futures = "0.3"
 tracing = "0.1"
 thiserror = "1"
+zen-engine = { version = "0.9", optional = true }

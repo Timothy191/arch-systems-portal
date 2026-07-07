@@ -10,3 +10,6 @@ napi = { version = "2.4", features = ["napi6", "tokio_rt"] }
 napi-derive = "2"
 serde_json = "1.0"
 tokio = { version = "1", features = ["full"] }
+
+[build-dependencies]
+napi-build = "2"

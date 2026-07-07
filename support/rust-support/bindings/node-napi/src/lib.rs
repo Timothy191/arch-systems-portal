@@ -21,7 +21,7 @@ use napi_derive::napi;
 // Re-export cache-engine and logic-engine as N-API objects
 use cache_engine::{CacheEngine as CoreCache, CacheError, TokenBucket as CoreBucket};
 use logic_engine::{
-    evaluate_rule, evaluate_rules, evaluate_rules_concurrent, evaluate_safety_interlocks,
+    evaluate_rule, evaluate_rules,
     Action, AlertSeverity, Condition, LogLevel, Operator, Rule, RuleContext,
 };
 
