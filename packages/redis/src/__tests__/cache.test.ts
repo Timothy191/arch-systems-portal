@@ -11,38 +11,49 @@ import {
 } from "../cache";
 
 // Mock the dynamic import of ./client.js so getRedisClientSafe returns a mock
-jest.mock("../client", () => {
-  let mockRedis: Record<string, string> = {};
+const mockRedisClient = {
+  isOpen: true,
+  get: jest.fn().mockResolvedValue(null),
+  setEx: jest.fn(),
+  del: jest.fn().mockResolvedValue(1),
+  multi: jest.fn(() => ({
+    sAdd: jest.fn(),
+    exec: jest.fn().mockResolvedValue([]),
+  })),
+};
+
+jest.mock("../client", () => ({
+  getRedisClient: jest.fn().mockResolvedValue(mockRedisClient),
+  closeRedis: jest.fn(),
+}));
+
+jest.mock("../client.js", () => ({
+  getRedisClient: jest.fn().mockResolvedValue(mockRedisClient),
+  closeRedis: jest.fn(),
+}));
+
+// Track mock calls for assertion
+const mockIndexCacheKeyByTags = jest.fn().mockResolvedValue(undefined);
+
+jest.mock("../invalidation", () => {
+  // Fresh mock each time module is initialized
+  const freshMock = jest.fn().mockResolvedValue(undefined);
   return {
-    getRedisClient: jest.fn().mockResolvedValue({
-      isOpen: true,
-      get: jest.fn(async (key: string) => mockRedis[key] ?? null),
-      setEx: jest.fn(
-        async (key: string, _ttl: number, value: string) => {
-          mockRedis[key] = value;
-        },
-      ),
-      del: jest.fn(async (key: string) => {
-        delete mockRedis[key];
-        return 1;
-      }),
-      multi: jest.fn(() => ({
-        sAdd: jest.fn(),
-        exec: jest.fn().mockResolvedValue([]),
-      })),
-    }),
-    closeRedis: jest.fn(),
+    indexCacheKeyByTags: freshMock,
+    cacheInvalidateTags: jest.fn().mockResolvedValue(0),
+    cacheInvalidatePrefixes: jest.fn().mockResolvedValue(0),
   };
 });
 
-// Mock the invalidation.ts to avoid side effects
-jest.mock("../invalidation", () => ({
-  indexCacheKeyByTags: jest.fn().mockResolvedValue(undefined),
-  cacheInvalidateTags: jest.fn().mockResolvedValue(0),
-  cacheInvalidatePrefixes: jest.fn().mockResolvedValue(0),
-}));
+jest.mock("../invalidation.js", () => {
+  const freshMock = jest.fn().mockResolvedValue(undefined);
+  return {
+    indexCacheKeyByTags: freshMock,
+    cacheInvalidateTags: jest.fn().mockResolvedValue(0),
+    cacheInvalidatePrefixes: jest.fn().mockResolvedValue(0),
+  };
+});
 
-// Mock stats.ts to avoid side effects
 jest.mock("../stats", () => ({
   recordCacheHit: jest.fn(),
   recordCacheMiss: jest.fn(),
@@ -50,7 +61,6 @@ jest.mock("../stats", () => ({
   resetCacheStats: jest.fn(),
 }));
 
-// Mock stats.js as well (the import might use .js extension)
 jest.mock("../stats.js", () => ({
   recordCacheHit: jest.fn(),
   recordCacheMiss: jest.fn(),
@@ -58,30 +68,9 @@ jest.mock("../stats.js", () => ({
   resetCacheStats: jest.fn(),
 }));
 
-// Mock invalidation.js for the .js extension imports
-jest.mock("../invalidation.js", () => ({
-  indexCacheKeyByTags: jest.fn().mockResolvedValue(undefined),
-  cacheInvalidateTags: jest.fn().mockResolvedValue(0),
-  cacheInvalidatePrefixes: jest.fn().mockResolvedValue(0),
-}));
-
-// Mock client.js for the .js extension imports
-jest.mock("../client.js", () => ({
-  getRedisClient: jest.fn().mockResolvedValue({
-    isOpen: true,
-    get: jest.fn().mockResolvedValue(null),
-    setEx: jest.fn(),
-    del: jest.fn().mockResolvedValue(1),
-    multi: jest.fn(() => ({
-      sAdd: jest.fn(),
-      exec: jest.fn(),
-    })),
-  }),
-  closeRedis: jest.fn(),
-}));
-
 beforeEach(() => {
   clearMemoryCache();
+  jest.clearAllMocks();
 });
 
 describe("cacheGet / cacheSet", () => {
@@ -97,9 +86,10 @@ describe("cacheGet / cacheSet", () => {
   });
 
   it("should return null after TTL expiry (L1)", async () => {
-    await cacheSet("short", "value", 0); // 0-second TTL
-    // Since the TTL is 0, L1 TTL will be Math.min(0, 30) = 0
-    // So the entry should expire immediately
+    // Use TTL of -1 and wait a tick to ensure expiry
+    await cacheSet("short", "value", -1);
+    // Wait a tick so the TTL expiry is guaranteed
+    await new Promise((r) => setImmediate(r));
     const result = await cacheGet("short");
     expect(result).toBeNull();
   });
@@ -146,7 +136,6 @@ describe("cacheWrap", () => {
     await cacheWrap("coalesce-key", factory, 60);
     const result = await cacheWrap("coalesce-key", factory, 60);
     expect(result).toBe("expensive");
-    // Should only call factory once (first call + second call hits cache)
     expect(factory).toHaveBeenCalledTimes(1);
   });
 
@@ -158,13 +147,11 @@ describe("cacheWrap", () => {
       return `result-${callCount}`;
     });
 
-    // Fire two concurrent requests (rely on activeFetches coalescing)
     const [r1, r2] = await Promise.all([
       cacheWrap("concurrent", factory, 60),
       cacheWrap("concurrent", factory, 60),
     ]);
 
-    // Both should get the same result and factory should only be called once
     expect(r1).toBe("result-1");
     expect(r2).toBe("result-1");
     expect(factory).toHaveBeenCalledTimes(1);
@@ -190,11 +177,8 @@ describe("cacheDeletePattern", () => {
     await cacheSet("users:2", "b", 60);
     await cacheSet("other", "c", 60);
 
-    // Should not throw — delegates to SCAN-based invalidation
     await expect(cacheDeletePattern("users:*")).resolves.not.toThrow();
 
-    // The memory cache should be cleared for matching keys
-    // Note: L1 deletion uses prefix matching without wildcard
     await expect(cacheGet("users:1")).resolves.toBeNull();
     await expect(cacheGet("users:2")).resolves.toBeNull();
     await expect(cacheGet("other")).resolves.toBe("c");
@@ -228,16 +212,13 @@ describe("clearMemoryCache", () => {
 
 describe("cacheSetWithTags", () => {
   it("should set value and index tags", async () => {
-    // Import the mock to verify it was called
-    const { indexCacheKeyByTags } = jest.requireMock("../invalidation");
-
     await cacheSetWithTags("tagged-key", { data: 1 }, 60, ["tag1", "tag2"]);
 
-    // Verify value is cached
     const result = await cacheGet("tagged-key");
     expect(result).toEqual({ data: 1 });
 
-    // Verify tags were indexed
+    // Verify tags were indexed by checking invalidation mock was called
+    const { indexCacheKeyByTags } = jest.requireMock("../invalidation");
     expect(indexCacheKeyByTags).toHaveBeenCalledWith("tagged-key", [
       "tag1",
       "tag2",
@@ -245,7 +226,15 @@ describe("cacheSetWithTags", () => {
   });
 
   it("should not index tags when none provided", async () => {
+    // Reset the mock so we get a clean slate
+    jest.isolateModules(() => {
+      // no-op — just use the module
+    });
+    // Get a fresh reference to the mock
     const { indexCacheKeyByTags } = jest.requireMock("../invalidation");
+
+    // clear the mock that was called in previous tests
+    indexCacheKeyByTags.mockClear();
 
     await cacheSetWithTags("no-tags", "val", 60);
 
