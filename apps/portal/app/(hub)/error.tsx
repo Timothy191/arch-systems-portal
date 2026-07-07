@@ -7,7 +7,7 @@ import { logError } from "@/lib/errors/error-logger";
 
 interface HubErrorProps {
   error: Error & { digest?: string };
-  reset: () => void;
+  unstable_retry: () => void;
 }
 
 function getErrorTitle(error: Error): string {
@@ -21,7 +21,7 @@ function getErrorMessage(error: Error): string {
   return error.message || "Failed to load hub data.";
 }
 
-export default function HubError({ error, reset }: HubErrorProps) {
+export default function HubError({ error, unstable_retry }: HubErrorProps) {
   useEffect(() => {
     if (isAppError(error)) {
       logError(error);
@@ -44,7 +44,7 @@ export default function HubError({ error, reset }: HubErrorProps) {
           {error.code}
         </div>
       )}
-      <SecondaryButton size="sm" onClick={reset}>
+      <SecondaryButton size="sm" onClick={() => unstable_retry()}>
         Try again
       </SecondaryButton>
     </div>

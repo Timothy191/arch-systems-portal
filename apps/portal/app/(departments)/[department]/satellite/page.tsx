@@ -1,4 +1,5 @@
 import { GlassCard } from "@repo/ui/GlassCard";
+import { connection } from "next/server";
 import {
   generateDeformationReadings,
   DEFAULT_MINE_CENTER,
@@ -9,7 +10,8 @@ import { SatelliteMonitoringClient } from "@/components/monitoring/SatelliteMoni
 // See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
 export const instant = false;
 
-export default function ControlRoomSatellitePage() {
+export default async function ControlRoomSatellitePage() {
+  await connection();
   const readings = generateDeformationReadings(
     DEFAULT_MINE_CENTER.lat,
     DEFAULT_MINE_CENTER.lon,

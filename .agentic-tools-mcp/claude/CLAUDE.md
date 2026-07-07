@@ -11,7 +11,7 @@
 > (documentation, ownership, history, decisions). **Always verify against
 > actual source files before making changes** — the index may be stale.
 
-Last indexed: 2026-07-07 (commit 79ad544c)
+Last indexed: 2026-07-07 (commit c61adcc7)
 ### Entry Points
 - `packages/supabase/src/server.ts`
 - `apps/ai-agents/src/main.py`
@@ -52,7 +52,7 @@ Last indexed: 2026-07-07 (commit 79ad544c)
 |------|-------|-------------|-------|
 | `apps/portal/proxy.ts` | 100.0th %ile | 5 | Timothy191 |
 | `apps/portal/components/BottomWidgetBar.tsx` | 100.0th %ile | 3 | Timothy191 |
-| `apps/portal/app/(departments)/[department]/reports/page.tsx` | 99.9th %ile | 3 | Timothy191 |
+| `apps/portal/app/(departments)/[department]/reports/page.tsx` | 100.0th %ile | 3 | Timothy191 |
 | `apps/portal/app/(departments)/[department]/hourly-loads/HourlyLoadsGrid.tsx` | 99.9th %ile | 3 | Timothy191 |
 | `packages/errors/src/index.ts` | 99.9th %ile | 3 | Timothy191 |
 

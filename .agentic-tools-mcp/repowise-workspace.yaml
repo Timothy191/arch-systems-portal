@@ -4,8 +4,8 @@ repos:
 - path: .
   alias: arch-mk2
   is_primary: true
-  indexed_at: '2026-07-07T05:48:53.458821+00:00'
-  last_commit_at_index: 79ad544cfb80db977d1c57bff46e550ef468b9e2
+  indexed_at: '2026-07-07T05:51:10.225650+00:00'
+  last_commit_at_index: c61adcc7d27dd61a9f0d8dac73d43e5b50c2260a
 - path: tools/repowise
   alias: repowise
   indexed_at: '2026-07-03T10:28:22.863648+00:00'
