@@ -15,8 +15,12 @@ export async function revalidateSitesCache() {
   updateTags([CACHE_TAGS.sites]);
 }
 
-export async function revalidateBadgesCache() {
-  updateTags([CACHE_TAGS.badges]);
+export async function revalidateBadgesCache(deptId?: string) {
+  const tags: string[] = [CACHE_TAGS.badges];
+  if (deptId) {
+    tags.push(`dept:${deptId}`);
+  }
+  await updateTags(tags);
 }
 
 export async function revalidateBreakdownsCache() {

@@ -12,7 +12,7 @@ import { logError } from "@/lib/errors/error-logger";
 
 interface DepartmentErrorProps {
   error: Error & { digest?: string };
-  reset: () => void;
+  unstable_retry: () => void;
 }
 
 function getErrorTitle(error: Error): string {
@@ -39,7 +39,7 @@ function getActionLink(error: Error): { href: string; label: string } {
 
 export default function DepartmentError({
   error,
-  reset,
+  unstable_retry,
 }: DepartmentErrorProps) {
   useEffect(() => {
     if (isAppError(error)) {
@@ -66,7 +66,7 @@ export default function DepartmentError({
         </div>
       )}
       <div className="flex items-center gap-3">
-        <SecondaryButton size="sm" onClick={reset}>
+        <SecondaryButton size="sm" onClick={() => unstable_retry()}>
           Try again
         </SecondaryButton>
         <Link
