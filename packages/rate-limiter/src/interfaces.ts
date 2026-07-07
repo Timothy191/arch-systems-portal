@@ -6,6 +6,8 @@ export interface RateLimitResult {
   retryAfter?: number;
 }
 
+export type { SimpleRedisClient } from "./stores/redis.store";
+
 export interface IStore {
   get(key: string): Promise<string | null>;
   set(key: string, value: string, ttlSeconds: number): Promise<void>;

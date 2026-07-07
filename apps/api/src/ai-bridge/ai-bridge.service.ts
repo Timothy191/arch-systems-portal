@@ -1,4 +1,5 @@
 import { Injectable, Logger } from "@nestjs/common";
+import { AiGatewayService } from "../ai/ai-gateway.service";
 
 @Injectable()
 export class AiBridgeService {
@@ -6,40 +7,41 @@ export class AiBridgeService {
   private readonly AI_GATEWAY_URL =
     process.env.AI_GATEWAY_URL || "http://ai-gateway:3000";
 
+  constructor(private readonly aiGateway: AiGatewayService) {}
+
   async invokeAgent(
     task: string,
     context: Record<string, any> = {},
   ): Promise<any> {
     this.logger.log(`Invoking AI Gateway for task: ${task}`);
-    try {
-      // Create a native AbortController for a 10-second timeout
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000);
+    const response = await this.aiGateway.invoke(
+      async (signal) => {
+        const controller = new AbortController();
+        const timeoutMs = this.aiGateway["features"].getConfig().requestTimeoutMs;
+        const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
-      const response = await fetch(`${this.AI_GATEWAY_URL}/api/ai/invoke`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ task, context }),
-        signal: controller.signal as any,
-      });
+        try {
+          const result = await fetch(`${this.AI_GATEWAY_URL}/api/ai/invoke`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ task, context }),
+            signal: signal as any,
+          });
+          clearTimeout(timeoutId);
 
-      clearTimeout(timeoutId);
+          if (!result.ok) {
+            throw new Error(`AI Gateway returned status: ${result.status}`);
+          }
 
-      if (!response.ok) {
-        throw new Error(`AI Gateway returned status: ${response.status}`);
-      }
+          return result.json();
+        } catch (error) {
+          clearTimeout(timeoutId);
+          throw error;
+        }
+      },
+      { task, context },
+    );
 
-      return await response.json();
-    } catch (error: any) {
-      this.logger.error(
-        `Failed to reach AI Gateway: ${error.message}. Returning fallback response.`,
-      );
-      // Elegant fail-safe response if the AI container is down
-      return {
-        status: "fallback",
-        result:
-          "The AI subsystem is currently unreachable. Operational systems remain active.",
-      };
-    }
+    return response.result;
   }
 }

@@ -11,7 +11,7 @@
 > (documentation, ownership, history, decisions). **Always verify against
 > actual source files before making changes** — the index may be stale.
 
-Last indexed: 2026-07-07 (commit 8139ae4a)
+Last indexed: 2026-07-07 (commit 83c1159e)
 ### Entry Points
 - `packages/supabase/src/server.ts`
 - `apps/ai-agents/src/main.py`
@@ -28,33 +28,33 @@ Last indexed: 2026-07-07 (commit 8139ae4a)
 **Infra:** Turborepo### Architectural Layers
 | Layer | Files | Purpose |
 |-------|-------|---------|
-| Application | 493 |  |
-| Config | 9951 |  |
+| Application | 499 |  |
+| Config | 9952 |  |
 | API | 65 |  |
-| Data | 13 |  |
-| UI | 142 |  |
+| UI | 148 |  |
 | Middleware | 1 |  |
+| Data | 14 |  |
 | Utility | 50 |  |
-| Service | 22 |  |
+| Service | 21 |  |
 | Docs & Tooling | 44 |  |
-| Test | 1097 |  |
+| Test | 1110 |  |
 
 ### Guided Tour (12 steps)
 1. `README.md`
 2. `server.ts`
-3. `supabase-auth.guard.ts`
+3. `memory.store.ts`
 4. `main.ts`
 5. `main.rs`
-6. `table.tsx`
+6. `supabase-auth.guard.ts`
 ... and 6 more steps
 ### Hotspots (High Churn)
 | File | Churn | 90d Commits | Owner |
 |------|-------|-------------|-------|
 | `apps/portal/proxy.ts` | 100.0th %ile | 5 | Timothy191 |
-| `apps/portal/components/BottomWidgetBar.tsx` | 100.0th %ile | 3 | Timothy191 |
-| `apps/portal/app/(departments)/[department]/reports/page.tsx` | 100.0th %ile | 3 | Timothy191 |
-| `apps/portal/app/(departments)/[department]/hourly-loads/HourlyLoadsGrid.tsx` | 99.9th %ile | 3 | Timothy191 |
-| `packages/errors/src/index.ts` | 99.9th %ile | 3 | Timothy191 |
+| `apps/portal/lib/env.ts` | 100.0th %ile | 6 | Timothy191 |
+| `apps/portal/app/(hub)/page.tsx` | 100.0th %ile | 6 | Timothy191 |
+| `apps/portal/app/(departments)/[department]/page.tsx` | 99.9th %ile | 7 | Timothy191 |
+| `apps/portal/app/(departments)/drilling/machine-telemetry/page.tsx` | 99.9th %ile | 5 | Timothy191 |
 
 ### Repowise MCP Tools
 

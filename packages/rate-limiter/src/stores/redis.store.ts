@@ -8,6 +8,10 @@ export interface SimpleRedisClient {
     options?: { EX: number },
   ): Promise<string | null | void>;
   del(key: string): Promise<number | void>;
+  eval?(
+    script: string,
+    options?: { keys: string[]; arguments: string[] },
+  ): Promise<unknown>;
 }
 
 export class RedisStore implements IStore {

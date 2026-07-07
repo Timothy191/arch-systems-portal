@@ -1,8 +1,8 @@
 import { RedisStore, SimpleRedisClient } from "./redis.store";
-import { vi, describe, it, expect, beforeEach, afterEach } from "vitest";
+import { vi, describe, it, expect, beforeEach, afterEach, type MockedObject } from "vitest";
 
 describe("RedisStore", () => {
-  let mockClient: SimpleRedisClient;
+  let mockClient: MockedObject<SimpleRedisClient>;
   let store: RedisStore;
 
   beforeEach(() => {

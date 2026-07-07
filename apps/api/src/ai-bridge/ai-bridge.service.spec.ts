@@ -1,9 +1,33 @@
 import { Test } from "@nestjs/testing";
 import { AiBridgeService } from "./ai-bridge.service";
+import { AiGatewayService } from "../ai/ai-gateway.service";
 
 describe("AiBridgeService", () => {
   let originalFetch: typeof global.fetch;
   let originalAiGatewayUrl: string | undefined;
+
+  const mockAiGateway = {
+    invoke: jest.fn().mockImplementation(async (fetcher) => {
+      try {
+        const res = await fetcher(new AbortController().signal);
+        return { status: "success", result: res };
+      } catch (err) {
+        return {
+          status: "fallback",
+          result: {
+            status: "fallback",
+            result:
+              "The AI subsystem is currently unreachable. Operational systems remain active.",
+          },
+        };
+      }
+    }),
+    features: {
+      getConfig: jest.fn().mockReturnValue({
+        requestTimeoutMs: 10000,
+      }),
+    },
+  };
 
   beforeAll(() => {
     originalFetch = global.fetch;
@@ -21,7 +45,13 @@ describe("AiBridgeService", () => {
 
   it("should be defined", async () => {
     const module = await Test.createTestingModule({
-      providers: [AiBridgeService],
+      providers: [
+        AiBridgeService,
+        {
+          provide: AiGatewayService,
+          useValue: mockAiGateway,
+        },
+      ],
     }).compile();
     expect(module.get<AiBridgeService>(AiBridgeService)).toBeDefined();
     await module.close();
@@ -38,7 +68,13 @@ describe("AiBridgeService", () => {
     global.fetch = jest.fn().mockResolvedValue(mockResponse);
 
     const module = await Test.createTestingModule({
-      providers: [AiBridgeService],
+      providers: [
+        AiBridgeService,
+        {
+          provide: AiGatewayService,
+          useValue: mockAiGateway,
+        },
+      ],
     }).compile();
     const service = module.get<AiBridgeService>(AiBridgeService);
 
@@ -69,7 +105,13 @@ describe("AiBridgeService", () => {
     });
 
     const module = await Test.createTestingModule({
-      providers: [AiBridgeService],
+      providers: [
+        AiBridgeService,
+        {
+          provide: AiGatewayService,
+          useValue: mockAiGateway,
+        },
+      ],
     }).compile();
     const service = module.get<AiBridgeService>(AiBridgeService);
 
@@ -90,7 +132,13 @@ describe("AiBridgeService", () => {
     });
 
     const module = await Test.createTestingModule({
-      providers: [AiBridgeService],
+      providers: [
+        AiBridgeService,
+        {
+          provide: AiGatewayService,
+          useValue: mockAiGateway,
+        },
+      ],
     }).compile();
     const service = module.get<AiBridgeService>(AiBridgeService);
 
@@ -110,7 +158,13 @@ describe("AiBridgeService", () => {
     });
 
     const module = await Test.createTestingModule({
-      providers: [AiBridgeService],
+      providers: [
+        AiBridgeService,
+        {
+          provide: AiGatewayService,
+          useValue: mockAiGateway,
+        },
+      ],
     }).compile();
     const service = module.get<AiBridgeService>(AiBridgeService);
 
@@ -127,7 +181,13 @@ describe("AiBridgeService", () => {
     global.fetch = jest.fn().mockRejectedValue(new Error("Connection refused"));
 
     const module = await Test.createTestingModule({
-      providers: [AiBridgeService],
+      providers: [
+        AiBridgeService,
+        {
+          provide: AiGatewayService,
+          useValue: mockAiGateway,
+        },
+      ],
     }).compile();
     const service = module.get<AiBridgeService>(AiBridgeService);
 
@@ -147,7 +207,13 @@ describe("AiBridgeService", () => {
     });
 
     const module = await Test.createTestingModule({
-      providers: [AiBridgeService],
+      providers: [
+        AiBridgeService,
+        {
+          provide: AiGatewayService,
+          useValue: mockAiGateway,
+        },
+      ],
     }).compile();
     const service = module.get<AiBridgeService>(AiBridgeService);
 

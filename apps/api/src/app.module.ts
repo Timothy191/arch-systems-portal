@@ -20,6 +20,7 @@ import { JobsModule } from "./jobs/jobs.module";
 import { AiBridgeModule } from "./ai-bridge/ai-bridge.module";
 import { AiModule } from "./ai/ai.module";
 import { QueueModule } from "./queue/queue.module";
+import { OpsModule } from "./ops/ops.module";
 
 @Module({
   imports: [
@@ -59,6 +60,7 @@ import { QueueModule } from "./queue/queue.module";
     AiBridgeModule,
     AiModule,
     QueueModule,
+    OpsModule,
   ],
 })
 export class AppModule {}

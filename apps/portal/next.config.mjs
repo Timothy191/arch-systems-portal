@@ -50,12 +50,22 @@ const nextConfig = {
     },
   },
   reactStrictMode: true,
+  poweredByHeader: false,
   cacheComponents: true,
+  reactCompiler: true,
+  logging: {
+    incomingRequests: {
+      ignore: [/^\/api\/health/],
+    },
+  },
   experimental: {
     optimizePackageImports: ["lucide-react", "framer-motion", "@tremor/react"],
     inlineCss: true,
     webVitalsAttribution: ["CLS", "LCP", "FCP", "TTFB", "INP"],
     authInterrupts: true,
+    serverActions: {
+      allowedOrigins: ["localhost:3000", "*.ngrok-free.app"],
+    },
   },
   // Strangler fig: proxy migrated API routes to NestJS backend
   async rewrites() {

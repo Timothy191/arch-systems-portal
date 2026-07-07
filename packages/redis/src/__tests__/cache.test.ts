@@ -32,9 +32,6 @@ jest.mock("../client.js", () => ({
   closeRedis: jest.fn(),
 }));
 
-// Track mock calls for assertion
-const mockIndexCacheKeyByTags = jest.fn().mockResolvedValue(undefined);
-
 jest.mock("../invalidation", () => {
   // Fresh mock each time module is initialized
   const freshMock = jest.fn().mockResolvedValue(undefined);

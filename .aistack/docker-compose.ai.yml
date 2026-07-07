@@ -1,6 +1,7 @@
 version: "3.8"
 
 services:
+  # ── AI Gateway (existing) ───────────────────────────────
   ai-gateway:
     image: node:22-alpine
     container_name: arch_ai_gateway
@@ -16,6 +17,7 @@ services:
       - ai-agents
       - surrealdb
 
+  # ── Python AI Agents (existing) ─────────────────────────
   ai-agents:
     image: python:3.11-slim
     container_name: arch_ai_agents
@@ -29,6 +31,30 @@ services:
     networks:
       - ai-network
 
+  # ── Ops Gateway — Meta-Backend (NEW) ────────────────────
+  ops-gateway:
+    image: node:22-alpine
+    container_name: arch_ops_gateway
+    working_dir: /app
+    volumes:
+      - ../apps/ops-gateway:/app
+    ports:
+      - "3100:3100"
+    environment:
+      - OPS_API_URL=http://host.docker.internal:3001/api/ops
+      - OPS_SECRET=${OPS_SECRET:-change-me}
+      - REDIS_URL=redis://host.docker.internal:6379
+      - MCP_PORT=3100
+      - HEALTH_POLL_INTERVAL_MS=15000
+      - METRICS_POLL_INTERVAL_MS=30000
+      - TRIGGER_STREAM_KEY=ai:triggers:stream
+      - NODE_ENV=development
+    command: pnpm run dev
+    networks:
+      - ai-network
+    restart: unless-stopped
+
+  # ── Neo4j (existing) ────────────────────────────────────
   neo4j:
     image: neo4j:5.19.0
     container_name: arch_ai_neo4j
@@ -40,6 +66,7 @@ services:
     networks:
       - ai-network
 
+  # ── SurrealDB (existing) ────────────────────────────────
   surrealdb:
     image: surrealdb/surrealdb:latest
     container_name: arch_ai_surrealdb

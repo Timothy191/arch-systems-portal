@@ -206,4 +206,14 @@ This file maintains a record of AI agent interventions, context hand-offs, and a
 - **Changes Made**:
   - `apps/portal/lib/env.ts`: Split the schema into `baseEnvSchema` and `envSchema = baseEnvSchema.superRefine(...)`. On validation failure, after logging warnings and handling missing-required errors, parse the raw env again with `baseEnvSchema` so defaults and custom values are preserved.
   - Added `// AGENT-TRACE` comment documenting the fallback behavior.
-- **Next Agent**: If you tighten production validation or add required fields, keep the fallback path in sync so that non-fatal warnings do not erase otherwise valid env values. Run `pnpm --filter portal test -- lib/env.test.ts` after any env schema changes.
+
+## [2026-07-07] Next.js 16.2.10 Config Polish
+
+- **Agent**: Antigravity
+- **Purpose**: Harden portal security and reduce development log noise.
+- **Changes Made**:
+  - `apps/portal/next.config.mjs`: Added `poweredByHeader: false` to prevent exposing Next.js server details in production headers.
+  - `apps/portal/next.config.mjs`: Configured development log filters under `logging.incomingRequests` to ignore `/api/health` incoming requests.
+- **Next Agent Notes**: Ensure any future changes to global middleware or proxies do not conflict with the suppressed logging rules.
+
+// AGENT-TRACE: Security headers and development logging filters updated to align with v16.2.10 best practices.

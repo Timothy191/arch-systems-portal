@@ -49,6 +49,7 @@
     "@types/react-dom": "^19.2.3",
     "@typescript-eslint/parser": "^8.59.4",
     "autoprefixer": "^10.4.20",
+    "babel-plugin-react-compiler": "^1.0.0",
     "eslint": "^8.57.0",
     "jest": "^30.0.0",
     "jest-environment-jsdom": "^30.2.0",
@@ -63,7 +64,7 @@
     "dev": "next dev --turbopack --hostname 0.0.0.0",
     "lint": "eslint . --cache --cache-location node_modules/.cache/.eslintcache --max-warnings 0",
     "start": "next start",
-    "test": "jest --passWithNoTests --maxWorkers=50%",
+    "test": "jest --passWithNoTests --runInBand",
     "type-check": "tsc --noEmit"
   }
 }

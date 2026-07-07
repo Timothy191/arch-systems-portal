@@ -1,0 +1,30 @@
+{
+  "projects": [],
+  "tasks": [
+    {
+      "description": "Fixed env.ts so that production-only custom Zod issues do not discard otherwise valid parsed env values; test now passes.",
+      "id": "8",
+      "status": "completed",
+      "title": "Fix failing portal unit test lib/env.test.ts → 'picks up custom env var values'"
+    },
+    {
+      "description": "Updated .gitignore to ignore Repowise transient SQLite artifacts and lock files; removed acc.db-shm/wal; restored acc session state files; documented cleanup in docs/AGENT_TRACER.md. Completed 2026-07-07.",
+      "id": "11",
+      "status": "completed",
+      "title": "Clean up post-commit generated artifacts left by the Repowise hook"
+    },
+    {
+      "description": "Removed unused exports and added missing dependencies so `pnpm knip` passes cleanly.",
+      "id": "9",
+      "status": "completed",
+      "title": "Address pnpm knip findings"
+    },
+    {
+      "description": "Removed export const instant=false opt-outs from portal routes, aligned with Next.js 16 Cache Components semantics, and verified via lint/type-check/build.",
+      "id": "10",
+      "status": "completed",
+      "title": "Adopt Next.js 16 Cache Components across portal routes"
+    }
+  ],
+  "subtasks": []
+}

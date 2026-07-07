@@ -1,12 +1,12 @@
 import { FixedWindowStrategy } from "./fixed-window";
 import { MemoryStore } from "../stores/memory.store";
 import { RedisStore, SimpleRedisClient } from "../stores/redis.store";
-import { vi, describe, it, expect, beforeEach, afterEach } from "vitest";
+import { vi, describe, it, expect, beforeEach, afterEach, type MockedObject } from "vitest";
 
 describe("FixedWindowStrategy", () => {
   let strategy: FixedWindowStrategy;
   let memoryStore: MemoryStore;
-  let mockRedisClient: SimpleRedisClient;
+  let mockRedisClient: MockedObject<SimpleRedisClient>;
   let redisStore: RedisStore;
 
   beforeEach(() => {

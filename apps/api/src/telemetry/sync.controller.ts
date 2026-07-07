@@ -1,6 +1,5 @@
 import { Controller, Post, Body, BadRequestException } from "@nestjs/common";
 import { ApiTags, ApiOperation } from "@nestjs/swagger";
-import { inngest, syncPlaybackEvent } from "@repo/utils/inngest";
 import { syncPlaybackSchema } from "../common/schemas";
 
 import { QueueService } from "../queue/queue.service";
