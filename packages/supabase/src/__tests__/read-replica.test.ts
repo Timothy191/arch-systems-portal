@@ -24,9 +24,6 @@ jest.mock("next/headers", () => ({
   cookies: jest.fn().mockResolvedValue(mockCookies),
 }));
 
-const mockCreateServerClient = jest.requireMock("@supabase/ssr")
-  .createServerClient;
-
 const OGP = process.env;
 
 beforeEach(() => {

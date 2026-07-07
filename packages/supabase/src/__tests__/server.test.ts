@@ -189,7 +189,12 @@ describe("getUserSafely", () => {
   }
 
   it("should return the user when authenticated", async () => {
-    const mockUser = { id: "user-1", email: "test@example.com" };
+    const mockUser: any = {
+      id: "user-1",
+      email: "test@example.com",
+      app_metadata: {},
+      user_metadata: {},
+    };
     mockGetUser().mockResolvedValue({
       data: { user: mockUser },
       error: null,

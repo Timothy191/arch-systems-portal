@@ -7,4 +7,10 @@ module.exports = {
     "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": "off", // Let tsc handle type checks
   },
+  overrides: [
+    {
+      files: ["**/*.test.ts", "**/*.spec.ts"],
+      env: { jest: true },
+    },
+  ],
 };

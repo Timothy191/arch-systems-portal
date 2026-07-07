@@ -44,11 +44,11 @@ describe("ToolsService", () => {
     const results = await service.checkAllTools();
 
     expect(results).toHaveLength(1);
-    expect(results[0]).toMatchObject({
+    expect(results[0]!).toMatchObject({
       name: "n8n",
       status: "online",
     });
-    expect(results[0].responseTime).toBeGreaterThanOrEqual(0);
+    expect(results[0]!.responseTime).toBeGreaterThanOrEqual(0);
   });
 
   it("returns n8n as offline when health check fails", async () => {
@@ -58,7 +58,7 @@ describe("ToolsService", () => {
 
     const results = await service.checkAllTools();
 
-    expect(results[0].status).toBe("offline");
+    expect(results[0]!.status).toBe("offline");
   });
 
   it("returns n8n as offline when fetch throws", async () => {
@@ -66,7 +66,7 @@ describe("ToolsService", () => {
 
     const results = await service.checkAllTools();
 
-    expect(results[0].status).toBe("offline");
+    expect(results[0]!.status).toBe("offline");
   });
 
   it("uses HEAD method for health checks", async () => {
@@ -96,6 +96,6 @@ describe("ToolsService", () => {
 
     const results = await service.checkAllTools();
 
-    expect(results[0].status).toBe("offline");
+    expect(results[0]!.status).toBe("offline");
   }, 10000);
 });
