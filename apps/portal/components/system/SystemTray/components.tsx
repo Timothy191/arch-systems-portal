@@ -1,8 +1,5 @@
 "use client";
 
-import Link from "next/link";
-import { useCallback, useEffect, useRef, useState } from "react";
-import * as Popover from "@radix-ui/react-popover";
 import { cn } from "@repo/ui/lib/utils";
 import {
   Wifi,
@@ -15,19 +12,18 @@ import {
   Volume2,
   Volume1,
   VolumeX,
-  Bell,
-  BellDot,
   SignalHigh,
   SignalMedium,
   SignalLow,
-  CheckSquare,
+  Clock,
+  BellDot,
+  Bell,
+  CheckCircle2,
+  MinusCircle,
+  AlertCircle,
   Database,
   HardDrive,
   Zap,
-  AlertCircle,
-  CheckCircle2,
-  MinusCircle,
-  Clock,
 } from "lucide-react";
 
 import {
@@ -36,9 +32,8 @@ import {
   useBatteryStatus,
   useAppVolume,
   useNotificationCount,
-  useServerHealth,
+  type HealthState,
 } from "./hooks";
-import type { HealthState } from "./hooks";
 
 export function NetworkStatusRow({
   online,

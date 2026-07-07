@@ -247,7 +247,6 @@ export default async function DepartmentDashboard({
   );
 }
 
-import { cookies } from "next/headers";
 import {
   getControlRoomSummary,
   getNonControlRoomSummary,
@@ -265,11 +264,7 @@ async function ControlRoomSummaryGrid({
   deptId: string;
   today: string;
 }) {
-  const cookieStore = await cookies();
-  const summary = await getControlRoomSummary(
-    deptId,
-    today
-  );
+  const summary = await getControlRoomSummary(deptId, today);
 
   const { todayOperations, todayDelays, todayLoads, machineCount } = summary;
 
@@ -338,11 +333,7 @@ async function NonControlRoomSummaryGrid({
   deptId: string;
   today: string;
 }) {
-  const cookieStore = await cookies();
-  const summary = await getNonControlRoomSummary(
-    deptId,
-    today
-  );
+  const summary = await getNonControlRoomSummary(deptId, today);
 
   const { todayLogs, machineCount } = summary;
 
@@ -391,11 +382,7 @@ async function ShiftCoverageSection({
   deptSlug: string;
   today: string;
 }) {
-  const cookieStore = await cookies();
-  const todayLogs = await getShiftCoverageLogs(
-    deptId,
-    today
-  );
+  const todayLogs = await getShiftCoverageLogs(deptId, today);
 
   const shiftCount = todayLogs?.length ?? 0;
   const latestShift = todayLogs?.[shiftCount - 1]?.shift;

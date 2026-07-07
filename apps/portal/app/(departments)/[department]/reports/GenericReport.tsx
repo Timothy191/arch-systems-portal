@@ -1,5 +1,6 @@
 import { GlassCard } from "@repo/ui/GlassCard";
 import { Input } from "@repo/ui/Input";
+import Form from "next/form";
 import { CopyReportButton } from "./CopyReportButton";
 import { ExportButton } from "@/features/analytics/components/ExportButton";
 import { PDFDownloadButton } from "@/features/analytics/components/PDFDownloadButton";
@@ -217,7 +218,7 @@ export async function GenericReport({
 
       {/* Date Filter */}
       <GlassCard>
-        <form method="GET" className="flex items-end gap-4">
+        <Form action="" className="flex items-end gap-4">
           <div>
             <label className="block text-sm text-[var(--text-muted)] mb-1">
               From
@@ -246,7 +247,7 @@ export async function GenericReport({
           >
             Update
           </button>
-        </form>
+        </Form>
       </GlassCard>
 
       {/* Report Table */}

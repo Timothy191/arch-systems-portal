@@ -11,7 +11,6 @@ import {
   TableRow,
 } from "@repo/ui/components/ui/table";
 import { QrCode, Plus, UserCheck, ShieldOff } from "lucide-react";
-import { cookies } from "next/headers";
 import { Suspense } from "react";
 import { getBadgesForDepartment } from "~/lib/data/access-control";
 import { GlassSkeleton } from "@repo/ui/components/ui/glass-skeleton";
@@ -36,9 +35,8 @@ interface BadgeWithRelations {
 // TODO: Cache Components adoption - restore dynamic = "force-dynamic" behavior
 
 async function BadgesTable({ deptId }: { deptId: string }) {
-  const cookieStore = await cookies();
   const badges = (await getBadgesForDepartment(
-    deptId
+    deptId,
   )) as unknown as BadgeWithRelations[];
 
   // Resolve entity names from nested relation data
@@ -130,8 +128,6 @@ export default async function BadgesPage() {
   const { deptId } = await getDepartmentContext({
     department: "access-control",
   });
-
-
 
   return (
     <div className="space-y-6">

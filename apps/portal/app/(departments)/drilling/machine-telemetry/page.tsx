@@ -3,9 +3,7 @@ import { getDepartmentContext } from "~/lib/dept-context";
 import { getMachineTelemetryData } from "~/lib/data/drilling";
 import SuspenseOnSearchParams from "~/components/SuspenseOnSearchParams";
 import { GlassSkeleton } from "@repo/ui/components/ui/glass-skeleton";
-import { TelemetryRecord, ArchivedMonth, DrillMonthlySummary } from "./components/types";
 import {
-  TelemetryHeader,
   TelemetryKPICards,
   TelemetryMonthlySummary,
   TelemetryCurrentTable,
@@ -27,10 +25,10 @@ interface MachineTelemetryPageProps {
   searchParams: Promise<{ [key: string]: string | undefined }>;
 }
 
-async function MachineTelemetryContent({ 
-  deptId, 
-  machineId 
-}: { 
+async function MachineTelemetryContent({
+  deptId,
+  machineId,
+}: {
   deptId: string;
   machineId?: string;
 }) {
@@ -87,18 +85,21 @@ async function MachineTelemetryContent({
           </Button>
         </div>
       </div>
-      <TelemetryKPICards 
-        totalRecords={totalRecords} 
-        totalAlerts={totalAlerts} 
-        avgPenetration={avgPenetration} 
-        maxBitDepth={maxBitDepth} 
+      <TelemetryKPICards
+        totalRecords={totalRecords}
+        totalAlerts={totalAlerts}
+        avgPenetration={avgPenetration}
+        maxBitDepth={maxBitDepth}
         drills={drills}
       />
-      <TelemetryMonthlySummary monthlySummary={monthlySummary} currentMonth={currentMonth} />
-      <TelemetryCurrentTable 
-        telemetry={telemetry} 
-        drills={drills} 
-        machineId={selectedMachineId} 
+      <TelemetryMonthlySummary
+        monthlySummary={monthlySummary}
+        currentMonth={currentMonth}
+      />
+      <TelemetryCurrentTable
+        telemetry={telemetry}
+        drills={drills}
+        machineId={selectedMachineId}
         maxBitDepth={maxBitDepth}
         currentMonth={currentMonth}
       />

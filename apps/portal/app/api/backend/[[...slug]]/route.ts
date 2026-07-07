@@ -8,7 +8,7 @@ const IDEMPOTENT_METHODS = new Set(["GET", "HEAD", "OPTIONS"]);
 
 async function proxy(
   request: NextRequest,
-  context: RouteContext<"/api/backend/[[...slug]]">,
+  context: { params: Promise<{ slug?: string[] }> },
 ) {
   const { slug = [] } = await context.params;
   const base = env.API_BASE_URL ?? "http://localhost:3004/api";

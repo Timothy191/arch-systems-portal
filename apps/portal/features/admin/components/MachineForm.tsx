@@ -1,9 +1,6 @@
-import { useState, useCallback } from "react";
-import { GlassCard } from "@repo/ui/GlassCard";
+import { useState } from "react";
 import { Button } from "@repo/ui/components/ui/button";
 import { Input } from "@repo/ui/components/ui/input";
-import { logError } from "@/lib/errors/error-logger";
-import { adminAddMachine, adminUpdateMachine } from "../actions/fleet";
 import { Machine, Department, Site } from "../types";
 import { DUMPER_TYPES } from "../constants";
 

@@ -12,7 +12,6 @@ import {
   TableRow,
 } from "@repo/ui/components/ui/table";
 import { Users, Plus, Clock } from "lucide-react";
-import { cookies } from "next/headers";
 import { Suspense } from "react";
 import { getVisitorsForDepartment } from "~/lib/data/access-control";
 import { GlassSkeleton } from "@repo/ui/components/ui/glass-skeleton";
@@ -24,7 +23,6 @@ export const instant = false;
 // TODO: Cache Components adoption - restore dynamic = "force-dynamic" behavior
 
 async function VisitorsTable({ deptId }: { deptId: string }) {
-  const cookieStore = await cookies();
   const visitors = await getVisitorsForDepartment(deptId);
 
   return (
@@ -110,8 +108,6 @@ export default async function VisitorsPage() {
   const { deptId } = await getDepartmentContext({
     department: "access-control",
   });
-
-
 
   return (
     <div className="space-y-6">

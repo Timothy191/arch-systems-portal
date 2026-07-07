@@ -2,6 +2,7 @@ import { getDepartmentContext } from "~/lib/dept-context";
 import { GlassCard } from "@repo/ui/GlassCard";
 import { SecondaryButton } from "@repo/ui/SecondaryButton";
 import { Input } from "@repo/ui/Input";
+import Form from "next/form";
 import { Drill, Clock, AlertTriangle, ClipboardList } from "lucide-react";
 import SuspenseOnSearchParams from "@/components/SuspenseOnSearchParams";
 
@@ -261,7 +262,7 @@ async function DrillingReportsContent({
 
       {/* Date Filter */}
       <GlassCard>
-        <form method="GET" className="flex items-end gap-4">
+        <Form action="" className="flex items-end gap-4">
           <div className="flex-1 max-w-[200px]">
             <label className="block text-sm text-[var(--text-muted)] mb-1">
               From
@@ -290,7 +291,7 @@ async function DrillingReportsContent({
           >
             Update
           </button>
-        </form>
+        </Form>
       </GlassCard>
 
       {/* Report Table */}

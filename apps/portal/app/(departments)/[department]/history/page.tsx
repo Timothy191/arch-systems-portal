@@ -2,6 +2,7 @@ import { getDepartmentContext } from "~/lib/dept-context";
 import { GlassCard } from "@repo/ui/GlassCard";
 import { Input } from "@repo/ui/Input";
 import Link from "next/link";
+import Form from "next/form";
 import SuspenseOnSearchParams from "@/components/SuspenseOnSearchParams";
 
 // TODO: Cache Components adoption. Refactor this route so this opt-out can be removed.
@@ -52,7 +53,7 @@ async function HistoryContent({
 
   const dateFilter = (
     <GlassCard>
-      <form method="GET" className="flex items-end gap-4">
+      <Form action="" className="flex items-end gap-4">
         <div>
           <label className="block text-sm text-[var(--text-muted)] mb-1">
             From
@@ -81,7 +82,7 @@ async function HistoryContent({
         >
           Filter
         </button>
-      </form>
+      </Form>
     </GlassCard>
   );
 

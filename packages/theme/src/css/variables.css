@@ -227,7 +227,6 @@
   --text-on-glass-video-muted: rgba(10, 10, 20, 0.55);
   --glass-video-radius: 20px;
 
-
   /* Premium Glass Stack — exact spec for the highest-tier surfaces
      (hero panels, drawer headers, command bar backdrop).
      These tokens are intentionally more translucent and vivid
@@ -366,17 +365,9 @@
        ═══════════════════════════════════════════════════════════════ */
   --theme-transition-duration: 0ms;
 
-  /* Font variables used in Tailwind config preset */
-  --font-sans:
-    "SF Pro", -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto,
-    sans-serif;
-  --font-inter:
-    "SF Pro", -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto,
-    sans-serif;
-  --font-outfit:
-    "SF Pro", -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto,
-    sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  /* Font variables (--font-sans, --font-mono, --font-anurati) are injected by
+     next/font in apps/portal/app/layout.tsx. Do not define static stacks here
+     or they will override the self-hosted, metric-optimized font families. */
 
   color-scheme: light;
 }

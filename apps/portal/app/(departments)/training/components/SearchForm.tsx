@@ -1,3 +1,4 @@
+import Form from "next/form";
 import { Search } from "lucide-react";
 
 interface SearchFormProps {
@@ -12,7 +13,7 @@ export function SearchForm({
   hiddenParams = {},
 }: SearchFormProps) {
   return (
-    <form method="GET" className="relative w-full sm:w-80">
+    <Form action="" className="relative w-full sm:w-80">
       <Search className="absolute left-3 top-2.5 h-4 w-4 text-[var(--text-muted)]" />
       <input
         type="text"
@@ -24,6 +25,6 @@ export function SearchForm({
       {Object.entries(hiddenParams).map(([key, val]) => (
         <input key={key} type="hidden" name={key} value={val} />
       ))}
-    </form>
+    </Form>
   );
 }

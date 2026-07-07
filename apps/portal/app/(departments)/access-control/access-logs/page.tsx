@@ -10,7 +10,6 @@ import {
   TableRow,
 } from "@repo/ui/components/ui/table";
 import { ShieldOff, Clock } from "lucide-react";
-import { cookies } from "next/headers";
 import { Suspense } from "react";
 import { getAccessLogsForDepartment } from "~/lib/data/access-control";
 import { GlassSkeleton } from "@repo/ui/components/ui/glass-skeleton";
@@ -22,7 +21,6 @@ export const instant = false;
 // TODO: Cache Components adoption - restore dynamic = "force-dynamic" behavior
 
 async function AccessLogsTable({ deptId }: { deptId: string }) {
-  const cookieStore = await cookies();
   const logs = await getAccessLogsForDepartment(deptId);
 
   const resolvedLogs = logs.map((log: any) => {
@@ -163,8 +161,6 @@ export default async function AccessLogsPage() {
   const { deptId } = await getDepartmentContext({
     department: "access-control",
   });
-
-
 
   return (
     <div className="space-y-6">

@@ -157,3 +157,18 @@ This file maintains a record of AI agent interventions, context hand-offs, and a
   - `app/(departments)/[department]/page.tsx`: Added cache tags to `cachedRSC()` calls for ControlRoomSummaryGrid, NonControlRoomSummaryGrid, and ShiftCoverageSection.
 - **Context**: All lib/data functions use `createServiceRoleClient()` (no cookies), safe for `"use cache"`. The service-role client uses `SUPABASE_SERVICE_KEY` which bypasses RLS — appropriate for server-side read-only data. All action wiring is additive (keeps existing `cacheInvalidateTags` from `@repo/redis`).
 - **Next Agent**: To fully adopt `"use cache"` across the portal: (1) migrate remaining direct supabase queries in sub-pages to `lib/data/` functions, (2) add Suspense boundaries to sub-pages, (3) remove deprecated `cachedRSC` wrapper in favor of native `"use cache"` functions, (4) migrate away from `@repo/redis` `cacheInvalidateTags` to `updateTag()` in `revalidate.ts`.
+
+## [2026-07-07] Audit / next/font and next/form docs alignment
+
+- **Agent**: Claude Code
+- **Purpose**: Align portal form and font usage with Next.js 16 docs recommendations.
+- **Changes Made**:
+  - `app/(departments)/training/components/SearchForm.tsx`: Migrated native `<form method="GET">` to `next/form` `<Form action="">` for client-side search-param navigation + prefetching.
+  - `app/(departments)/[department]/history/page.tsx`: Migrated date-range filter `<form method="GET">` to `next/form`.
+  - `app/(departments)/[department]/reports/GenericReport.tsx`: Migrated date-range filter `<form method="GET">` to `next/form`.
+  - `app/(departments)/[department]/reports/ControlRoomReport.tsx`: Migrated date-range filter `<form method="GET">` to `next/form`.
+  - `app/(departments)/drilling/reports/page.tsx`: Migrated date-range filter `<form method="GET">` to `next/form`.
+  - `app/(departments)/drilling/machine-telemetry/components/TelemetryComponents.tsx`: Migrated rig filter `<form method="GET">` to `next/form`.
+  - `packages/theme/src/css/variables.css` and `packages/theme/src/tailwind/preset.ts`: Removed static font stack overrides and removed `var(--font-anurati)` from default `font-sans` so `next/font` variables from `app/layout.tsx` are authoritative.
+- **Context**: The native GET forms caused full page reloads and missed Next.js shared-UI prefetching. The theme CSS was overriding `next/font`-injected `--font-sans`/`--font-mono` with static stacks, undermining self-hosting and CLS optimization. Mutation/client forms (login, data entry, chat) were intentionally left as native forms because they do not perform URL search-param navigation.
+- **Next Agent**: When adding new search-param filter forms, prefer `next/form` with `action=""`. When changing global fonts, ensure `next/font` variables are not overridden by static definitions in theme CSS.

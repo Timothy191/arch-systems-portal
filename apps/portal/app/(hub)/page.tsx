@@ -278,9 +278,6 @@ export default async function HubPage() {
   const userId = user.id as string;
   const today = new Date().toISOString().split("T")[0] as string;
 
-  const cookieStore = await cookies();
-  const cookieList = cookieStore.getAll();
-
   // GAP-3: only fetch the fast, above-the-fold data in the main page so the
   // shell streams immediately. The slow ProductionTrend fetch is hoisted into
   // a Suspense child (`ProductionTrendSection`) so it streams after the shell
@@ -510,8 +507,6 @@ export default async function HubPage() {
  * (GAP-3) so the production trend streams after the shell paints.
  */
 async function ProductionTrendSection() {
-  const cookieStore = await cookies();
-  const cookieList = cookieStore.getAll();
   const supabase = await createServerSupabaseClient();
   const user = await getUserSafely(supabase);
   const userId = user?.id ?? "anonymous";
