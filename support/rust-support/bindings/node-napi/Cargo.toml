@@ -6,6 +6,7 @@ edition = "2021"
 [dependencies]
 cache-engine = { path = "../../cache-engine" }
 logic-engine = { path = "../../logic-engine" }
-napi = "2.4"
+napi = { version = "2.4", features = ["napi6", "tokio_rt"] }
+napi-derive = "2"
 serde_json = "1.0"
 tokio = { version = "1", features = ["full"] }

@@ -57,7 +57,7 @@ __pycache__
 venv
 
 # Rust
-/target
+target/
 Cargo.lock
 
 # Docker volumes

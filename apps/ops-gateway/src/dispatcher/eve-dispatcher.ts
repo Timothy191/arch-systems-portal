@@ -135,11 +135,7 @@ async function spawnEveProcess(
   }
 }
 
-function buildEveArgs(
-  eve: EveConfig,
-  prompt: string,
-  cwd: string,
-): string[] {
+function buildEveArgs(eve: EveConfig, prompt: string, cwd: string): string[] {
   switch (eve.id) {
     case "opencode":
       return buildOpencodeArgs(prompt, cwd, eve.autoApprove);
@@ -182,27 +178,18 @@ function buildAgyArgs(
 
 // ── Status helpers ─────────────────────────────────────────
 
-function updateStatus(
-  dispatch: EveDispatch,
-  status: DispatchStatus,
-): void {
+function updateStatus(dispatch: EveDispatch, status: DispatchStatus): void {
   dispatch.status = status;
 }
 
-function completeDispatch(
-  dispatch: EveDispatch,
-  output: string,
-): void {
+function completeDispatch(dispatch: EveDispatch, output: string): void {
   dispatch.status = "completed";
   dispatch.completedAt = new Date().toISOString();
   dispatch.output = output;
   logger.info(`Dispatch ${dispatch.id} completed (${output.length} bytes)`);
 }
 
-function failDispatch(
-  dispatch: EveDispatch,
-  error: string,
-): void {
+function failDispatch(dispatch: EveDispatch, error: string): void {
   dispatch.status = "failed";
   dispatch.completedAt = new Date().toISOString();
   dispatch.error = error;

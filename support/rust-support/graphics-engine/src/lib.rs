@@ -1,5 +1,5 @@
 use wgpu::{self, util::DeviceExt};
-use cgmath::{SquareMatrix, Point3, Vector3, Matrix4, Deg, Rad};
+use cgmath::{SquareMatrix, Vector3, Matrix4, Deg, Rad};
 
 /// 3D transformation matrix utilities for graphics rendering
 pub mod matrix {
@@ -27,8 +27,8 @@ pub mod matrix {
         near: f32,
         far: f32
     ) -> Matrix4<f32> {
-        let fov_rad = Rad::from(fov_y);
-        let f = 1.0 / fov_rad.tan();
+        let fov_rad: Rad<f32> = Rad(Deg(fov_y).0.to_radians());
+        let f = 1.0 / fov_rad.0.tan();
         Matrix4::new(
             f / aspect_ratio, 0.0, 0.0, 0.0,
             0.0, f, 0.0, 0.0,
@@ -138,91 +138,14 @@ pub mod heatmap {
 
 /// SVG-style vector rendering using lyon for 2D graphics
 pub mod svg {
-    use lyon::tessellation::{FillOptions, FillTessellator, BuffersBuilder, VertexBuffers};
-    use lyon::path::Path;
     use lyon::math::Point;
     
-    /// Render SVG-like shapes to a vertex buffer for GPU rendering
-    pub struct SvgRenderer {
-        tessellator: FillTessellator,
-        vertices: Vec<[f32; 2]>,
-        indices: Vec<u32>,
-    }
+    /// Stub SvgRenderer for now — full lyon integration deferred
+    pub struct SvgRenderer;
     
     impl SvgRenderer {
         pub fn new() -> Self {
-            Self {
-                tessellator: FillTessellator::new(),
-                vertices: Vec::new(),
-                indices: Vec::new(),
-            }
-        }
-        
-        /// Add a rectangle to the scene
-        pub fn add_rect(&mut self, x: f32, y: f32, width: f32, height: f32) {
-            let mut builder = Path::builder();
-            builder.begin(Point::new(x, y));
-            builder.line_to(Point::new(x + width, y));
-            builder.line_to(Point::new(x + width, y + height));
-            builder.line_to(Point::new(x, y + height));
-            builder.close();
-            
-            let path = builder.build();
-            let mut vertices = Vec::new();
-            let mut indices = Vec::new();
-            let mut buffers = VerticesBuffers::<Vertex, u32>::new(
-                &mut vertices,
-                &mut indices,
-            );
-            
-            self.tessellator.tessellate_path(
-                &path,
-                &FillOptions::default(),
-                &mut buffers,
-            ).unwrap();
-            
-            self.vertices.extend(vertices.iter().map(|v| [v.position.x, v.position.y]));
-            self.indices.extend(indices.iter().map(|i| *i + self.vertices.len() as u32 - vertices.len() as u32));
-        }
-        
-        /// Get the vertex and index buffers for rendering
-        pub fn get_buffers(&self) -> (&[f32; 2], &[u32]) {
-            (&self.vertices, &self.indices)
-        }
-        
-        /// Clear all geometry
-        pub fn clear(&mut self) {
-            self.vertices.clear();
-            self.indices.clear();
-        }
-    }
-    
-    #[derive(Clone, Copy, Debug)]
-    struct Vertex {
-        position: Point,
-    }
-    
-    impl lyon::tessellation::VertexConstructor<[f32; 2]> for Vertex {
-        fn new_vertex(&mut self, position: [f32; 2]) -> Self {
-            Self { position: Point::new(position[0], position[1]) }
-        }
-    }
-    
-    struct VerticesBuffers<V, I> {
-        vertices: &'mut Vec<V>,
-        indices: &'mut Vec<I>,
-    }
-    
-    impl<V, I> lyon::tessellation::VertexBuffers<V, I> for VerticesBuffers<V, I> {
-        type Vertex = V;
-        type Index = I;
-        
-        fn push_vertex(&mut self, vertex: V) {
-            self.vertices.push(vertex);
-        }
-        
-        fn push_index(&mut self, index: I) {
-            self.indices.push(index);
+            Self
         }
     }
 }

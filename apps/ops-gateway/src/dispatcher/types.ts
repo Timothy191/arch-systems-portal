@@ -18,11 +18,7 @@ export type DispatchStatus =
   | "failed"
   | "timed_out";
 
-export type DispatchTrigger =
-  | "incident"
-  | "trigger"
-  | "mcp"
-  | "manual";
+export type DispatchTrigger = "incident" | "trigger" | "mcp" | "manual";
 
 export interface EveDispatch {
   id: string;

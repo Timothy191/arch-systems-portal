@@ -4,22 +4,22 @@
 
 Industrial mining-operations portal (Plantcor). pnpm + Nx/Turborepo monorepo using Node `>=22` (Volta pins `24.15.0`) and pnpm `9.15.9`.
 
-| App / Package                  | Role                                                |
-| ------------------------------ | --------------------------------------------------- |
-| `apps/portal`                  | Next.js 16 (App Router) operations dashboard        |
-| `apps/api`                     | NestJS 11 backend on Fastify 5                      |
-| `apps/ai-agents`               | Python 3.11+ FastAPI agent microservice             |
-| `apps/ops-gateway`             | Meta-backend / control plane (MCP, incidents)       |
-| `packages/supabase`            | App-facing data access layer                        |
-| `packages/database`            | SQL migrations source of truth ONLY                 |
-| `packages/redis`               | L1/L2 cache helpers                                 |
-| `packages/rate-limiter`        | Shared rate-limiting utilities                      |
-| `packages/errors`              | Shared error classes                                |
-| `packages/ui`                  | shadcn-style presentational primitives              |
-| `packages/theme`               | OKLCH design tokens + Tailwind preset               |
-| `packages/utils`               | Shared utilities                                    |
-| `packages/eslint-config`       | Shared ESLint config                                |
-| `packages/typescript-config`   | Shared TypeScript config                            |
+| App / Package                | Role                                          |
+| ---------------------------- | --------------------------------------------- |
+| `apps/portal`                | Next.js 16 (App Router) operations dashboard  |
+| `apps/api`                   | NestJS 11 backend on Fastify 5                |
+| `apps/ai-agents`             | Python 3.11+ FastAPI agent microservice       |
+| `apps/ops-gateway`           | Meta-backend / control plane (MCP, incidents) |
+| `packages/supabase`          | App-facing data access layer                  |
+| `packages/database`          | SQL migrations source of truth ONLY           |
+| `packages/redis`             | L1/L2 cache helpers                           |
+| `packages/rate-limiter`      | Shared rate-limiting utilities                |
+| `packages/errors`            | Shared error classes                          |
+| `packages/ui`                | shadcn-style presentational primitives        |
+| `packages/theme`             | OKLCH design tokens + Tailwind preset         |
+| `packages/utils`             | Shared utilities                              |
+| `packages/eslint-config`     | Shared ESLint config                          |
+| `packages/typescript-config` | Shared TypeScript config                      |
 
 > Note: `agentic-tools-mcp` lives in `.aistack/packages/agentic-tools-mcp/` and is invoked via the root `pnpm agentic-tools` script.
 

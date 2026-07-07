@@ -24,7 +24,6 @@ const nextConfig = {
     "@repo/ui",
     "@repo/supabase",
     "@repo/utils",
-    "@repo/redis",
     "@repo/theme",
   ],
   serverExternalPackages: [
