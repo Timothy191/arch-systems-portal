@@ -104,9 +104,9 @@ describe("RedisStore", () => {
       del: jest.fn(),
     };
     const noEvalStore = new RedisStore(simpleClient);
-    await expect(
-      noEvalStore.eval("script", ["k"], ["a"]),
-    ).rejects.toThrow("does not support eval");
+    await expect(noEvalStore.eval("script", ["k"], ["a"])).rejects.toThrow(
+      "does not support eval",
+    );
   });
 });
 

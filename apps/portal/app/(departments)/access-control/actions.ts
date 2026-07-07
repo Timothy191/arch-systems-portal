@@ -394,4 +394,3 @@ async function _revokeBadge(
   revalidatePath("/access-control/badges");
   return { success: true };
 }
-

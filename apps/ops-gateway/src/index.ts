@@ -11,7 +11,7 @@ import {
   periodicIncidentCheck,
 } from "./incident/engine.js";
 import { Logger } from "./logger.js";
-import { getConfiguredAgents } from "./dispatcher/agent-dispatcher.js";
+import { getConfiguredEves } from "./dispatcher/eve-dispatcher.js";
 
 const logger = new Logger("main");
 
@@ -44,10 +44,9 @@ async function main(): Promise<void> {
     logger.warn("Continuing without Redis subscription — manual triggers only");
   });
 
-  // 3. Periodic incident check (every health poll cycle)
-  const incidentCheckIntervalMs = 30_000;
-  setInterval(() => {
-    periodicIncidentCheck().catch((error) => {
+  const availableEves = getConfiguredEves().map(
+    (e: any) => `${e.id}${e.autoApprove ? " (auto)" : ""}`,
+  );
       logger.error(
         `Incident check failed: ${error instanceof Error ? error.message : String(error)}`,
       );

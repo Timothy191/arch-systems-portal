@@ -33,18 +33,18 @@ We have preconfigured the following Model Context Protocol (MCP) servers in `cli
 
 ### 4. `repowise-mcp` (Codebase Intelligence & Health)
 
-- **Command**: `uv run --project tools/repowise repowise mcp .`
+- **Command**: `uv run --project .aistack/tools/repowise repowise mcp .`
 - **Purpose**: Provides deep structural dependency graphs, git history analytics (hotspots, ownership), and deterministic code health scores.
-- **Initialization**: Run `uv run --project tools/repowise repowise init` to initialize or update the repository's index.
+- **Initialization**: Run `uv run --project .aistack/tools/repowise repowise init` to initialize or update the repository's index.
 
 ### 5. `sense-mcp` (Go-based Codebase Navigation)
 
-- **Command**: `tools/sense/bin/sense`
+- **Command**: `.aistack/tools/sense/bin/sense`
 - **Purpose**: Compiled Go codebase understanding tool providing symbol graphs, semantic search, and blast radius analysis.
 
 ### 6. `memex-mcp` (Developer Context Memory)
 
-- **Command**: `uv run --project tools/memex memex serve`
+- **Command**: `uv run --project .aistack/tools/memex memex serve`
 - **Purpose**: Builds and maintains a temporal knowledge graph of your codebase, tracking modules, symbols, decisions, and open problems.
 - **Environment Variables**:
   - `NEO4J_URI` (default: `bolt://localhost:7687`)
@@ -82,7 +82,7 @@ We have preconfigured the following Model Context Protocol (MCP) servers in `cli
 
 ### 11. `agentic-tools-mcp` (Project Memory & Tasks)
 
-- **Command**: `node packages/agentic-tools-mcp/src/server.js`
+- **Command**: `node .aistack/packages/agentic-tools-mcp/src/server.js`
 - **Purpose**: Local MCP server exposing the project's `.agentic-tools-mcp/` memory and task store.
 - **Tools**: `agentic_list_memories`, `agentic_read_memory`, `agentic_search_memories`, `agentic_create_memory`, `agentic_update_memory`, `agentic_list_tasks`, `agentic_create_task`, `agentic_update_task`, `agentic_delete_task`.
 
@@ -139,13 +139,13 @@ Add these servers to Claude Code's global configuration by running the following
 claude mcp add preflight-mcp node tools/preflight-mcp/index.js
 
 # Add Repowise MCP
-claude mcp add repowise-mcp uv --project tools/repowise repowise mcp .
+claude mcp add repowise-mcp uv --project .aistack/tools/repowise repowise mcp .
 
 # Add Sense MCP
-claude mcp add sense-mcp tools/sense/bin/sense
+claude mcp add sense-mcp .aistack/tools/sense/bin/sense
 
 # Add Memex MCP
-claude mcp add memex-mcp uv --project tools/memex memex serve --env NEO4J_URI="${NEO4J_URI}" --env NEO4J_USER="${NEO4J_USER}" --env NEO4J_PASSWORD="${NEO4J_PASSWORD}" --env GEMINI_API_KEY="${GEMINI_API_KEY}"
+claude mcp add memex-mcp uv --project .aistack/tools/memex memex serve --env NEO4J_URI="${NEO4J_URI}" --env NEO4J_USER="${NEO4J_USER}" --env NEO4J_PASSWORD="${NEO4J_PASSWORD}" --env GEMINI_API_KEY="${GEMINI_API_KEY}"
 
 # Add DeepGraph MCPs
 claude mcp add deepgraph-nextjs npx -y mcp-code-graph@latest vercel/next.js
@@ -153,7 +153,7 @@ claude mcp add deepgraph-react npx -y mcp-code-graph@latest facebook/react
 claude mcp add deepgraph-typescript npx -y mcp-code-graph@latest microsoft/TypeScript
 
 # Add Agentic Tools MCP (project memory/tasks)
-claude mcp add agentic-tools-mcp node packages/agentic-tools-mcp/src/server.js
+claude mcp add agentic-tools-mcp node .aistack/packages/agentic-tools-mcp/src/server.js
 
 # Add GitHub Official
 claude mcp add github-official docker run -i --rm -e GITHUB_PERSONAL_ACCESS_TOKEN ghcr.io/github/github-mcp-server --env GITHUB_PERSONAL_ACCESS_TOKEN="${GITHUB_PERSONAL_ACCESS_TOKEN}"

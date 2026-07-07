@@ -1,5 +1,13 @@
 import { RedisStore, SimpleRedisClient } from "./redis.store";
-import { vi, describe, it, expect, beforeEach, afterEach, type MockedObject } from "vitest";
+import {
+  vi,
+  describe,
+  it,
+  expect,
+  beforeEach,
+  afterEach,
+  type MockedObject,
+} from "vitest";
 
 describe("RedisStore", () => {
   let mockClient: MockedObject<SimpleRedisClient>;
@@ -55,12 +63,16 @@ describe("RedisStore", () => {
     it("passes TTL as-is when >= 1", async () => {
       mockClient.set.mockResolvedValue("OK");
       await store.set("key1", "value1", 3600);
-      expect(mockClient.set).toHaveBeenCalledWith("key1", "value1", { EX: 3600 });
+      expect(mockClient.set).toHaveBeenCalledWith("key1", "value1", {
+        EX: 3600,
+      });
     });
 
     it("handles client errors", async () => {
       mockClient.set.mockRejectedValue(new Error("Connection error"));
-      await expect(store.set("key1", "value1", 60)).rejects.toThrow("Connection error");
+      await expect(store.set("key1", "value1", 60)).rejects.toThrow(
+        "Connection error",
+      );
     });
   });
 
@@ -86,7 +98,10 @@ describe("RedisStore", () => {
       const args = ["10", "60000"];
 
       const result = await store.eval(script, keys, args);
-      expect(mockClient.eval).toHaveBeenCalledWith(script, { keys, arguments: args });
+      expect(mockClient.eval).toHaveBeenCalledWith(script, {
+        keys,
+        arguments: args,
+      });
       expect(result).toEqual(mockResult);
     });
 
@@ -99,13 +114,15 @@ describe("RedisStore", () => {
       const storeWithoutEval = new RedisStore(clientWithoutEval);
 
       await expect(storeWithoutEval.eval("script", [], [])).rejects.toThrow(
-        "Redis client does not support eval method"
+        "Redis client does not support eval method",
       );
     });
 
     it("handles client eval errors", async () => {
       mockClient.eval.mockRejectedValue(new Error("Lua script error"));
-      await expect(store.eval("script", [], [])).rejects.toThrow("Lua script error");
+      await expect(store.eval("script", [], [])).rejects.toThrow(
+        "Lua script error",
+      );
     });
   });
 

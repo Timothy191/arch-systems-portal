@@ -19,10 +19,7 @@ export function getLatestSnapshot(): MetricSnapshot | null {
   return latestSnapshot;
 }
 
-function parseMetricValue(
-  text: string,
-  metricName: string,
-): number | null {
+function parseMetricValue(text: string, metricName: string): number | null {
   const escapedName = metricName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const pattern = `^${escapedName}[{ ]`;
   const regex = new RegExp(pattern, "m");
@@ -32,9 +29,7 @@ function parseMetricValue(
   const lineStart = match.index!;
   const lineEnd = text.indexOf("\n", lineStart);
   const line =
-    lineEnd === -1
-      ? text.slice(lineStart)
-      : text.slice(lineStart, lineEnd);
+    lineEnd === -1 ? text.slice(lineStart) : text.slice(lineStart, lineEnd);
 
   const parts = line.split(/\s+/);
   return parts.length >= 2 ? Number(parts[parts.length - 1]) : null;
@@ -42,8 +37,7 @@ function parseMetricValue(
 
 export async function pollMetrics(): Promise<void> {
   const metricsUrl =
-    process.env.METRICS_URL ??
-    "http://host.docker.internal:3001/api/metrics";
+    process.env.METRICS_URL ?? "http://host.docker.internal:3001/api/metrics";
 
   try {
     const response = await fetch(metricsUrl);

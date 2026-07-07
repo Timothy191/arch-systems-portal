@@ -64,7 +64,7 @@
     "dev": "next dev --turbopack --hostname 0.0.0.0",
     "lint": "eslint . --cache --cache-location node_modules/.cache/.eslintcache --max-warnings 0",
     "start": "next start",
-    "test": "jest --passWithNoTests --runInBand",
+    "test": "jest --passWithNoTests --runInBand --forceExit",
     "type-check": "tsc --noEmit"
   }
 }

@@ -1,7 +1,5 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import {
-  AdminService,
-} from "./admin.service";
+import { AdminService } from "./admin.service";
 import { SUPABASE_CLIENT } from "../supabase/supabase.constants";
 import {
   NotFoundException,
@@ -32,7 +30,11 @@ describe("AdminService", () => {
 
   beforeEach(async () => {
     mockSupabase = {
-      from: jest.fn().mockImplementation((table: string) => makeThenable({ data: [], error: null, count: 0 })),
+      from: jest
+        .fn()
+        .mockImplementation((table: string) =>
+          makeThenable({ data: [], error: null, count: 0 }),
+        ),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -51,11 +53,15 @@ describe("AdminService", () => {
     it("should return normalized table name for known tables", () => {
       expect(service.validateTable("MACHINES")).toBe("machines");
       expect(service.validateTable("Daily_Logs")).toBe("daily_logs");
-      expect(service.validateTable("safety_incidents")).toBe("safety_incidents");
+      expect(service.validateTable("safety_incidents")).toBe(
+        "safety_incidents",
+      );
     });
 
     it("should throw NotFoundException for unknown tables", () => {
-      expect(() => service.validateTable("secret_data")).toThrow(NotFoundException);
+      expect(() => service.validateTable("secret_data")).toThrow(
+        NotFoundException,
+      );
       expect(() => service.validateTable("users")).toThrow(NotFoundException);
     });
   });
@@ -153,11 +159,7 @@ describe("AdminService", () => {
         makeThenable({ data: null, error: null }),
       );
 
-      const result = await service.updateData(
-        "machines",
-        validBody,
-        "emp-1",
-      );
+      const result = await service.updateData("machines", validBody, "emp-1");
 
       expect(result).toEqual({ success: true });
       // Verify audit insert was called
@@ -212,9 +214,9 @@ describe("AdminService", () => {
     });
 
     it("should throw BadRequestException when id is missing", async () => {
-      await expect(
-        service.deleteData("machines", "", "emp-1"),
-      ).rejects.toThrow(BadRequestException);
+      await expect(service.deleteData("machines", "", "emp-1")).rejects.toThrow(
+        BadRequestException,
+      );
     });
 
     it("should throw when delete operation fails", async () => {

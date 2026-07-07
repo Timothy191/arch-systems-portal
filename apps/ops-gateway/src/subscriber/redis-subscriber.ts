@@ -91,8 +91,7 @@ async function pollStream(): Promise<void> {
         }
       }
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : String(error);
+      const message = error instanceof Error ? error.message : String(error);
       logger.warn(`Stream read error: ${message}`);
       // Wait before retry on error
       await sleep(1000);
@@ -122,9 +121,7 @@ async function processMessage(
       timestamp: String(payload["timestamp"] ?? new Date().toISOString()),
     };
 
-    logger.info(
-      `Event: ${event.severity}/${event.triggerType} (${id})`,
-    );
+    logger.info(`Event: ${event.severity}/${event.triggerType} (${id})`);
 
     // Notify the incident engine
     if (onEvent) {

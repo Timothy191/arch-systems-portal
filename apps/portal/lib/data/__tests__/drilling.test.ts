@@ -41,9 +41,18 @@ beforeEach(() => {
 describe("portal lib/data/drilling", () => {
   describe("getDrillingOpsData", () => {
     it("returns drills, ops, and operators for the department", async () => {
-      const mockDrills = { data: [{ id: "drill-1", name: "Rig A" }], error: null };
-      const mockOps = { data: [{ id: "op-1", machine_id: "drill-1" }], error: null };
-      const mockOperators = { data: [{ id: "emp-1", full_name: "John" }], error: null };
+      const mockDrills = {
+        data: [{ id: "drill-1", name: "Rig A" }],
+        error: null,
+      };
+      const mockOps = {
+        data: [{ id: "op-1", machine_id: "drill-1" }],
+        error: null,
+      };
+      const mockOperators = {
+        data: [{ id: "emp-1", full_name: "John" }],
+        error: null,
+      };
 
       const responses = [mockDrills, mockOps, mockOperators];
       let callCount = 0;
@@ -75,13 +84,44 @@ describe("portal lib/data/drilling", () => {
 
   describe("getMachineTelemetryData", () => {
     it("returns telemetry, archives, drills, and monthly summary", async () => {
-      const mockDrills = { data: [{ id: "drill-1", name: "Rig A" }], error: null };
-      const mockTelemetry = { data: [{ period: "2026-07-07", machine_id: "drill-1", total_alerts: 2 }], error: null };
-      const mockArchives = { data: [{ id: "arch-1", year_month: "2026-06", machine_id: "drill-1", archived_at: "2026-07-01T00:00:00Z", record_count: 100 }], error: null };
-      const mockAllMachines = { data: [{ id: "drill-1", name: "Rig A" }], error: null };
-      const mockMonthlySummary = { data: [{ machine_id: "drill-1", availability_pct: 95 }], error: null };
+      const mockDrills = {
+        data: [{ id: "drill-1", name: "Rig A" }],
+        error: null,
+      };
+      const mockTelemetry = {
+        data: [
+          { period: "2026-07-07", machine_id: "drill-1", total_alerts: 2 },
+        ],
+        error: null,
+      };
+      const mockArchives = {
+        data: [
+          {
+            id: "arch-1",
+            year_month: "2026-06",
+            machine_id: "drill-1",
+            archived_at: "2026-07-01T00:00:00Z",
+            record_count: 100,
+          },
+        ],
+        error: null,
+      };
+      const mockAllMachines = {
+        data: [{ id: "drill-1", name: "Rig A" }],
+        error: null,
+      };
+      const mockMonthlySummary = {
+        data: [{ machine_id: "drill-1", availability_pct: 95 }],
+        error: null,
+      };
 
-      const responses = [mockDrills, mockTelemetry, mockArchives, mockAllMachines, mockMonthlySummary];
+      const responses = [
+        mockDrills,
+        mockTelemetry,
+        mockArchives,
+        mockAllMachines,
+        mockMonthlySummary,
+      ];
       let fromCallCount = 0;
       let rpcCallCount = 0;
 

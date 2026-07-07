@@ -3,7 +3,13 @@ import { Injectable, Logger } from "@nestjs/common";
 export interface AiInvocationRecord {
   id: string;
   task: string;
-  status: "success" | "failure" | "fallback" | "timeout" | "disabled" | "circuit_open";
+  status:
+    | "success"
+    | "failure"
+    | "fallback"
+    | "timeout"
+    | "disabled"
+    | "circuit_open";
   durationMs: number;
   attempt: number;
   gatewayStatus?: number;
@@ -33,9 +39,12 @@ export class AiInvocationTelemetry {
   }
 
   summarize(): Record<string, number> {
-    return this.records.reduce((acc, record) => {
-      acc[record.status] = (acc[record.status] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    return this.records.reduce(
+      (acc, record) => {
+        acc[record.status] = (acc[record.status] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>,
+    );
   }
 }

@@ -7,7 +7,9 @@
  * persists across test files.
  */
 jest.mock("../client.js", () => ({
-  getRedisClient: jest.fn().mockRejectedValue(new Error("Redis connection refused")),
+  getRedisClient: jest
+    .fn()
+    .mockRejectedValue(new Error("Redis connection refused")),
   getClientIfOpen: jest.fn().mockReturnValue(null),
   closeRedis: jest.fn(),
 }));

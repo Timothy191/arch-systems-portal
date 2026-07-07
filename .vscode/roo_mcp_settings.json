@@ -26,7 +26,7 @@
       "args": [
         "run",
         "--project",
-        "tools/repowise",
+        ".aistack/tools/repowise",
         "repowise",
         "mcp",
         ".",
@@ -35,7 +35,7 @@
       ]
     },
     "sense-mcp": {
-      "command": "tools/sense/bin/sense",
+      "command": ".aistack/tools/sense/bin/sense",
       "args": []
     },
     "memex-mcp": {
@@ -43,7 +43,7 @@
       "args": [
         "run",
         "--project",
-        "tools/memex",
+        ".aistack/tools/memex",
         "memex",
         "serve"
       ],
@@ -104,9 +104,10 @@
       }
     },
     "trace-mcp": {
-      "command": "/home/timothy/.trace-mcp/bin/trace-mcp",
+      "command": "npx",
       "args": [
-        "serve"
+        "-y",
+        "trace-mcp@latest"
       ]
     },
     "agentic-tools-mcp": {

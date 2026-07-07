@@ -1,6 +1,9 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { AiFeaturesService, type AiFeatureKey } from "./ai-features.service";
-import { AiInvocationTelemetry, type AiInvocationRecord } from "./ai-invocation.telemetry";
+import {
+  AiInvocationTelemetry,
+  type AiInvocationRecord,
+} from "./ai-invocation.telemetry";
 
 export interface AiGatewayInvokeOptions {
   task: string;
@@ -111,9 +114,18 @@ export class AiGatewayService {
       } catch (error) {
         clearTimeout(timeoutId);
         const durationMs = this.ms(attemptStart);
-        const message = error instanceof Error ? error.message : "Unknown error";
+        const message =
+          error instanceof Error ? error.message : "Unknown error";
         lastError = error instanceof Error ? error : new Error(message);
-        this.recordFailure(id, options.task, durationMs, attempt, lastError, options.metadata, config);
+        this.recordFailure(
+          id,
+          options.task,
+          durationMs,
+          attempt,
+          lastError,
+          options.metadata,
+          config,
+        );
 
         if (attempt < maxAttempts) {
           const delay = this.backoffMs(attempt, config);
@@ -138,7 +150,7 @@ export class AiGatewayService {
 
     if (this.features.isEnabled("ai_fallback_enabled")) {
       this.logger.error(
-        `AI invoke failed after ${maxAttempts} attempts task=${options.task} error=${lastError?.message}`
+        `AI invoke failed after ${maxAttempts} attempts task=${options.task} error=${lastError?.message}`,
       );
       return {
         status: "fallback",
@@ -161,17 +173,24 @@ export class AiGatewayService {
   private fallbackPayload(task: string, error?: string): AiGatewayFallback {
     return {
       status: "fallback",
-      result: "The AI subsystem is currently unreachable. Operational systems remain active.",
+      result:
+        "The AI subsystem is currently unreachable. Operational systems remain active.",
       error,
       task,
     };
   }
 
-  private featureFlag(config: ReturnType<AiFeaturesService["getConfig"]>, key: AiFeatureKey): boolean {
+  private featureFlag(
+    config: ReturnType<AiFeaturesService["getConfig"]>,
+    key: AiFeatureKey,
+  ): boolean {
     return config.flags[key];
   }
 
-  private backoffMs(attempt: number, config: ReturnType<AiFeaturesService["getConfig"]>): number {
+  private backoffMs(
+    attempt: number,
+    config: ReturnType<AiFeaturesService["getConfig"]>,
+  ): number {
     const base = Math.max(0, config.retryBaseDelayMs);
     const delay = base * 2 ** (attempt - 1);
     const jitter = Math.floor(Math.random() * base);
@@ -190,7 +209,9 @@ export class AiGatewayService {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
-  private isCircuitOpen(config: ReturnType<AiFeaturesService["getConfig"]>): boolean {
+  private isCircuitOpen(
+    config: ReturnType<AiFeaturesService["getConfig"]>,
+  ): boolean {
     const stateKey = "ai:circuit:breaker:open";
     const ttlMs = config.circuitBreakerRecoveryMs;
     const raw = process.env[stateKey];
@@ -228,7 +249,9 @@ export class AiGatewayService {
       metadata,
     };
     this.telemetry.record(record);
-    this.logger.warn(`AI invoke failure task=${task} attempt=${attempt} error=${error.message}`);
+    this.logger.warn(
+      `AI invoke failure task=${task} attempt=${attempt} error=${error.message}`,
+    );
 
     if (this.featureFlag(config, "ai_circuit_breaker_enabled")) {
       const threshold = Math.max(1, config.circuitBreakerFailureThreshold);
@@ -244,7 +267,9 @@ export class AiGatewayService {
     }
   }
 
-  private resetCircuitBreaker(config: ReturnType<AiFeaturesService["getConfig"]>): void {
+  private resetCircuitBreaker(
+    config: ReturnType<AiFeaturesService["getConfig"]>,
+  ): void {
     if (!this.featureFlag(config, "ai_circuit_breaker_enabled")) return;
     const stateKey = "ai:circuit:breaker:open";
     if (process.env[stateKey]) {

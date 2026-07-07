@@ -190,7 +190,11 @@ describe("WebhooksService", () => {
       service = mod.get(WebhooksService);
 
       const result = await service.createWebhook(
-        { department_id: "550e8400-e29b-41d4-a716-446655440000", role: "user", accessible_departments: [] },
+        {
+          department_id: "550e8400-e29b-41d4-a716-446655440000",
+          role: "user",
+          accessible_departments: [],
+        },
         {
           url: "https://hooks.example.com",
           event_types: ["order.placed"],
@@ -238,7 +242,13 @@ describe("WebhooksService", () => {
     };
 
     it("updates all fields for admin", async () => {
-      const updatedData = { ...existingWebhook, url: "https://new.example.com", description: "New description", event_types: ["order.shipped"], active: false };
+      const updatedData = {
+        ...existingWebhook,
+        url: "https://new.example.com",
+        description: "New description",
+        event_types: ["order.shipped"],
+        active: false,
+      };
       const mod = await buildModule({
         webhook_endpoints: { data: updatedData, error: null },
       });
@@ -269,7 +279,9 @@ describe("WebhooksService", () => {
       service = mod.get(WebhooksService);
 
       await expect(
-        service.updateWebhook("wh-nonexistent", adminEmployee, { url: "https://example.com" }),
+        service.updateWebhook("wh-nonexistent", adminEmployee, {
+          url: "https://example.com",
+        }),
       ).rejects.toThrow(NotFoundException);
     });
 
@@ -292,7 +304,10 @@ describe("WebhooksService", () => {
     });
 
     it("allows non-admin to update own department webhook", async () => {
-      const updatedData = { ...existingWebhook, description: "Updated by user" };
+      const updatedData = {
+        ...existingWebhook,
+        description: "Updated by user",
+      };
       const mod = await buildModule({
         webhook_endpoints: { data: updatedData, error: null },
       });
@@ -313,15 +328,12 @@ describe("WebhooksService", () => {
       });
       service = mod.get(WebhooksService);
 
-      const result = await service.updateWebhook(
-        "wh-1",
-        adminEmployee,
-        { active: false },
-      );
+      const result = await service.updateWebhook("wh-1", adminEmployee, {
+        active: false,
+      });
       expect(result.webhook.active).toBe(false);
       expect(result.webhook.url).toBe(existingWebhook.url); // unchanged
     });
-
   });
 
   describe("deleteWebhook", () => {

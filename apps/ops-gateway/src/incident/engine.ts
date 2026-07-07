@@ -4,7 +4,7 @@ import { getLatestSnapshot } from "../poller/metrics-poller.js";
 import { getLatestAudit, runAuditCheck } from "../poller/audit-poller.js";
 import { opsClient } from "../ops-client.js";
 import { Logger } from "../logger.js";
-import { dispatchTask } from "../dispatcher/agent-dispatcher.js";
+import { dispatchTask } from "../dispatcher/eve-dispatcher.js";
 import type { TriggerEvent } from "../subscriber/redis-subscriber.js";
 
 const logger = new Logger("incident-engine");
@@ -295,7 +295,11 @@ async function dispatchToAgent(incident: Incident): Promise<void> {
 
 // ── Helpers ────────────────────────────────────────────────
 
-let incidentCounter = 0;
+      triggerRef: incident.id,
+    });
+    logger.info(
+      `Dispatched to ${dispatch.eve} for incident ${incident.type} (${dispatch.id})`,
+    );
 const knownIncidents = new Map<string, string>(); // type -> id
 
 async function createOrUpdateIncident(

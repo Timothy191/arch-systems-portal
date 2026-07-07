@@ -83,10 +83,7 @@ interface HttpError extends Error {
   status?: number;
 }
 
-function requestError(
-  message: string,
-  status?: number,
-): HttpError {
+function requestError(message: string, status?: number): HttpError {
   const err = new Error(message) as HttpError;
   err.status = status;
   return err;

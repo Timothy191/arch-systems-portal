@@ -63,9 +63,9 @@ describe("AccessControlService", () => {
       const mod = await buildModule({});
       service = mod.get(AccessControlService);
 
-      expect(() => service.validateScannerAuth("C66-HARDWARE", "wrong-key")).toThrow(
-        UnauthorizedException,
-      );
+      expect(() =>
+        service.validateScannerAuth("C66-HARDWARE", "wrong-key"),
+      ).toThrow(UnauthorizedException);
     });
 
     it("throws ForbiddenException when source is not allowed", async () => {

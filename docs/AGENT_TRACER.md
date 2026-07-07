@@ -2,6 +2,17 @@
 
 This file maintains a record of AI agent interventions, context hand-offs, and architectural breadcrumbs for this specific package/app.
 
+## [2026-07-08] Fix MCP configs and update copilot instructions
+
+- **Agent**: GitHub Copilot CLI
+- **Changes**:
+  - Fixed portable configuration issues across `.mcp.json` and `.vscode/*_mcp_settings.json` (`trace-mcp` command, `.aistack/tools/...` paths for Repowise/Sense/Memex).
+  - Fixed root `package.json` `agentic-tools*` scripts to run `.aistack/packages/agentic-tools-mcp/` directly and copy `.env.tools.example`.
+  - Changed `docker-compose.tools.yml` n8n bind mount to named volume `n8n_data`; added `.env.tools.example` template; updated `.gitignore` and `.vscode/README.md`.
+  - Updated `.github/copilot-instructions.md` to match the real workspace layout (`apps/ai-agents`, `apps/ops-gateway`, `packages/errors`, `packages/rate-limiter`, etc.) and added `.env.tools.example` guidance.
+- **Context**: Config-only fixes. Runtime MCP servers (`n8n-mcp`, `github-official`, `vscode-mcp-server`) still require user-supplied secrets/containers or the VS Code MCP extension.
+- **Next Agent Notes**: To fully restore MCP runtime, populate `.env` and `.env.tools`, start the tools stack, and install/launch the VS Code MCP extension. `bash`/`glob`/`grep` remain blocked by repo `preToolUse` settings.
+
 ## [2026-07-07] Clean up Repowise transient artifacts
 
 - **Agent**: Claude Code

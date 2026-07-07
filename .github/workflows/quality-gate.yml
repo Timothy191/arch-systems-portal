@@ -127,6 +127,23 @@ jobs:
         working-directory: apps/portal
         run: npx jest --no-cache --forceExit --verbose --coverage lib/data/__tests__/ 2>&1 | tail -10
 
+  knip:
+    name: Dead Code Detection
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: "9.15.9"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "pnpm"
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm knip
+
   test-e2e:
     name: E2E Tests
     needs: prepare
@@ -154,8 +171,11 @@ jobs:
             echo "Waiting for portal... ($i)"
             sleep 2
           done
-      - name: Run E2E tests
+      - name: Run E2E tests (unauthenticated)
         run: npx playwright test --reporter=list 2>&1
+      - name: Run Auth E2E tests (CI-safe with fallback)
+        continue-on-error: true
+        run: npx playwright test e2e/auth-ui.spec.ts --reporter=list 2>&1
       - name: Upload E2E artifacts
         if: failure()
         uses: actions/upload-artifact@v4

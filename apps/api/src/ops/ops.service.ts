@@ -3,6 +3,8 @@ import { ConfigService } from "@nestjs/config";
 import { REDIS_CLIENT } from "../redis/redis.constants";
 import type { RedisClientType } from "redis";
 import { AgentTriggerService } from "../ai/agent-trigger.service";
+import { AiGatewayService } from "../ai/ai-gateway.service";
+import { AiInvocationTelemetry } from "../ai/ai-invocation.telemetry";
 import {
   type ClearCacheDto,
   type UpdateRateLimitDto,
@@ -29,6 +31,8 @@ export class OpsService {
     private readonly configService: ConfigService,
     @Inject(REDIS_CLIENT) private readonly redisClient: RedisClientType,
     private readonly agentTriggerService: AgentTriggerService,
+    private readonly aiGateway: AiGatewayService,
+    private readonly aiTelemetry: AiInvocationTelemetry,
   ) {}
 
   // ── Cache ────────────────────────────────────────────────
@@ -100,9 +104,7 @@ export class OpsService {
 
   // ── Config Read ──────────────────────────────────────────
 
-  readConfig(
-    dto: ReadConfigDto,
-  ): Record<string, string | undefined> {
+  readConfig(dto: ReadConfigDto): Record<string, string | undefined> {
     const keyList = dto.keys ?? Object.keys(ALLOWED_PUBLIC_CONFIG_KEYS);
     const result: Record<string, string | undefined> = {};
     for (const key of keyList) {
@@ -144,9 +146,7 @@ export class OpsService {
   async triggerAgent(
     dto: TriggerAgentDto,
   ): Promise<{ queued: boolean; streamId: string | null }> {
-    this.logger.warn(
-      `Agent trigger: ${dto.severity} - ${dto.triggerType}`,
-    );
+    this.logger.warn(`Agent trigger: ${dto.severity} - ${dto.triggerType}`);
     try {
       const payload = {
         triggerType: dto.triggerType,
@@ -162,5 +162,15 @@ export class OpsService {
       this.logger.error(`Agent trigger failed: ${message}`);
       return { queued: false, streamId: null };
     }
+  }
+
+  // ── AI observability ─────────────────────────────────────
+
+  getAiStatus() {
+    return this.aiGateway.getTelemetrySummary();
+  }
+
+  getAiInvocations(limit = 20) {
+    return this.aiGateway.getTelemetry(limit);
   }
 }

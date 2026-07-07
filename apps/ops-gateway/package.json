@@ -1,16 +1,7 @@
 {
   "name": "ops-gateway",
-  "version": "1.0.0",
   "description": "Meta-Backend / Control Plane for Arch Systems — MCP server, incident detection, and operational bridge to the NestJS backend",
-  "private": true,
-  "type": "module",
-  "main": "dist/index.js",
-  "scripts": {
-    "dev": "tsx watch src/index.ts",
-    "build": "tsc",
-    "start": "node dist/index.js",
-    "type-check": "tsc --noEmit"
-  },
+  "version": "1.0.0",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",
     "redis": "^4.7.0",
@@ -20,5 +11,14 @@
     "@types/node": "^22",
     "tsx": "^4.0.0",
     "typescript": "^5.7.0"
-  }
+  },
+  "main": "dist/index.js",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js",
+    "type-check": "tsc --noEmit"
+  },
+  "type": "module"
 }

@@ -44,7 +44,9 @@ describe("AiFeaturesService", () => {
   it("should warn on runtime setFlag without persistence", async () => {
     const module = await createModule();
     const service = module.get<AiFeaturesService>(AiFeaturesService);
-    const warnSpy = jest.spyOn(service["logger"], "warn").mockImplementation(() => {});
+    const warnSpy = jest
+      .spyOn(service["logger"], "warn")
+      .mockImplementation(() => {});
 
     service.setFlag("ai_gateway_enabled", false);
 

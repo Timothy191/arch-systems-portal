@@ -46,7 +46,9 @@ export function startHealthPoller(): void {
 
   // Immediate first poll
   pollHealth().catch((e) =>
-    logger.error(`Initial health poll failed: ${e instanceof Error ? e.message : String(e)}`),
+    logger.error(
+      `Initial health poll failed: ${e instanceof Error ? e.message : String(e)}`,
+    ),
   );
 
   setInterval(() => {

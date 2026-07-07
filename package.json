@@ -58,9 +58,9 @@
   "packageManager": "pnpm@9.15.9",
   "private": true,
   "scripts": {
-    "agentic-tools": "pnpm --filter @repo/agentic-tools-mcp start",
-    "agentic-tools:daemon": "pnpm --filter @repo/agentic-tools-mcp daemon",
-    "agentic-tools:setup": "cp -n .env.example .env 2>/dev/null || true && echo 'Fill .env with real secrets'",
+    "agentic-tools": "node .aistack/packages/agentic-tools-mcp/src/server.js",
+    "agentic-tools:daemon": "node .aistack/packages/agentic-tools-mcp/scripts/daemon.js",
+    "agentic-tools:setup": "cp -n .env.example .env 2>/dev/null || true && cp -n .env.tools.example .env.tools 2>/dev/null || true && echo 'Fill .env and .env.tools with real secrets'",
     "analyze": "ANALYZE=true pnpm --filter portal build",
     "audit:rls": "node tools/audit-rls.cjs",
     "build": "turbo run build",

@@ -11,16 +11,16 @@
 > (documentation, ownership, history, decisions). **Always verify against
 > actual source files before making changes** — the index may be stale.
 
-Last indexed: 2026-07-07 (commit 83c1159e)
+Last indexed: 2026-07-07 (commit ef79384f)
 ### Entry Points
 - `packages/supabase/src/server.ts`
 - `apps/ai-agents/src/main.py`
 - `apps/api/src/main.ts`
 - `.aistack/packages/agentic-tools-mcp/src/server.js`
+- `apps/ops-gateway/src/mcp/server.ts`
 - `.aistack/apps/ai-gateway/src/main.ts`
 - `.aistack/tools/memex/memex/__main__.py`
 - `.aistack/tools/memex/memex/memory_tool/server.py`
-- `.aistack/tools/memex/memex/mcp_server/server.py`
 ### Tech Stack
 **Languages:** Node.js, TypeScript
 
@@ -28,31 +28,31 @@ Last indexed: 2026-07-07 (commit 83c1159e)
 **Infra:** Turborepo### Architectural Layers
 | Layer | Files | Purpose |
 |-------|-------|---------|
-| Application | 499 |  |
-| Config | 9952 |  |
-| API | 65 |  |
+| Application | 517 |  |
+| Config | 9959 |  |
+| API | 74 |  |
+| Middleware | 2 |  |
 | UI | 148 |  |
-| Middleware | 1 |  |
 | Data | 14 |  |
-| Utility | 50 |  |
+| Utility | 51 |  |
 | Service | 21 |  |
-| Docs & Tooling | 44 |  |
-| Test | 1110 |  |
+| Docs & Tooling | 46 |  |
+| Test | 1126 |  |
 
 ### Guided Tour (12 steps)
 1. `README.md`
 2. `server.ts`
-3. `memory.store.ts`
-4. `main.ts`
-5. `main.rs`
-6. `supabase-auth.guard.ts`
+3. `redis.store.ts`
+4. `table.tsx`
+5. `main.ts`
+6. `main.rs`
 ... and 6 more steps
 ### Hotspots (High Churn)
 | File | Churn | 90d Commits | Owner |
 |------|-------|-------------|-------|
 | `apps/portal/proxy.ts` | 100.0th %ile | 5 | Timothy191 |
 | `apps/portal/lib/env.ts` | 100.0th %ile | 6 | Timothy191 |
-| `apps/portal/app/(hub)/page.tsx` | 100.0th %ile | 6 | Timothy191 |
+| `apps/portal/app/(hub)/page.tsx` | 99.9th %ile | 6 | Timothy191 |
 | `apps/portal/app/(departments)/[department]/page.tsx` | 99.9th %ile | 7 | Timothy191 |
 | `apps/portal/app/(departments)/drilling/machine-telemetry/page.tsx` | 99.9th %ile | 5 | Timothy191 |
 

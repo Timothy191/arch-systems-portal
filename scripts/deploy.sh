@@ -594,6 +594,13 @@ phase_validate() {
   log "Performing pre-launch project-wide cache cleanup..."
   run_if_not_dry rm -rf "$REPO_ROOT"/.kilo "$REPO_ROOT"/.remember "$REPO_ROOT"/.turbo "$REPO_ROOT"/.venv "$REPO_ROOT"/.vercel "$REPO_ROOT"/.vscode "$REPO_ROOT"/skills-lock.json "$REPO_ROOT"/deployment-logs
   run_if_not_dry rm -rf "$REPO_ROOT"/apps/portal/.next/cache "$REPO_ROOT"/apps/cms/.next/cache "$REPO_ROOT"/apps/overview/.next/cache "$REPO_ROOT"/packages/eval/.pytest_cache
+
+  # Production/staging clean-build safeguard: remove stale build artifacts between major deployments
+  if [ "$DEPLOY_MODE" = "production" ] || [ "$DEPLOY_MODE" = "staging" ]; then
+    log "Cleaning portal build artifacts for clean production build..."
+    run_if_not_dry rm -rf "$PORTAL_DIR/.next"
+  fi
+
   run_if_not_dry find "$REPO_ROOT" -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
   
   # Clean old logs and temporary status/monitor scripts, keeping the current DEPLOY_LOG

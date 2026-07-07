@@ -60,6 +60,11 @@ const VENDOR_TOKENS = new Set([
   "--radix-toast-swipe-move-y",
   "--radix-toast-swipe-end-x",
   "--radix-toast-swipe-end-y",
+  "--font-anurati",
+  "--font-sans",
+  "--font-inter",
+  "--font-outfit",
+  "--font-mono",
 ]);
 
 // ── 1. Extract all defined CSS tokens ────────────────────────────────────────

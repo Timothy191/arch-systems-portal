@@ -9,7 +9,9 @@ describe("AiGatewayService", () => {
 
   beforeEach(() => {
     process.env = {};
-    features = new AiFeaturesService({ get: (key: string) => process.env[key] } as any);
+    features = new AiFeaturesService({
+      get: (key: string) => process.env[key],
+    } as any);
     telemetry = new AiInvocationTelemetry();
     gateway = new AiGatewayService(features, telemetry);
   });
@@ -32,10 +34,10 @@ describe("AiGatewayService", () => {
   it("should succeed and record telemetry", async () => {
     const output = { ok: true };
 
-    const result = await gateway.invoke(
-      async () => output,
-      { task: "test", context: { foo: "bar" } },
-    );
+    const result = await gateway.invoke(async () => output, {
+      task: "test",
+      context: { foo: "bar" },
+    });
 
     expect(result.status).toBe("success");
     expect(result.result).toBe(output);

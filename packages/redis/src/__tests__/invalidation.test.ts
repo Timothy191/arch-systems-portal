@@ -84,10 +84,9 @@ describe("cacheInvalidateTags", () => {
     const deleted = await cacheInvalidateTags(["tag1"]);
 
     expect(deleted).toBe(2);
-    expect(mockRedis.sScanIterator).toHaveBeenCalledWith(
-      "arch:__tags__:tag1",
-      { COUNT: 100 },
-    );
+    expect(mockRedis.sScanIterator).toHaveBeenCalledWith("arch:__tags__:tag1", {
+      COUNT: 100,
+    });
     expect(mockRedis.unlink).toHaveBeenCalledWith(["del-key-1", "del-key-2"]);
     expect(mockRedis.unlink).toHaveBeenCalledWith("arch:__tags__:tag1");
   });

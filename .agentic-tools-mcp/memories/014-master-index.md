@@ -23,7 +23,8 @@
 | `013-local-mcp-implementations.md` | **6 in-repo MCP servers** + **9 external** servers                                                                                                                                           |
 | `014-master-index.md`              | This file — master index of all memory files, summary counts, security/consistency issues                                                                                                    |
 | `015-centralization-migration.md`  | Centralization migration record — all data moved to `.agentic-tools-mcp/`, symlink table, updated directive files                                                                            |
-| `recall_daemon.sh`                 | Claude Recall daemon management script                                                                                                                                                       |
+| `033-mcp-config-copilot-instructions-fix.md` | Fixes for `.mcp.json`/VS Code MCP settings, `docker-compose.tools.yml`, root scripts, `.env.tools.example`, and refreshed `.github/copilot-instructions.md`                                |
+| `recall_daemon.sh`                 | Claude Recall daemon management script                                                                                                                                                     |
 
 ## Summary Counts
 

@@ -17,7 +17,8 @@ export class AiBridgeService {
     const response = await this.aiGateway.invoke(
       async (signal) => {
         const controller = new AbortController();
-        const timeoutMs = this.aiGateway["features"].getConfig().requestTimeoutMs;
+        const timeoutMs =
+          this.aiGateway["features"].getConfig().requestTimeoutMs;
         const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
         try {

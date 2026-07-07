@@ -81,9 +81,7 @@ describe("createReadReplicaClient", () => {
     const client = await createReadReplicaClient([]);
 
     // Calling setAll should be a no-op
-    client.options.cookies.setAll([
-      { name: "x", value: "y", options: {} },
-    ]);
+    client.options.cookies.setAll([{ name: "x", value: "y", options: {} }]);
 
     expect(mockCookies.set).not.toHaveBeenCalled();
   });

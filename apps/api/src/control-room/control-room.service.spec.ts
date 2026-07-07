@@ -42,22 +42,59 @@ describe("ControlRoomService", () => {
   const defaultM = {
     machines: {
       data: [
-        { id: "m1", name: "Excavator A", machine_type: "Excavator", report_exempt: false },
-        { id: "m2", name: "Dump Truck 1", machine_type: "Dump Truck", report_exempt: false },
-        { id: "m3", name: "Dozer 1", machine_type: "Bulldozer", report_exempt: false },
-        { id: "m4", name: "LHD 1", machine_type: "Loader", report_exempt: false },
-        { id: "m5", name: "Old Dozer", machine_type: "Bulldozer", report_exempt: true },
+        {
+          id: "m1",
+          name: "Excavator A",
+          machine_type: "Excavator",
+          report_exempt: false,
+        },
+        {
+          id: "m2",
+          name: "Dump Truck 1",
+          machine_type: "Dump Truck",
+          report_exempt: false,
+        },
+        {
+          id: "m3",
+          name: "Dozer 1",
+          machine_type: "Bulldozer",
+          report_exempt: false,
+        },
+        {
+          id: "m4",
+          name: "LHD 1",
+          machine_type: "Loader",
+          report_exempt: false,
+        },
+        {
+          id: "m5",
+          name: "Old Dozer",
+          machine_type: "Bulldozer",
+          report_exempt: true,
+        },
       ],
       error: null,
     },
-    machine_operations: { data: [{ machine_id: "m4", hours_worked: 8.5 }], error: null },
+    machine_operations: {
+      data: [{ machine_id: "m4", hours_worked: 8.5 }],
+      error: null,
+    },
     excavator_activity: { data: [{ machine_id: "m1" }], error: null },
-    dozer_rolls: { data: [{ machine_id: "m3", hours_operated: 7.0 }], error: null },
-    hourly_loads: { data: [{ machine_id: "m2", total_loads: 120 }], error: null },
+    dozer_rolls: {
+      data: [{ machine_id: "m3", hours_operated: 7.0 }],
+      error: null,
+    },
+    hourly_loads: {
+      data: [{ machine_id: "m2", total_loads: 120 }],
+      error: null,
+    },
   };
 
   let seq = 0;
-  function nextDept() { seq++; return `dept-${seq}`; }
+  function nextDept() {
+    seq++;
+    return `dept-${seq}`;
+  }
 
   beforeEach(async () => {
     jest.clearAllMocks();
@@ -71,15 +108,28 @@ describe("ControlRoomService", () => {
   describe("getShiftCompleteness", () => {
     it("should report shift as complete when all machines have entries", async () => {
       const svc = await buildModule(defaultM);
-      const result = await svc.getShiftCompleteness(nextDept(), "mining", "2026-07-07", "day");
+      const result = await svc.getShiftCompleteness(
+        nextDept(),
+        "mining",
+        "2026-07-07",
+        "day",
+      );
       expect(result.complete).toBe(true);
       expect(result.totalRequired).toBe(4);
       expect(result.totalCovered).toBe(4);
     });
 
     it("should report shift as incomplete when machines are missing entries", async () => {
-      const svc = await buildModule({ ...defaultM, hourly_loads: { data: [], error: null } });
-      const result = await svc.getShiftCompleteness(nextDept(), "mining", "2026-07-07", "day");
+      const svc = await buildModule({
+        ...defaultM,
+        hourly_loads: { data: [], error: null },
+      });
+      const result = await svc.getShiftCompleteness(
+        nextDept(),
+        "mining",
+        "2026-07-07",
+        "day",
+      );
       expect(result.complete).toBe(false);
       expect(result.totalRequired).toBe(4);
       expect(result.totalCovered).toBe(3);
@@ -87,7 +137,12 @@ describe("ControlRoomService", () => {
 
     it("should mark exempt machines as not required", async () => {
       const svc = await buildModule(defaultM);
-      const result = await svc.getShiftCompleteness(nextDept(), "mining", "2026-07-07", "day");
+      const result = await svc.getShiftCompleteness(
+        nextDept(),
+        "mining",
+        "2026-07-07",
+        "day",
+      );
       const m = result.statuses.find((s) => s.machineId === "m5");
       expect(m?.exempt).toBe(true);
       expect(m?.hasEntry).toBe(false);
@@ -96,29 +151,63 @@ describe("ControlRoomService", () => {
 
     it("should assign correct required forms", async () => {
       const svc = await buildModule(defaultM);
-      const result = await svc.getShiftCompleteness(nextDept(), "mining", "2026-07-07", "day");
-      expect(result.statuses.find((s) => s.machineId === "m1")?.requiredForm).toBe("excavator-activity");
-      expect(result.statuses.find((s) => s.machineId === "m2")?.requiredForm).toBe("hourly-loads");
-      expect(result.statuses.find((s) => s.machineId === "m3")?.requiredForm).toBe("roll-over");
-      expect(result.statuses.find((s) => s.machineId === "m4")?.requiredForm).toBe("machine-operations");
+      const result = await svc.getShiftCompleteness(
+        nextDept(),
+        "mining",
+        "2026-07-07",
+        "day",
+      );
+      expect(
+        result.statuses.find((s) => s.machineId === "m1")?.requiredForm,
+      ).toBe("excavator-activity");
+      expect(
+        result.statuses.find((s) => s.machineId === "m2")?.requiredForm,
+      ).toBe("hourly-loads");
+      expect(
+        result.statuses.find((s) => s.machineId === "m3")?.requiredForm,
+      ).toBe("roll-over");
+      expect(
+        result.statuses.find((s) => s.machineId === "m4")?.requiredForm,
+      ).toBe("machine-operations");
     });
 
     it("should report hours worked for machine operations", async () => {
       const svc = await buildModule(defaultM);
-      const result = await svc.getShiftCompleteness(nextDept(), "mining", "2026-07-07", "day");
-      expect(result.statuses.find((s) => s.machineId === "m4")?.hoursWorked).toBe(8.5);
+      const result = await svc.getShiftCompleteness(
+        nextDept(),
+        "mining",
+        "2026-07-07",
+        "day",
+      );
+      expect(
+        result.statuses.find((s) => s.machineId === "m4")?.hoursWorked,
+      ).toBe(8.5);
     });
 
     it("should report hours operated for dozer rolls", async () => {
       const svc = await buildModule(defaultM);
-      const result = await svc.getShiftCompleteness(nextDept(), "mining", "2026-07-07", "day");
-      expect(result.statuses.find((s) => s.machineId === "m3")?.hoursWorked).toBe(7.0);
+      const result = await svc.getShiftCompleteness(
+        nextDept(),
+        "mining",
+        "2026-07-07",
+        "day",
+      );
+      expect(
+        result.statuses.find((s) => s.machineId === "m3")?.hoursWorked,
+      ).toBe(7.0);
     });
 
     it("should build correct form paths", async () => {
       const svc = await buildModule(defaultM);
-      const result = await svc.getShiftCompleteness(nextDept(), "mining", "2026-07-07", "day");
-      expect(result.statuses.find((s) => s.machineId === "m4")?.formPath).toBe("/mining/machine-operations");
+      const result = await svc.getShiftCompleteness(
+        nextDept(),
+        "mining",
+        "2026-07-07",
+        "day",
+      );
+      expect(result.statuses.find((s) => s.machineId === "m4")?.formPath).toBe(
+        "/mining/machine-operations",
+      );
     });
 
     it("should handle empty machine list", async () => {
@@ -129,7 +218,12 @@ describe("ControlRoomService", () => {
         dozer_rolls: { data: [], error: null },
         hourly_loads: { data: [], error: null },
       });
-      const result = await svc.getShiftCompleteness(nextDept(), "mining", "2026-07-07", "day");
+      const result = await svc.getShiftCompleteness(
+        nextDept(),
+        "mining",
+        "2026-07-07",
+        "day",
+      );
       expect(result.complete).toBe(true);
       expect(result.totalRequired).toBe(0);
       expect(result.totalCovered).toBe(0);
@@ -144,7 +238,12 @@ describe("ControlRoomService", () => {
         dozer_rolls: { data: null, error: null },
         hourly_loads: { data: null, error: null },
       });
-      const result = await svc.getShiftCompleteness(nextDept(), "mining", "2026-07-07", "day");
+      const result = await svc.getShiftCompleteness(
+        nextDept(),
+        "mining",
+        "2026-07-07",
+        "day",
+      );
       expect(result.complete).toBe(true);
       expect(result.statuses).toHaveLength(0);
     });

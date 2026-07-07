@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  Inject,
-  Logger,
-} from "@nestjs/common";
+import { Injectable, Inject, Logger } from "@nestjs/common";
 import { SUPABASE_CLIENT } from "../supabase/supabase.constants";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
@@ -163,7 +159,8 @@ export class DbAuditService {
             (issuesByCategory[issue.category] ?? 0) + issue.count;
         }
       } catch (error) {
-        const message = error instanceof Error ? error.message : "Unknown error";
+        const message =
+          error instanceof Error ? error.message : "Unknown error";
         this.logger.error(`Audit failed for ${tableName}: ${message}`);
         tables.push({
           tableName,
@@ -210,7 +207,12 @@ export class DbAuditService {
       infoCount,
       issuesByCategory,
       tables,
-      summary: this.summarize(totalIssues, errorCount, warningCount, tables.length),
+      summary: this.summarize(
+        totalIssues,
+        errorCount,
+        warningCount,
+        tables.length,
+      ),
     };
 
     this.lastReport = report;
@@ -269,9 +271,7 @@ export class DbAuditService {
   }
 
   /** Run a safe read-only query. Only SELECT allowed; max 500 rows; 10s timeout. */
-  async runSafeQuery(
-    sql: string,
-  ): Promise<SafeQueryResult> {
+  async runSafeQuery(sql: string): Promise<SafeQueryResult> {
     if (!ALLOWED_QUERY_PATTERNS.test(sql)) {
       throw new Error("Only SELECT queries are allowed");
     }
@@ -293,10 +293,7 @@ SELECT * FROM (${sql}) AS _sub LIMIT ${SAFE_QUERY_MAX_ROWS + 1};`;
       rows.length = SAFE_QUERY_MAX_ROWS;
     }
 
-    const columns =
-      rows.length > 0
-        ? Object.keys(rows[0]!)
-        : [];
+    const columns = rows.length > 0 ? Object.keys(rows[0]!) : [];
 
     return {
       columns,
@@ -323,7 +320,8 @@ SELECT * FROM (${sql}) AS _sub LIMIT ${SAFE_QUERY_MAX_ROWS + 1};`;
         category: "rls_disabled",
         message: `${tableName} does not have Row Level Security enabled`,
         count: 1,
-        detail: "Critical security gap — data accessible to all authenticated users",
+        detail:
+          "Critical security gap — data accessible to all authenticated users",
         repairSql: `ALTER TABLE ${tableName} ENABLE ROW LEVEL SECURITY;`,
       });
     }
@@ -353,9 +351,7 @@ SELECT * FROM (${sql}) AS _sub LIMIT ${SAFE_QUERY_MAX_ROWS + 1};`;
 
   // ── Integrity checks ─────────────────────────────────────
 
-  private async checkDataIntegrity(
-    tableName: string,
-  ): Promise<TableIssue[]> {
+  private async checkDataIntegrity(tableName: string): Promise<TableIssue[]> {
     const issues: TableIssue[] = [];
     const tableKey = tableName as keyof typeof INTEGRITY_CHECKS;
     const checks = INTEGRITY_CHECKS[tableKey];
@@ -480,7 +476,10 @@ SELECT * FROM (${sql}) AS _sub LIMIT ${SAFE_QUERY_MAX_ROWS + 1};`;
       const { data } = await this.supabase.rpc("exec_sql", {
         sql: `SELECT relrowsecurity FROM pg_class WHERE relname = '${tableName}';`,
       });
-      return (data as [{ relrowsecurity: boolean }] | null)?.[0]?.relrowsecurity ?? false;
+      return (
+        (data as [{ relrowsecurity: boolean }] | null)?.[0]?.relrowsecurity ??
+        false
+      );
     } catch {
       return false;
     }
@@ -582,7 +581,11 @@ SELECT * FROM (${sql}) AS _sub LIMIT ${SAFE_QUERY_MAX_ROWS + 1};`;
           return `DELETE FROM "${tableName}" WHERE "${fk.column}" IS NOT NULL AND "${fk.column}" NOT IN (SELECT "${fk.refColumn}" FROM "${fk.refTable}");`;
         }
       }
-      if (check.type === "stale_data" && category === "stale_data" && check.filterDateColumn) {
+      if (
+        check.type === "stale_data" &&
+        category === "stale_data" &&
+        check.filterDateColumn
+      ) {
         return `DELETE FROM "${tableName}" WHERE "${check.filterDateColumn}" < NOW() - INTERVAL '${check.staleDays} days';`;
       }
     }
@@ -601,7 +604,8 @@ SELECT * FROM (${sql}) AS _sub LIMIT ${SAFE_QUERY_MAX_ROWS + 1};`;
     const parts: string[] = [];
     if (errors > 0) parts.push(`${errors} error(s)`);
     if (warnings > 0) parts.push(`${warnings} warning(s)`);
-    const prefix = parts.length > 0 ? `${parts.join(", ")} found. ` : "No issues found. ";
+    const prefix =
+      parts.length > 0 ? `${parts.join(", ")} found. ` : "No issues found. ";
     return `${prefix}Scanned ${scanned}/${AUDIT_TABLES.size} tables. Total: ${totalIssues} items.`;
   }
 }

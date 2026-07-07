@@ -7,7 +7,17 @@ import { AiInvocationTelemetry } from "./ai-invocation.telemetry";
 
 @Module({
   controllers: [AiController],
-  providers: [AgentTriggerService, AiFeaturesService, AiGatewayService, AiInvocationTelemetry],
-  exports: [AgentTriggerService, AiFeaturesService, AiGatewayService, AiInvocationTelemetry],
+  providers: [
+    AgentTriggerService,
+    AiFeaturesService,
+    AiGatewayService,
+    AiInvocationTelemetry,
+  ],
+  exports: [
+    AgentTriggerService,
+    AiFeaturesService,
+    AiGatewayService,
+    AiInvocationTelemetry,
+  ],
 })
 export class AiModule {}

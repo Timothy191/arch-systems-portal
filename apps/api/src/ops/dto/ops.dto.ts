@@ -2,7 +2,10 @@ import { z } from "zod";
 
 // ── Cache operations ──────────────────────────────────────
 export const clearCacheSchema = z.object({
-  pattern: z.string().min(1).describe("Redis key pattern to clear, e.g. 'session:*'"),
+  pattern: z
+    .string()
+    .min(1)
+    .describe("Redis key pattern to clear, e.g. 'session:*'"),
 });
 
 export type ClearCacheDto = z.infer<typeof clearCacheSchema>;
@@ -10,14 +13,21 @@ export type ClearCacheDto = z.infer<typeof clearCacheSchema>;
 // ── Queue operations ──────────────────────────────────────
 export const queueActionSchema = z.object({
   queue: z.enum(["background-tasks"]).describe("Queue name"),
-  action: z.enum(["pause", "resume", "getJobCounts"]).describe("Action to take"),
+  action: z
+    .enum(["pause", "resume", "getJobCounts"])
+    .describe("Action to take"),
 });
 
 export type QueueActionDto = z.infer<typeof queueActionSchema>;
 
 // ── Rate limit operations ─────────────────────────────────
 export const updateRateLimitSchema = z.object({
-  limit: z.number().int().positive().max(1000).describe("Requests per 60s window"),
+  limit: z
+    .number()
+    .int()
+    .positive()
+    .max(1000)
+    .describe("Requests per 60s window"),
 });
 
 export type UpdateRateLimitDto = z.infer<typeof updateRateLimitSchema>;
@@ -35,9 +45,15 @@ export type ReadConfigDto = z.infer<typeof readConfigSchema>;
 
 // ── Trigger agent operation ────────────────────────────────
 export const triggerAgentSchema = z.object({
-  triggerType: z.string().min(1).describe("Type of trigger, e.g. 'INCIDENT_DETECTED'"),
+  triggerType: z
+    .string()
+    .min(1)
+    .describe("Type of trigger, e.g. 'INCIDENT_DETECTED'"),
   severity: z.enum(["info", "warning", "critical"]).default("info"),
-  context: z.record(z.string(), z.unknown()).default({}).describe("Arbitrary context payload"),
+  context: z
+    .record(z.string(), z.unknown())
+    .default({})
+    .describe("Arbitrary context payload"),
 });
 
 export type TriggerAgentDto = z.infer<typeof triggerAgentSchema>;

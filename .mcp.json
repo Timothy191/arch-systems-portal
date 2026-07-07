@@ -109,10 +109,12 @@
       }
     },
     "trace-mcp": {
-      "command": "/home/timothy/.trace-mcp/bin/trace-mcp",
+      "command": "npx",
       "args": [
-        "serve"
-      ]
+        "-y",
+        "trace-mcp@latest"
+      ],
+      "description": "Standard tracing and debugger logging MCP server"
     },
     "agentic-tools-mcp": {
       "command": "node",
@@ -131,10 +133,14 @@
       "description": "MCP Toolbox for Databases \u2014 multi-DB query engine (PostgreSQL, MySQL, SQLite, MongoDB, Redis, Neo4j, BigQuery, Spanner, etc.)"
     },
     "repowise": {
-      "command": "repowise",
+      "command": "uv",
       "args": [
+        "run",
+        "--project",
+        ".aistack/tools/repowise",
+        "repowise",
         "mcp",
-        "/home/timothy/Documents/Arch-Mk2",
+        ".",
         "--transport",
         "stdio"
       ],

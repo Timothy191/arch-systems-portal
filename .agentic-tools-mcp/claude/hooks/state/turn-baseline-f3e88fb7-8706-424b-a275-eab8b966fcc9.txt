@@ -1,0 +1,13 @@
+.agentic-tools-mcp/claude/hooks/state/acc-session.json
+apps/api/src/ops/ops.controller.ts
+apps/api/src/ops/ops.module.ts
+apps/api/src/ops/ops.service.ts
+apps/ops-gateway/src/config.ts
+apps/ops-gateway/src/incident/engine.ts
+apps/ops-gateway/src/index.ts
+apps/ops-gateway/src/mcp/tools.ts
+packages/theme/scripts/validate-tokens.mjs
+packages/theme/src/css/variables.css
+.agentic-tools-mcp/claude/hooks/state/acc-turn-f3e88fb7-8706-424b-a275-eab8b966fcc9.json
+apps/ops-gateway/src/dispatcher/agent-dispatcher.ts
+apps/ops-gateway/src/dispatcher/types.ts

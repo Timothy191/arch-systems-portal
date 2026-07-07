@@ -9,7 +9,11 @@ import {
 import { ApiTags, ApiOperation } from "@nestjs/swagger";
 import { OpsService } from "./ops.service";
 import { DbAuditService } from "./db-audit.service";
-import type { AuditReport, RepairResult, SafeQueryResult } from "./db-audit.service";
+import type {
+  AuditReport,
+  RepairResult,
+  SafeQueryResult,
+} from "./db-audit.service";
 import { OpsInternalGuard } from "./guards/ops-internal.guard";
 import { SkipInternalAuth } from "./decorators/skip-internal-auth.decorator";
 import {
@@ -33,7 +37,9 @@ export class OpsController {
   ) {}
 
   @Post("cache/clear")
-  @ApiOperation({ summary: "Clear cache by key pattern (SCAN-based, non-blocking)" })
+  @ApiOperation({
+    summary: "Clear cache by key pattern (SCAN-based, non-blocking)",
+  })
   async clearCache(
     @Body() body: unknown,
   ): Promise<OpsResponse<{ cleared: number }>> {
@@ -54,9 +60,7 @@ export class OpsController {
 
   @Post("queue/action")
   @ApiOperation({ summary: "Pause, resume, or inspect a queue" })
-  async queueAction(
-    @Body() body: unknown,
-  ): Promise<OpsResponse> {
+  async queueAction(@Body() body: unknown): Promise<OpsResponse> {
     const parsed = queueActionSchema.safeParse(body);
     if (!parsed.success) {
       throw new BadRequestException(parsed.error.issues);
@@ -103,14 +107,32 @@ export class OpsController {
 
   @Get("summary")
   @SkipInternalAuth()
-  @ApiOperation({ summary: "Aggregated system summary (used by Meta-Backend health poller)" })
+  @ApiOperation({
+    summary: "Aggregated system summary (used by Meta-Backend health poller)",
+  })
   async systemSummary(): Promise<OpsResponse> {
     const data = await this.opsService.getSystemSummary();
     return { success: true, data, timestamp: new Date().toISOString() };
   }
 
+  @Get("ai/status")
+  @ApiOperation({ summary: "Get AI invocation summary counts" })
+  async aiStatus(): Promise<OpsResponse<Record<string, number>>> {
+    const data = this.opsService.getAiStatus();
+    return { success: true, data, timestamp: new Date().toISOString() };
+  }
+
+  @Get("ai/invocations")
+  @ApiOperation({ summary: "Get recent AI invocations" })
+  async aiInvocations(): Promise<OpsResponse> {
+    const data = this.opsService.getAiInvocations(20);
+    return { success: true, data, timestamp: new Date().toISOString() };
+  }
+
   @Post("trigger")
-  @ApiOperation({ summary: "Manually trigger an agent event (bridge to Redis Stream)" })
+  @ApiOperation({
+    summary: "Manually trigger an agent event (bridge to Redis Stream)",
+  })
   async triggerAgent(
     @Body() body: unknown,
   ): Promise<OpsResponse<{ queued: boolean; streamId: string | null }>> {
@@ -152,10 +174,10 @@ export class OpsController {
   }
 
   @Post("db/repair")
-  @ApiOperation({ summary: "Run a repair for a specific issue category on a table" })
-  async runRepair(
-    @Body() body: unknown,
-  ): Promise<OpsResponse<RepairResult>> {
+  @ApiOperation({
+    summary: "Run a repair for a specific issue category on a table",
+  })
+  async runRepair(@Body() body: unknown): Promise<OpsResponse<RepairResult>> {
     const parsed = repairDataSchema.safeParse(body);
     if (!parsed.success) {
       throw new BadRequestException(parsed.error.issues);
@@ -173,10 +195,10 @@ export class OpsController {
   }
 
   @Post("db/query")
-  @ApiOperation({ summary: "Run a safe read-only query (SELECT only, max 500 rows)" })
-  async runQuery(
-    @Body() body: unknown,
-  ): Promise<OpsResponse<SafeQueryResult>> {
+  @ApiOperation({
+    summary: "Run a safe read-only query (SELECT only, max 500 rows)",
+  })
+  async runQuery(@Body() body: unknown): Promise<OpsResponse<SafeQueryResult>> {
     const parsed = safeQuerySchema.safeParse(body);
     if (!parsed.success) {
       throw new BadRequestException(parsed.error.issues);

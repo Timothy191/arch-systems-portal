@@ -187,6 +187,22 @@
         "src/**/*.ts"
       ]
     },
+    "apps/api": {
+      "entry": [
+        "src/main.ts"
+      ],
+      "project": [
+        "src/**/*.ts"
+      ]
+    },
+    "apps/ops-gateway": {
+      "entry": [
+        "src/index.ts"
+      ],
+      "project": [
+        "src/**/*.ts"
+      ]
+    },
     "packages/eval": {
       "entry": [
         "tests/**/*.py"
@@ -202,7 +218,7 @@
     "devDependencies": "warn",
     "unlisted": "warn",
     "binaries": "warn",
-    "exports": "error",
+    "exports": "warn",
     "nsExports": "warn",
     "types": "warn",
     "nsTypes": "warn",

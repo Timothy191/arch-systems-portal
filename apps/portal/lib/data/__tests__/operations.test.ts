@@ -76,7 +76,10 @@ describe("portal lib/data/operations", () => {
 
   describe("getNonControlRoomSummary", () => {
     it("returns logs and machine count", async () => {
-      const mockLogs = { data: [{ id: "log-1", log_date: "2026-07-07", shift: "day" }], error: null };
+      const mockLogs = {
+        data: [{ id: "log-1", log_date: "2026-07-07", shift: "day" }],
+        error: null,
+      };
       const mockMachines = { data: null, count: 3, error: null };
 
       const responses = [mockLogs, mockMachines];

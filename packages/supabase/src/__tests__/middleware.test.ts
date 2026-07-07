@@ -88,9 +88,7 @@ describe("createMiddlewareClient", () => {
     const cookieConfig = createServerClient.mock.calls[0][2].cookies;
 
     const allCookies = cookieConfig.getAll();
-    expect(allCookies).toEqual([
-      { name: "sb-auth-token", value: "token123" },
-    ]);
+    expect(allCookies).toEqual([{ name: "sb-auth-token", value: "token123" }]);
   });
 
   it("should set cookies on both the request and response", async () => {
@@ -158,9 +156,8 @@ describe("createMiddlewareClient", () => {
 
     await createMiddlewareClient(new NextRequest());
 
-    const { createServerClient: createClient2 } = jest.requireMock(
-      "@supabase/ssr",
-    );
+    const { createServerClient: createClient2 } =
+      jest.requireMock("@supabase/ssr");
     const allCalls = createClient2.mock.calls;
     const latestCall = allCalls[allCalls.length - 1];
     latestCall[2].cookies.setAll([{ name: "t", value: "v", options: {} }]);

@@ -50,7 +50,11 @@ describe("WeatherService", () => {
       json: () => Promise.resolve(sampleResponse),
     });
 
-    const result = await service.fetchWeather(-26.1436, 28.6811, "Test Location");
+    const result = await service.fetchWeather(
+      -26.1436,
+      28.6811,
+      "Test Location",
+    );
 
     expect(result).toMatchObject({
       temperature: 25,

@@ -42,7 +42,8 @@ export async function instrumentedFetch(
       }
     }
 
-    const recordDbQuery = (globalThis as unknown as Record<string, unknown>).__recordDbQuery;
+    const recordDbQuery = (globalThis as unknown as Record<string, unknown>)
+      .__recordDbQuery;
     if (typeof recordDbQuery === "function") {
       recordDbQuery(tableName, method, duration, success);
     }

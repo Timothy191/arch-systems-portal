@@ -54,7 +54,7 @@
     "start": "node dist/main",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
-    "test": "jest --passWithNoTests --runInBand",
+    "test": "jest --passWithNoTests --runInBand --forceExit",
     "test:cov": "jest --coverage",
     "test:watch": "jest --watch",
     "type-check": "tsc --noEmit"

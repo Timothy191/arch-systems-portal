@@ -13,9 +13,10 @@
     },
     "trace-mcp": {
       "type": "stdio",
-      "command": "/home/timothy/.trace-mcp/bin/trace-mcp",
+      "command": "npx",
       "args": [
-        "serve"
+        "-y",
+        "trace-mcp@latest"
       ]
     },
     "agentic-tools-mcp": {

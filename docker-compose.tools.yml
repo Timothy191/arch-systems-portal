@@ -20,7 +20,7 @@ services:
       - N8N_CONCURRENCY_PRODUCTION_LIMIT=16
       - N8N_LOG_LEVEL=warn
     volumes:
-      - /home/timothy/.n8n:/home/node/.n8n
+      - n8n_data:/home/node/.n8n
     healthcheck:
       test:
         [
@@ -310,6 +310,7 @@ services:
       - plantcor-tools
 
 volumes:
+  n8n_data:
   redis_data:
   langfuse_db_data:
   qdrant_data:

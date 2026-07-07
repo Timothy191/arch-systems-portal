@@ -51,16 +51,19 @@ const nextConfig = {
   },
   reactStrictMode: true,
   poweredByHeader: false,
-  cacheComponents: true,
-  reactCompiler: true,
+  cacheComponents: process.env.NODE_ENV === "production",
+  reactCompiler: process.env.NODE_ENV === "production",
   logging: {
     incomingRequests: {
       ignore: [/^\/api\/health/],
     },
   },
   experimental: {
-    optimizePackageImports: ["lucide-react", "framer-motion", "@tremor/react"],
-    inlineCss: true,
+    optimizePackageImports: [
+      "lucide-react",
+      "@tremor/react",
+    ],
+    inlineCss: process.env.NODE_ENV === "production",
     webVitalsAttribution: ["CLS", "LCP", "FCP", "TTFB", "INP"],
     authInterrupts: true,
     serverActions: {

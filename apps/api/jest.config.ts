@@ -21,7 +21,12 @@ const config: Config = {
       },
     ],
   },
-  collectCoverageFrom: ["**/*.(t|j)s", "!**/*.spec.ts", "!**/*.test.ts", "!**/*.d.ts"],
+  collectCoverageFrom: [
+    "**/*.(t|j)s",
+    "!**/*.spec.ts",
+    "!**/*.test.ts",
+    "!**/*.d.ts",
+  ],
   coverageDirectory: "../coverage",
   coverageReporters: ["text", "lcov", "html"],
   coverageThreshold: {
