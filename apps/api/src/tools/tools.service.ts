@@ -39,15 +39,6 @@ export class ToolsService {
         icon: "Workflow",
         color: "#ff6d5a",
       },
-      {
-        name: "flowise",
-        displayName: "Flowise",
-        url: this.configService.get("FLOWISE_URL") ?? "http://localhost:3001",
-        description:
-          "Visual AI workflow builder — drag-and-drop LangChain agents and LLM pipelines",
-        icon: "Bot",
-        color: "#3ecf8e",
-      },
     ];
   }
 

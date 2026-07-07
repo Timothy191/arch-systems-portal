@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { logout } from "~/app/actions";
+import { logout } from "@/app/actions";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -111,6 +111,9 @@ function useSafetyAlerts() {
  * and quick emergency actions.
  */
 export function ServicesDropdown() {
+  // Force Turbopack HMR cache bust
+  // eslint-disable-next-line no-console
+  console.debug("ServicesDropdown mounted"); // Cache bust for Turbopack HMR {
   const [open, setOpen] = useState(false);
   const [locked, setLocked] = useState(false);
   const [sleeping, setSleeping] = useState(false);

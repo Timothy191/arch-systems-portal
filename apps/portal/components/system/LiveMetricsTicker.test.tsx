@@ -28,13 +28,28 @@ describe("LiveMetricsTicker component", () => {
     expect(ticker.className).toContain("text-[10px]");
 
     const indicator = screen.getByTestId("pulsing-indicator");
-    expect(indicator.className).toContain("bg-emerald-500");
+    expect(indicator.className).toContain("bg-accent-green");
     expect(indicator.className).toContain("animate-pulse");
 
     expect(screen.getByText("SYS_OK")).toBeInTheDocument();
     expect(screen.getByText("SAST: 14:05:32")).toBeInTheDocument();
     expect(screen.getByText("RTT: 18ms")).toBeInTheDocument();
     expect(screen.getByText("Shift B (14:00-22:00)")).toBeInTheDocument();
+  });
+
+  it("renders connecting state", () => {
+    render(<LiveMetricsTicker status="connecting" />);
+    expect(screen.getByText("Connecting")).toBeInTheDocument();
+  });
+
+  it("renders disconnected state", () => {
+    render(<LiveMetricsTicker status="disconnected" />);
+    expect(screen.getByText("Offline")).toBeInTheDocument();
+    
+    // Check indicator color
+    const indicator = document.querySelector(".w-2.h-2");
+    expect(indicator).toBeInTheDocument();
+    expect(indicator.className).toContain("bg-accent-red");
   });
 
   it("renders offline state with pulsing red dot when offline", () => {
@@ -52,7 +67,7 @@ describe("LiveMetricsTicker component", () => {
 
     render(<LiveMetricsTicker />);
     const indicator = screen.getByTestId("pulsing-indicator");
-    expect(indicator.className).toContain("bg-rose-500");
+    expect(indicator.className).toContain("bg-accent-red");
     expect(screen.getByText("SYS_OFF")).toBeInTheDocument();
   });
 });

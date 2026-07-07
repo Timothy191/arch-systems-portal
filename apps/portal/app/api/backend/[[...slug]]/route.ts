@@ -4,8 +4,8 @@
 import { NextRequest } from "next/server";
 import { env } from "@/lib/env";
 
-export const dynamic = "force-dynamic";
-export const runtime = "nodejs";
+// TODO: Cache Components adoption - restore dynamic = "force-dynamic" behavior
+// TODO: Cache Components adoption - restore runtime = "nodejs" behavior
 
 const IDEMPOTENT_METHODS = new Set(["GET", "HEAD", "OPTIONS"]);
 
@@ -34,9 +34,8 @@ async function proxy(
     method: request.method,
     headers,
     body: IDEMPOTENT_METHODS.has(request.method) ? undefined : request.body,
-    // @ts-expect-error — duplex is required for streaming request bodies but not yet in TS fetch types
     duplex: "half",
-  });
+  } as RequestInit);
 
   return new Response(upstreamResponse.body, {
     status: upstreamResponse.status,

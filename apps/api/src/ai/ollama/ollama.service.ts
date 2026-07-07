@@ -10,7 +10,7 @@ type OllamaChatOptions = {
   keepAlive?: string | number;
 };
 
-export type OllamaMessage = {
+type OllamaMessage = {
   role: "system" | "user" | "assistant";
   content: string;
 };

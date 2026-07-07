@@ -70,3 +70,7 @@ assets/**
 *.ttf
 *.otf
 *.eot
+
+# Search helper scripts
+search_webm.js
+search_wiki.js

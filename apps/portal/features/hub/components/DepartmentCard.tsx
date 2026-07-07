@@ -106,20 +106,20 @@ export function DepartmentCard({ department, index }: DepartmentCardProps) {
                 "text-[9px] font-bold uppercase tracking-[0.05em] px-2 py-0.5 rounded-full border",
                 department.status === "active" && "active-badge-liquid",
                 department.status === "maintenance" &&
-                  "bg-amber-50/70 border-amber-200/50 text-amber-700",
+                  "bg-accent-amber/10 border-accent-amber/20 text-accent-amber",
                 department.status === "alert" &&
-                  "bg-red-50/70 border-red-200/50 text-red-700",
+                  "bg-accent-red/10 border-accent-red/20 text-accent-red",
               )}
             >
               <span className="flex items-center gap-1.5">
                 <span
                   className={cn(
                     department.status === "active" &&
-                      "badge-pulse-dot bg-emerald-500",
+                      "badge-pulse-dot bg-accent-green",
                     department.status === "maintenance" &&
-                      "w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse",
+                      "w-1.5 h-1.5 rounded-full bg-accent-amber animate-pulse",
                     department.status === "alert" &&
-                      "w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse",
+                      "w-1.5 h-1.5 rounded-full bg-accent-red animate-pulse",
                   )}
                 />
                 {department.status}

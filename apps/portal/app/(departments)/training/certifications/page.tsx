@@ -9,6 +9,10 @@ import {
 import { SearchForm } from "../components/SearchForm";
 import { FilterTabs } from "../components/FilterTabs";
 
+// TODO: Cache Components adoption. Refactor this route so this opt-out can be removed.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
+export const instant = false;
+
 interface Certification {
   id: number;
   employee: string;
@@ -142,7 +146,7 @@ export default async function CertificationsPage({
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <GlassCard className="flex items-center gap-4">
-          <div className="p-3 bg-emerald-500/10 text-emerald-600 rounded-xl">
+          <div className="p-3 bg-accent-green/10 text-accent-green rounded-xl">
             <CheckCircle className="w-6 h-6" />
           </div>
           <div>
@@ -156,7 +160,7 @@ export default async function CertificationsPage({
         </GlassCard>
 
         <GlassCard className="flex items-center gap-4">
-          <div className="p-3 bg-amber-500/10 text-amber-600 rounded-xl">
+          <div className="p-3 bg-accent-amber/10 text-accent-amber rounded-xl">
             <AlertTriangle className="w-6 h-6" />
           </div>
           <div>
@@ -170,7 +174,7 @@ export default async function CertificationsPage({
         </GlassCard>
 
         <GlassCard className="flex items-center gap-4">
-          <div className="p-3 bg-rose-500/10 text-rose-600 rounded-xl">
+          <div className="p-3 bg-accent-red/10 text-accent-red rounded-xl">
             <AlertOctagon className="w-6 h-6" />
           </div>
           <div>
@@ -239,10 +243,10 @@ export default async function CertificationsPage({
                       <span
                         className={`text-[10px] px-2.5 py-0.5 rounded-full font-semibold ${
                           cert.status === "Active"
-                            ? "bg-emerald-500/10 text-emerald-600"
+                            ? "bg-accent-green/10 text-accent-green"
                             : cert.status === "Expiring Soon"
-                              ? "bg-amber-500/10 text-amber-600"
-                              : "bg-rose-500/10 text-rose-600 animate-pulse"
+                              ? "bg-accent-amber/10 text-accent-amber"
+                              : "bg-accent-red/10 text-accent-red animate-pulse"
                         }`}
                       >
                         {cert.status}

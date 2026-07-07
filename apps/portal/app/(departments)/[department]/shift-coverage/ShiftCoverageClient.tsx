@@ -224,8 +224,8 @@ export function ShiftCoverageClient({
               Machine Coverage
             </h3>
             {isClosed && (
-              <span className="inline-flex items-center gap-1.5 text-[9px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-full border bg-emerald-50/70 border-emerald-200/50 text-emerald-700">
-                <span className="badge-pulse-dot bg-emerald-500" />
+              <span className="inline-flex items-center gap-1.5 text-[9px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-full border bg-accent-green/10 border-accent-green/20 text-accent-green">
+                <span className="badge-pulse-dot bg-accent-green" />
                 Closed
               </span>
             )}
@@ -389,7 +389,7 @@ export function ShiftCoverageClient({
                         className={`text-xs px-2 py-0.5 rounded-full font-medium ${
                           item.shift_type === "day"
                             ? "bg-accent-blue/10 text-accent-blue border border-accent-blue/20"
-                            : "bg-indigo-500/10 text-indigo-400 border border-indigo-500/20"
+                            : "bg-accent-blue/10 text-accent-blue border border-accent-blue/20"
                         }`}
                       >
                         {item.shift_type === "day" ? "Day" : "Night"}

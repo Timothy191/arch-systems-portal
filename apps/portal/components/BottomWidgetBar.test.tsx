@@ -110,7 +110,6 @@ describe("BottomWidgetBar", () => {
 
     expect(screen.getByText("Tasks")).toBeInTheDocument();
     expect(screen.getByText("n8n Workflows")).toBeInTheDocument();
-    expect(screen.getByText("Flowise AI")).toBeInTheDocument();
   });
 
   it("renders active indicator for active routes when wheel is open", async () => {

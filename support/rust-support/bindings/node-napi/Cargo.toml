@@ -1,0 +1,11 @@
+[package]
+name = "bindings-node-napi"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+cache-engine = { path = "../../cache-engine" }
+logic-engine = { path = "../../logic-engine" }
+napi = "2.4"
+serde_json = "1.0"
+tokio = { version = "1", features = ["full"] }

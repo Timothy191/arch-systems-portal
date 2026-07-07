@@ -54,6 +54,7 @@ const envSchema = z.object({
 
   // ── External services (optional) ───────────────────────────────────
   N8N_URL: z.string().url().optional(),
+  NEXT_PUBLIC_N8N_URL: z.string().url().optional(),
   N8N_USER: z.string().optional(),
   N8N_PASSWORD: z.string().optional(),
   NEXT_PUBLIC_FUXA_URL: z.string().url().optional(),
@@ -103,6 +104,23 @@ const envSchema = z.object({
     .string()
     .default("false")
     .transform((v) => v === "true"),
+}).superRefine((val, ctx) => {
+  if (val.NODE_ENV === "production") {
+    if (val.NEXT_PUBLIC_SUPABASE_URL === "http://127.0.0.1:54321") {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Production must not use localhost Supabase URL",
+        path: ["NEXT_PUBLIC_SUPABASE_URL"],
+      });
+    }
+    if (val.NEXT_PUBLIC_SUPABASE_ANON_KEY === "dummy-anon-key") {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Production must not use the dummy anon key",
+        path: ["NEXT_PUBLIC_SUPABASE_ANON_KEY"],
+      });
+    }
+  }
 });
 
 // ---------------------------------------------------------------------------
@@ -139,6 +157,7 @@ function parseEnv(): EnvVars {
     SENTRY_AUTH_TOKEN: process.env.SENTRY_AUTH_TOKEN,
     NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
     N8N_URL: process.env.N8N_URL,
+    NEXT_PUBLIC_N8N_URL: process.env.NEXT_PUBLIC_N8N_URL,
     N8N_USER: process.env.N8N_USER,
     N8N_PASSWORD: process.env.N8N_PASSWORD,
     NEXT_PUBLIC_FUXA_URL: process.env.NEXT_PUBLIC_FUXA_URL,

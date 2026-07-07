@@ -139,9 +139,9 @@ export function ViewportBoundaries({ className }: ViewportBoundariesProps) {
             {/* Network Latency */}
             <div className="group relative flex items-center gap-1.5 cursor-default">
               {online ? (
-                <Wifi className="w-3.5 h-3.5 text-emerald-600" />
+                <Wifi className="w-3.5 h-3.5 text-accent-green" />
               ) : (
-                <WifiOff className="w-3.5 h-3.5 text-rose-500" />
+                <WifiOff className="w-3.5 h-3.5 text-accent-red" />
               )}
               <span className="text-[var(--text-secondary)] font-medium tabular-nums group-hover:text-[var(--text-heading)] transition-colors">
                 {websocketLatency} ms
@@ -154,7 +154,7 @@ export function ViewportBoundaries({ className }: ViewportBoundariesProps) {
 
             {/* Current Shift */}
             <div className="group relative flex items-center gap-1.5 cursor-default">
-              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <div className="w-1.5 h-1.5 rounded-full bg-accent-green animate-pulse" />
               <span className="text-[var(--text-secondary)] font-medium group-hover:text-[var(--text-heading)] transition-colors">
                 {currentShift.label}
               </span>

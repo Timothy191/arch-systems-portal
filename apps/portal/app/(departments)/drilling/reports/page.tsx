@@ -5,7 +5,11 @@ import { Input } from "@repo/ui/Input";
 import { Drill, Clock, AlertTriangle, ClipboardList } from "lucide-react";
 import SuspenseOnSearchParams from "@/components/SuspenseOnSearchParams";
 
-export const dynamic = "force-dynamic";
+// TODO: Cache Components adoption. Refactor this route so this opt-out can be removed.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
+export const instant = false;
+
+// TODO: Cache Components adoption - restore dynamic = "force-dynamic" behavior
 
 interface DrillingReportsPageProps {
   params: Promise<{ department: string }>;
@@ -233,12 +237,12 @@ async function DrillingReportsContent({
         </GlassCard>
         <GlassCard>
           <div className="flex items-center gap-2">
-            <Clock className="w-4 h-4 text-cyan-400" />
+            <Clock className="w-4 h-4 text-accent-cyan" />
             <p className="text-[var(--text-muted)] text-sm font-medium">
               Total Operating Hours
             </p>
           </div>
-          <p className="text-2xl font-semibold text-cyan-400 mt-2">
+          <p className="text-2xl font-semibold text-accent-cyan mt-2">
             {totalHours.toFixed(1)}h
           </p>
         </GlassCard>
@@ -409,14 +413,14 @@ async function DrillingReportsContent({
                       <span
                         className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2 py-0.5 rounded-full border ${
                           op.status === "active" || op.status === "completed"
-                            ? "bg-emerald-50/70 border-emerald-200/50 text-emerald-700"
+                            ? "bg-accent-green/10 border-accent-green/20 text-accent-green"
                             : op.status === "maintenance"
-                              ? "bg-amber-50/70 border-amber-200/50 text-amber-700"
-                              : "bg-red-50/70 border-red-200/50 text-red-700"
+                              ? "bg-accent-amber/10 border-accent-amber/20 text-accent-amber"
+                              : "bg-accent-red/10 border-accent-red/20 text-accent-red"
                         }`}
                       >
                         {op.status === "active" && (
-                          <span className="badge-pulse-dot bg-emerald-500" />
+                          <span className="badge-pulse-dot bg-accent-green" />
                         )}
                         {op.status}
                       </span>

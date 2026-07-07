@@ -27,7 +27,11 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-export const dynamic = "force-dynamic";
+// TODO: Cache Components adoption. Refactor this route so this opt-out can be removed.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
+export const instant = false;
+
+// TODO: Cache Components adoption - restore dynamic = "force-dynamic" behavior
 
 interface TelemetryRecord {
   period: string;
@@ -555,7 +559,7 @@ export default async function MachineTelemetryPage({
                       <TableCell className="text-right font-semibold text-accent-green">
                         {formatNumber(record.max_bit_depth, 1)}m
                       </TableCell>
-                      <TableCell className="text-right font-semibold text-cyan-400">
+                      <TableCell className="text-right font-semibold text-[var(--accent-cyan)]">
                         {formatNumber(record.max_hole_depth, 1)}m
                       </TableCell>
                       <TableCell className="text-right text-[var(--text-body)] font-medium">

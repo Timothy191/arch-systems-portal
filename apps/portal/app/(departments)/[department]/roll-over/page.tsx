@@ -2,6 +2,10 @@ import { getDepartmentContext, requireDepartment } from "~/lib/dept-context";
 import { GlassCard } from "@repo/ui/GlassCard";
 import { DozerRollForm } from "~/features/departments/components/control-room/DozerRollForm";
 
+// TODO: Cache Components adoption. Refactor this route so this opt-out can be removed.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
+export const instant = false;
+
 export default async function RollOverPage({
   params,
 }: {
@@ -211,8 +215,8 @@ export default async function RollOverPage({
 
                     {nightRolls.length > 0 && (
                       <div className="space-y-2">
-                        <h5 className="text-xs font-medium text-indigo-400 flex items-center gap-1.5 ml-4">
-                          <span className="w-1.5 h-1.5 rounded-full bg-indigo-400" />
+                        <h5 className="text-xs font-medium text-accent-blue flex items-center gap-1.5 ml-4">
+                          <span className="w-1.5 h-1.5 rounded-full bg-accent-blue" />
                           Night Shift
                         </h5>
                         {nightRolls.map((roll) => (

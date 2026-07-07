@@ -2,6 +2,7 @@
 
 import { createServerSupabaseClient } from "@repo/supabase/server";
 import { createServiceRoleClient } from "@repo/supabase/service-role";
+import { AuthError, NotFoundError, ForbiddenError } from "@repo/errors";
 
 export async function updateMachineSite(
   machineId: string,
@@ -14,7 +15,7 @@ export async function updateMachineSite(
   } = await supabase.auth.getUser();
 
   if (!user) {
-    throw new Error("Unauthorized");
+    throw new AuthError("Unauthorized");
   }
 
   // Validate that the employee exists and has a role
@@ -25,7 +26,7 @@ export async function updateMachineSite(
     .single();
 
   if (!employee) {
-    throw new Error("Unauthorized");
+    throw new AuthError("Unauthorized");
   }
 
   const { data: machine } = await supabase
@@ -35,7 +36,7 @@ export async function updateMachineSite(
     .single();
 
   if (!machine) {
-    throw new Error("Machine not found");
+    throw new NotFoundError("Machine not found");
   }
 
   const hasAccess =
@@ -43,7 +44,7 @@ export async function updateMachineSite(
     employee.department_id === machine.department_id;
 
   if (!hasAccess) {
-    throw new Error(
+    throw new ForbiddenError(
       "Forbidden: You do not have access to manage this machine.",
     );
   }

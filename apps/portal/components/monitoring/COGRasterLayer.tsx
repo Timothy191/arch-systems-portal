@@ -88,11 +88,11 @@ export function COGRasterLayer({
   return (
     <div className="space-y-4">
       {/* Info */}
-      <div className="p-4 rounded-xl bg-purple-500/10 border border-purple-500/20">
+      <div className="p-4 rounded-xl bg-accent-blue/10 border border-accent-blue/20">
         <div className="flex items-start gap-3">
-          <span className="text-purple-400 text-xl mt-0.5">🗺️</span>
+          <span className="text-accent-blue text-xl mt-0.5">🗺️</span>
           <div>
-            <p className="text-sm font-semibold text-purple-400">
+            <p className="text-sm font-semibold text-accent-blue">
               Cloud-Optimized GeoTIFF (COG)
             </p>
             <p className="text-xs text-[var(--text-secondary)] mt-1 leading-relaxed">

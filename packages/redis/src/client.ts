@@ -6,8 +6,15 @@ let client: RedisClientType | null = null;
 let connecting: Promise<RedisClientType> | null = null;
 
 /**
+ * Returns the Redis client if it is currently open, otherwise null.
+ * Useful for non-critical operations (like telemetry) to avoid triggering connections.
+ */
+export function getClientIfOpen(): RedisClientType | null {
+  return client?.isOpen ? client : null;
+}
+
+/**
  * Get or create the singleton Redis client.
- *
  * Reconnection behaviour:
  *  - Existing open socket → returned immediately.
  *  - In-flight connect → awaited (prevents thundering herd).
@@ -18,13 +25,12 @@ export async function getRedisClient(): Promise<RedisClientType> {
   if (connecting) return connecting;
 
   connecting = (async () => {
-    // @ts-ignore — pnpm hoists two copies of @redis/client types, causing
-    // spurious "Two different types with this name exist" errors. Cast to
-    // any so TS uses structural typing instead of nominal.
-    const next: RedisClientType = createClient({
+    // Cast through unknown to resolve nominal type mismatch from pnpm hoisting
+    // of duplicate @redis/client versions, without disabling type checking.
+    const next = createClient({
       url: REDIS_URL,
       socket: {
-        keepAlive: true,
+        keepAlive: 5000,
         reconnectStrategy(retries: number) {
           if (retries > 3) {
             return new Error("Redis connection failed");
@@ -32,7 +38,7 @@ export async function getRedisClient(): Promise<RedisClientType> {
           return Math.min(retries * 50, 500);
         },
       },
-    } as any);
+    }) as unknown as RedisClientType;
 
     next.on("error", () => {
       if (client === next) client = null;
@@ -44,10 +50,13 @@ export async function getRedisClient(): Promise<RedisClientType> {
       connecting = null;
     });
 
-    await next.connect();
-    client = next;
-    connecting = null;
-    return client;
+    try {
+      await next.connect();
+      client = next;
+      return client;
+    } finally {
+      connecting = null;
+    }
   })();
 
   return connecting;

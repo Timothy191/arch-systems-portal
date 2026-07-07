@@ -36,10 +36,10 @@ export const tokens = {
       heading: "var(--text-heading)",
       onGlass: "var(--text-on-glass)",
       onGlassMuted: "var(--text-on-glass-muted)",
-      onGlassVideo: "var(--text-on-glass-video)",
-      onGlassVideoMuted: "var(--text-on-glass-video-muted)",
       onDarkGlass: "var(--text-on-dark-glass)",
       onDarkGlassMuted: "var(--text-on-dark-glass-muted)",
+      onGlassVideo: "var(--text-on-glass-video)",
+      onGlassVideoMuted: "var(--text-on-glass-video-muted)",
     },
     accent: {
       red: "var(--accent-red)",

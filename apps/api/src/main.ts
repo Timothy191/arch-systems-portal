@@ -9,6 +9,7 @@ import { ConfigService } from "@nestjs/config";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { AppModule } from "./app.module";
 import { GlobalExceptionFilter } from "./common/filters/global-exception.filter";
+import { AgentTriggerService } from "./ai/agent-trigger.service";
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -47,8 +48,9 @@ async function bootstrap() {
     }),
   );
 
-  // Global exception filter with Sentry integration
-  app.useGlobalFilters(new GlobalExceptionFilter());
+  // Global exception filter with Sentry integration and AI hooks
+  const agentTriggerService = app.get(AgentTriggerService);
+  app.useGlobalFilters(new GlobalExceptionFilter(agentTriggerService));
 
   // Swagger (dev only)
   const configService = app.get(ConfigService);

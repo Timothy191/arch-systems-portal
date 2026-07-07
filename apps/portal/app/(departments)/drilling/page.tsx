@@ -3,7 +3,11 @@ import { GlassCard } from "@repo/ui/GlassCard";
 import { createReadReplicaClient } from "@repo/supabase/read-replica";
 import { Drill, Clock, AlertTriangle } from "lucide-react";
 
-export const dynamic = "force-dynamic";
+// TODO: Cache Components adoption. Refactor this route so this opt-out can be removed.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
+export const instant = false;
+
+// TODO: Cache Components adoption - restore dynamic = "force-dynamic" behavior
 
 async function getDrillingDashboardData(deptId: string, today: string) {
   const db = await createReadReplicaClient();
@@ -134,12 +138,12 @@ export default async function DrillingDashboardPage() {
 
         <GlassCard>
           <div className="flex items-center gap-2">
-            <Clock className="w-4 h-4 text-cyan-400" />
+            <Clock className="w-4 h-4 text-[var(--accent-cyan)]" />
             <p className="text-[var(--text-muted)] text-xs font-medium uppercase tracking-wider">
               Hours Today
             </p>
           </div>
-          <p className="text-2xl font-bold text-cyan-400 mt-2">
+          <p className="text-2xl font-bold text-[var(--accent-cyan)] mt-2">
             {totalHours.toFixed(1)}h
           </p>
         </GlassCard>

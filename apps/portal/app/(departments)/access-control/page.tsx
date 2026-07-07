@@ -10,7 +10,11 @@ import {
   getBadgeStatusDistribution,
 } from "./actions";
 
-export const dynamic = "force-dynamic";
+// TODO: Cache Components adoption. Refactor this route so this opt-out can be removed.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
+export const instant = false;
+
+// TODO: Cache Components adoption - restore dynamic = "force-dynamic" behavior
 
 const DashboardKPIGrid = nextDynamic(
   () => import("./components/DashboardKPIGrid"),
@@ -66,14 +70,14 @@ export default async function AccessControlDashboardPage() {
         </GlassCard>
         <GlassCard>
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-cyan-400/10 rounded-lg">
-              <span className="text-cyan-400 font-bold text-sm">VISITORS</span>
+            <div className="p-2 bg-[var(--accent-cyan)]/10 rounded-lg">
+              <span className="text-[var(--accent-cyan)] font-bold text-sm">VISITORS</span>
             </div>
             <div>
               <p className="text-[var(--text-muted)] text-xs font-medium uppercase tracking-wider">
                 Active Visitors
               </p>
-              <p className="text-2xl font-bold text-cyan-400 mt-1">
+              <p className="text-2xl font-bold text-[var(--accent-cyan)] mt-1">
                 {metrics.accessEventsToday}
               </p>
             </div>

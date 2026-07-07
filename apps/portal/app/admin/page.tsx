@@ -13,6 +13,10 @@ import { WebhooksTab } from "~/features/admin/tabs/WebhooksTab";
 import { AuditLogsTab } from "~/features/admin/tabs/AuditLogsTab";
 import { SettingsTab } from "~/features/admin/tabs/SettingsTab";
 
+// TODO: Cache Components adoption. Refactor this route so this opt-out can be removed.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
+export const instant = false;
+
 const TABS = [
   "users",
   "departments",

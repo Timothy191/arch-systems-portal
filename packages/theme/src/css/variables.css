@@ -203,6 +203,11 @@
   --text-on-glass: rgba(10, 10, 20, 0.92);
   --text-on-glass-muted: rgba(10, 10, 20, 0.55);
 
+  --dark-glass-surface: rgba(15, 23, 42, 0.45);
+  --dark-glass-surface-hover: rgba(15, 23, 42, 0.6);
+  --text-on-dark-glass: rgba(255, 255, 255, 0.95);
+  --text-on-dark-glass-muted: rgba(255, 255, 255, 0.6);
+
   /* ── Glass-on-Video (translucent light glass over dark media) ──────────
      These tokens produce a light-blurred-glass effect when layered over
      the dark video scrim. The white surface at ~70 % opacity over a

@@ -128,17 +128,17 @@ export function DepartmentLayout({
           <div
             className={cn(
               "p-1.5 rounded-lg",
-              department.color === "blue" && "bg-blue-500/10 text-blue-600",
+              department.color === "blue" && "bg-accent-blue/10 text-accent-blue",
               department.color === "emerald" &&
                 "bg-accent-green/10 text-accent-green",
-              department.color === "blue" && "bg-blue-500/10 text-blue-600",
+              department.color === "blue" && "bg-accent-blue/10 text-accent-blue",
               department.color === "violet" &&
-                "bg-violet-500/10 text-violet-600",
-              department.color === "red" && "bg-red-500/10 text-red-600",
-              department.color === "blue" && "bg-blue-500/10 text-blue-600",
-              department.color === "cyan" && "bg-cyan-500/10 text-cyan-600",
+                "bg-accent-blue/10 text-accent-blue",
+              department.color === "red" && "bg-accent-red/10 text-accent-red",
+              department.color === "blue" && "bg-accent-blue/10 text-accent-blue",
+              department.color === "cyan" && "bg-accent-blue/10 text-accent-blue",
               department.color === "indigo" &&
-                "bg-indigo-500/10 text-indigo-600",
+                "bg-accent-blue/10 text-accent-blue",
             )}
           >
             <BarChart3 className="w-3.5 h-3.5" />

@@ -124,20 +124,20 @@ function sceneAgeDays(datetime: string): number {
 
 function getActiveClass(composite: SpectralComposite, color: string) {
   const map: Record<string, string> = {
-    sky: "bg-sky-500/10 border-sky-500/40",
+    sky: "bg-accent-cyan/10 border-accent-cyan/40",
     emerald: "bg-accent-green/10 border-accent-green/40",
-    lime: "bg-lime-500/10 border-lime-500/40",
-    violet: "bg-violet-500/10 border-violet-500/40",
+    lime: "bg-accent-green/10 border-accent-green/40",
+    violet: "bg-accent-blue/10 border-accent-blue/40",
   };
   return map[color] ?? "bg-[#3ecf8e]/10 border-[#3ecf8e]/40";
 }
 
 function getActiveLabelClass(composite: SpectralComposite, color: string) {
   const map: Record<string, string> = {
-    sky: "text-sky-400",
+    sky: "text-accent-cyan",
     emerald: "text-accent-green",
-    lime: "text-lime-400",
-    violet: "text-violet-400",
+    lime: "text-accent-green",
+    violet: "text-accent-blue",
   };
   return map[color] ?? "text-[#3ecf8e]";
 }
@@ -152,11 +152,11 @@ export function HyperspectralLayer({
   return (
     <div className="space-y-4">
       {/* Info Banner */}
-      <div className="p-4 rounded-xl bg-violet-500/10 border border-violet-500/20">
+      <div className="p-4 rounded-xl bg-accent-blue/10 border-accent-blue/20">
         <div className="flex items-start gap-3">
-          <span className="text-violet-400 text-xl mt-0.5">🌈</span>
+          <span className="text-accent-blue text-xl mt-0.5">🌈</span>
           <div>
-            <p className="text-sm font-semibold text-violet-400">
+            <p className="text-sm font-semibold text-accent-blue">
               Sentinel-2 Multispectral — 13 Bands
             </p>
             <p className="text-xs text-[var(--text-secondary)] mt-1 leading-relaxed">
@@ -306,7 +306,7 @@ export function HyperspectralLayer({
                             ☁ {cloud.toFixed(0)}%
                           </span>
                         )}
-                        <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-violet-500/20 text-violet-400">
+                        <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-accent-blue/20 text-accent-blue">
                           S2
                         </span>
                       </div>

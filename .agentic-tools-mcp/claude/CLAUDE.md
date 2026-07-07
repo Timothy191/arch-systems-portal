@@ -11,9 +11,8 @@
 > (documentation, ownership, history, decisions). **Always verify against
 > actual source files before making changes** — the index may be stale.
 
-Last indexed: 2026-07-06 (commit 6a4f5da0)
+Last indexed: 2026-07-07 (commit 7b422abe)
 ### Entry Points
-- `.ai/framework/__main__.py`
 - `packages/supabase/src/server.ts`
 - `apps/ai-agents/src/main.py`
 - `apps/api/src/main.ts`
@@ -21,6 +20,7 @@ Last indexed: 2026-07-06 (commit 6a4f5da0)
 - `.aistack/apps/ai-gateway/src/main.ts`
 - `.aistack/tools/memex/memex/__main__.py`
 - `.aistack/tools/memex/memex/memory_tool/server.py`
+- `.aistack/tools/memex/memex/mcp_server/server.py`
 ### Tech Stack
 **Languages:** Node.js, TypeScript
 
@@ -28,16 +28,16 @@ Last indexed: 2026-07-06 (commit 6a4f5da0)
 **Infra:** Turborepo### Architectural Layers
 | Layer | Files | Purpose |
 |-------|-------|---------|
-| Application | 487 |  |
-| Config | 10517 |  |
-| API | 71 |  |
+| Application | 488 |  |
+| Config | 9946 |  |
+| API | 73 |  |
+| UI | 139 |  |
 | Middleware | 1 |  |
 | Data | 11 |  |
-| UI | 143 |  |
-| Utility | 54 |  |
+| Utility | 53 |  |
 | Service | 22 |  |
 | Docs & Tooling | 44 |  |
-| Test | 1101 |  |
+| Test | 1097 |  |
 
 ### Guided Tour (12 steps)
 1. `README.md`
@@ -51,10 +51,10 @@ Last indexed: 2026-07-06 (commit 6a4f5da0)
 | File | Churn | 90d Commits | Owner |
 |------|-------|-------------|-------|
 | `apps/portal/proxy.ts` | 100.0th %ile | 5 | Timothy191 |
+| `CLAUDE.md` | 100.0th %ile | 6 | Timothy191 |
 | `apps/portal/app/(departments)/[department]/hourly-loads/HourlyLoadsGrid.tsx` | 100.0th %ile | 3 | Timothy191 |
+| `packages/errors/src/index.ts` | 99.9th %ile | 3 | Timothy191 |
 | `apps/portal/lib/shift-completeness.ts` | 99.9th %ile | 3 | Timothy191 |
-| `apps/portal/app/(departments)/[department]/page.tsx` | 99.9th %ile | 3 | Timothy191 |
-| `scripts/dev.sh` | 99.8th %ile | 3 | Timothy191 |
 
 ### Repowise MCP Tools
 

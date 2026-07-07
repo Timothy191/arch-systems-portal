@@ -10,7 +10,7 @@ Arch-Systems (Plantcor) is an industrial mining-operations portal. It is a **pnp
 | ------------------------------------------------------------------------------- | ---------------------------------------------------- | --------------------------------------- |
 | `apps/portal`                                                                   | Next.js 16 operations dashboard (main app)           | `3000`, Turbopack dev                   |
 | `apps/api`                                                                      | NestJS 11 backend on Fastify 5                       | `3004` by default, global prefix `/api` |
-| `apps/ai-agents`                                                                | FastAPI CrewAI/LangGraph orchestration (stub)        | Python 3.11+, no fixed port              |
+| `apps/ai-agents`                                                                | FastAPI CrewAI/LangGraph orchestration (stub)        | Python 3.11+, no fixed port             |
 | `packages/supabase`                                                             | Data access layer: `@supabase/ssr`, Kysely, typed DB | consumed by apps                        |
 | `packages/database`                                                             | SQL migrations source of truth ONLY                  | not imported directly by apps           |
 | `packages/theme`                                                                | OKLCH design tokens + Tailwind preset                | source: `src/css/variables.css`         |
@@ -24,36 +24,36 @@ Arch-Systems (Plantcor) is an industrial mining-operations portal. It is a **pnp
 
 Run everything from the repository root unless noted.
 
-| Task                                             | Command                                              |
-| ------------------------------------------------ | ---------------------------------------------------- |
-| Install dependencies                             | `pnpm install`                                       |
-| Full dev stack (Supabase + Redis + API + Portal) | `pnpm dev`                                           |
-| Portal only, no Docker/Supabase                  | `pnpm dev --quick`                                   |
-| Dev without the NestJS API                       | `pnpm dev --no-api`                                  |
-| Build all apps/packages                          | `pnpm build`                                         |
-| Type-check all                                   | `pnpm type-check`                                    |
-| Lint all                                         | `pnpm lint`                                          |
-| Lint root workspace files only                   | `pnpm lint:root`                                     |
-| Unit tests all                                   | `pnpm test`                                          |
-| Run a single portal test                         | `pnpm --filter portal test -- path/to/file.test.tsx` |
-| Run a single API test                            | `pnpm --filter api test -- path/to/file.spec.ts`     |
-| E2E tests (Playwright)                           | `pnpm test:e2e`                                      |
-| Full quality gate                                | `pnpm quality`                                       |
-| Format all files                                 | `pnpm format`                                        |
-| Check formatting                                 | `pnpm format:check`                                  |
-| Run a script in one package                      | `pnpm --filter <package-name> <script>`              |
-| Regenerate policy/boundary rules                 | `pnpm policy:gen`                                    |
-| Audit RLS after migration changes                | `pnpm audit:rls`                                     |
-| Start agentic-tools MCP server                   | `pnpm agentic-tools`                                 |
-| Start agentic-tools daemon                       | `pnpm agentic-tools:daemon`                          |
-| Bootstrap env template                           | `pnpm agentic-tools:setup`                           |
-| Dead-code / unused-export detection              | `pnpm knip` (or `pnpm knip:fix` to autofix)          |
-| Portal bundle analysis build                     | `pnpm analyze`                                       |
-| Generate DB docs                                  | `pnpm db:docs`                                       |
-| Monitoring HUD                                    | `pnpm monitor`                                       |
-| Grafana/Prometheus stack                          | `pnpm monitor:grafana` / `pnpm monitor:grafana-stop` |
+| Task                                             | Command                                                    |
+| ------------------------------------------------ | ---------------------------------------------------------- |
+| Install dependencies                             | `pnpm install`                                             |
+| Full dev stack (Supabase + Redis + API + Portal) | `pnpm dev`                                                 |
+| Portal only, no Docker/Supabase                  | `pnpm dev --quick`                                         |
+| Dev without the NestJS API                       | `pnpm dev --no-api`                                        |
+| Build all apps/packages                          | `pnpm build`                                               |
+| Type-check all                                   | `pnpm type-check`                                          |
+| Lint all                                         | `pnpm lint`                                                |
+| Lint root workspace files only                   | `pnpm lint:root`                                           |
+| Unit tests all                                   | `pnpm test`                                                |
+| Run a single portal test                         | `pnpm --filter portal test -- path/to/file.test.tsx`       |
+| Run a single API test                            | `pnpm --filter api test -- path/to/file.spec.ts`           |
+| E2E tests (Playwright)                           | `pnpm test:e2e`                                            |
+| Full quality gate                                | `pnpm quality`                                             |
+| Format all files                                 | `pnpm format`                                              |
+| Check formatting                                 | `pnpm format:check`                                        |
+| Run a script in one package                      | `pnpm --filter <package-name> <script>`                    |
+| Regenerate policy/boundary rules                 | `pnpm policy:gen`                                          |
+| Audit RLS after migration changes                | `pnpm audit:rls`                                           |
+| Start agentic-tools MCP server                   | `pnpm agentic-tools`                                       |
+| Start agentic-tools daemon                       | `pnpm agentic-tools:daemon`                                |
+| Bootstrap env template                           | `pnpm agentic-tools:setup`                                 |
+| Dead-code / unused-export detection              | `pnpm knip` (or `pnpm knip:fix` to autofix)                |
+| Portal bundle analysis build                     | `pnpm analyze`                                             |
+| Generate DB docs                                 | `pnpm db:docs`                                             |
+| Monitoring HUD                                   | `pnpm monitor`                                             |
+| Grafana/Prometheus stack                         | `pnpm monitor:grafana` / `pnpm monitor:grafana-stop`       |
 | Deploy (dev / staging / production)              | `pnpm deploy:dev` / `deploy:staging` / `deploy:production` |
-| Rollback a production deploy                      | `pnpm deploy:rollback`                               |
+| Rollback a production deploy                     | `pnpm deploy:rollback`                                     |
 
 Supabase helpers live in `packages/database/package.json` and `packages/supabase/package.json` (e.g. `pnpm --filter @repo/database supabase:start`, `supabase:reset`, `supabase:push`).
 

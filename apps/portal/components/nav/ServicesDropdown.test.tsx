@@ -114,7 +114,7 @@ jest.mock("@/lib/weather-api", () => ({
   }),
 }));
 
-jest.mock("~/app/actions", () => ({
+jest.mock("@/app/actions", () => ({
   logout: jest.fn(),
 }));
 

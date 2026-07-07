@@ -4,146 +4,153 @@
 @tailwind components;
 @tailwind utilities;
 
-@theme inline {
-  --animate-shine: shine var(--duration) infinite linear;
-  --animate-marquee: marquee var(--duration) infinite linear;
-  --animate-marquee-vertical: marquee-vertical var(--duration) linear infinite;
-  @keyframes shine {
-    0% {
-      background-position: 0% 0%;
-    }
-    50% {
-      background-position: 100% 100%;
-    }
-    to {
-      background-position: 0% 0%;
-    }
+@keyframes shine {
+  0% {
+    background-position: 0% 0%;
   }
-  @keyframes marquee {
-    from {
-      transform: translateX(0);
-    }
-    to {
-      transform: translateX(calc(-100% - var(--gap)));
-    }
+  50% {
+    background-position: 100% 100%;
   }
-  @keyframes marquee-vertical {
-    from {
-      transform: translateY(0);
-    }
-    to {
-      transform: translateY(calc(-100% - var(--gap)));
-    }
+  to {
+    background-position: 0% 0%;
   }
-  @keyframes wave-drift {
-    from {
-      transform: translateX(0);
-    }
-    to {
-      transform: translateX(-50%);
-    }
+}
+@keyframes marquee {
+  from {
+    transform: translateX(0);
   }
-  @keyframes wave-drift-vertical {
-    from {
-      transform: translateY(0);
-    }
-    to {
-      transform: translateY(-50%);
-    }
+  to {
+    transform: translateX(calc(-100% - var(--gap)));
   }
-  @keyframes solar-flare {
-    0% {
-      opacity: 0.4;
-      transform: scale(1) translate3d(0, 0, 0);
-    }
-    50% {
-      opacity: 0.8;
-      transform: scale(1.15) translate3d(3%, 4%, 0);
-    }
-    100% {
-      opacity: 0.4;
-      transform: scale(1.05) translate3d(-3%, -2%, 0);
-    }
+}
+@keyframes marquee-vertical {
+  from {
+    transform: translateY(0);
   }
-
-  @keyframes aurora-shadow {
-    0%,
-    100% {
-      box-shadow:
-        0 10px 30px -10px rgba(15, 25, 45, 0.08),
-        0 0 15px rgba(210, 210, 215, 0.15);
-    }
-    50% {
-      box-shadow:
-        0 10px 33px -10px rgba(15, 25, 45, 0.15),
-        0 0 18px rgba(210, 210, 215, 0.25);
-    }
+  to {
+    transform: translateY(calc(-100% - var(--gap)));
   }
-
-  @keyframes glass-shimmer {
-    0% {
-      transform: translateX(-150%) skewX(-45deg);
-    }
-    15% {
-      transform: translateX(350%) skewX(-45deg);
-    }
-    100% {
-      transform: translateX(350%) skewX(-45deg);
-    }
+}
+@keyframes wave-drift {
+  from {
+    transform: translateX(0);
   }
-
-  @keyframes glass-shimmer-ambient {
-    0% {
-      transform: translateX(-100%) skewX(-12deg);
-    }
-    8%,
-    100% {
-      transform: translateX(200%) skewX(-12deg);
-    }
+  to {
+    transform: translateX(-50%);
   }
-
-  @keyframes caustic-wave {
-    0% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-    100% {
-      background-position: 0% 50%;
-    }
+}
+@keyframes wave-drift-vertical {
+  from {
+    transform: translateY(0);
   }
-
-  @keyframes caustic-shadow-optimal {
-    0%,
-    100% {
-      box-shadow: 0 4px 20px -2px rgba(52, 199, 89, 0.05);
-    }
-    50% {
-      box-shadow: 0 6px 30px -2px rgba(52, 199, 89, 0.2);
-    }
+  to {
+    transform: translateY(-50%);
   }
-  @keyframes caustic-shadow-warning {
-    0%,
-    100% {
-      box-shadow: 0 4px 20px -2px rgba(245, 158, 11, 0.05);
-    }
-    50% {
-      box-shadow: 0 6px 30px -2px rgba(245, 158, 11, 0.2);
-    }
+}
+@keyframes solar-flare {
+  0% {
+    opacity: 0.4;
+    transform: scale(1) translate3d(0, 0, 0);
   }
-  @keyframes caustic-shadow-critical {
-    0%,
-    100% {
-      box-shadow: 0 4px 20px -2px rgba(255, 59, 48, 0.05);
-    }
-    50% {
-      box-shadow: 0 6px 30px -2px rgba(255, 59, 48, 0.25);
-    }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.15) translate3d(3%, 4%, 0);
+  }
+  100% {
+    opacity: 0.4;
+    transform: scale(1.05) translate3d(-3%, -2%, 0);
   }
 }
 
+@keyframes aurora-shadow {
+  0%,
+  100% {
+    box-shadow:
+      0 10px 30px -10px rgba(15, 25, 45, 0.08),
+      0 0 15px rgba(210, 210, 215, 0.15);
+  }
+  50% {
+    box-shadow:
+      0 10px 33px -10px rgba(15, 25, 45, 0.15),
+      0 0 18px rgba(210, 210, 215, 0.25);
+  }
+}
+
+@keyframes glass-shimmer {
+  0% {
+    transform: translateX(-150%) skewX(-45deg);
+  }
+  15% {
+    transform: translateX(350%) skewX(-45deg);
+  }
+  100% {
+    transform: translateX(350%) skewX(-45deg);
+  }
+}
+
+@keyframes glass-shimmer-ambient {
+  0% {
+    transform: translateX(-100%) skewX(-12deg);
+  }
+  8%,
+  100% {
+    transform: translateX(200%) skewX(-12deg);
+  }
+}
+
+@keyframes caustic-wave {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes caustic-shadow-optimal {
+  0%,
+  100% {
+    box-shadow: 0 4px 20px -2px rgba(52, 199, 89, 0.05);
+  }
+  50% {
+    box-shadow: 0 6px 30px -2px rgba(52, 199, 89, 0.2);
+  }
+}
+@keyframes caustic-shadow-warning {
+  0%,
+  100% {
+    box-shadow: 0 4px 20px -2px rgba(245, 158, 11, 0.05);
+  }
+  50% {
+    box-shadow: 0 6px 30px -2px rgba(245, 158, 11, 0.2);
+  }
+}
+@keyframes caustic-shadow-critical {
+  0%,
+  100% {
+    box-shadow: 0 4px 20px -2px rgba(255, 59, 48, 0.05);
+  }
+  50% {
+    box-shadow: 0 6px 30px -2px rgba(255, 59, 48, 0.25);
+  }
+}
+
+
 @layer utilities {
+  /* ── Animation Utilities ── */
+  .animate-shine {
+    animation: shine var(--duration, 8s) infinite linear;
+  }
+  .animate-marquee {
+    animation: marquee var(--duration, 40s) infinite linear;
+  }
+  .animate-marquee-vertical {
+    animation: marquee-vertical var(--duration, 40s) linear infinite;
+  }
+
   /* ── Z-Index Matrix Utilities ── */
   .z-background {
     z-index: var(--z-background);
@@ -446,6 +453,47 @@
     outline: none;
     border-color: var(--arch-brand-blue) !important;
     box-shadow: 0 0 0 4px rgba(28, 28, 30, 0.2) !important;
+  }
+}
+
+/* ── View Transitions: page-content swap on navigation ──
+   AGENT-TRACE: driven by React <ViewTransition enter="nav-slide-up"
+   exit="nav-slide-down"> in the department layout + experimental.viewTransition.
+   Old content fades out + slides down; new content fades in + slides up after
+   the exit completes. The department tab chrome sits outside the ViewTransition
+   boundary and does not move. */
+::view-transition-old(.nav-slide-down) {
+  animation:
+    140ms ease-out both nav-fade reverse,
+    140ms ease-out both nav-slide-y reverse;
+}
+::view-transition-new(.nav-slide-up) {
+  animation:
+    200ms ease-out 140ms both nav-fade,
+    220ms ease-out 140ms both nav-slide-y;
+}
+@keyframes nav-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes nav-slide-y {
+  from {
+    transform: translateY(8px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
   }
 }
 

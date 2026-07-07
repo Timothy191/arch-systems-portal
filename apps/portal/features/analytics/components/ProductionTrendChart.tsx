@@ -73,7 +73,7 @@ export function ProductionTrendChart({
         </span>
         {forecast.length > 0 && (
           <span className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-indigo-500 inline-block" />
+            <span className="w-2 h-2 rounded-full bg-accent-blue inline-block" />
             7-day Forecast
           </span>
         )}

@@ -1,6 +1,5 @@
 "use server";
 
-import { cacheInvalidateTags } from "@repo/redis";
 import { createServerSupabaseClient } from "@repo/supabase/server";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { revalidateMachinesCache } from "@/lib/cache/revalidate";
@@ -57,7 +56,6 @@ export async function adminAddMachine(data: {
 
   if (error) return { error: "Failed to add machine" };
 
-  await cacheInvalidateTags(["table:fleet", "table:equipment"]);
   await revalidateMachinesCache();
   try {
     revalidateTag("table:machines", "max");
@@ -105,7 +103,6 @@ export async function adminUpdateMachine(
 
   if (error) return { error: "Failed to update machine" };
 
-  await cacheInvalidateTags(["table:fleet", "table:equipment"]);
   await revalidateMachinesCache();
   try {
     revalidateTag("table:machines", "max");

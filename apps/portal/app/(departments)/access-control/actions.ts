@@ -1,6 +1,6 @@
 "use server";
 
-import { cacheInvalidateTags, CacheCategory } from "@repo/redis";
+import { CacheCategory } from "@repo/redis";
 import { createServerSupabaseClient } from "@repo/supabase/server";
 import { revalidatePath } from "next/cache";
 import { revalidateBadgesCache } from "@/lib/cache/revalidate";
@@ -390,8 +390,7 @@ async function _revokeBadge(
     return { success: false, error: error.message };
   }
 
-  await cacheInvalidateTags(["table:badges", `dept:${employee.department_id}`]);
-  await revalidateBadgesCache();
+  await revalidateBadgesCache(employee.department_id);
   revalidatePath("/access-control/badges");
   return { success: true };
 }

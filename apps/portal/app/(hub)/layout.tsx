@@ -7,6 +7,10 @@ import {
 import { createReadReplicaClient } from "@repo/supabase/read-replica";
 import { redirect } from "next/navigation";
 
+// TODO: Cache Components adoption. Refactor this route so this opt-out can be removed.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
+export const instant = false;
+
 const getAccessibleDepartmentNames = cache(
   async function getAccessibleDepartmentNames(
     userId: string,

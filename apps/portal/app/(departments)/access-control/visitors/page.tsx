@@ -12,9 +12,105 @@ import {
   TableRow,
 } from "@repo/ui/components/ui/table";
 import { Users, Plus, Clock } from "lucide-react";
-import { getVisitorsForDepartment } from "../actions";
+import { cookies } from "next/headers";
+import { Suspense } from "react";
+import { getVisitorsForDepartment } from "~/lib/data/access-control";
+import { GlassSkeleton } from "@repo/ui/components/ui/glass-skeleton";
 
-export const dynamic = "force-dynamic";
+// TODO: Cache Components adoption. Refactor this route so this opt-out can be removed.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
+export const instant = false;
+
+// TODO: Cache Components adoption - restore dynamic = "force-dynamic" behavior
+
+async function VisitorsTable({ deptId }: { deptId: string }) {
+  const cookieStore = await cookies();
+  const visitors = await getVisitorsForDepartment(deptId, cookieStore.getAll());
+
+  return (
+    <GlassCard className="p-0 overflow-hidden h-full">
+      <div className="p-4 border-b border-[var(--border-default)] bg-[var(--bg-secondary)]/50 flex justify-between items-center">
+        <h3 className="font-semibold text-[var(--text-heading)] flex items-center">
+          <Clock className="w-4 h-4 mr-2 text-[var(--text-muted)]" />
+          Today&apos;s Visitors
+        </h3>
+      </div>
+      <Table>
+        <TableHeader>
+          <TableRow className="border-b border-[var(--border-default)] hover:bg-transparent">
+            <TableHead className="text-[var(--text-muted)]">
+              Visitor Name
+            </TableHead>
+            <TableHead className="text-[var(--text-muted)]">
+              Company
+            </TableHead>
+            <TableHead className="text-[var(--text-muted)]">
+              Reason
+            </TableHead>
+            <TableHead className="text-[var(--text-muted)]">
+              Check-In
+            </TableHead>
+            <TableHead className="text-right text-[var(--text-muted)]">
+              Status
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {visitors.length === 0 && (
+            <TableRow>
+              <TableCell
+                colSpan={5}
+                className="text-center py-8 text-[var(--text-muted)]"
+              >
+                No visitors found for this department.
+              </TableCell>
+            </TableRow>
+          )}
+          {visitors.map((visitor) => (
+            <TableRow
+              key={visitor.id}
+              className="border-b border-[var(--border-default)]/50 hover:bg-[var(--bg-tertiary)] transition-colors"
+            >
+              <TableCell className="font-medium text-[var(--text-heading)]">
+                {visitor.first_name} {visitor.surname}
+              </TableCell>
+              <TableCell className="text-[var(--text-secondary)]">
+                {visitor.company || "—"}
+              </TableCell>
+              <TableCell className="text-[var(--text-secondary)]">
+                {visitor.reason_for_entry || "—"}
+              </TableCell>
+              <TableCell className="font-mono text-sm text-[var(--text-secondary)]">
+                {visitor.check_in_time
+                  ? new Date(visitor.check_in_time).toLocaleTimeString(
+                      "en-US",
+                      {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: false,
+                      },
+                    )
+                  : "—"}
+              </TableCell>
+              <TableCell className="text-right">
+                {visitor.status === "Checked In" ? (
+                  <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2 py-0.5 rounded-full border bg-accent-green/10 border-accent-green/20 text-accent-green">
+                    <span className="badge-pulse-dot bg-accent-green" />
+                    Checked In
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2 py-0.5 rounded-full border bg-[var(--bg-secondary)] text-[var(--text-muted)] border-[var(--border-default)]">
+                    {visitor.status || "—"}
+                  </span>
+                )}
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </GlassCard>
+  );
+}
 
 export default async function VisitorsPage() {
   const { deptId } = await getDepartmentContext({
@@ -34,8 +130,6 @@ export default async function VisitorsPage() {
       </div>
     );
   }
-
-  const visitors = await getVisitorsForDepartment(deptId);
 
   return (
     <div className="space-y-6">
@@ -133,87 +227,9 @@ export default async function VisitorsPage() {
 
         {/* Active Visitors Table (Right, 2 cols) */}
         <div className="lg:col-span-2">
-          <GlassCard className="p-0 overflow-hidden h-full">
-            <div className="p-4 border-b border-[var(--border-default)] bg-[var(--bg-secondary)]/50 flex justify-between items-center">
-              <h3 className="font-semibold text-[var(--text-heading)] flex items-center">
-                <Clock className="w-4 h-4 mr-2 text-[var(--text-muted)]" />
-                Today&apos;s Visitors
-              </h3>
-            </div>
-            <Table>
-              <TableHeader>
-                <TableRow className="border-b border-[var(--border-default)] hover:bg-transparent">
-                  <TableHead className="text-[var(--text-muted)]">
-                    Visitor Name
-                  </TableHead>
-                  <TableHead className="text-[var(--text-muted)]">
-                    Company
-                  </TableHead>
-                  <TableHead className="text-[var(--text-muted)]">
-                    Reason
-                  </TableHead>
-                  <TableHead className="text-[var(--text-muted)]">
-                    Check-In
-                  </TableHead>
-                  <TableHead className="text-right text-[var(--text-muted)]">
-                    Status
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {visitors.length === 0 && (
-                  <TableRow>
-                    <TableCell
-                      colSpan={5}
-                      className="text-center py-8 text-[var(--text-muted)]"
-                    >
-                      No visitors found for this department.
-                    </TableCell>
-                  </TableRow>
-                )}
-                {visitors.map((visitor) => (
-                  <TableRow
-                    key={visitor.id}
-                    className="border-b border-[var(--border-default)]/50 hover:bg-[var(--bg-tertiary)] transition-colors"
-                  >
-                    <TableCell className="font-medium text-[var(--text-heading)]">
-                      {visitor.first_name} {visitor.surname}
-                    </TableCell>
-                    <TableCell className="text-[var(--text-secondary)]">
-                      {visitor.company || "—"}
-                    </TableCell>
-                    <TableCell className="text-[var(--text-secondary)]">
-                      {visitor.reason_for_entry || "—"}
-                    </TableCell>
-                    <TableCell className="font-mono text-sm text-[var(--text-secondary)]">
-                      {visitor.check_in_time
-                        ? new Date(visitor.check_in_time).toLocaleTimeString(
-                            "en-US",
-                            {
-                              hour: "2-digit",
-                              minute: "2-digit",
-                              hour12: false,
-                            },
-                          )
-                        : "—"}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      {visitor.status === "Checked In" ? (
-                        <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2 py-0.5 rounded-full border bg-emerald-50/70 border-emerald-200/50 text-emerald-700">
-                          <span className="badge-pulse-dot bg-emerald-500" />
-                          Checked In
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2 py-0.5 rounded-full border bg-[var(--bg-secondary)] text-[var(--text-muted)] border-[var(--border-default)]">
-                          {visitor.status || "—"}
-                        </span>
-                      )}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </GlassCard>
+          <Suspense fallback={<GlassSkeleton showHeader rows={5} />}>
+            <VisitorsTable deptId={deptId} />
+          </Suspense>
         </div>
       </div>
     </div>

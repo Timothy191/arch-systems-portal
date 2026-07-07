@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { logout } from "~/app/actions";
+import { env } from "@/lib/env";
+import { logout } from "@/app/actions";
 import { cn } from "@repo/ui/lib/utils";
 import {
   Search,
@@ -130,7 +131,7 @@ const TOOLS_COMMANDS: CommandItem[] = [
   {
     id: "tool-n8n",
     label: "n8n",
-    href: "http://localhost:5678",
+    href: env.NEXT_PUBLIC_N8N_URL || "#",
     category: "Tools",
     icon: <Workflow className="w-4 h-4" />,
   },

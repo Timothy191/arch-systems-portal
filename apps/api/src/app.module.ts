@@ -19,6 +19,7 @@ import { TelemetryModule } from "./telemetry/telemetry.module";
 import { JobsModule } from "./jobs/jobs.module";
 import { AiBridgeModule } from "./ai-bridge/ai-bridge.module";
 import { AiModule } from "./ai/ai.module";
+import { QueueModule } from "./queue/queue.module";
 
 @Module({
   imports: [
@@ -57,6 +58,7 @@ import { AiModule } from "./ai/ai.module";
     JobsModule,
     AiBridgeModule,
     AiModule,
+    QueueModule,
   ],
 })
 export class AppModule {}

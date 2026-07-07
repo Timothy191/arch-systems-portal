@@ -96,9 +96,9 @@ export function KeplerGlMap({
 
   return (
     <div className="space-y-3">
-      <div className="p-4 rounded-xl bg-indigo-500/10 border border-indigo-500/20">
+      <div className="p-4 rounded-xl bg-accent-blue/10 border border-accent-blue/20">
         <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
-          <strong className="text-indigo-400">
+          <strong className="text-accent-blue">
             Kepler.gl Spatial Analysis
           </strong>{" "}
           — High-performance geospatial engine for mining deformation data.

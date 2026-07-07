@@ -4,9 +4,16 @@ import { createServerSupabaseClient } from "@repo/supabase/server";
 import { redirect } from "next/navigation";
 import { revalidateTag } from "next/cache";
 import { logError } from "@/lib/errors/error-logger";
+import { env } from "@/lib/env";
+import {
+  AuthError,
+  ForbiddenError,
+  ValidationError,
+  APIError,
+} from "@repo/errors";
 
 function getApiUrl(): string {
-  return (process.env.API_URL ?? "http://localhost:3001").replace(/\/$/, "");
+  return (env.NEXT_PUBLIC_API_URL ?? env.API_BASE_URL ?? "http://localhost:3001").replace(/\/$/, "");
 }
 
 async function getAccessToken(
@@ -17,7 +24,7 @@ async function getAccessToken(
   } = await supabase.auth.getSession();
 
   if (!session?.access_token) {
-    throw new Error("Unauthorized");
+    throw new AuthError("Unauthorized");
   }
 
   return session.access_token;
@@ -40,7 +47,7 @@ async function postApi<T>(
 
   if (!response.ok) {
     const payload = await response.json().catch(() => ({}));
-    throw new Error(
+    throw new APIError(
       payload.message ||
         payload.error ||
         `API request failed: ${response.status}`,
@@ -63,7 +70,7 @@ export async function speculativeEmbedShiftLog(text: string) {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    throw new Error("Unauthorized");
+    throw new AuthError("Unauthorized");
   }
 
   if (!text || text.trim() === "") return;
@@ -86,7 +93,7 @@ export async function revalidateRSC(tags: string[]) {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    throw new Error("Unauthorized");
+    throw new AuthError("Unauthorized");
   }
 
   for (const tag of tags) {
@@ -105,7 +112,7 @@ export async function generateMonthlyReport(
   } = await supabase.auth.getUser();
 
   if (!user) {
-    throw new Error("Unauthorized");
+    throw new AuthError("Unauthorized");
   }
 
   const { data: employee } = await supabase
@@ -115,7 +122,7 @@ export async function generateMonthlyReport(
     .single();
 
   if (employee?.role !== "admin" && employee?.role !== "manager") {
-    throw new Error("Unauthorized");
+    throw new AuthError("Unauthorized");
   }
 
   if (
@@ -123,14 +130,14 @@ export async function generateMonthlyReport(
     departmentId &&
     departmentId !== employee.department_id
   ) {
-    throw new Error(
+    throw new ForbiddenError(
       "Forbidden: Managers cannot generate reports for other departments",
     );
   }
 
   const deptId = departmentId || employee.department_id;
   if (!deptId) {
-    throw new Error(
+    throw new ValidationError(
       "Department ID is required to determine storage permissions",
     );
   }

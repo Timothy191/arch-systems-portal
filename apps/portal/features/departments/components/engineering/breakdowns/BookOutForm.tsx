@@ -184,7 +184,7 @@ export function BookOutForm({
                 required
                 value={selectedId}
                 onChange={(e) => setSelectedId(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg bg-[var(--bg-primary)] border border-[var(--border-emphasis)] text-[var(--text-heading)] text-sm focus:outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20 transition-colors"
+                className="w-full px-3 py-2 rounded-lg bg-[var(--bg-primary)] border border-[var(--border-emphasis)] text-[var(--text-heading)] text-sm focus:outline-none focus:border-accent-blue/50 focus:ring-1 focus:ring-accent-blue/20 transition-colors"
               >
                 <option value="">— Select a booked-in machine —</option>
                 {activeBreakdowns.map((b) => (
@@ -198,7 +198,7 @@ export function BookOutForm({
 
             {/* Auto-filled Breakdown Details */}
             {selectedBreakdown && (
-              <div className="grid grid-cols-2 gap-3 p-3 rounded-lg bg-violet-500/5 border border-violet-500/10">
+              <div className="grid grid-cols-2 gap-3 p-3 rounded-lg bg-accent-blue/5 border border-accent-blue/10">
                 <div>
                   <p className="text-[10px] uppercase tracking-wider text-[var(--text-muted)] font-medium">
                     Fleet ID
@@ -255,7 +255,7 @@ export function BookOutForm({
                   aria-label="Date Out"
                   value={dateOut}
                   onChange={(e) => setDateOut(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-[var(--bg-primary)] border border-[var(--border-emphasis)] text-[var(--text-heading)] text-sm focus:outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20 transition-colors"
+                  className="w-full px-3 py-2 rounded-lg bg-[var(--bg-primary)] border border-[var(--border-emphasis)] text-[var(--text-heading)] text-sm focus:outline-none focus:border-accent-blue/50 focus:ring-1 focus:ring-accent-blue/20 transition-colors"
                 />
               </div>
               <div>
@@ -269,7 +269,7 @@ export function BookOutForm({
                   aria-label="Time Out"
                   value={timeOut}
                   onChange={(e) => setTimeOut(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-[var(--bg-primary)] border border-[var(--border-emphasis)] text-[var(--text-heading)] text-sm focus:outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20 transition-colors"
+                  className="w-full px-3 py-2 rounded-lg bg-[var(--bg-primary)] border border-[var(--border-emphasis)] text-[var(--text-heading)] text-sm focus:outline-none focus:border-accent-blue/50 focus:ring-1 focus:ring-accent-blue/20 transition-colors"
                 />
               </div>
             </div>
@@ -283,14 +283,14 @@ export function BookOutForm({
                 placeholder="What was fixed?"
                 value={repairNotes}
                 onChange={(e) => setRepairNotes(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg bg-[var(--bg-primary)] border border-[var(--border-emphasis)] text-[var(--text-heading)] text-sm placeholder:text-[#555] focus:outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20 transition-colors resize-none"
+                className="w-full px-3 py-2 rounded-lg bg-[var(--bg-primary)] border border-[var(--border-emphasis)] text-[var(--text-heading)] text-sm placeholder:text-[#555] focus:outline-none focus:border-accent-blue/50 focus:ring-1 focus:ring-accent-blue/20 transition-colors resize-none"
               />
             </div>
 
             <button
               type="submit"
               disabled={isPending}
-              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg bg-violet-600 hover:bg-violet-500 text-white font-medium text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg bg-[var(--accent-blue)] hover:opacity-90 text-white font-medium text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Wrench className="w-4 h-4" />
               {isPending ? "Completing..." : "Complete Service"}

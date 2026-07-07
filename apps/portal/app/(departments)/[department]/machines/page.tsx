@@ -2,6 +2,10 @@ import { getDepartmentContext } from "~/lib/dept-context";
 import { GlassCard } from "@repo/ui/GlassCard";
 import Link from "next/link";
 
+// TODO: Cache Components adoption. Refactor this route so this opt-out can be removed.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
+export const instant = false;
+
 export default async function MachinesPage({
   params,
 }: {
@@ -155,12 +159,12 @@ export default async function MachinesPage({
                           <span
                             className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2 py-0.5 rounded-full border ${
                               machine.active
-                                ? "bg-emerald-50/70 border-emerald-200/50 text-emerald-700"
+                                ? "bg-accent-green/10 border-accent-green/20 text-accent-green"
                                 : "bg-[var(--bg-secondary)] text-[var(--text-muted)] border-[var(--border-default)]"
                             }`}
                           >
                             {machine.active && (
-                              <span className="badge-pulse-dot bg-emerald-500" />
+                              <span className="badge-pulse-dot bg-accent-green" />
                             )}
                             {machine.active ? "Active" : "Inactive"}
                           </span>

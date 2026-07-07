@@ -84,13 +84,13 @@ function RustTelemetryWidget({
       : "text-[#3ecf8e] border-[#3ecf8e]/20 bg-[#3ecf8e]/10";
 
   return (
-    <div className="relative group overflow-hidden rounded-2xl border border-violet-500/20 bg-gradient-to-br from-[#0c0914] to-[#07050d] p-5 shadow-diffusion-xl backdrop-blur-xl transition-all duration-300 hover:border-violet-500/30">
+    <div className="relative group overflow-hidden rounded-2xl border border-accent-blue/20 bg-gradient-to-br from-[#0c0914] to-[#07050d] p-5 shadow-diffusion-xl backdrop-blur-xl transition-all duration-300 hover:border-accent-blue/30">
       {/* Dynamic Glow effect */}
-      <div className="absolute -right-12 -top-12 h-24 w-24 rounded-full bg-violet-500/10 blur-2xl transition-all duration-500 group-hover:bg-violet-500/15" />
+      <div className="absolute -right-12 -top-12 h-24 w-24 rounded-full bg-accent-blue/10 blur-2xl transition-all duration-500 group-hover:bg-accent-blue/15" />
 
-      <div className="flex items-center justify-between border-b border-violet-500/10 pb-3">
+      <div className="flex items-center justify-between border-b border-accent-blue/10 pb-3">
         <div className="flex items-center gap-2">
-          <span className="text-xs font-bold text-violet-400 border border-violet-500/30 rounded px-1.5 py-0.5 uppercase bg-violet-500/5">
+          <span className="text-xs font-bold text-accent-blue border border-accent-blue/30 rounded px-1.5 py-0.5 uppercase bg-accent-blue/5">
             Rust Native
           </span>
           <h4 className="text-xs font-semibold uppercase tracking-wider text-[var(--text-heading)]">
@@ -129,7 +129,7 @@ function RustTelemetryWidget({
             <span className="text-[var(--text-secondary)] uppercase tracking-wider">
               Failure Probability
             </span>
-            <span className="text-violet-400 font-semibold">
+            <span className="text-accent-blue font-semibold">
               {data?.probability}%
             </span>
           </div>

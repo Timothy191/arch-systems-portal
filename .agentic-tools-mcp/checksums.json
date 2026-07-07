@@ -1,9 +1,9 @@
 {
-  "updated": "2026-07-06T15:53:16.257Z",
+  "updated": "2026-07-06T23:02:01.079Z",
   "files": [
     {
       "file": ".agentic-tools-mcp/agents/AGENTS.md",
-      "checksum": "2802217ece26a103eccd83c404bc27d799ddbf0e91f9a28f94dd7495acbed01e"
+      "checksum": "2eb94bc15a2eafa335e7600eaa28852209763d3fe4f22ef9e88e9b2dfe820994"
     },
     {
       "file": ".agentic-tools-mcp/agents/README.md",
@@ -936,6 +936,14 @@
     {
       "file": ".agentic-tools-mcp/agents/skills/applicationinsights-web-ts/SKILL.md",
       "checksum": "7422e0e3c23d6e63ea560664237909b0ce3aea9cd97c109177ae8a602db94ea7"
+    },
+    {
+      "file": ".agentic-tools-mcp/agents/skills/arch-light-glass/SKILL.md",
+      "checksum": "5d896f1efcecf0b8b97638d0eb98d8f2af7c0d54ff926d0b5a0ad5ecd949f8ac"
+    },
+    {
+      "file": ".agentic-tools-mcp/agents/skills/arch-light-glass/references/design-system-rules.md",
+      "checksum": "2356fd35f46734166d9c8b7f5c2fd552a9783d1fe52337f4ef468ded8dc40136"
     },
     {
       "file": ".agentic-tools-mcp/agents/skills/architect-review/SKILL.md",
@@ -2132,10 +2140,6 @@
     {
       "file": ".agentic-tools-mcp/agents/skills/bugs-are-annoying/SKILL.md",
       "checksum": "a44cf4e4110b7d96d46fbc2effad8e3a9b3252daf1d2233e54b39f7d53140e2c"
-    },
-    {
-      "file": ".agentic-tools-mcp/agents/skills/build/SKILL.md",
-      "checksum": "32802a874c52268dcbc46879b49c6782fdb822d3b116ace399c2d970653ade7a"
     },
     {
       "file": ".agentic-tools-mcp/agents/skills/building-native-ui/SKILL.md",

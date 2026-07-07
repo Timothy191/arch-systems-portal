@@ -1,6 +1,16 @@
 {
   "name": "arch-systems",
   "version": "1.5.1",
+  "bundlesize": [
+    {
+      "path": "apps/portal/.next/static/chunks/*.js",
+      "maxSize": "5.5 MB"
+    },
+    {
+      "path": "apps/portal/.next/static/chunks/*.css",
+      "maxSize": "120 kB"
+    }
+  ],
   "devDependencies": {
     "@commitlint/cli": "^21.0.1",
     "@commitlint/config-conventional": "^21.0.1",
@@ -10,6 +20,7 @@
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@secretlint/secretlint-rule-preset-recommend": "^13.0.2",
+    "bundlesize": "^0.18.2",
     "eslint": "^8.57.0",
     "globals": "^17.6.0",
     "husky": "^9.1.7",
@@ -53,6 +64,7 @@
     "analyze": "ANALYZE=true pnpm --filter portal build",
     "audit:rls": "node tools/audit-rls.cjs",
     "build": "turbo run build",
+    "bundlesize": "bundlesize",
     "checksum:verify": "node tools/preflight-mcp/index.js --tool mpc_checksum_verify --directory .agentic-tools-mcp/memories",
     "cleanup": "bash tools/cleanup.sh",
     "commitlint": "commitlint --edit",

@@ -125,8 +125,8 @@ export function MachineOperationsList({
 
             {nightOps.length > 0 && (
               <div className="space-y-2">
-                <h5 className="text-xs font-medium text-indigo-400 flex items-center gap-1.5 ml-4">
-                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-400" />
+                <h5 className="text-xs font-medium text-accent-blue flex items-center gap-1.5 ml-4">
+                  <span className="w-1.5 h-1.5 rounded-full bg-accent-blue" />
                   Night Shift
                 </h5>
                 <div className="space-y-2">

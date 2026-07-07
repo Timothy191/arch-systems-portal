@@ -4,6 +4,10 @@ import { SafetyIncidentForm } from "@/features/departments/components/safety/Saf
 import { SafetyIncidentsList } from "@/features/departments/components/safety/SafetyIncidentsList";
 import { GlassCard } from "@repo/ui/GlassCard";
 
+// TODO: Cache Components adoption. Refactor this route so this opt-out can be removed.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
+export const instant = false;
+
 export default async function DailyLogPage({
   params,
 }: {

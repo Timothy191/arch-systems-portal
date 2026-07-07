@@ -3,6 +3,10 @@ import { BookOpen, Clock, Users, PlayCircle, Plus } from "lucide-react";
 import { SearchForm } from "../components/SearchForm";
 import { FilterTabs } from "../components/FilterTabs";
 
+// TODO: Cache Components adoption. Refactor this route so this opt-out can be removed.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
+export const instant = false;
+
 interface Course {
   id: number;
   title: string;
@@ -153,12 +157,12 @@ export default async function CoursesPage({
                   <span
                     className={`text-[10px] px-2 py-0.5 rounded-md font-semibold ${
                       course.category === "Safety"
-                        ? "bg-red-500/10 text-red-600"
+                        ? "bg-accent-red/10 text-accent-red"
                         : course.category === "Equipment"
-                          ? "bg-blue-500/10 text-blue-600"
+                          ? "bg-accent-blue/10 text-accent-blue"
                           : course.category === "Induction"
-                            ? "bg-emerald-500/10 text-emerald-600"
-                            : "bg-violet-500/10 text-violet-600"
+                            ? "bg-accent-green/10 text-accent-green"
+                            : "bg-accent-blue/10 text-accent-blue"
                     }`}
                   >
                     {course.category}
@@ -206,10 +210,10 @@ export default async function CoursesPage({
                     <div
                       className={`h-full rounded-full ${
                         course.completionRate > 85
-                          ? "bg-emerald-500"
+                          ? "bg-accent-green"
                           : course.completionRate > 70
-                            ? "bg-blue-500"
-                            : "bg-amber-500"
+                            ? "bg-accent-blue"
+                            : "bg-accent-amber"
                       }`}
                       style={{ width: `${course.completionRate}%` }}
                     />

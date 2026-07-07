@@ -31,7 +31,7 @@ export function LiveMetricsTicker({ className }: LiveMetricsTickerProps) {
           data-testid="pulsing-indicator"
           className={cn(
             "w-1.5 h-1.5 rounded-full animate-pulse",
-            online ? "bg-emerald-500" : "bg-rose-500",
+            online ? "bg-accent-green" : "bg-accent-red",
           )}
         />
         <span className="font-semibold">{online ? "SYS_OK" : "SYS_OFF"}</span>

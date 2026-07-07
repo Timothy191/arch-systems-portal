@@ -17,11 +17,11 @@ type KPIColor =
 const colorMap: Record<KPIColor, string> = {
   default: "text-[var(--text-heading)]",
   green: "text-accent-green",
-  blue: "text-blue-400",
-  red: "text-red-400",
-  cyan: "text-[var(--accent-blue)]",
-  indigo: "text-[var(--accent-blue)]",
-  alert: "text-[var(--accent-red)]",
+  blue: "text-accent-blue",
+  red: "text-accent-red",
+  cyan: "text-accent-blue",
+  indigo: "text-accent-blue",
+  alert: "text-accent-red",
 };
 
 interface KPICardProps {

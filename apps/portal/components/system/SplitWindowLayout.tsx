@@ -29,7 +29,7 @@ const SERVICE_META: Record<
     shortLabel: "WhatsApp",
     Icon: (
       <svg
-        className="w-3.5 h-3.5 text-emerald-600 fill-current"
+        className="w-3.5 h-3.5 text-accent-green fill-current"
         viewBox="0 0 24 24"
       >
         <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.455L0 24zm6.79-4.896c1.675.993 3.324 1.558 5.207 1.559 5.405 0 9.803-4.375 9.806-9.754.002-2.607-1.002-5.06-2.83-6.892-1.829-1.83-4.263-2.836-6.868-2.837-5.39 0-9.786 4.377-9.79 9.753-.001 2.03.535 3.738 1.555 5.262l-.994 3.63 3.74-.981z" />
@@ -268,7 +268,7 @@ function GitHubMockView() {
                 className="bg-black/[0.015] border border-black/[0.04] p-3 rounded-lg flex flex-col gap-1 hover:bg-black/[0.03] transition-colors"
               >
                 <div className="flex items-center justify-between">
-                  <span className="font-semibold text-blue-600 hover:underline cursor-pointer">
+                  <span className="font-semibold text-accent-blue hover:underline cursor-pointer">
                     {c.hash}
                   </span>
                   <span className="text-[11px] text-[var(--text-muted)]">
@@ -318,7 +318,7 @@ function GitHubMockView() {
           <div className="space-y-2">
             <div className="bg-black/[0.015] border border-black/[0.04] p-3 rounded-lg flex items-start gap-2">
               <svg
-                className="w-4 h-4 text-amber-500 mt-0.5 shrink-0"
+                className="w-4 h-4 text-accent-amber mt-0.5 shrink-0"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -341,7 +341,7 @@ function GitHubMockView() {
             </div>
             <div className="bg-black/[0.015] border border-black/[0.04] p-3 rounded-lg flex items-start gap-2">
               <svg
-                className="w-4 h-4 text-blue-500 mt-0.5 shrink-0"
+                className="w-4 h-4 text-accent-blue mt-0.5 shrink-0"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"

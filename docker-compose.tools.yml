@@ -36,31 +36,6 @@ services:
     networks:
       - plantcor-tools
 
-  flowise:
-    image: flowiseai/flowise:2.1.2
-    container_name: plantcor-flowise
-    restart: unless-stopped
-    env_file: .env.tools
-    ports:
-      - "3001:3000"
-    environment:
-      - FLOWISE_USERNAME=${TOOL_ADMIN_EMAIL}
-      - FLOWISE_PASSWORD=${TOOL_ADMIN_PASSWORD}
-      - FLOWISE_SECRETKEY_OVERWRITE=${FLOWISE_SECRETKEY_OVERWRITE}
-    volumes:
-      - flowise_data:/root/.flowise
-    healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "wget -qO- http://localhost:3000/ > /dev/null 2>&1 || exit 1",
-        ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks:
-      - plantcor-tools
-
   redis:
     image: redis:7
     container_name: plantcor-redis
@@ -335,7 +310,6 @@ services:
       - plantcor-tools
 
 volumes:
-  flowise_data:
   redis_data:
   langfuse_db_data:
   qdrant_data:

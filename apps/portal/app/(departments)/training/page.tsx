@@ -1,35 +1,39 @@
 import { GlassCard } from "@repo/ui/GlassCard";
 import { GraduationCap, Award, Calendar, Clock } from "lucide-react";
 
+// TODO: Cache Components adoption. Refactor this route so this opt-out can be removed.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
+export const instant = false;
+
 export default async function TrainingDashboardPage() {
   const stats = [
     {
       label: "LMS Compliance",
       value: "94.2%",
       change: "+1.4% this month",
+      color: "text-accent-green",
       icon: Award,
-      color: "text-emerald-500",
     },
     {
       label: "Active Trainees",
       value: "42",
       change: "8 onboarding this week",
+      color: "text-accent-blue",
       icon: GraduationCap,
-      color: "text-cyan-500",
     },
     {
       label: "Upcoming Sessions",
       value: "7",
       change: "3 scheduled for today",
+      color: "text-accent-blue",
       icon: Calendar,
-      color: "text-blue-500",
     },
     {
       label: "Hours Logged (MTD)",
       value: "384h",
       change: "+48h vs last month",
+      color: "text-accent-blue",
       icon: Clock,
-      color: "text-violet-500",
     },
   ];
 
@@ -123,7 +127,7 @@ export default async function TrainingDashboardPage() {
                 {stat.value}
               </p>
               <p className="text-xs text-[var(--text-muted)] mt-1 flex items-center gap-1">
-                <span className="text-emerald-600 font-medium">
+                <span className="text-accent-green font-medium">
                   {stat.change.split(" ")[0]}
                 </span>
                 <span>{stat.change.substring(stat.change.indexOf(" "))}</span>
@@ -157,10 +161,10 @@ export default async function TrainingDashboardPage() {
                     <span
                       className={`text-[10px] px-2 py-0.5 rounded-full font-semibold ${
                         item.status === "In Progress"
-                          ? "bg-emerald-500/10 text-emerald-600"
+                          ? "bg-accent-green/10 text-accent-green"
                           : item.status === "Starting Soon"
-                            ? "bg-amber-500/10 text-amber-600"
-                            : "bg-blue-500/10 text-blue-600"
+                            ? "bg-accent-amber/10 text-accent-amber"
+                            : "bg-accent-blue/10 text-accent-blue"
                       }`}
                     >
                       {item.status}
@@ -224,7 +228,7 @@ export default async function TrainingDashboardPage() {
                         {cert.issueDate}
                       </td>
                       <td className="py-2.5 text-right">
-                        <span className="text-[10px] px-2 py-0.5 bg-emerald-500/10 text-emerald-600 font-semibold rounded-full">
+                        <span className="text-[10px] px-2 py-0.5 bg-accent-green/10 text-accent-green font-semibold rounded-full">
                           {cert.status}
                         </span>
                       </td>

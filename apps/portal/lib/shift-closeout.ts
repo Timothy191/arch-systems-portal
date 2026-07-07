@@ -8,6 +8,7 @@ import {
   NotFoundError,
   ForbiddenError,
   DatabaseError,
+  APIError,
 } from "@/lib/errors/error-classes";
 import { logError } from "@/lib/errors/error-logger";
 import { getShiftCompleteness } from "./shift-completeness";
@@ -24,7 +25,7 @@ async function getAccessToken(supabase: SupabaseClient): Promise<string> {
   } = await supabase.auth.getSession();
 
   if (!session?.access_token) {
-    throw new Error("Unauthorized");
+    throw new AuthError("Unauthorized");
   }
 
   return session.access_token;
@@ -48,7 +49,7 @@ async function postApi<T>(
 
   if (!response.ok) {
     const payload = await response.json().catch(() => ({}));
-    throw new Error(
+    throw new APIError(
       payload.message ||
         payload.error ||
         `API request failed: ${response.status}`,
@@ -193,7 +194,7 @@ export async function verifyPin(employeeCode: string, pin: string) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) throw new Error("Unauthorized");
+  if (!user) throw new AuthError("Unauthorized");
 
   const { data: employee, error } = await supabase
     .from("employees")

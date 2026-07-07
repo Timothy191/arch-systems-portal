@@ -189,7 +189,7 @@ export function UsersTab() {
                         variant="outline"
                         className={
                           emp.role === "admin"
-                            ? "bg-violet-500/10 text-violet-400 border-violet-500/20"
+                            ? "bg-accent-blue/10 text-accent-blue border-accent-blue/20"
                             : emp.role === "supervisor"
                               ? "bg-accent-blue/10 text-accent-blue border-accent-blue/20"
                               : ""

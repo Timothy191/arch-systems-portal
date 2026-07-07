@@ -60,8 +60,8 @@ const DEPARTMENTS_LIST = [
     name: "drilling",
     displayName: "Drilling Operations",
     icon: Pickaxe,
-    iconColor: "text-blue-600",
-    bgColor: "bg-blue-50 hover:bg-blue-100",
+    iconColor: "text-accent-blue",
+    bgColor: "bg-accent-blue/10 hover:bg-accent-blue/20",
     description: "Rig operations & depth telemetry",
   },
   {
@@ -69,55 +69,55 @@ const DEPARTMENTS_LIST = [
     displayName: "Production Tracking",
     icon: TrendingUp,
     iconColor: "text-accent-green",
-    bgColor: "bg-emerald-50 hover:bg-emerald-100",
+    bgColor: "bg-accent-green/10 hover:bg-accent-green/20",
     description: "Yield & tonnage monitoring",
   },
   {
     name: "access-control",
     displayName: "Access Control",
     icon: ScanFace,
-    iconColor: "text-sky-600",
-    bgColor: "bg-sky-50 hover:bg-sky-100",
+    iconColor: "text-accent-blue",
+    bgColor: "bg-accent-blue/10 hover:bg-accent-blue/20",
     description: "Personnel badging & visitor logs",
   },
   {
     name: "engineering",
     displayName: "Engineering",
     icon: Wrench,
-    iconColor: "text-violet-600",
-    bgColor: "bg-violet-50 hover:bg-violet-100",
+    iconColor: "text-accent-blue",
+    bgColor: "bg-accent-blue/10 hover:bg-accent-blue/20",
     description: "CAD, equipment specs & breakdowns",
   },
   {
     name: "control-room",
     displayName: "SCADA Control Room",
     icon: TowerControl,
-    iconColor: "text-red-600",
-    bgColor: "bg-red-50 hover:bg-red-100",
+    iconColor: "text-accent-red",
+    bgColor: "bg-accent-red/10 hover:bg-accent-red/20",
     description: "Real-time operations monitor",
   },
   {
     name: "safety",
     displayName: "Safety Compliance",
     icon: HardHat,
-    iconColor: "text-amber-600",
-    bgColor: "bg-amber-50 hover:bg-amber-100",
+    iconColor: "text-accent-amber",
+    bgColor: "bg-accent-amber/10 hover:bg-accent-amber/20",
     description: "Incident reporting & inspections",
   },
   {
     name: "training",
     displayName: "Training & LMS",
     icon: GraduationCap,
-    iconColor: "text-cyan-600",
-    bgColor: "bg-cyan-50 hover:bg-cyan-100",
+    iconColor: "text-accent-blue",
+    bgColor: "bg-accent-blue/10 hover:bg-accent-blue/20",
     description: "LMS, certificates & site rules",
   },
   {
     name: "satellite-monitoring",
     displayName: "Satellite Monitoring",
     icon: Orbit,
-    iconColor: "text-indigo-600",
-    bgColor: "bg-indigo-50 hover:bg-indigo-100",
+    iconColor: "text-accent-blue",
+    bgColor: "bg-accent-blue/10 hover:bg-accent-blue/20",
     description: "SAR, High-Res & Hyperspectral",
   },
 ] as const;
@@ -133,25 +133,25 @@ const PRODUCTIVITY_LIST = [
     name: "documents",
     displayName: "Documents",
     icon: FileText,
-    colorClass: "text-blue-500",
+    colorClass: "text-accent-blue",
   },
   {
     name: "schedule",
     displayName: "Schedule",
     icon: CalendarDays,
-    colorClass: "text-rose-500",
+    colorClass: "text-accent-red",
   },
   {
     name: "calculations",
     displayName: "Calculations",
     icon: Calculator,
-    colorClass: "text-violet-500",
+    colorClass: "text-accent-blue",
   },
   {
     name: "notes",
     displayName: "Notes",
     icon: StickyNote,
-    colorClass: "text-amber-500",
+    colorClass: "text-accent-amber",
   },
 ] as const;
 
@@ -161,7 +161,7 @@ const EXTERNAL_LIST = [
     displayName: "n8n Workflows",
     icon: Workflow,
     url: "http://localhost:5678",
-    colorClass: "text-[#ea4b2a]",
+    colorClass: "text-accent-red",
   },
 ] as const;
 
@@ -213,10 +213,14 @@ export function MacMenuBar({
               <button
                 aria-label="System Menu"
                 aria-haspopup="true"
-                className="relative w-11 h-11 -ml-1 rounded-full bg-white border border-black/10 shadow-window flex items-center justify-center hover:bg-gray-50 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-blue)] transition-all duration-150 ease-in-out cursor-default"
+                className="relative w-11 h-11 -ml-1 rounded-full bg-white border border-black/10 shadow-window flex items-center justify-center hover:bg-black/[0.04] active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-blue)] transition-all duration-150 ease-in-out cursor-default"
               >
                 <img
-                  src={isFocusMode ? "/assets/logo-focused.jpeg" : "/assets/logo.png"}
+                  src={
+                    isFocusMode
+                      ? "/assets/logo-focused.jpeg"
+                      : "/assets/logo.png"
+                  }
                   alt="Arch Logo"
                   className="w-6 h-6 object-contain"
                 />
@@ -357,10 +361,10 @@ export function MacMenuBar({
               <div className="mt-auto px-2.5 py-2.5 border-t border-black/[0.06]">
                 <Link
                   href="/admin"
-                  className="flex items-center gap-2.5 px-2 py-1.5 rounded-md hover:bg-violet-50 active:bg-violet-100 transition-all group"
+                  className="flex items-center gap-2.5 px-2 py-1.5 rounded-md hover:bg-accent-blue/10 active:bg-accent-blue/20 transition-all group"
                 >
-                  <Shield className="w-3.5 h-3.5 text-violet-500 shrink-0" />
-                  <span className="text-[12.5px] font-medium text-[var(--text-secondary)] group-hover:text-violet-700">
+                  <Shield className="w-3.5 h-3.5 text-accent-blue shrink-0" />
+                  <span className="text-[12.5px] font-medium text-[var(--text-secondary)] group-hover:text-accent-blue">
                     Admin Panel
                   </span>
                 </Link>

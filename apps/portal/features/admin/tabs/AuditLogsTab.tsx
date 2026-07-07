@@ -182,7 +182,7 @@ export function AuditLogsTab() {
                         variant="outline"
                         className={
                           log.action === "INSERT"
-                            ? "bg-green-500/10 text-green-400 border-green-500/20"
+                            ? "bg-accent-green/10 text-accent-green border-accent-green/20"
                             : log.action === "UPDATE"
                               ? "bg-accent-blue/10 text-accent-blue border-accent-blue/20"
                               : log.action === "DELETE"

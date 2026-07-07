@@ -4,6 +4,10 @@ import { Input } from "@repo/ui/Input";
 import Link from "next/link";
 import SuspenseOnSearchParams from "@/components/SuspenseOnSearchParams";
 
+// TODO: Cache Components adoption. Refactor this route so this opt-out can be removed.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
+export const instant = false;
+
 export default async function HistoryPage({
   params,
   searchParams,
@@ -198,7 +202,7 @@ async function HistoryContent({
                           className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${
                             ss.shift_type === "day"
                               ? "bg-accent-blue/10 text-accent-blue"
-                              : "bg-indigo-500/10 text-indigo-400"
+                              : "bg-accent-blue/10 text-accent-blue"
                           }`}
                         >
                           {ss.shift_type}
@@ -208,12 +212,12 @@ async function HistoryContent({
                         <span
                           className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2 py-0.5 rounded-full border ${
                             ss.status === "closed"
-                              ? "bg-emerald-50/70 border-emerald-200/50 text-emerald-700"
-                              : "bg-amber-50/70 border-amber-200/50 text-amber-700"
+                              ? "bg-accent-green/10 border-accent-green/20 text-accent-green"
+                              : "bg-accent-amber/10 border-accent-amber/20 text-accent-amber"
                           }`}
                         >
                           {ss.status === "closed" && (
-                            <span className="badge-pulse-dot bg-emerald-500" />
+                            <span className="badge-pulse-dot bg-accent-green" />
                           )}
                           {ss.status}
                         </span>
@@ -336,7 +340,7 @@ async function HistoryContent({
                       className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${
                         log.shift === "day"
                           ? "bg-accent-blue/10 text-accent-blue"
-                          : "bg-indigo-500/10 text-indigo-400"
+                          : "bg-accent-blue/10 text-accent-blue"
                       }`}
                     >
                       {log.shift}

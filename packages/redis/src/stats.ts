@@ -1,4 +1,4 @@
-import { getRedisClient } from "./client.js";
+import { getRedisClient, getClientIfOpen } from "./client.js";
 
 interface CacheStatsSnapshot {
   hits: number;
@@ -63,23 +63,20 @@ export function recordCacheHit(source: "l1" | "l2", latencyMs: number): void {
   else stats.l2Hits++;
   addLatency(latencyMs);
 
-  // 2. Redis sync (fire-and-forget)
-  getRedisClient()
-    .then((redis) => {
-      if (redis?.isOpen) {
-        redis.hIncrBy("stats:cache", "hits", 1).catch(() => {});
-        redis
-          .hIncrBy("stats:cache", source === "l1" ? "l1Hits" : "l2Hits", 1)
-          .catch(() => {});
-        redis
-          .lPush("stats:latencies", latencyMs.toString())
-          .then(() => {
-            redis.lTrim("stats:latencies", 0, 999).catch(() => {});
-          })
-          .catch(() => {});
-      }
-    })
-    .catch(() => {});
+  // 2. Redis sync (fire-and-forget, only if already connected)
+  const redis = getClientIfOpen();
+  if (redis) {
+    redis.hIncrBy("stats:cache", "hits", 1).catch(() => {});
+    redis
+      .hIncrBy("stats:cache", source === "l1" ? "l1Hits" : "l2Hits", 1)
+      .catch(() => {});
+    redis
+      .lPush("stats:latencies", latencyMs.toString())
+      .then(() => {
+        redis.lTrim("stats:latencies", 0, 999).catch(() => {});
+      })
+      .catch(() => {});
+  }
 }
 
 export function recordCacheMiss(latencyMs: number): void {
@@ -87,34 +84,28 @@ export function recordCacheMiss(latencyMs: number): void {
   stats.misses++;
   addLatency(latencyMs);
 
-  // 2. Redis sync (fire-and-forget)
-  getRedisClient()
-    .then((redis) => {
-      if (redis?.isOpen) {
-        redis.hIncrBy("stats:cache", "misses", 1).catch(() => {});
-        redis
-          .lPush("stats:latencies", latencyMs.toString())
-          .then(() => {
-            redis.lTrim("stats:latencies", 0, 999).catch(() => {});
-          })
-          .catch(() => {});
-      }
-    })
-    .catch(() => {});
+  // 2. Redis sync (fire-and-forget, only if already connected)
+  const redis = getClientIfOpen();
+  if (redis) {
+    redis.hIncrBy("stats:cache", "misses", 1).catch(() => {});
+    redis
+      .lPush("stats:latencies", latencyMs.toString())
+      .then(() => {
+        redis.lTrim("stats:latencies", 0, 999).catch(() => {});
+      })
+      .catch(() => {});
+  }
 }
 
 export function recordRedisError(): void {
   // 1. Local update
   stats.redisErrors++;
 
-  // 2. Redis sync (fire-and-forget)
-  getRedisClient()
-    .then((redis) => {
-      if (redis?.isOpen) {
-        redis.hIncrBy("stats:cache", "redisErrors", 1).catch(() => {});
-      }
-    })
-    .catch(() => {});
+  // 2. Redis sync (fire-and-forget, only if already connected)
+  const redis = getClientIfOpen();
+  if (redis) {
+    redis.hIncrBy("stats:cache", "redisErrors", 1).catch(() => {});
+  }
 }
 
 export async function getCacheStats(): Promise<CacheStatsSnapshot> {

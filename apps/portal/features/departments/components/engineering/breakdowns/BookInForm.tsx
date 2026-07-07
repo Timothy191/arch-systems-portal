@@ -96,7 +96,7 @@ export function BookInForm({
       {/* Form */}
       <div className="rounded-xl border border-[var(--border-emphasis)] bg-[var(--bg-tertiary)] p-6">
         <div className="flex items-center gap-3 mb-5">
-          <ClipboardPlus className="w-5 h-5 text-violet-400" />
+          <ClipboardPlus className="w-5 h-5 text-accent-blue" />
           <h3 className="text-lg font-medium text-[var(--text-heading)]">
             Book In Machine
           </h3>
@@ -128,7 +128,7 @@ export function BookInForm({
               required
               value={selectedMachineId}
               onChange={(e) => setSelectedMachineId(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg bg-[var(--bg-primary)] border border-[var(--border-emphasis)] text-[var(--text-heading)] text-sm focus:outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20 transition-colors"
+              className="w-full px-3 py-2 rounded-lg bg-[var(--bg-primary)] border border-[var(--border-emphasis)] text-[var(--text-heading)] text-sm focus:outline-none focus:border-accent-blue/50 focus:ring-1 focus:ring-accent-blue/20 transition-colors"
             >
               <option value="">— Choose a machine —</option>
               {machines.map((m) => (
@@ -141,7 +141,7 @@ export function BookInForm({
 
           {/* Auto-filled Machine Details */}
           {selectedMachine && (
-            <div className="grid grid-cols-2 gap-3 p-3 rounded-lg bg-violet-500/5 border border-violet-500/10">
+            <div className="grid grid-cols-2 gap-3 p-3 rounded-lg bg-accent-blue/5 border border-accent-blue/10">
               <div>
                 <p className="text-[10px] uppercase tracking-wider text-[var(--text-muted)] font-medium">
                   Fleet / Serial
@@ -175,7 +175,7 @@ export function BookInForm({
                 aria-label="Date In"
                 value={dateIn}
                 onChange={(e) => setDateIn(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg bg-[var(--bg-primary)] border border-[var(--border-emphasis)] text-[var(--text-heading)] text-sm focus:outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20 transition-colors"
+                className="w-full px-3 py-2 rounded-lg bg-[var(--bg-primary)] border border-[var(--border-emphasis)] text-[var(--text-heading)] text-sm focus:outline-none focus:border-accent-blue/50 focus:ring-1 focus:ring-accent-blue/20 transition-colors"
               />
             </div>
             <div>
@@ -189,7 +189,7 @@ export function BookInForm({
                 aria-label="Time In"
                 value={timeIn}
                 onChange={(e) => setTimeIn(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg bg-[var(--bg-primary)] border border-[var(--border-emphasis)] text-[var(--text-heading)] text-sm focus:outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20 transition-colors"
+                className="w-full px-3 py-2 rounded-lg bg-[var(--bg-primary)] border border-[var(--border-emphasis)] text-[var(--text-heading)] text-sm focus:outline-none focus:border-accent-blue/50 focus:ring-1 focus:ring-accent-blue/20 transition-colors"
               />
             </div>
           </div>
@@ -205,14 +205,14 @@ export function BookInForm({
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               placeholder="Describe the issue..."
-              className="w-full px-3 py-2 rounded-lg bg-[var(--bg-primary)] border border-[var(--border-emphasis)] text-[var(--text-heading)] text-sm placeholder:text-[#555] focus:outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20 transition-colors resize-none"
+              className="w-full px-3 py-2 rounded-lg bg-[var(--bg-primary)] border border-[var(--border-emphasis)] text-[var(--text-heading)] text-sm placeholder:text-[#555] focus:outline-none focus:border-accent-blue/50 focus:ring-1 focus:ring-accent-blue/20 transition-colors resize-none"
             />
           </div>
 
           <button
             type="submit"
             disabled={isPending}
-            className="w-full py-2.5 rounded-lg bg-violet-600 hover:bg-violet-500 text-white font-medium text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full py-2.5 rounded-lg bg-[var(--accent-blue)] hover:opacity-90 text-white font-medium text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isPending ? "Booking In..." : "Book In Machine"}
           </button>
@@ -223,7 +223,7 @@ export function BookInForm({
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <ClipboardList className="w-5 h-5 text-violet-400" />
+            <ClipboardList className="w-5 h-5 text-accent-blue" />
             <h3 className="text-lg font-medium text-[var(--text-heading)]">
               Active Breakdowns
             </h3>

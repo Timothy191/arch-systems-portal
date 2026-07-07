@@ -219,7 +219,6 @@ const archTheme: Config = {
             emphasis: "hsl(var(--tremor-content-emphasis))",
             strong: "hsl(var(--tremor-content-strong))",
             inverted: "hsl(var(--tremor-content-inverted))",
-            inverted: "hsl(var(--tremor-content-inverted))",
           },
         },
         hud: {

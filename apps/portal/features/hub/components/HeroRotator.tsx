@@ -113,7 +113,7 @@ export function HeroRotator({
               <Link
                 href={panel.primary.href}
                 data-cta="primary-hero"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-indigo-600 text-white font-semibold text-sm shadow-glow-primary transition-all hover:bg-indigo-700 active:bg-indigo-800 hover:scale-[1.02] active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-indigo-600 focus-visible:outline-offset-2 min-h-[44px]"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[var(--accent-blue)] text-white font-semibold text-sm shadow-glow-primary transition-all hover:opacity-90 active:opacity-80 hover:scale-[1.02] active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-[var(--accent-blue)] focus-visible:outline-offset-2 min-h-[44px]"
               >
                 {panel.primary.icon}
                 {panel.primary.label}
@@ -142,7 +142,7 @@ export function HeroRotator({
               className={cn(
                 "w-2 h-2 rounded-full transition-all duration-300",
                 idx === activeIndex
-                  ? "bg-indigo-600 w-4"
+                  ? "bg-accent-blue w-4"
                   : "bg-arch-border-emphasis",
               )}
             />

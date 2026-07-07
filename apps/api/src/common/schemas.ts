@@ -100,20 +100,6 @@ export const scannerBadgeSchema = z.object({
 // ---------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------
-
-export const aiSafetySchema = z.object({
-  logData: z.string().min(1).max(50000),
-});
-
-export const aiPredictSchema = z.object({
-  machineData: z.string().min(1).max(50000),
-});
-
-export const aiHandoffSchema = z.object({
-  shiftData: z.string().min(1).max(50000),
-});
-
-// ---------------------------------------------------------------------------
 // Export Endpoints
 // ---------------------------------------------------------------------------
 

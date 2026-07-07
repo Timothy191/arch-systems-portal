@@ -1,0 +1,10 @@
+[workspace]
+members = [
+    "logic-engine",
+    "graphics-engine",
+    "cache-engine",
+    # "bindings/node-napi",
+    # "bindings/python-pyo3",
+    # "bindings/wasm",
+]
+resolver = "2"

@@ -16,14 +16,14 @@
   padding-right: 1rem;
 }
 
-@media (min-width: 640px) {
+@media (width >= 640px) {
   .page-container {
     padding-left: 1.5rem;
     padding-right: 1.5rem;
   }
 }
 
-@media (min-width: 1024px) {
+@media (width >= 1024px) {
   .page-container {
     padding-left: 2rem;
     padding-right: 2rem;
@@ -37,7 +37,7 @@
   margin-bottom: 1.5rem;
 }
 
-@media (min-width: 640px) {
+@media (width >= 640px) {
   .page-section {
     margin-top: 3rem;
     margin-bottom: 3rem;
@@ -53,13 +53,13 @@
   padding: 1.5rem;
 }
 
-@media (min-width: 640px) {
+@media (width >= 640px) {
   .hero-section {
     padding: 2rem 2.5rem;
   }
 }
 
-@media (min-width: 768px) {
+@media (width >= 768px) {
   .hero-section {
     padding: 2.5rem 3.5rem;
   }
@@ -73,7 +73,7 @@
   grid-template-columns: 1fr;
 }
 
-@media (min-width: 768px) {
+@media (width >= 768px) {
   .content-grid-2 {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -85,13 +85,13 @@
   grid-template-columns: 1fr;
 }
 
-@media (min-width: 768px) {
+@media (width >= 768px) {
   .content-grid-3 {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (min-width: 1024px) {
+@media (width >= 1024px) {
   .content-grid-3 {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -102,7 +102,7 @@
   padding: 1.25rem;
 }
 
-@media (min-width: 640px) {
+@media (width >= 640px) {
   .card-body {
     padding: 1.5rem;
   }

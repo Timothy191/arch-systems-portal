@@ -8,6 +8,10 @@ import {
 } from "lucide-react";
 import { ExportButton } from "../components/ExportButton";
 
+// TODO: Cache Components adoption. Refactor this route so this opt-out can be removed.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
+export const instant = false;
+
 interface Report {
   id: string;
   name: string;
@@ -122,10 +126,10 @@ export default function ReportsPage() {
                       <span
                         className={`font-semibold ${
                           dept.rate >= 95
-                            ? "text-emerald-600"
+                            ? "text-accent-green"
                             : dept.rate >= 90
-                              ? "text-blue-600"
-                              : "text-amber-600 font-bold"
+                              ? "text-accent-blue"
+                              : "text-accent-amber font-bold"
                         }`}
                       >
                         {dept.rate}%
@@ -136,10 +140,10 @@ export default function ReportsPage() {
                     <div
                       className={`h-full rounded-full ${
                         dept.rate >= 95
-                          ? "bg-emerald-500"
+                          ? "bg-accent-green"
                           : dept.rate >= 90
-                            ? "bg-blue-500"
-                            : "bg-amber-500"
+                            ? "bg-accent-blue"
+                            : "bg-accent-amber"
                       }`}
                       style={{ width: `${dept.rate}%` }}
                     />
@@ -154,7 +158,7 @@ export default function ReportsPage() {
         <div className="space-y-4">
           <GlassCard>
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-emerald-500/10 text-emerald-600 rounded-lg">
+              <div className="p-2 bg-accent-green/10 text-accent-green rounded-lg">
                 <CheckCircle className="w-5 h-5" />
               </div>
               <div>
@@ -170,7 +174,7 @@ export default function ReportsPage() {
 
           <GlassCard>
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-amber-500/10 text-amber-600 rounded-lg">
+              <div className="p-2 bg-accent-amber/10 text-accent-amber rounded-lg">
                 <ShieldAlert className="w-5 h-5" />
               </div>
               <div>
@@ -186,7 +190,7 @@ export default function ReportsPage() {
 
           <GlassCard>
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-500/10 text-blue-600 rounded-lg">
+              <div className="p-2 bg-accent-blue/10 text-accent-blue rounded-lg">
                 <TrendingUp className="w-5 h-5" />
               </div>
               <div>
@@ -232,7 +236,7 @@ export default function ReportsPage() {
                     {report.id}
                   </td>
                   <td className="py-3 font-medium text-[var(--text-heading)] flex items-center gap-2">
-                    <FileText className="w-3.5 h-3.5 text-blue-500" />
+                    <FileText className="w-3.5 h-3.5 text-accent-blue" />
                     <span>{report.name}</span>
                   </td>
                   <td className="py-3">

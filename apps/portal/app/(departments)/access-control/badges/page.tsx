@@ -11,7 +11,14 @@ import {
   TableRow,
 } from "@repo/ui/components/ui/table";
 import { QrCode, Plus, UserCheck, ShieldOff } from "lucide-react";
-import { getBadgesForDepartment } from "../actions";
+import { cookies } from "next/headers";
+import { Suspense } from "react";
+import { getBadgesForDepartment } from "~/lib/data/access-control";
+import { GlassSkeleton } from "@repo/ui/components/ui/glass-skeleton";
+
+// TODO: Cache Components adoption. Refactor this route so this opt-out can be removed.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
+export const instant = false;
 
 interface BadgeWithRelations {
   id: string;
@@ -26,7 +33,99 @@ interface BadgeWithRelations {
   equipment: { equip_code: string; equipment_type: string } | null;
 }
 
-export const dynamic = "force-dynamic";
+// TODO: Cache Components adoption - restore dynamic = "force-dynamic" behavior
+
+async function BadgesTable({ deptId }: { deptId: string }) {
+  const cookieStore = await cookies();
+  const badges = (await getBadgesForDepartment(
+    deptId,
+    cookieStore.getAll(),
+  )) as unknown as BadgeWithRelations[];
+
+  // Resolve entity names from nested relation data
+  const resolvedBadges = badges.map((b) => {
+    let entityName = "Unknown";
+    if (b.personnel) {
+      entityName = `${b.personnel.first_name} ${b.personnel.surname}`;
+    } else if (b.visitor) {
+      entityName = `${b.visitor.first_name} ${b.visitor.surname}`;
+    } else if (b.fleet) {
+      entityName = `${b.fleet.fleet_code} (${b.fleet.vehicle_type})`;
+    } else if (b.equipment) {
+      entityName = `${b.equipment.equip_code} (${b.equipment.equipment_type})`;
+    }
+    return { ...b, entity_name: entityName };
+  });
+
+  return (
+    <GlassCard className="p-0 overflow-hidden">
+      <div className="p-4 border-b border-[var(--border-default)] bg-[var(--bg-secondary)]/50">
+        <h3 className="font-semibold text-[var(--text-heading)] flex items-center">
+          <UserCheck className="w-4 h-4 mr-2 text-accent-green" />
+          Active Provisioned Badges
+        </h3>
+      </div>
+      <Table>
+        <TableHeader>
+          <TableRow className="border-b border-[var(--border-default)] hover:bg-transparent">
+            <TableHead className="text-[var(--text-muted)]">
+              QR Code Data
+            </TableHead>
+            <TableHead className="text-[var(--text-muted)]">
+              Assigned To
+            </TableHead>
+            <TableHead className="text-[var(--text-muted)]">
+              Entity Type
+            </TableHead>
+            <TableHead className="text-right text-[var(--text-muted)]">
+              Status
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {resolvedBadges.length === 0 && (
+            <TableRow>
+              <TableCell
+                colSpan={4}
+                className="text-center py-8 text-[var(--text-muted)]"
+              >
+                No badges found for this department.
+              </TableCell>
+            </TableRow>
+          )}
+          {resolvedBadges.map((badge) => (
+            <TableRow
+              key={badge.id}
+              className="border-b border-[var(--border-default)]/50 hover:bg-[var(--bg-tertiary)] transition-colors cursor-pointer group"
+            >
+              <TableCell className="font-mono text-sm text-[var(--accent-blue)] group-hover:text-accent-blue transition-colors">
+                {badge.qr_code}
+              </TableCell>
+              <TableCell className="font-medium text-[var(--text-heading)]">
+                {badge.entity_name}
+              </TableCell>
+              <TableCell className="text-[var(--text-secondary)] capitalize">
+                {badge.entity_type}
+              </TableCell>
+              <TableCell className="text-right">
+                {badge.is_active ? (
+                  <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2 py-0.5 rounded-full border bg-accent-green/10 border-accent-green/20 text-accent-green">
+                    <span className="badge-pulse-dot bg-accent-green" />
+                    Active
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2 py-0.5 rounded-full border bg-accent-red/10 border-accent-red/20 text-accent-red">
+                    Revoked
+                  </span>
+                )}
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </GlassCard>
+  );
+}
 
 export default async function BadgesPage() {
   const { deptId } = await getDepartmentContext({
@@ -46,25 +145,6 @@ export default async function BadgesPage() {
       </div>
     );
   }
-
-  const badges = (await getBadgesForDepartment(
-    deptId,
-  )) as unknown as BadgeWithRelations[];
-
-  // Resolve entity names from nested relation data
-  const resolvedBadges = badges.map((b) => {
-    let entityName = "Unknown";
-    if (b.personnel) {
-      entityName = `${b.personnel.first_name} ${b.personnel.surname}`;
-    } else if (b.visitor) {
-      entityName = `${b.visitor.first_name} ${b.visitor.surname}`;
-    } else if (b.fleet) {
-      entityName = `${b.fleet.fleet_code} (${b.fleet.vehicle_type})`;
-    } else if (b.equipment) {
-      entityName = `${b.equipment.equip_code} (${b.equipment.equipment_type})`;
-    }
-    return { ...b, entity_name: entityName };
-  });
 
   return (
     <div className="space-y-6">
@@ -87,72 +167,9 @@ export default async function BadgesPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Side: Active Badges Table (Takes up 2 cols) */}
         <div className="lg:col-span-2 space-y-4">
-          <GlassCard className="p-0 overflow-hidden">
-            <div className="p-4 border-b border-[var(--border-default)] bg-[var(--bg-secondary)]/50">
-              <h3 className="font-semibold text-[var(--text-heading)] flex items-center">
-                <UserCheck className="w-4 h-4 mr-2 text-accent-green" />
-                Active Provisioned Badges
-              </h3>
-            </div>
-            <Table>
-              <TableHeader>
-                <TableRow className="border-b border-[var(--border-default)] hover:bg-transparent">
-                  <TableHead className="text-[var(--text-muted)]">
-                    QR Code Data
-                  </TableHead>
-                  <TableHead className="text-[var(--text-muted)]">
-                    Assigned To
-                  </TableHead>
-                  <TableHead className="text-[var(--text-muted)]">
-                    Entity Type
-                  </TableHead>
-                  <TableHead className="text-right text-[var(--text-muted)]">
-                    Status
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {resolvedBadges.length === 0 && (
-                  <TableRow>
-                    <TableCell
-                      colSpan={4}
-                      className="text-center py-8 text-[var(--text-muted)]"
-                    >
-                      No badges found for this department.
-                    </TableCell>
-                  </TableRow>
-                )}
-                {resolvedBadges.map((badge) => (
-                  <TableRow
-                    key={badge.id}
-                    className="border-b border-[var(--border-default)]/50 hover:bg-[var(--bg-tertiary)] transition-colors cursor-pointer group"
-                  >
-                    <TableCell className="font-mono text-sm text-[var(--accent-blue)] group-hover:text-accent-blue transition-colors">
-                      {badge.qr_code}
-                    </TableCell>
-                    <TableCell className="font-medium text-[var(--text-heading)]">
-                      {badge.entity_name}
-                    </TableCell>
-                    <TableCell className="text-[var(--text-secondary)] capitalize">
-                      {badge.entity_type}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      {badge.is_active ? (
-                        <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2 py-0.5 rounded-full border bg-emerald-50/70 border-emerald-200/50 text-emerald-700">
-                          <span className="badge-pulse-dot bg-emerald-500" />
-                          Active
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2 py-0.5 rounded-full border bg-red-50/70 border-red-200/50 text-red-700">
-                          Revoked
-                        </span>
-                      )}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </GlassCard>
+          <Suspense fallback={<GlassSkeleton showHeader rows={5} />}>
+            <BadgesTable deptId={deptId} />
+          </Suspense>
         </div>
 
         {/* Right Side: QR Generation/Preview Widget */}

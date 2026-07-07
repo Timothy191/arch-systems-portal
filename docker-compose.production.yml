@@ -37,25 +37,6 @@ services:
         max-size: "10m"
         max-file: "5"
 
-  flowise:
-    restart: always
-    environment:
-      - FLOWISE_USERNAME=${FLOWISE_USER:-admin@plantcor.os}
-      - FLOWISE_PASSWORD=${FLOWISE_PASSWORD}
-      - FLOWISE_SECRETKEY_OVERWRITE=${FLOWISE_SECRET_KEY}
-    volumes:
-      - /opt/arch-systems/data/flowise:/root/.flowise
-    deploy:
-      resources:
-        limits:
-          cpus: "1.0"
-          memory: 512M
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "5"
-
   redis:
     restart: always
     command: ["redis-server", "--save", "60", "1", "--loglevel", "warning", "--requirepass", "${REDIS_PASSWORD}"]

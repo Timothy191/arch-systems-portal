@@ -484,9 +484,7 @@ export function GlassCard({
         ],
 
         // Spotlight custom layout style
-        variant === "spotlight" && [
-          "group rounded-card liquid-glass",
-        ],
+        variant === "spotlight" && ["group rounded-card liquid-glass"],
 
         // GlowBorder custom layout style
         variant === "glowborder" && [

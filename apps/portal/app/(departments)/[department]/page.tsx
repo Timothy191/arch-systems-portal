@@ -4,10 +4,6 @@ import Link from "next/link";
 import { GlassCard } from "@repo/ui/GlassCard";
 import { getDepartmentContext } from "~/lib/dept-context";
 import { getCurrentShift } from "@repo/utils";
-import { cachedRSC } from "@/lib/server-cache";
-import { withCache } from "@/lib/cache-utils";
-import { CacheCategory } from "@repo/redis";
-import { CACHE_TAGS } from "@/lib/cache/tags";
 
 const ScadaPanel = dynamic(
   () =>
@@ -251,7 +247,16 @@ export default async function DepartmentDashboard({
   );
 }
 
-import { createServerSupabaseClient } from "@repo/supabase/server";
+import { cookies } from "next/headers";
+import {
+  getControlRoomSummary,
+  getNonControlRoomSummary,
+  getShiftCoverageLogs,
+} from "~/lib/data/operations";
+
+// TODO: Cache Components adoption. Refactor this route so this opt-out can be removed.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
+export const instant = false;
 
 async function ControlRoomSummaryGrid({
   deptId,
@@ -260,71 +265,25 @@ async function ControlRoomSummaryGrid({
   deptId: string;
   today: string;
 }) {
-  const supabase = await createServerSupabaseClient();
-  const [todayOperations, todayDelays, todayLoads, machines] = await cachedRSC(
-    ["dept", deptId, "summary", today],
-    async () =>
-      withCache(
-        async () => {
-          return Promise.all([
-            supabase
-              .from("machine_operations")
-              .select("hours_worked, end_time")
-              .eq("department_id", deptId)
-              .eq("shift_date", today),
-            supabase
-              .from("operational_delays")
-              .select("delay_minutes, status")
-              .eq("department_id", deptId)
-              .eq("delay_date", today),
-            supabase
-              .from("hourly_loads")
-              .select("total_loads")
-              .eq("department_id", deptId)
-              .eq("load_date", today),
-            supabase
-              .from("machines")
-              .select("*", { count: "exact", head: true })
-              .eq("active", true),
-          ]);
-        },
-        {
-          category: CacheCategory.DEPARTMENT,
-          keyParts: ["control-room-summary", deptId, today],
-          tags: [
-            "table:machine_operations",
-            "table:operational_delays",
-            "table:hourly_loads",
-            "table:machines",
-          ],
-        },
-      ),
-    {
-      tags: [
-        CACHE_TAGS.machineOperations,
-        CACHE_TAGS.operationalDelays,
-        CACHE_TAGS.hourlyLoads,
-        CACHE_TAGS.machines,
-      ],
-    },
-  );
+  const cookieStore = await cookies();
+  const summary = await getControlRoomSummary(deptId, today, cookieStore.getAll());
+
+  const { todayOperations, todayDelays, todayLoads, machineCount } = summary;
 
   const totalHours =
-    todayOperations.data?.reduce(
-      (sum, op) => sum + (op.hours_worked || 0),
+    todayOperations.reduce(
+      (sum: number, op: any) => sum + (op.hours_worked || 0),
       0,
     ) || 0;
   const activeOperations =
-    todayOperations.data?.filter((op) => op.end_time === null).length || 0;
+    todayOperations.filter((op: any) => op.end_time === null).length || 0;
 
-  const delayCount = todayDelays.data?.length || 0;
+  const delayCount = todayDelays.length || 0;
   const delayMinutes =
-    todayDelays.data?.reduce((sum, d) => sum + (d.delay_minutes || 0), 0) || 0;
+    todayDelays.reduce((sum: number, d: any) => sum + (d.delay_minutes || 0), 0) || 0;
 
   const totalLoads =
-    todayLoads.data?.reduce((sum, l) => sum + (l.total_loads || 0), 0) || 0;
-
-  const machineCount = machines.count ?? 0;
+    todayLoads.reduce((sum: number, l: any) => sum + (l.total_loads || 0), 0) || 0;
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -372,28 +331,13 @@ async function NonControlRoomSummaryGrid({
   deptId: string;
   today: string;
 }) {
-  const supabase = await createServerSupabaseClient();
-  const [todayLogs, machines] = await cachedRSC(
-    ["dept", deptId, "non-cr-summary", today],
-    async () =>
-      Promise.all([
-        supabase
-          .from("daily_logs")
-          .select("id, log_date, shift")
-          .eq("department_id", deptId)
-          .eq("log_date", today)
-          .order("shift"),
-        supabase
-          .from("machines")
-          .select("*", { count: "exact", head: true })
-          .eq("active", true),
-      ]),
-    { tags: [CACHE_TAGS.dailyLogs, CACHE_TAGS.machines] },
-  );
+  const cookieStore = await cookies();
+  const summary = await getNonControlRoomSummary(deptId, today, cookieStore.getAll());
 
-  const shiftCount = todayLogs.data?.length ?? 0;
-  const latestShift = todayLogs.data?.[shiftCount - 1]?.shift;
-  const machineCount = machines.count ?? 0;
+  const { todayLogs, machineCount } = summary;
+
+  const shiftCount = todayLogs.length ?? 0;
+  const latestShift = todayLogs[shiftCount - 1]?.shift;
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -437,20 +381,8 @@ async function ShiftCoverageSection({
   deptSlug: string;
   today: string;
 }) {
-  const supabase = await createServerSupabaseClient();
-  const { data: todayLogs } = await cachedRSC(
-    ["dept", deptId, "shift-coverage", today],
-    async () => {
-      const result = await supabase
-        .from("daily_logs")
-        .select("id, log_date, shift")
-        .eq("department_id", deptId)
-        .eq("log_date", today)
-        .order("shift");
-      return result;
-    },
-    { tags: [CACHE_TAGS.dailyLogs] },
-  );
+  const cookieStore = await cookies();
+  const todayLogs = await getShiftCoverageLogs(deptId, today, cookieStore.getAll());
 
   const shiftCount = todayLogs?.length ?? 0;
   const latestShift = todayLogs?.[shiftCount - 1]?.shift;

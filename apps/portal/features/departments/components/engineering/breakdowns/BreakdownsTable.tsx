@@ -51,13 +51,13 @@ export function BreakdownsTable({
               placeholder="Search Fleet ID, Machine Type or Reason..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-3 py-2 rounded-lg bg-[var(--bg-primary)] border border-[var(--border-emphasis)] text-[var(--text-heading)] text-sm placeholder:text-[#555] focus:outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20 transition-colors"
+              className="w-full pl-10 pr-3 py-2 rounded-lg bg-[var(--bg-primary)] border border-[var(--border-emphasis)] text-[var(--text-heading)] text-sm placeholder:text-[#555] focus:outline-none focus:border-accent-blue/50 focus:ring-1 focus:ring-accent-blue/20 transition-colors"
             />
           </div>
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-3 py-2 rounded-lg bg-[var(--bg-primary)] border border-[var(--border-emphasis)] text-[var(--text-heading)] text-sm focus:outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20 transition-colors"
+            className="px-3 py-2 rounded-lg bg-[var(--bg-primary)] border border-[var(--border-emphasis)] text-[var(--text-heading)] text-sm focus:outline-none focus:border-accent-blue/50 focus:ring-1 focus:ring-accent-blue/20 transition-colors"
           >
             <option value="">All Statuses</option>
             <option value="active">Active</option>
@@ -144,7 +144,7 @@ export function BreakdownsTable({
                       b.missing_book_in ? "border-l-2 border-l-blue-500" : ""
                     }`}
                   >
-                    <td className="px-4 py-3 text-violet-400 font-medium">
+                    <td className="px-4 py-3 text-accent-blue font-medium">
                       {b.fleet_id}
                     </td>
                     <td className="px-4 py-3 text-[var(--text-heading)]">

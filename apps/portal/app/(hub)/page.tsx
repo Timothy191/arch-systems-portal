@@ -32,9 +32,13 @@ import { withCache } from "@/lib/cache-utils";
 import { cachedRSC } from "@/lib/server-cache";
 import { CacheCategory } from "@repo/redis";
 
+// TODO: Cache Components adoption. Refactor this route so this opt-out can be removed.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
+export const instant = false;
+
 const PORTAL_VERSION = process.env.PORTAL_VERSION ?? "2.4.1";
 
-export const dynamic = "force-dynamic";
+// TODO: Cache Components adoption - restore dynamic = "force-dynamic" behavior
 
 async function getDashboardCounts(
   today: string,
@@ -409,7 +413,7 @@ export default async function HubPage() {
             <div className="flex items-center gap-3 flex-wrap liquid-shift-y">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-arch-border-subtle bg-arch-surface-secondary/80 backdrop-blur-sm text-xs font-semibold tracking-wide text-arch-text-secondary">
                 <span
-                  className="w-1.5 h-1.5 rounded-full bg-emerald-500"
+                  className="w-1.5 h-1.5 rounded-full bg-accent-green"
                   aria-hidden="true"
                 />
                 Sector-01 Active
@@ -420,7 +424,7 @@ export default async function HubPage() {
               <FocusModeToggle />
               {incidentCount > 0 && (
                 <span
-                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-red-50 text-red-700 text-[10px] font-semibold tracking-wide"
+                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-accent-red/10 text-accent-red text-[10px] font-semibold tracking-wide"
                   title={`${incidentCount} open safety incidents`}
                 >
                   <AlertTriangle className="w-3 h-3" aria-hidden="true" />
@@ -429,7 +433,7 @@ export default async function HubPage() {
               )}
               {breakdownCount > 0 && (
                 <span
-                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-50 text-amber-700 text-[10px] font-semibold tracking-wide"
+                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-accent-amber/10 text-accent-amber text-[10px] font-semibold tracking-wide"
                   title={`${breakdownCount} active breakdowns`}
                 >
                   <Wrench className="w-3 h-3" aria-hidden="true" />
@@ -438,7 +442,7 @@ export default async function HubPage() {
               )}
               {offlineMachineCount > 0 && (
                 <span
-                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[10px] font-semibold tracking-wide"
+                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-black/[0.04] text-[var(--text-secondary)] text-[10px] font-semibold tracking-wide"
                   title={`${offlineMachineCount} machines offline`}
                 >
                   <Power className="w-3 h-3" aria-hidden="true" />

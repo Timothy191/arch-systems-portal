@@ -238,8 +238,8 @@ export function EngineeringNotesForm({
                           Active
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2 py-0.5 rounded-full border bg-emerald-50/70 border-emerald-200/50 text-emerald-700">
-                          <span className="badge-pulse-dot bg-emerald-500" />
+                        <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2 py-0.5 rounded-full border bg-accent-green/10 border-accent-green/20 text-accent-green">
+                          <span className="badge-pulse-dot bg-accent-green" />
                           Completed today
                         </span>
                       )}
