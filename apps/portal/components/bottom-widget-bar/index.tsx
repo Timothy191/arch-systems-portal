@@ -9,7 +9,14 @@ import { useFocusMode } from "@/hooks/useFocusMode";
 
 /* ─────────────────────────────── Data ─────────────────────────────── */
 
-import { POS_STORAGE_KEY, DRAG_THRESHOLD, OUTER_ITEMS, INNER_ITEMS, clampDockPosition, DockPosition } from "./constants";
+import {
+  POS_STORAGE_KEY,
+  DRAG_THRESHOLD,
+  OUTER_ITEMS,
+  INNER_ITEMS,
+  clampDockPosition,
+  DockPosition,
+} from "./constants";
 import { WheelItem, getAngle } from "./sub-components";
 export function BottomWidgetBar({
   isMerged = false,

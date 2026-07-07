@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
+import { cacheTag, cacheLife } from "next/cache";
 import {
   createServerSupabaseClient,
   getUserSafely,
@@ -28,9 +29,6 @@ import {
   Power,
 } from "lucide-react";
 import { FocusModeToggle } from "@/components/FocusModeToggle";
-import { withCache } from "@/lib/cache-utils";
-import { cachedRSC } from "@/lib/server-cache";
-import { CacheCategory } from "@repo/redis";
 
 // TODO: Cache Components adoption. Refactor this route so this opt-out can be removed.
 // See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
@@ -40,61 +38,39 @@ const PORTAL_VERSION = process.env.PORTAL_VERSION ?? "2.4.1";
 
 // TODO: Cache Components adoption - restore dynamic = "force-dynamic" behavior
 
-async function getDashboardCounts(
-  today: string,
-  userId: string,
-  cookieList: Array<{ name: string; value: string }>,
-) {
-  return cachedRSC(
-    ["hub", "counts", userId, today],
-    async () => {
-      return withCache(
-        async () => {
-          const db = await createReadReplicaClient(cookieList);
-          const [incidents, breakdowns, machines] = await Promise.all([
-            db
-              .from("safety_incidents")
-              .select("id", { count: "exact", head: true })
-              .eq("incident_date", today)
-              .eq("status", "open"),
-            db
-              .from("breakdowns")
-              .select("id", { count: "exact", head: true })
-              .eq("status", "active")
-              .is("deleted_at", null),
-            db
-              .from("machines")
-              .select("id", { count: "exact", head: true })
-              .eq("active", false),
-          ]);
-          return {
-            incidentCount: incidents.count ?? 0,
-            breakdownCount: breakdowns.count ?? 0,
-            offlineMachineCount: machines.count ?? 0,
-          };
-        },
-        {
-          category: CacheCategory.METRICS,
-          keyParts: ["hub", "counts", userId, today],
-          tags: [
-            `auth:${userId}`,
-            "table:safety_incidents",
-            "table:breakdowns",
-            "table:machines",
-          ],
-        },
-      );
-    },
-    {
-      revalidate: 300,
-      tags: [
-        `auth:${userId}`,
-        "table:safety_incidents",
-        "table:breakdowns",
-        "table:machines",
-      ],
-    },
+async function getDashboardCounts(today: string, userId: string) {
+  "use cache: private";
+  cacheTag(
+    `auth:${userId}`,
+    "table:safety_incidents",
+    "table:breakdowns",
+    "table:machines",
   );
+  cacheLife({ expire: 300 });
+
+  const cookieStore = await cookies();
+  const db = await createReadReplicaClient(cookieStore.getAll());
+  const [incidents, breakdowns, machines] = await Promise.all([
+    db
+      .from("safety_incidents")
+      .select("id", { count: "exact", head: true })
+      .eq("incident_date", today)
+      .eq("status", "open"),
+    db
+      .from("breakdowns")
+      .select("id", { count: "exact", head: true })
+      .eq("status", "active")
+      .is("deleted_at", null),
+    db
+      .from("machines")
+      .select("id", { count: "exact", head: true })
+      .eq("active", false),
+  ]);
+  return {
+    incidentCount: incidents.count ?? 0,
+    breakdownCount: breakdowns.count ?? 0,
+    offlineMachineCount: machines.count ?? 0,
+  };
 }
 
 const FALLBACK_TREND_DATA: TrendDataPoint[] = [
@@ -108,244 +84,187 @@ const FALLBACK_TREND_DATA: TrendDataPoint[] = [
 
 async function getProductionTrendData(
   userId: string,
-  cookieList: Array<{ name: string; value: string }>,
 ): Promise<TrendDataPoint[]> {
-  return cachedRSC(
-    ["hub", "production-trend", userId],
-    async () => {
-      return withCache(
-        async () => {
-          const db = await createReadReplicaClient(cookieList);
-          const { data: rows, error } = await db
-            .from("daily_logs")
-            .select(
-              `
-                created_at,
-                department:department_id(name),
-                production_logs(coal_tonnes, waste_tonnes)
-              `,
-            )
-            .gte(
-              "created_at",
-              new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-            )
-            .order("created_at", { ascending: true });
+  "use cache: private";
+  cacheTag(`auth:${userId}`, "table:daily_logs", "table:production_logs");
+  cacheLife({ expire: 300 });
 
-          if (error || !rows || rows.length === 0) {
-            return FALLBACK_TREND_DATA;
-          }
+  const cookieStore = await cookies();
+  const db = await createReadReplicaClient(cookieStore.getAll());
+  const { data: rows, error } = await db
+    .from("daily_logs")
+    .select(
+      `
+        created_at,
+        department:department_id(name),
+        production_logs(coal_tonnes, waste_tonnes)
+      `,
+    )
+    .gte("created_at", new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
+    .order("created_at", { ascending: true });
 
-          const hourlyMap = new Map<string, Record<string, number>>();
+  if (error || !rows || rows.length === 0) {
+    return FALLBACK_TREND_DATA;
+  }
 
-          for (const row of rows) {
-            const hour = new Date(row.created_at).toLocaleTimeString("en-GB", {
-              hour: "2-digit",
-              minute: "2-digit",
-            });
-            const deptName =
-              (row.department as unknown as { name: string } | null)?.name ??
-              "Unknown";
+  const hourlyMap = new Map<string, Record<string, number>>();
 
-            if (!hourlyMap.has(hour)) {
-              hourlyMap.set(hour, {
-                Drilling: 0,
-                Production: 0,
-                Engineering: 0,
-              });
-            }
+  for (const row of rows) {
+    const hour = new Date(row.created_at).toLocaleTimeString("en-GB", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    const deptName =
+      (row.department as unknown as { name: string } | null)?.name ?? "Unknown";
 
-            const logs = row.production_logs as
-              | { coal_tonnes: number; waste_tonnes: number }[]
-              | null;
-            if (logs) {
-              const total = logs.reduce(
-                (sum, l) =>
-                  sum + Number(l.coal_tonnes) + Number(l.waste_tonnes),
-                0,
-              );
-              hourlyMap.get(hour)![deptName] =
-                (hourlyMap.get(hour)![deptName] ?? 0) + total;
-            }
-          }
+    if (!hourlyMap.has(hour)) {
+      hourlyMap.set(hour, {
+        Drilling: 0,
+        Production: 0,
+        Engineering: 0,
+      });
+    }
 
-          const formatted: TrendDataPoint[] = Array.from(
-            hourlyMap.entries(),
-          ).map(([date, depts]) => ({
-            date,
-            Drilling: depts.Drilling || 0,
-            Production: depts.Production || 0,
-            Engineering: depts.Engineering || 0,
-          }));
-
-          return formatted.length > 0 ? formatted : FALLBACK_TREND_DATA;
-        },
-        {
-          category: CacheCategory.METRICS,
-          keyParts: ["hub", "production-trend", userId],
-          tags: [`auth:${userId}`, "table:daily_logs", "table:production_logs"],
-        },
+    const logs = row.production_logs as
+      | { coal_tonnes: number; waste_tonnes: number }[]
+      | null;
+    if (logs) {
+      const total = logs.reduce(
+        (sum, l) => sum + Number(l.coal_tonnes) + Number(l.waste_tonnes),
+        0,
       );
-    },
-    {
-      revalidate: 300,
-      tags: [`auth:${userId}`, "table:daily_logs", "table:production_logs"],
-    },
+      hourlyMap.get(hour)![deptName] =
+        (hourlyMap.get(hour)![deptName] ?? 0) + total;
+    }
+  }
+
+  const formatted: TrendDataPoint[] = Array.from(hourlyMap.entries()).map(
+    ([date, depts]) => ({
+      date,
+      Drilling: depts.Drilling || 0,
+      Production: depts.Production || 0,
+      Engineering: depts.Engineering || 0,
+    }),
   );
+
+  return formatted.length > 0 ? formatted : FALLBACK_TREND_DATA;
 }
 
 async function getRecentAlertEvents(
   today: string,
   userId: string,
-  cookieList: Array<{ name: string; value: string }>,
 ): Promise<AlertEvent[]> {
-  return cachedRSC(
-    ["hub", "alerts", userId, today],
-    async () => {
-      return withCache(
-        async () => {
-          const db = await createReadReplicaClient(cookieList);
-          const events: AlertEvent[] = [];
+  "use cache: private";
+  cacheTag(`auth:${userId}`, "table:safety_incidents", "table:breakdowns");
+  cacheLife({ expire: 300 });
 
-          const { data: incidents } = await db
-            .from("safety_incidents")
-            .select(
-              "id, description, created_at, severity_id, location, severity:safety_severities(level)",
-            )
-            .eq("incident_date", today)
-            .eq("status", "open")
-            .order("created_at", { ascending: false })
-            .limit(5);
+  const cookieStore = await cookies();
+  const db = await createReadReplicaClient(cookieStore.getAll());
+  const events: AlertEvent[] = [];
 
-          function mapSeverityLevel(level?: string): AlertEvent["severity"] {
-            if (!level) return "warning";
-            const lower = level.toLowerCase();
-            if (
-              lower.includes("critical") ||
-              lower.includes("high") ||
-              lower.includes("severe")
-            ) {
-              return "critical";
-            }
-            if (
-              lower.includes("warning") ||
-              lower.includes("medium") ||
-              lower.includes("moderate")
-            ) {
-              return "warning";
-            }
-            return "info";
-          }
+  const { data: incidents } = await db
+    .from("safety_incidents")
+    .select(
+      "id, description, created_at, severity_id, location, severity:safety_severities(level)",
+    )
+    .eq("incident_date", today)
+    .eq("status", "open")
+    .order("created_at", { ascending: false })
+    .limit(5);
 
-          if (incidents) {
-            for (const incident of incidents) {
-              const sev = incident.severity as unknown as {
-                level: string;
-              } | null;
-              events.push({
-                id: `incident-${incident.id}`,
-                type: "incident",
-                title: incident.location
-                  ? `${incident.location}: Incident`
-                  : "Safety Incident",
-                description: incident.description,
-                timestamp: incident.created_at,
-                severity: mapSeverityLevel(sev?.level),
-                href: "/safety/daily-log",
-              });
-            }
-          }
+  function mapSeverityLevel(level?: string): AlertEvent["severity"] {
+    if (!level) return "warning";
+    const lower = level.toLowerCase();
+    if (
+      lower.includes("critical") ||
+      lower.includes("high") ||
+      lower.includes("severe")
+    ) {
+      return "critical";
+    }
+    if (
+      lower.includes("warning") ||
+      lower.includes("medium") ||
+      lower.includes("moderate")
+    ) {
+      return "warning";
+    }
+    return "info";
+  }
 
-          const { data: breakdownsData } = await db
-            .from("breakdowns")
-            .select(
-              "id, machine_name, machine_type, reason, created_at, date_in",
-            )
-            .eq("status", "active")
-            .is("deleted_at", null)
-            .order("created_at", { ascending: false })
-            .limit(5);
+  if (incidents) {
+    for (const incident of incidents) {
+      const sev = incident.severity as unknown as {
+        level: string;
+      } | null;
+      events.push({
+        id: `incident-${incident.id}`,
+        type: "incident",
+        title: incident.location
+          ? `${incident.location}: Incident`
+          : "Safety Incident",
+        description: incident.description,
+        timestamp: incident.created_at,
+        severity: mapSeverityLevel(sev?.level),
+        href: "/safety/daily-log",
+      });
+    }
+  }
 
-          if (breakdownsData) {
-            for (const b of breakdownsData) {
-              events.push({
-                id: `breakdown-${b.id}`,
-                type: "breakdown",
-                title: b.machine_name
-                  ? `${b.machine_name} Breakdown`
-                  : `${b.machine_type} Breakdown`,
-                description: b.reason,
-                timestamp: b.created_at,
-                severity: "warning",
-                href: "/engineering/breakdowns",
-              });
-            }
-          }
+  const { data: breakdownsData } = await db
+    .from("breakdowns")
+    .select("id, machine_name, machine_type, reason, created_at, date_in")
+    .eq("status", "active")
+    .is("deleted_at", null)
+    .order("created_at", { ascending: false })
+    .limit(5);
 
-          return events
-            .sort(
-              (a, b) =>
-                new Date(b.timestamp).getTime() -
-                new Date(a.timestamp).getTime(),
-            )
-            .slice(0, 8);
-        },
-        {
-          category: CacheCategory.METRICS,
-          keyParts: ["hub", "alerts", userId, today],
-          tags: [
-            `auth:${userId}`,
-            "table:safety_incidents",
-            "table:breakdowns",
-          ],
-        },
-      );
-    },
-    {
-      revalidate: 300,
-      tags: [`auth:${userId}`, "table:safety_incidents", "table:breakdowns"],
-    },
-  );
+  if (breakdownsData) {
+    for (const b of breakdownsData) {
+      events.push({
+        id: `breakdown-${b.id}`,
+        type: "breakdown",
+        title: b.machine_name
+          ? `${b.machine_name} Breakdown`
+          : `${b.machine_type} Breakdown`,
+        description: b.reason,
+        timestamp: b.created_at,
+        severity: "warning",
+        href: "/engineering/breakdowns",
+      });
+    }
+  }
+
+  return events
+    .sort(
+      (a, b) =>
+        new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
+    )
+    .slice(0, 8);
 }
 
-async function getEmployeeDepartments(
-  userId: string,
-  cookieList: Array<{ name: string; value: string }>,
-) {
-  return cachedRSC(
-    ["user", userId, "accessible-dept-names"],
-    async () => {
-      return withCache(
-        async () => {
-          const db = await createReadReplicaClient(cookieList);
-          const { data: empData } = await db
-            .from("employees")
-            .select("accessible_departments")
-            .eq("auth_id", userId)
-            .single();
+async function getEmployeeDepartments(userId: string) {
+  "use cache: private";
+  cacheTag(`auth:${userId}`, "table:employees", "table:departments");
+  cacheLife({ expire: 3600 });
 
-          const accessibleDeptIds = (empData?.accessible_departments ??
-            []) as string[];
-          if (accessibleDeptIds.length === 0) return [];
+  const cookieStore = await cookies();
+  const db = await createReadReplicaClient(cookieStore.getAll());
+  const { data: empData } = await db
+    .from("employees")
+    .select("accessible_departments")
+    .eq("auth_id", userId)
+    .single();
 
-          const { data: deptData } = await db
-            .from("departments")
-            .select("name")
-            .in("id", accessibleDeptIds);
+  const accessibleDeptIds = (empData?.accessible_departments ?? []) as string[];
+  if (accessibleDeptIds.length === 0) return [];
 
-          return (deptData ?? []).map((d) => d.name);
-        },
-        {
-          category: CacheCategory.AUTH,
-          keyParts: ["user", userId, "accessible-dept-names"],
-          tags: [`auth:${userId}`, "table:employees", "table:departments"],
-        },
-      );
-    },
-    {
-      revalidate: 3600,
-      tags: [`auth:${userId}`, "table:employees", "table:departments"],
-    },
-  );
+  const { data: deptData } = await db
+    .from("departments")
+    .select("name")
+    .in("id", accessibleDeptIds);
+
+  return (deptData ?? []).map((d) => d.name);
 }
 
 export default async function HubPage() {
@@ -372,10 +291,10 @@ export default async function HubPage() {
     tools,
     alertEvents,
   ] = await Promise.all([
-    getDashboardCounts(today, userId, cookieList),
-    getEmployeeDepartments(userId, cookieList),
+    getDashboardCounts(today, userId),
+    getEmployeeDepartments(userId),
     getTools(),
-    getRecentAlertEvents(today, userId, cookieList),
+    getRecentAlertEvents(today, userId),
   ]);
 
   const departments =
@@ -596,6 +515,6 @@ async function ProductionTrendSection() {
   const supabase = await createServerSupabaseClient();
   const user = await getUserSafely(supabase);
   const userId = user?.id ?? "anonymous";
-  const productionTrendData = await getProductionTrendData(userId, cookieList);
+  const productionTrendData = await getProductionTrendData(userId);
   return <ProductionTrend data={productionTrendData} />;
 }

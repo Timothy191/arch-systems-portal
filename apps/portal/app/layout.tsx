@@ -2,6 +2,7 @@ import "@repo/ui/globals.css";
 import { ArchThemeProvider } from "@repo/theme/react";
 import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import Script from "next/script";
 import ClientProviders from "./ClientProviders";
 import { OfflineBanner } from "@/components/OfflineBanner";
@@ -39,6 +40,12 @@ import { ViewportBoundaries } from "@/components/system/ViewportBoundaries";
 // See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
 export const instant = false;
 
+const anurati = localFont({
+  src: "../assets/fonts/Anurati-Regular.otf",
+  variable: "--font-anurati",
+  display: "swap",
+});
+
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
@@ -59,7 +66,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "Arch Portal",
+    title: "Arch OS",
   },
   formatDetection: {
     telephone: false,
@@ -86,7 +93,7 @@ export default function RootLayout({
       lang="en"
       data-theme="light"
       suppressHydrationWarning
-      className={`${inter.variable} ${jetbrainsMono.variable}`}
+      className={`${inter.variable} ${jetbrainsMono.variable} ${anurati.variable}`}
     >
       <head>
         <link

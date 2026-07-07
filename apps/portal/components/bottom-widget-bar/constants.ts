@@ -100,7 +100,12 @@ export const PRODUCTIVITY_LIST = [
 ];
 
 export const OUTER_ITEMS = [
-  { href: "/", label: "Hub", icon: LayoutDashboard, color: "text-[var(--text-muted)]" },
+  {
+    href: "/",
+    label: "Hub",
+    icon: LayoutDashboard,
+    color: "text-[var(--text-muted)]",
+  },
   {
     href: "/drilling",
     label: "Drilling",
@@ -178,7 +183,6 @@ export const INNER_ITEMS = [
   },
 ];
 
-
 /**
  * Key used to persist the dock's xy coordinates in localStorage.
  */
@@ -205,4 +209,3 @@ export function clampDockPosition(pos: DockPosition): DockPosition {
     y: Math.max(margin, Math.min(window.innerHeight - margin, pos.y)),
   };
 }
-

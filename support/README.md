@@ -7,6 +7,7 @@ By offloading CPU-intensive processing, data transformations, and caching logic 
 
 - `rust-support/`: A Cargo workspace containing all Rust logic, graphics, and cache engines.
 - `tools-support/`: Helper scripts and deployment manifests for these engines.
+- `redis-topology/`: Infrastructure and configuration for the multi-node Redis cluster.
 
 ## Integration Methods
 

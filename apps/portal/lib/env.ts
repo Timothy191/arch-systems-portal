@@ -20,108 +20,113 @@ import { z } from "zod";
 // Schema
 // ---------------------------------------------------------------------------
 
-const envSchema = z.object({
-  // ── Public (embedded in client bundle — safe defaults for dev) ──────
-  NEXT_PUBLIC_SUPABASE_URL: z.string().url().default("http://127.0.0.1:54321"),
-  NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1).default("dummy-anon-key"),
+const envSchema = z
+  .object({
+    // ── Public (embedded in client bundle — safe defaults for dev) ──────
+    NEXT_PUBLIC_SUPABASE_URL: z
+      .string()
+      .url()
+      .default("http://127.0.0.1:54321"),
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1).default("dummy-anon-key"),
 
-  // ── Server-side required ───────────────────────────────────────────
-  SUPABASE_URL: z.string().url().optional(),
-  SUPABASE_ANON_KEY: z.string().optional(),
-  SUPABASE_SERVICE_KEY: z.string().optional(),
-  DATABASE_URL: z.string().optional(),
+    // ── Server-side required ───────────────────────────────────────────
+    SUPABASE_URL: z.string().url().optional(),
+    SUPABASE_ANON_KEY: z.string().optional(),
+    SUPABASE_SERVICE_KEY: z.string().optional(),
+    DATABASE_URL: z.string().optional(),
 
-  // ── Server — optional with defaults ────────────────────────────────
-  PORT: z.coerce.number().int().positive().default(3000),
-  NODE_ENV: z
-    .enum(["development", "production", "test"])
-    .default("development"),
+    // ── Server — optional with defaults ────────────────────────────────
+    PORT: z.coerce.number().int().positive().default(3000),
+    NODE_ENV: z
+      .enum(["development", "production", "test"])
+      .default("development"),
 
-  // ── Redis (optional, used only when configured) ────────────────────
-  REDIS_URL: z.string().optional(),
+    // ── Redis (optional, used only when configured) ────────────────────
+    REDIS_URL: z.string().optional(),
 
-  // ── LLM / AI providers (optional) ──────────────────────────────────
-  OLLAMA_URL: z.string().url().default("http://localhost:11434"),
-  OLLAMA_DEFAULT_MODEL: z.string().default("gemma4:latest"),
-  OPENAI_API_KEY: z.string().optional(),
-  OPENAI_MODEL: z.string().optional(),
+    // ── LLM / AI providers (optional) ──────────────────────────────────
+    OLLAMA_URL: z.string().url().default("http://localhost:11434"),
+    OLLAMA_DEFAULT_MODEL: z.string().default("gemma4:latest"),
+    OPENAI_API_KEY: z.string().optional(),
+    OPENAI_MODEL: z.string().optional(),
 
-  // ── Sentry (optional) ──────────────────────────────────────────────
-  SENTRY_ORG: z.string().optional(),
-  SENTRY_PROJECT: z.string().optional(),
-  SENTRY_AUTH_TOKEN: z.string().optional(),
-  NEXT_PUBLIC_SENTRY_DSN: z.string().url().optional(),
+    // ── Sentry (optional) ──────────────────────────────────────────────
+    SENTRY_ORG: z.string().optional(),
+    SENTRY_PROJECT: z.string().optional(),
+    SENTRY_AUTH_TOKEN: z.string().optional(),
+    NEXT_PUBLIC_SENTRY_DSN: z.string().url().optional(),
 
-  // ── External services (optional) ───────────────────────────────────
-  N8N_URL: z.string().url().optional(),
-  NEXT_PUBLIC_N8N_URL: z.string().url().optional(),
-  N8N_USER: z.string().optional(),
-  N8N_PASSWORD: z.string().optional(),
-  NEXT_PUBLIC_FUXA_URL: z.string().url().optional(),
-  NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID: z.string().optional(),
+    // ── External services (optional) ───────────────────────────────────
+    N8N_URL: z.string().url().optional(),
+    NEXT_PUBLIC_N8N_URL: z.string().url().optional(),
+    N8N_USER: z.string().optional(),
+    N8N_PASSWORD: z.string().optional(),
+    NEXT_PUBLIC_FUXA_URL: z.string().url().optional(),
+    NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID: z.string().optional(),
 
-  // ── Backend NestJS API (optional — defaults to dev orchestration port) ─
-  API_BASE_URL: z.string().url().optional(),
-  NEXT_PUBLIC_API_URL: z.string().url().optional(),
+    // ── Backend NestJS API (optional — defaults to dev orchestration port) ─
+    API_BASE_URL: z.string().url().optional(),
+    NEXT_PUBLIC_API_URL: z.string().url().optional(),
 
-  // ── Feature flags ──────────────────────────────────────────────────
-  ENABLE_LOAD_ADAPTIVE_TEST: z
-    .string()
-    .default("false")
-    .transform((v) => v === "true"),
-  DISABLE_RATE_LIMIT: z
-    .string()
-    .default("false")
-    .transform((v) => v === "true"),
+    // ── Feature flags ──────────────────────────────────────────────────
+    ENABLE_LOAD_ADAPTIVE_TEST: z
+      .string()
+      .default("false")
+      .transform((v) => v === "true"),
+    DISABLE_RATE_LIMIT: z
+      .string()
+      .default("false")
+      .transform((v) => v === "true"),
 
-  // ── Rate limiting ──────────────────────────────────────────────────
-  RATE_LIMIT_IP_WHITELIST: z.string().optional(),
-  DISABLE_CORS: z
-    .string()
-    .default("false")
-    .transform((v) => v === "true"),
-  ALLOWED_ORIGINS: z.string().optional(),
+    // ── Rate limiting ──────────────────────────────────────────────────
+    RATE_LIMIT_IP_WHITELIST: z.string().optional(),
+    DISABLE_CORS: z
+      .string()
+      .default("false")
+      .transform((v) => v === "true"),
+    ALLOWED_ORIGINS: z.string().optional(),
 
-  // ── Inngest / Background jobs ──────────────────────────────────────
-  INNGEST_EVENT_KEY: z.string().optional(),
+    // ── Inngest / Background jobs ──────────────────────────────────────
+    INNGEST_EVENT_KEY: z.string().optional(),
 
-  // ── Novu (notifications) ───────────────────────────────────────────
-  NOVU_API_KEY: z.string().optional(),
+    // ── Novu (notifications) ───────────────────────────────────────────
+    NOVU_API_KEY: z.string().optional(),
 
-  // ── Observability ──────────────────────────────────────────────────
-  OTEL_EXPORTER_OTLP_ENDPOINT: z.string().url().optional(),
-  OTEL_SERVICE_NAME: z.string().default("arch-portal"),
-  ENABLE_DB_TRACING: z
-    .string()
-    .default("false")
-    .transform((v) => v === "true"),
-  SLOW_QUERY_THRESHOLD_MS: z.coerce.number().int().positive().default(500),
+    // ── Observability ──────────────────────────────────────────────────
+    OTEL_EXPORTER_OTLP_ENDPOINT: z.string().url().optional(),
+    OTEL_SERVICE_NAME: z.string().default("arch-portal"),
+    ENABLE_DB_TRACING: z
+      .string()
+      .default("false")
+      .transform((v) => v === "true"),
+    SLOW_QUERY_THRESHOLD_MS: z.coerce.number().int().positive().default(500),
 
-  // ── Version ────────────────────────────────────────────────────────
-  PORTAL_VERSION: z.string().default("1.0.0"),
-  VERCEL_ENV: z.string().optional(),
-  CI: z
-    .string()
-    .default("false")
-    .transform((v) => v === "true"),
-}).superRefine((val, ctx) => {
-  if (val.NODE_ENV === "production") {
-    if (val.NEXT_PUBLIC_SUPABASE_URL === "http://127.0.0.1:54321") {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Production must not use localhost Supabase URL",
-        path: ["NEXT_PUBLIC_SUPABASE_URL"],
-      });
+    // ── Version ────────────────────────────────────────────────────────
+    PORTAL_VERSION: z.string().default("1.0.0"),
+    VERCEL_ENV: z.string().optional(),
+    CI: z
+      .string()
+      .default("false")
+      .transform((v) => v === "true"),
+  })
+  .superRefine((val, ctx) => {
+    if (val.NODE_ENV === "production") {
+      if (val.NEXT_PUBLIC_SUPABASE_URL === "http://127.0.0.1:54321") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Production must not use localhost Supabase URL",
+          path: ["NEXT_PUBLIC_SUPABASE_URL"],
+        });
+      }
+      if (val.NEXT_PUBLIC_SUPABASE_ANON_KEY === "dummy-anon-key") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Production must not use the dummy anon key",
+          path: ["NEXT_PUBLIC_SUPABASE_ANON_KEY"],
+        });
+      }
     }
-    if (val.NEXT_PUBLIC_SUPABASE_ANON_KEY === "dummy-anon-key") {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Production must not use the dummy anon key",
-        path: ["NEXT_PUBLIC_SUPABASE_ANON_KEY"],
-      });
-    }
-  }
-});
+  });
 
 // ---------------------------------------------------------------------------
 // Parsed result (cached singleton)

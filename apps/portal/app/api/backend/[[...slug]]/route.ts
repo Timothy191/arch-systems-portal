@@ -4,14 +4,11 @@
 import { NextRequest } from "next/server";
 import { env } from "@/lib/env";
 
-// TODO: Cache Components adoption - restore dynamic = "force-dynamic" behavior
-// TODO: Cache Components adoption - restore runtime = "nodejs" behavior
-
 const IDEMPOTENT_METHODS = new Set(["GET", "HEAD", "OPTIONS"]);
 
 async function proxy(
   request: NextRequest,
-  context: { params: Promise<{ slug?: string[] }> },
+  context: RouteContext<"/api/backend/[[...slug]]">,
 ) {
   const { slug = [] } = await context.params;
   const base = env.API_BASE_URL ?? "http://localhost:3004/api";

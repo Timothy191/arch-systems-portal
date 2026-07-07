@@ -9,9 +9,12 @@
     "pg": "^8.13.1"
   },
   "devDependencies": {
+    "@types/jest": "^30.0.0",
     "@types/node": "^22",
     "@types/pg": "^8.11.10",
+    "jest": "^30.4.2",
     "next": "16.3.0-canary.78",
+    "ts-jest": "^29.4.11",
     "typescript": "^5.7.0"
   },
   "exports": {
@@ -34,6 +37,7 @@
     "supabase:link": "pnpx supabase link --project-ref <your-project-ID>",
     "supabase:pull": "pnpx supabase db pull",
     "supabase:push": "pnpx supabase db push",
+    "test": "jest",
     "type-check": "tsc --noEmit"
   },
   "types": "./src/index.ts"

@@ -21,7 +21,9 @@ const archTheme: Config = {
     },
     extend: {
       fontFamily: {
+        anurati: ["var(--font-anurati)", "sans-serif"],
         sans: [
+          "var(--font-anurati)",
           "var(--font-sans)",
           "var(--font-inter)",
           "var(--font-outfit)",

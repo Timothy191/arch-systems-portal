@@ -8,6 +8,7 @@ export const CACHE_TAGS = {
   machines: "table:machines",
   dailyLogs: "table:daily_logs",
   machineOperations: "table:machine_operations",
+  machineTelemetry: "table:machine_telemetry",
   hourlyLoads: "table:hourly_loads",
   operationalDelays: "table:operational_delays",
   excavatorActivity: "table:excavator_activity",

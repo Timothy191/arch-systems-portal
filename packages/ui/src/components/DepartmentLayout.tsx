@@ -128,15 +128,19 @@ export function DepartmentLayout({
           <div
             className={cn(
               "p-1.5 rounded-lg",
-              department.color === "blue" && "bg-accent-blue/10 text-accent-blue",
+              department.color === "blue" &&
+                "bg-accent-blue/10 text-accent-blue",
               department.color === "emerald" &&
                 "bg-accent-green/10 text-accent-green",
-              department.color === "blue" && "bg-accent-blue/10 text-accent-blue",
+              department.color === "blue" &&
+                "bg-accent-blue/10 text-accent-blue",
               department.color === "violet" &&
                 "bg-accent-blue/10 text-accent-blue",
               department.color === "red" && "bg-accent-red/10 text-accent-red",
-              department.color === "blue" && "bg-accent-blue/10 text-accent-blue",
-              department.color === "cyan" && "bg-accent-blue/10 text-accent-blue",
+              department.color === "blue" &&
+                "bg-accent-blue/10 text-accent-blue",
+              department.color === "cyan" &&
+                "bg-accent-blue/10 text-accent-blue",
               department.color === "indigo" &&
                 "bg-accent-blue/10 text-accent-blue",
             )}

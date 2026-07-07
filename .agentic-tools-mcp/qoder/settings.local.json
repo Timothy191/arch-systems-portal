@@ -172,7 +172,18 @@
       "Bash(cd /home/timothy/Documents/Arch-Mk2 && cat apps/portal/package.json | grep -A5 '\"scripts\"' | head -10)",
       "Bash(cd /home/timothy/Documents/Arch-Mk2 && grep -A2 '\"test' apps/portal/package.json)",
       "Bash(cd /home/timothy/Documents/Arch-Mk2 && pnpm --filter portal test -- --testPathPattern=\"hourly-loads\" 2>&1 | tail -80)",
-      "Bash(cd /home/timothy/Documents/Arch-Mk2 && pnpm --filter portal test -- --testPathPatterns=\"hourly-loads\" 2>&1 | tail -100)"
+      "Bash(cd /home/timothy/Documents/Arch-Mk2 && pnpm --filter portal test -- --testPathPatterns=\"hourly-loads\" 2>&1 | tail -100)",
+      "Bash(ls -la /home/arch/Applications/Arch-Mk2/packages/ui/src/ 2>/dev/null; echo \"---\"; ls -la /home/arch/Applications/Arch-Mk2/packages/ui/src/components/ 2>/dev/null | head -20)",
+      "Bash(ls /home/arch/Applications/Arch-Mk2/apps/portal/app/ 2>/dev/null | head -20; echo \"---\"; ls /home/arch/Applications/Arch-Mk2/apps/portal/app/\\\\\\(departments\\\\\\)/ 2>/dev/null | head -20)",
+      "Bash(ls /home/arch/Applications/Arch-Mk2/apps/ 2>/dev/null; echo \"---PACKAGES---\"; ls /home/arch/Applications/Arch-Mk2/packages/ 2>/dev/null)",
+      "Bash(ls /home/arch/Applications/Arch-Mk2/apps/api/ 2>/dev/null; echo \"---\"; ls /home/arch/Applications/Arch-Mk2/apps/ai-agents/ 2>/dev/null)",
+      "Bash(cat /home/arch/Applications/Arch-Mk2/apps/api/package.json 2>/dev/null | head -50; echo \"---\"; cat /home/arch/Applications/Arch-Mk2/apps/ai-agents/package.json 2>/dev/null | head -50)",
+      "Bash(cat /home/arch/Applications/Arch-Mk2/packages/ui/package.json 2>/dev/null; echo \"---UTILS---\"; cat /home/arch/Applications/Arch-Mk2/packages/utils/package.json 2>/dev/null | head -50; echo \"---DB---\"; cat /home/arch/Applications/Arch-Mk2/packages/database/package.json 2>/dev/null | head -50)",
+      "Bash(cat /home/arch/Applications/Arch-Mk2/packages/supabase/package.json 2>/dev/null; echo \"---REDIS---\"; cat /home/arch/Applications/Arch-Mk2/packages/redis/package.json 2>/dev/null | head -30; echo \"---ERRORS---\"; cat /home/arch/Applications/Arch-Mk2/packages/errors/package.json 2>/dev/null | head -30)",
+      "Bash(cat /home/arch/Applications/Arch-Mk2/apps/portal/app/layout.tsx 2>/dev/null | head -50; echo \"---\"; cat /home/arch/Applications/Arch-Mk2/apps/portal/app/ClientProviders.tsx 2>/dev/null | head -50)",
+      "Bash(cat /home/arch/Applications/Arch-Mk2/packages/theme/src/tokens/index.ts 2>/dev/null | head -40)",
+      "Bash(ls /home/arch/Applications/Arch-Mk2/apps/portal/node_modules/@sentry 2>/dev/null; echo \"---\"; ls /home/arch/Applications/Arch-Mk2/apps/portal/node_modules/ 2>/dev/null | head -20)",
+      "Bash(ls /home/arch/Applications/Arch-Mk2/apps/portal/node_modules/maplibre-gl 2>/dev/null && echo \"INSTALLED\" || echo \"NOT DIRECTLY INSTALLED\")"
     ]
   }
 }

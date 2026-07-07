@@ -1,8 +1,7 @@
 "use server";
 
-import { cacheInvalidateTags } from "@repo/redis";
+import { updateTag } from "next/cache";
 import { createServerSupabaseClient } from "@repo/supabase/server";
-import { revalidateTag } from "next/cache";
 import { AuthError } from "@/lib/errors/error-classes";
 
 type AuditAction = "insert" | "update" | "delete";
@@ -46,9 +45,8 @@ export async function logAuditEvent(input: AuditLogInput) {
   });
 
   if (input.tableName) {
-    cacheInvalidateTags([`table:${input.tableName}`]).catch(() => {});
     try {
-      revalidateTag(`table:${input.tableName}`, "max");
+      updateTag(`table:${input.tableName}`);
     } catch {
       // Ignore if not in rendering/action context
     }

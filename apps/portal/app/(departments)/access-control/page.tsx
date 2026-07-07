@@ -71,7 +71,9 @@ export default async function AccessControlDashboardPage() {
         <GlassCard>
           <div className="flex items-center gap-3">
             <div className="p-2 bg-[var(--accent-cyan)]/10 rounded-lg">
-              <span className="text-[var(--accent-cyan)] font-bold text-sm">VISITORS</span>
+              <span className="text-[var(--accent-cyan)] font-bold text-sm">
+                VISITORS
+              </span>
             </div>
             <div>
               <p className="text-[var(--text-muted)] text-xs font-medium uppercase tracking-wider">

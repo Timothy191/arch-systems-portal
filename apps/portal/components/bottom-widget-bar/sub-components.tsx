@@ -4,10 +4,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { cn } from "@repo/ui/lib/utils";
 import { env } from "@/lib/env";
-import {
-  Workflow,
-  ExternalLink,
-} from "lucide-react";
+import { Workflow, ExternalLink } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -16,8 +13,12 @@ import {
   DropdownMenuSeparator,
 } from "@repo/ui/components/ui/dropdown-menu";
 
-
-import { DEPARTMENTS_LIST, PRODUCTIVITY_LIST, OUTER_ITEMS, INNER_ITEMS } from "./constants";
+import {
+  DEPARTMENTS_LIST,
+  PRODUCTIVITY_LIST,
+  OUTER_ITEMS,
+  INNER_ITEMS,
+} from "./constants";
 /**
  * Calculates the Cartesian coordinates for a wheel item based on its index.
  */
@@ -52,7 +53,6 @@ export function getAngle(
   const sweep = Math.PI;
   return Math.PI + (index / Math.max(1, total - 1)) * sweep;
 }
-
 
 /**
  * Base interactive item rendered along the circumference of the main widget wheel.
@@ -302,4 +302,3 @@ export function ToolsWheelItem({
     </DropdownMenu>
   );
 }
-

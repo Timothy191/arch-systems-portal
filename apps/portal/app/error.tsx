@@ -106,7 +106,9 @@ export default function RootError({ error, unstable_retry }: RootErrorProps) {
           </details>
         )}
 
-        <SecondaryButton onClick={() => unstable_retry()}>Try again</SecondaryButton>
+        <SecondaryButton onClick={() => unstable_retry()}>
+          Try again
+        </SecondaryButton>
       </div>
     </div>
   );

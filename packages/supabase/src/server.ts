@@ -2,6 +2,9 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import type { User } from "@supabase/supabase-js";
+import type { SupabaseClient } from "@supabase/supabase-js";
+
+export type ServerSupabaseClient = SupabaseClient;
 
 export async function instrumentedFetch(
   input: RequestInfo | URL,
@@ -39,7 +42,7 @@ export async function instrumentedFetch(
       }
     }
 
-    const recordDbQuery = (globalThis as any).__recordDbQuery;
+    const recordDbQuery = (globalThis as unknown as Record<string, unknown>).__recordDbQuery;
     if (typeof recordDbQuery === "function") {
       recordDbQuery(tableName, method, duration, success);
     }
@@ -86,12 +89,12 @@ export async function createServerSupabaseClient() {
  * from crashing server components.
  */
 export async function getUserSafely(
-  supabase: Awaited<ReturnType<typeof createServerSupabaseClient>>,
+  supabase: ServerSupabaseClient,
 ): Promise<User | null> {
   try {
     const result = await supabase.auth.getUser();
     return result.data.user ?? null;
-  } catch (_error) {
+  } catch {
     // Handle refresh token errors - treat as no user
     // This can happen when the access token is expired and refresh token is invalid/missing
     return null;

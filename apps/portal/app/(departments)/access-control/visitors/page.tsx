@@ -1,5 +1,5 @@
 import { getDepartmentContext } from "~/lib/dept-context";
-import { createServerSupabaseClient } from "@repo/supabase/server";
+
 import { GlassCard } from "@repo/ui/GlassCard";
 import { Button } from "@repo/ui/components/ui/button";
 import { Input } from "@repo/ui/components/ui/input";
@@ -25,7 +25,7 @@ export const instant = false;
 
 async function VisitorsTable({ deptId }: { deptId: string }) {
   const cookieStore = await cookies();
-  const visitors = await getVisitorsForDepartment(deptId, cookieStore.getAll());
+  const visitors = await getVisitorsForDepartment(deptId);
 
   return (
     <GlassCard className="p-0 overflow-hidden h-full">
@@ -41,15 +41,9 @@ async function VisitorsTable({ deptId }: { deptId: string }) {
             <TableHead className="text-[var(--text-muted)]">
               Visitor Name
             </TableHead>
-            <TableHead className="text-[var(--text-muted)]">
-              Company
-            </TableHead>
-            <TableHead className="text-[var(--text-muted)]">
-              Reason
-            </TableHead>
-            <TableHead className="text-[var(--text-muted)]">
-              Check-In
-            </TableHead>
+            <TableHead className="text-[var(--text-muted)]">Company</TableHead>
+            <TableHead className="text-[var(--text-muted)]">Reason</TableHead>
+            <TableHead className="text-[var(--text-muted)]">Check-In</TableHead>
             <TableHead className="text-right text-[var(--text-muted)]">
               Status
             </TableHead>
@@ -117,19 +111,7 @@ export default async function VisitorsPage() {
     department: "access-control",
   });
 
-  const supabase = await createServerSupabaseClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) {
-    return (
-      <div className="space-y-6">
-        <p className="text-[var(--text-muted)]">
-          Please log in to view visitors.
-        </p>
-      </div>
-    );
-  }
+
 
   return (
     <div className="space-y-6">

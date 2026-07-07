@@ -12,10 +12,10 @@
 - [server-cache.ts](file://apps/portal/lib/server-cache.ts)
 - [cache-dashboard.json](file://infra/observability/grafana-dashboards/cache-dashboard.json)
 - [067_cache_events.sql](file://packages/database/migrations/067_cache_events.sql)
-- [redis-cluster.yml](file://redis-topology/docker-compose/redis-cluster.yml)
-- [main.tf](file://redis-topology/terraform/main.tf)
-- [outputs.tf](file://redis-topology/terraform/outputs.tf)
-- [shard-map.json](file://redis-topology/config/shard-map.json)
+- [redis-cluster.yml](file://support/redis-topology/docker-compose/redis-cluster.yml)
+- [main.tf](file://support/redis-topology/terraform/main.tf)
+- [outputs.tf](file://support/redis-topology/terraform/outputs.tf)
+- [shard-map.json](file://support/redis-topology/config/shard-map.json)
 - [cache-agent.yaml](file://infra/k8s/cache-agent.yaml)
 </cite>
 
@@ -95,10 +95,10 @@ M --> E
 - [stats.ts:1-169](file://packages/redis/src/stats.ts#L1-L169)
 - [cache-utils.ts:1-79](file://apps/portal/lib/cache-utils.ts#L1-L79)
 - [server-cache.ts:1-27](file://apps/portal/lib/server-cache.ts#L1-L27)
-- [redis-cluster.yml:1-36](file://redis-topology/docker-compose/redis-cluster.yml#L1-L36)
-- [main.tf:1-26](file://redis-topology/terraform/main.tf#L1-L26)
-- [outputs.tf:1-8](file://redis-topology/terraform/outputs.tf#L1-L8)
-- [shard-map.json:1-17](file://redis-topology/config/shard-map.json#L1-L17)
+- [redis-cluster.yml:1-36](file://support/redis-topology/docker-compose/redis-cluster.yml#L1-L36)
+- [main.tf:1-26](file://support/redis-topology/terraform/main.tf#L1-L26)
+- [outputs.tf:1-8](file://support/redis-topology/terraform/outputs.tf#L1-L8)
+- [shard-map.json:1-17](file://support/redis-topology/config/shard-map.json#L1-L17)
 - [cache-agent.yaml:1-31](file://infra/k8s/cache-agent.yaml#L1-L31)
 
 **Section sources**
@@ -482,10 +482,10 @@ The caching layer provides a robust, observable, and scalable solution combining
 **Section sources**
 
 - [client.ts:3-35](file://packages/redis/src/client.ts#L3-L35)
-- [redis-cluster.yml:1-36](file://redis-topology/docker-compose/redis-cluster.yml#L1-L36)
-- [main.tf:10-25](file://redis-topology/terraform/main.tf#L10-L25)
-- [outputs.tf:1-8](file://redis-topology/terraform/outputs.tf#L1-L8)
-- [shard-map.json:1-17](file://redis-topology/config/shard-map.json#L1-L17)
+- [redis-cluster.yml:1-36](file://support/redis-topology/docker-compose/redis-cluster.yml#L1-L36)
+- [main.tf:10-25](file://support/redis-topology/terraform/main.tf#L10-L25)
+- [outputs.tf:1-8](file://support/redis-topology/terraform/outputs.tf#L1-L8)
+- [shard-map.json:1-17](file://support/redis-topology/config/shard-map.json#L1-L17)
 
 ### Disaster Recovery Procedures
 
@@ -496,7 +496,7 @@ The caching layer provides a robust, observable, and scalable solution combining
 
 **Section sources**
 
-- [main.tf:17-22](file://redis-topology/terraform/main.tf#L17-L22)
+- [main.tf:17-22](file://support/redis-topology/terraform/main.tf#L17-L22)
 - [client.ts:37-54](file://packages/redis/src/client.ts#L37-L54)
 - [client.ts:60-66](file://packages/redis/src/client.ts#L60-L66)
 

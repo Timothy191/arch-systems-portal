@@ -12,7 +12,7 @@ Per-app configs — Each Next.js app owns its own runtime config:
 - CMS: payload.config.ts reads DATABASE_URL and PAYLOAD_SECRET
 - Overview: minimal Tailwind config extending @repo/theme/tailwind
 
-Infrastructure & observability config — config/nginx.conf defines reverse-proxy, SSL termination, security headers, and upstream routing for the portal backend. config/prometheus.yml and monitoring/prometheus.yml declare scrape targets for n8n, langfuse, and internal services. Redis cluster topology lives under redis-topology/config/shard-map.json.
+Infrastructure & observability config — config/nginx.conf defines reverse-proxy, SSL termination, security headers, and upstream routing for the portal backend. config/prometheus.yml and monitoring/prometheus.yml declare scrape targets for n8n, langfuse, and internal services. Redis cluster topology lives under support/redis-topology/config/shard-map.json.
 
 Conventions developers should follow
 

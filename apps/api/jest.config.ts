@@ -1,7 +1,7 @@
 import type { Config } from "jest";
 
 const config: Config = {
-  moduleFileExtensions: ["js", "json", "ts"],
+  moduleFileExtensions: ["js", "json", "ts", "tsx"],
   rootDir: "src",
   testRegex: ".*\\.spec\\.ts$",
   transform: {
@@ -27,12 +27,14 @@ const config: Config = {
   testEnvironment: "node",
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/$1",
-    "^@repo/supabase/(.*)$": "<rootDir>/../../packages/supabase/src/$1",
-    "^@repo/supabase$": "<rootDir>/../../packages/supabase/src/index.ts",
-    "^@repo/redis$": "<rootDir>/../../packages/redis/src/index.ts",
-    "^@repo/redis/(.*)$": "<rootDir>/../../packages/redis/src/$1",
-    "^@repo/utils$": "<rootDir>/../../packages/utils/src/index.ts",
-    "^@repo/utils/(.*)$": "<rootDir>/../../packages/utils/src/$1",
+    "^@repo/supabase/(.*)$": "<rootDir>/../../../packages/supabase/src/$1",
+    "^@repo/supabase$": "<rootDir>/../../../packages/supabase/src/index.ts",
+    "^@repo/redis$": "<rootDir>/../../../packages/redis/src/index.ts",
+    "^@repo/redis/(.*)$": "<rootDir>/../../../packages/redis/src/$1",
+    "^@repo/utils$": "<rootDir>/../../../packages/utils/src/index.ts",
+    "^@repo/utils/(.*)$": "<rootDir>/../../../packages/utils/src/$1",
+    // Strip .js extension for relative imports within workspace packages
+    "^(.+)\\.js$": "$1",
   },
 };
 

@@ -39,9 +39,7 @@ export function FormInput({
         {optional && (
           <span className="text-[var(--text-muted)]"> (Optional)</span>
         )}
-        {!optional && props.required && (
-          <span className="text-danger"> *</span>
-        )}
+        {!optional && props.required && <span className="text-danger"> *</span>}
       </label>
       <input
         id={inputId}

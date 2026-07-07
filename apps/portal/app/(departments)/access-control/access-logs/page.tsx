@@ -1,5 +1,5 @@
 import { getDepartmentContext } from "~/lib/dept-context";
-import { createServerSupabaseClient } from "@repo/supabase/server";
+
 import { GlassCard } from "@repo/ui/GlassCard";
 import {
   Table,
@@ -23,7 +23,7 @@ export const instant = false;
 
 async function AccessLogsTable({ deptId }: { deptId: string }) {
   const cookieStore = await cookies();
-  const logs = await getAccessLogsForDepartment(deptId, cookieStore.getAll());
+  const logs = await getAccessLogsForDepartment(deptId);
 
   const resolvedLogs = logs.map((log: any) => {
     const badge = log.badge as any;
@@ -80,9 +80,7 @@ async function AccessLogsTable({ deptId }: { deptId: string }) {
             <TableHead className="text-[var(--text-muted)]">Time</TableHead>
             <TableHead className="text-[var(--text-muted)]">Entity</TableHead>
             <TableHead className="text-[var(--text-muted)]">Type</TableHead>
-            <TableHead className="text-[var(--text-muted)]">
-              QR Code
-            </TableHead>
+            <TableHead className="text-[var(--text-muted)]">QR Code</TableHead>
             <TableHead className="text-[var(--text-muted)]">Zone</TableHead>
             <TableHead className="text-[var(--text-muted)]">
               Direction
@@ -166,19 +164,7 @@ export default async function AccessLogsPage() {
     department: "access-control",
   });
 
-  const supabase = await createServerSupabaseClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) {
-    return (
-      <div className="space-y-6">
-        <p className="text-[var(--text-muted)]">
-          Please log in to view access logs.
-        </p>
-      </div>
-    );
-  }
+
 
   return (
     <div className="space-y-6">

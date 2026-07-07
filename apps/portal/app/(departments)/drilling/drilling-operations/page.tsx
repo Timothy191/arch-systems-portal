@@ -1,64 +1,34 @@
-import { createServerSupabaseClient } from "@repo/supabase/server";
 import { redirect } from "next/navigation";
 import { DrillingOperationsTable } from "./DrillingOperationsTable";
-import { getOperationalToday } from "@repo/utils";
+import { getDepartmentContext } from "~/lib/dept-context";
+import { getDrillingOpsData } from "~/lib/data/drilling";
+import { Suspense } from "react";
+import { GlassSkeleton } from "@repo/ui/components/ui/glass-skeleton";
 
-// TODO: Cache Components adoption. Refactor this route so this opt-out can be removed.
-// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
 export const instant = false;
 
-// TODO: Cache Components adoption - restore dynamic = "force-dynamic" behavior
+async function DrillingOperationsContent({ deptId }: { deptId: string }) {
+  const { drills, ops, operators } = await getDrillingOpsData(deptId);
 
-async function getDrillingOpsData() {
-  const supabase = await createServerSupabaseClient();
+  return (
+    <DrillingOperationsTable
+      departmentId={deptId}
+      drills={drills}
+      operators={operators}
+      initialOps={ops}
+    />
+  );
+}
+
+export default async function DrillingOperationsPage() {
+  const { deptId, supabase } = await getDepartmentContext({
+    department: "drilling",
+  });
+
   const {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
-
-  const { data: dept } = await supabase
-    .from("departments")
-    .select("id")
-    .eq("name", "drilling")
-    .single();
-  if (!dept) {
-    return { drills: [], ops: [], operators: [], deptId: "" };
-  }
-
-  const today = getOperationalToday();
-
-  const [{ data: drills }, { data: ops }, { data: operators }] =
-    await Promise.all([
-      supabase
-        .from("machines")
-        .select("id, name")
-        .eq("machine_type", "Drill Rig")
-        .eq("active", true)
-        .order("name"),
-      supabase
-        .from("drill_operations")
-        .select(
-          "id, machine_id, shift_type, operation_date, open_hours, close_hours, total_hours, operator_name, block_drilled, site, external_delays_minutes, standard_delays_hours, production_delays_minutes, engineering_delays_minutes, comments, status",
-        )
-        .eq("department_id", dept.id)
-        .eq("operation_date", today),
-      supabase
-        .from("employees")
-        .select("id, full_name")
-        .eq("department_id", dept.id)
-        .order("full_name"),
-    ]);
-
-  return {
-    drills: drills ?? [],
-    ops: ops ?? [],
-    operators: operators ?? [],
-    deptId: dept.id,
-  };
-}
-
-export default async function DrillingOperationsPage() {
-  const { drills, ops, operators, deptId } = await getDrillingOpsData();
 
   return (
     <div className="space-y-6">
@@ -71,12 +41,10 @@ export default async function DrillingOperationsPage() {
         </p>
       </header>
 
-      <DrillingOperationsTable
-        departmentId={deptId}
-        drills={drills}
-        operators={operators}
-        initialOps={ops}
-      />
+      <Suspense fallback={<GlassSkeleton showHeader rows={5} />}>
+        <DrillingOperationsContent deptId={deptId} />
+      </Suspense>
     </div>
   );
 }
+

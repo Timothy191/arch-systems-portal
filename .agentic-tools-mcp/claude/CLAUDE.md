@@ -11,7 +11,7 @@
 > (documentation, ownership, history, decisions). **Always verify against
 > actual source files before making changes** — the index may be stale.
 
-Last indexed: 2026-07-07 (commit c61adcc7)
+Last indexed: 2026-07-07 (commit 8139ae4a)
 ### Entry Points
 - `packages/supabase/src/server.ts`
 - `apps/ai-agents/src/main.py`

@@ -7,7 +7,9 @@
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
     "@types/node": "^22",
-    "typescript": "^5.7.0"
+    "typescript": "^5.7.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.0"
   },
   "exports": {
     ".": {
@@ -33,7 +35,8 @@
     "clean": "rm -rf dist .turbo",
     "dev": "tsc --watch",
     "lint": "eslint . --cache --cache-location node_modules/.cache/.eslintcache --max-warnings 0",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "test": "jest"
   },
   "types": "./dist/index.d.ts"
 }

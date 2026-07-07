@@ -4,7 +4,9 @@ import { CopyReportButton } from "./CopyReportButton";
 import { ExportButton } from "@/features/analytics/components/ExportButton";
 import { PDFDownloadButton } from "@/features/analytics/components/PDFDownloadButton";
 import { createServerSupabaseClient } from "@repo/supabase/server";
-type SupabaseClientType = Awaited<ReturnType<typeof createServerSupabaseClient>>;
+type SupabaseClientType = Awaited<
+  ReturnType<typeof createServerSupabaseClient>
+>;
 
 export async function GenericReport({
   supabase,
@@ -170,7 +172,10 @@ export async function GenericReport({
         </h2>
         <div className="flex items-center gap-2">
           <CopyReportButton csvContent={csvContent} />
-          <PDFDownloadButton reportData={pdfReportData} departmentId={deptId || ""} />
+          <PDFDownloadButton
+            reportData={pdfReportData}
+            departmentId={deptId || ""}
+          />
           <ExportButton
             filename={`${deptSlug}-report-${fromDateStr}-to-${toDateStr}`}
             rows={exportRows}

@@ -616,9 +616,9 @@ modules:
         dir_name: Redis Cluster Topology & Infrastructure
         title: Redis Cluster Topology & Infrastructure
         scope:
-            - redis-topology/config/
-            - redis-topology/docker-compose/
-            - redis-topology/terraform/
+            - support/redis-topology/config/
+            - support/redis-topology/docker-compose/
+            - support/redis-topology/terraform/
         source_files: []
         children: []
         depends_on: []

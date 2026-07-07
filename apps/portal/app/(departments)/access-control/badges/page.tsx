@@ -1,5 +1,5 @@
 import { getDepartmentContext } from "~/lib/dept-context";
-import { createServerSupabaseClient } from "@repo/supabase/server";
+
 import { GlassCard } from "@repo/ui/GlassCard";
 import { Button } from "@repo/ui/components/ui/button";
 import {
@@ -38,8 +38,7 @@ interface BadgeWithRelations {
 async function BadgesTable({ deptId }: { deptId: string }) {
   const cookieStore = await cookies();
   const badges = (await getBadgesForDepartment(
-    deptId,
-    cookieStore.getAll(),
+    deptId
   )) as unknown as BadgeWithRelations[];
 
   // Resolve entity names from nested relation data
@@ -132,19 +131,7 @@ export default async function BadgesPage() {
     department: "access-control",
   });
 
-  const supabase = await createServerSupabaseClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) {
-    return (
-      <div className="space-y-6">
-        <p className="text-[var(--text-muted)]">
-          Please log in to view badges.
-        </p>
-      </div>
-    );
-  }
+
 
   return (
     <div className="space-y-6">

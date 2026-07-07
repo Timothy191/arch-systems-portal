@@ -13,7 +13,11 @@ import {
 } from "@repo/errors";
 
 function getApiUrl(): string {
-  return (env.NEXT_PUBLIC_API_URL ?? env.API_BASE_URL ?? "http://localhost:3001").replace(/\/$/, "");
+  return (
+    env.NEXT_PUBLIC_API_URL ??
+    env.API_BASE_URL ??
+    "http://localhost:3001"
+  ).replace(/\/$/, "");
 }
 
 async function getAccessToken(

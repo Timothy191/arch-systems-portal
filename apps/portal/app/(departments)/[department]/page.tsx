@@ -266,7 +266,10 @@ async function ControlRoomSummaryGrid({
   today: string;
 }) {
   const cookieStore = await cookies();
-  const summary = await getControlRoomSummary(deptId, today, cookieStore.getAll());
+  const summary = await getControlRoomSummary(
+    deptId,
+    today
+  );
 
   const { todayOperations, todayDelays, todayLoads, machineCount } = summary;
 
@@ -280,10 +283,14 @@ async function ControlRoomSummaryGrid({
 
   const delayCount = todayDelays.length || 0;
   const delayMinutes =
-    todayDelays.reduce((sum: number, d: any) => sum + (d.delay_minutes || 0), 0) || 0;
+    todayDelays.reduce(
+      (sum: number, d: any) => sum + (d.delay_minutes || 0),
+      0,
+    ) || 0;
 
   const totalLoads =
-    todayLoads.reduce((sum: number, l: any) => sum + (l.total_loads || 0), 0) || 0;
+    todayLoads.reduce((sum: number, l: any) => sum + (l.total_loads || 0), 0) ||
+    0;
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -332,7 +339,10 @@ async function NonControlRoomSummaryGrid({
   today: string;
 }) {
   const cookieStore = await cookies();
-  const summary = await getNonControlRoomSummary(deptId, today, cookieStore.getAll());
+  const summary = await getNonControlRoomSummary(
+    deptId,
+    today
+  );
 
   const { todayLogs, machineCount } = summary;
 
@@ -382,7 +392,10 @@ async function ShiftCoverageSection({
   today: string;
 }) {
   const cookieStore = await cookies();
-  const todayLogs = await getShiftCoverageLogs(deptId, today, cookieStore.getAll());
+  const todayLogs = await getShiftCoverageLogs(
+    deptId,
+    today
+  );
 
   const shiftCount = todayLogs?.length ?? 0;
   const latestShift = todayLogs?.[shiftCount - 1]?.shift;
