@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, fireevent, waitFor } from "@testing-library/react";
 import { WeatherWidget } from "./WeatherWidget";
 import { type WeatherData } from "@/lib/weather-api";
 
@@ -125,7 +125,7 @@ describe("WeatherWidget - Header Variant Popover", () => {
     expect(screen.queryByTestId("popover-content")).not.toBeInTheDocument();
 
     // Click trigger to open popover
-    fireEvent.click(trigger);
+    fireevent.click(trigger);
     expect(trigger).toHaveAttribute("aria-expanded", "true");
     expect(screen.getByTestId("popover-content")).toBeInTheDocument();
 
@@ -137,7 +137,7 @@ describe("WeatherWidget - Header Variant Popover", () => {
     expect(screen.getByText("💧 60%")).toBeInTheDocument();
 
     // Click trigger to close popover
-    fireEvent.click(trigger);
+    fireevent.click(trigger);
     expect(trigger).toHaveAttribute("aria-expanded", "false");
     expect(screen.queryByTestId("popover-content")).not.toBeInTheDocument();
   });
@@ -157,7 +157,7 @@ describe("WeatherWidget - Header Variant Popover", () => {
     expect(alertDot).toBeInTheDocument();
 
     // Open popover to see alert message
-    fireEvent.click(trigger);
+    fireevent.click(trigger);
     expect(
       screen.getByText(
         "⚠️ Thunderstorm - Cease outdoor operations immediately",

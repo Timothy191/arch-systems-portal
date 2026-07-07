@@ -1,8 +1,8 @@
 import { z } from "zod";
 import { opsClient } from "../ops-client.js";
-import type { EveConfig, EveDispatch } from "../dispatcher/types.js";
+import type { eveConfig, eveDispatch } from "../dispatcher/types.js";
 import {
-  getConfiguredEves,
+  getConfiguredeves,
   getDispatch,
   getDispatches,
   dispatchTask,
@@ -391,12 +391,12 @@ export function defineTools(): ToolDefinition[] {
       },
     },
 
-    // 13. Eve dispatch — Fire-and-forget task to an Eve agent
+    // 13. eve dispatch — Fire-and-forget task to an eve agent
     {
       name: "eve-dispatch",
       description:
         "Manually dispatch a task to a TUI agent (opencode/kilo/agy) for investigation or repair. " +
-        "Use when an incident requires deeper analysis or code changes. The Eve agent receives the task " +
+        "Use when an incident requires deeper analysis or code changes. The eve agent receives the task " +
         "prompt and works autonomously. Check dispatch-status for results.",
       inputSchema: {
         type: "object",
@@ -409,12 +409,12 @@ export function defineTools(): ToolDefinition[] {
           prompt: {
             type: "string",
             description:
-              "Detailed instructions for the Eve agent — include context, logs, and expected actions",
+              "Detailed instructions for the eve agent — include context, logs, and expected actions",
           },
           eve: {
             type: "string",
             enum: ["opencode", "kilo", "agy"],
-            description: "Preferred Eve agent (auto-selected if omitted)",
+            description: "Preferred eve agent (auto-selected if omitted)",
           },
         },
         required: ["task", "prompt"],
@@ -424,16 +424,16 @@ export function defineTools(): ToolDefinition[] {
         const prompt = String(args["prompt"] ?? "");
         if (!task) throw new Error("task is required");
         if (!prompt) throw new Error("prompt is required");
-        const preferredEve = args["eve"];
+        const preferredeve = args["eve"];
         const eveId =
-          typeof preferredEve === "string" &&
-          ["opencode", "kilo", "agy"].includes(preferredEve)
-            ? (preferredEve as "opencode" | "kilo" | "agy")
+          typeof preferredeve === "string" &&
+          ["opencode", "kilo", "agy"].includes(preferredeve)
+            ? (preferredeve as "opencode" | "kilo" | "agy")
             : undefined;
 
-        const eves = getConfiguredEves();
+        const eves = getConfiguredeves();
         if (eves.length === 0) {
-          throw new Error("No Eve agents are enabled on this gateway");
+          throw new Error("No eve agents are enabled on this gateway");
         }
 
         const dispatch = await dispatchTask({
@@ -451,22 +451,22 @@ export function defineTools(): ToolDefinition[] {
       },
     },
 
-    // 14. Eve list — Show configured Eve agents
+    // 14. eve list — Show configured eve agents
     {
       name: "eve-list",
       description:
-        "List all configured Eve agents (TUI agents), their enabled status, and which are currently processing tasks. " +
-        "Use to verify Eve agent availability before dispatching.",
+        "List all configured eve agents (TUI agents), their enabled status, and which are currently processing tasks. " +
+        "Use to verify eve agent availability before dispatching.",
       inputSchema: {
         type: "object",
         properties: {},
         required: [],
       },
       handler: async () => {
-        const eves = getConfiguredEves();
+        const eves = getConfiguredeves();
         const allDispatches = getDispatches();
         const runningDispatches = allDispatches.filter(
-          (d: EveDispatch) => d.status === "running",
+          (d: eveDispatch) => d.status === "running",
         );
         return {
           eves: eves.map((e) => ({
@@ -474,18 +474,18 @@ export function defineTools(): ToolDefinition[] {
             enabled: e.enabled,
             autoApprove: e.autoApprove,
             timeoutMs: e.timeoutMs,
-            activeCount: runningDispatches.filter((d: EveDispatch) => d.eve === e.id)
+            activeCount: runningDispatches.filter((d: eveDispatch) => d.eve === e.id)
               .length,
           })),
         };
       },
     },
 
-    // 15. Eve dispatch status — Check previous dispatch results
+    // 15. eve dispatch status — Check previous dispatch results
     {
       name: "dispatch-status",
       description:
-        "Check the status of dispatched Eve tasks. Lists recent dispatches with their status " +
+        "Check the status of dispatched eve tasks. Lists recent dispatches with their status " +
         "(pending/running/completed/failed). Optionally filter by dispatch ID for full detail.",
       inputSchema: {
         type: "object",
@@ -525,7 +525,7 @@ export function defineTools(): ToolDefinition[] {
 
         const limit = Math.min(Math.max(Number(args["limit"] ?? 5), 1), 50);
         const dispatches = resolveLatestDispatches(limit);
-        return dispatches.map((d: EveDispatch) => ({
+        return dispatches.map((d: eveDispatch) => ({
           id: d.id,
           eve: d.eve,
           task: d.task,

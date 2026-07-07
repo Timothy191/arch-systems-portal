@@ -1,10 +1,10 @@
-// ── Eve agent types ─────────────────────────────────────────
-// Eve = TUI agent (opencode/kilo/agy) dispatched for investigation & repair
+// ── eve agent types ─────────────────────────────────────────
+// eve = TUI agent (opencode/kilo/agy) dispatched for investigation & repair
 
-export type EveId = "opencode" | "kilo" | "agy";
+export type eveId = "opencode" | "kilo" | "agy";
 
-export interface EveConfig {
-  id: EveId;
+export interface eveConfig {
+  id: eveId;
   cliPath: string;
   enabled: boolean;
   autoApprove: boolean;
@@ -20,9 +20,9 @@ export type DispatchStatus =
 
 export type DispatchTrigger = "incident" | "trigger" | "mcp" | "manual";
 
-export interface EveDispatch {
+export interface eveDispatch {
   id: string;
-  eve: EveId;
+  eve: eveId;
   task: string;
   prompt: string;
   status: DispatchStatus;
@@ -37,7 +37,7 @@ export interface EveDispatch {
 
 export interface DispatchTask {
   prompt: string;
-  eve?: EveId;
+  eve?: eveId;
   context?: Record<string, unknown>;
   triggeredBy: DispatchTrigger;
   triggerRef?: string;
@@ -46,7 +46,7 @@ export interface DispatchTask {
 
 // ── Default configs ─────────────────────────────────────────
 
-export const DEFAULT_EVE_CONFIGS: EveConfig[] = [
+export const DEFAULT_EVE_CONFIGS: eveConfig[] = [
   {
     id: "opencode",
     cliPath: "opencode",

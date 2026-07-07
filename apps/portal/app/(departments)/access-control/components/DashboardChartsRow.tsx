@@ -35,7 +35,7 @@ export default function DashboardChartsRow({
         <div className="flex items-center justify-between mb-4">
           <div>
             <h2 className="text-sm font-bold text-foreground">
-              Access Events — Today
+              Access events — Today
             </h2>
             <p className="text-xs text-muted-foreground mt-0.5">
               Hourly scan volume across all entry points

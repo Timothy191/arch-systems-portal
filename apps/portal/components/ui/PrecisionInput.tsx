@@ -13,7 +13,7 @@ export interface PrecisionInputProps
   suffix?: string;
   value?: number | null;
   onChange?: (
-    _event: React.SyntheticEvent | null,
+    _event: React.Syntheticevent | null,
     _value: number | null,
   ) => void;
 }
@@ -41,7 +41,7 @@ export const PrecisionInput = React.forwardRef<
     onChange?.(null, next);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.Changeevent<HTMLInputElement>) => {
     const valStr = e.target.value;
     if (valStr === "") {
       onChange?.(e, null);

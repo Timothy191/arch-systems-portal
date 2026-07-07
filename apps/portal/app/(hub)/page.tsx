@@ -8,7 +8,7 @@ import {
 } from "@repo/supabase/server";
 import { createReadReplicaClient } from "@repo/supabase/read-replica";
 import { AlertTicker } from "@/features/hub/components/AlertTicker";
-import type { AlertEvent } from "@/features/hub/components/AlertTicker";
+import type { Alertevent } from "@/features/hub/components/AlertTicker";
 import { ProductionTrend } from "@/features/hub/components/ProductionTrendWrapper";
 import type { TrendDataPoint } from "@/features/hub/components/ProductionTrend";
 import { HeroBackground } from "@/features/hub/components/HeroBackground";
@@ -144,17 +144,17 @@ async function getProductionTrendData(
   return formatted.length > 0 ? formatted : FALLBACK_TREND_DATA;
 }
 
-async function getRecentAlertEvents(
+async function getRecentAlertevents(
   today: string,
   userId: string,
-): Promise<AlertEvent[]> {
+): Promise<Alertevent[]> {
   "use cache: private";
   cacheTag(`auth:${userId}`, "table:safety_incidents", "table:breakdowns");
   cacheLife({ expire: 300 });
 
   const cookieStore = await cookies();
   const db = await createReadReplicaClient(cookieStore.getAll());
-  const events: AlertEvent[] = [];
+  const events: Alertevent[] = [];
 
   const { data: incidents } = await db
     .from("safety_incidents")
@@ -166,7 +166,7 @@ async function getRecentAlertEvents(
     .order("created_at", { ascending: false })
     .limit(5);
 
-  function mapSeverityLevel(level?: string): AlertEvent["severity"] {
+  function mapSeverityLevel(level?: string): Alertevent["severity"] {
     if (!level) return "warning";
     const lower = level.toLowerCase();
     if (
@@ -280,12 +280,12 @@ export default async function HubPage() {
     { incidentCount, breakdownCount, offlineMachineCount },
     accessibleDeptIds,
     tools,
-    alertEvents,
+    alertevents,
   ] = await Promise.all([
     getDashboardCounts(today, userId),
     getEmployeeDepartments(userId),
     getTools(),
-    getRecentAlertEvents(today, userId),
+    getRecentAlertevents(today, userId),
   ]);
 
   const departments =
@@ -405,7 +405,7 @@ export default async function HubPage() {
             Live System Urgency & Incident Controls
           </h2>
         </div>
-        <AlertTicker events={alertEvents} />
+        <AlertTicker events={alertevents} />
       </div>
 
       {/* Core Operational Modules - Responsive Grid */}

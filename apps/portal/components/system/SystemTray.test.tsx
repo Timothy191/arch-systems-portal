@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireevent } from "@testing-library/react";
 import {
   formatTimeSeconds,
   NetworkStatusRow,
@@ -131,7 +131,7 @@ describe("VolumeControlRow", () => {
     expect(screen.getByText("75%")).toBeInTheDocument();
 
     const slider = screen.getByLabelText("Volume");
-    fireEvent.change(slider, { target: { value: "50" } });
+    fireevent.change(slider, { target: { value: "50" } });
     expect(adjust).toHaveBeenCalledWith(50);
   });
 
@@ -148,7 +148,7 @@ describe("VolumeControlRow", () => {
     expect(screen.getByText("Muted")).toBeInTheDocument();
 
     const muteButton = screen.getByLabelText("Unmute");
-    fireEvent.click(muteButton);
+    fireevent.click(muteButton);
     expect(toggleMute).toHaveBeenCalled();
   });
 });
@@ -160,7 +160,7 @@ describe("NotificationRow", () => {
     expect(screen.getByText("3 notifications")).toBeInTheDocument();
 
     const clearButton = screen.getByLabelText("Clear notifications");
-    fireEvent.click(clearButton);
+    fireevent.click(clearButton);
     expect(clear).toHaveBeenCalled();
   });
 

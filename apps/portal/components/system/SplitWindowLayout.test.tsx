@@ -1,7 +1,7 @@
 import {
   render,
   screen,
-  fireEvent,
+  fireevent,
   act,
   waitFor,
 } from "@testing-library/react";
@@ -36,8 +36,8 @@ describe("SplitWindowLayout", () => {
     );
 
     await act(async () => {
-      window.dispatchEvent(
-        new CustomEvent("open-split-view", {
+      window.dispatchevent(
+        new Customevent("open-split-view", {
           detail: { service: "whatsapp" },
         }),
       );
@@ -56,11 +56,11 @@ describe("SplitWindowLayout", () => {
     );
 
     await act(async () => {
-      window.dispatchEvent(
-        new CustomEvent("open-split-view", { detail: { service: "github" } }),
+      window.dispatchevent(
+        new Customevent("open-split-view", { detail: { service: "github" } }),
       );
-      window.dispatchEvent(
-        new CustomEvent("open-split-view", { detail: { service: "whatsapp" } }),
+      window.dispatchevent(
+        new Customevent("open-split-view", { detail: { service: "whatsapp" } }),
       );
     });
 
@@ -78,11 +78,11 @@ describe("SplitWindowLayout", () => {
     );
 
     await act(async () => {
-      window.dispatchEvent(
-        new CustomEvent("open-split-view", { detail: { service: "whatsapp" } }),
+      window.dispatchevent(
+        new Customevent("open-split-view", { detail: { service: "whatsapp" } }),
       );
-      window.dispatchEvent(
-        new CustomEvent("open-split-view", { detail: { service: "whatsapp" } }),
+      window.dispatchevent(
+        new Customevent("open-split-view", { detail: { service: "whatsapp" } }),
       );
     });
 
@@ -100,8 +100,8 @@ describe("SplitWindowLayout", () => {
     );
 
     await act(async () => {
-      window.dispatchEvent(
-        new CustomEvent("open-split-view", { detail: { service: "whatsapp" } }),
+      window.dispatchevent(
+        new Customevent("open-split-view", { detail: { service: "whatsapp" } }),
       );
     });
 
@@ -110,7 +110,7 @@ describe("SplitWindowLayout", () => {
     );
 
     await act(async () => {
-      fireEvent.click(closeButton);
+      fireevent.click(closeButton);
     });
 
     await waitFor(() => {
@@ -126,11 +126,11 @@ describe("SplitWindowLayout", () => {
     );
 
     await act(async () => {
-      window.dispatchEvent(
-        new CustomEvent("open-split-view", { detail: { service: "github" } }),
+      window.dispatchevent(
+        new Customevent("open-split-view", { detail: { service: "github" } }),
       );
-      window.dispatchEvent(
-        new CustomEvent("open-split-view", { detail: { service: "whatsapp" } }),
+      window.dispatchevent(
+        new Customevent("open-split-view", { detail: { service: "whatsapp" } }),
       );
     });
 
@@ -139,7 +139,7 @@ describe("SplitWindowLayout", () => {
     );
 
     await act(async () => {
-      fireEvent.click(closeAllButton);
+      fireevent.click(closeAllButton);
     });
 
     await waitFor(() => {

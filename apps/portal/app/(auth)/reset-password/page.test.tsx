@@ -1,4 +1,4 @@
-import { render, screen, waitFor, fireEvent } from "@testing-library/react";
+import { render, screen, waitFor, fireevent } from "@testing-library/react";
 import { ResetPasswordForm } from "./ResetPasswordForm";
 
 jest.mock("next/link", () => ({
@@ -34,7 +34,7 @@ jest.mock("@repo/ui/AnimatedButton", () => ({
     disabled?: boolean;
     className?: string;
     type?: "button" | "submit" | "reset";
-    onClick?: React.MouseEventHandler<HTMLButtonElement>;
+    onClick?: React.MouseeventHandler<HTMLButtonElement>;
   }) => (
     <button
       type={type}
@@ -76,11 +76,11 @@ describe("ResetPasswordForm", () => {
 
     render(<ResetPasswordForm />);
 
-    fireEvent.change(screen.getByLabelText("Email"), {
+    fireevent.change(screen.getByLabelText("Email"), {
       target: { value: "test@arch.os" },
     });
 
-    fireEvent.submit(screen.getByLabelText("Email").closest("form")!);
+    fireevent.submit(screen.getByLabelText("Email").closest("form")!);
 
     await waitFor(() => {
       expect(mockReset).toHaveBeenCalledWith("test@arch.os", {
@@ -106,11 +106,11 @@ describe("ResetPasswordForm", () => {
 
     render(<ResetPasswordForm />);
 
-    fireEvent.change(screen.getByLabelText("Email"), {
+    fireevent.change(screen.getByLabelText("Email"), {
       target: { value: "test@arch.os" },
     });
 
-    fireEvent.submit(screen.getByLabelText("Email").closest("form")!);
+    fireevent.submit(screen.getByLabelText("Email").closest("form")!);
 
     await waitFor(() => {
       expect(
@@ -131,11 +131,11 @@ describe("ResetPasswordForm", () => {
 
     render(<ResetPasswordForm />);
 
-    fireEvent.change(screen.getByLabelText("Email"), {
+    fireevent.change(screen.getByLabelText("Email"), {
       target: { value: "not-an-email" },
     });
 
-    fireEvent.submit(screen.getByLabelText("Email").closest("form")!);
+    fireevent.submit(screen.getByLabelText("Email").closest("form")!);
 
     await waitFor(() => {
       expect(
@@ -156,11 +156,11 @@ describe("ResetPasswordForm", () => {
 
     render(<ResetPasswordForm />);
 
-    fireEvent.change(screen.getByLabelText("Email"), {
+    fireevent.change(screen.getByLabelText("Email"), {
       target: { value: "test@arch.os" },
     });
 
-    fireEvent.submit(screen.getByLabelText("Email").closest("form")!);
+    fireevent.submit(screen.getByLabelText("Email").closest("form")!);
 
     await waitFor(() => {
       expect(

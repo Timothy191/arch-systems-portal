@@ -186,7 +186,7 @@ export function ExcavatorActivityForm({
   };
 
   // Handle submit
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.Formevent) => {
     e.preventDefault();
     if (!validate()) return;
 

@@ -75,7 +75,7 @@ export function useDepartmentForm<T>({
   }, [initialValues, storageKey]);
 
   const handleSubmit = useCallback(
-    async (e?: React.FormEvent) => {
+    async (e?: React.Formevent) => {
       if (e) e.preventDefault();
       setError(null);
       setErrors({});

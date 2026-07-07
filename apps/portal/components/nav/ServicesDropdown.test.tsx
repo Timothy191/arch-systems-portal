@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, fireevent, waitFor } from "@testing-library/react";
 import { ServicesDropdown } from "./ServicesDropdown";
 
 jest.mock("@repo/ui/components/ui/dropdown-menu", () => {
@@ -160,13 +160,13 @@ describe("ServicesDropdown", () => {
     const trigger = screen.getByRole("button", { name: /system tray/i });
 
     // Open
-    fireEvent.click(trigger);
+    fireevent.click(trigger);
     await waitFor(() => {
       expect(trigger).toHaveAttribute("aria-expanded", "true");
     });
 
     // Close
-    fireEvent.click(trigger);
+    fireevent.click(trigger);
     await waitFor(() => {
       expect(trigger).toHaveAttribute("aria-expanded", "false");
     });
@@ -175,7 +175,7 @@ describe("ServicesDropdown", () => {
   it("renders environmental and operations status when open", async () => {
     render(<ServicesDropdown />);
     const trigger = screen.getByRole("button", { name: /system tray/i });
-    fireEvent.click(trigger);
+    fireevent.click(trigger);
 
     await waitFor(() => {
       // Weather
@@ -198,7 +198,7 @@ describe("ServicesDropdown", () => {
   it("renders power options when open", async () => {
     render(<ServicesDropdown />);
     const trigger = screen.getByRole("button", { name: /system tray/i });
-    fireEvent.click(trigger);
+    fireevent.click(trigger);
 
     await waitFor(() => {
       expect(screen.getByText("Lock Screen")).toBeInTheDocument();
@@ -212,16 +212,16 @@ describe("ServicesDropdown", () => {
   it("shows lock screen overlay and dismisses on click", async () => {
     render(<ServicesDropdown />);
     const trigger = screen.getByRole("button", { name: /system tray/i });
-    fireEvent.click(trigger);
+    fireevent.click(trigger);
 
     const lockItem = screen.getByText("Lock Screen");
-    fireEvent.click(lockItem);
+    fireevent.click(lockItem);
 
     await waitFor(() => {
       expect(screen.getByText("Click anywhere to unlock")).toBeInTheDocument();
     });
 
-    fireEvent.click(screen.getByText("Click anywhere to unlock"));
+    fireevent.click(screen.getByText("Click anywhere to unlock"));
     await waitFor(() => {
       expect(
         screen.queryByText("Click anywhere to unlock"),
@@ -232,7 +232,7 @@ describe("ServicesDropdown", () => {
   it("contains logout form", async () => {
     render(<ServicesDropdown />);
     const trigger = screen.getByRole("button", { name: /system tray/i });
-    fireEvent.click(trigger);
+    fireevent.click(trigger);
 
     const logoutButton = screen.getByText("Log Out");
     expect(logoutButton.closest("form")).toBeInTheDocument();
@@ -241,10 +241,10 @@ describe("ServicesDropdown", () => {
   it("shows shut down overlay", async () => {
     render(<ServicesDropdown />);
     const trigger = screen.getByRole("button", { name: /system tray/i });
-    fireEvent.click(trigger);
+    fireevent.click(trigger);
 
     const shutDownItem = screen.getByText("Shut Down…");
-    fireEvent.click(shutDownItem);
+    fireevent.click(shutDownItem);
 
     await waitFor(() => {
       expect(
@@ -256,7 +256,7 @@ describe("ServicesDropdown", () => {
   it("renders View and Safety submenus and their contents", async () => {
     render(<ServicesDropdown />);
     const trigger = screen.getByRole("button", { name: /system tray/i });
-    fireEvent.click(trigger);
+    fireevent.click(trigger);
 
     await waitFor(() => {
       expect(screen.getByText("View")).toBeInTheDocument();
@@ -275,13 +275,13 @@ describe("ServicesDropdown", () => {
     expect(trigger).toHaveAttribute("aria-expanded", "false");
 
     // Open
-    fireEvent.keyDown(window, { key: "s", altKey: true });
+    fireevent.keyDown(window, { key: "s", altKey: true });
     await waitFor(() => {
       expect(trigger).toHaveAttribute("aria-expanded", "true");
     });
 
     // Close
-    fireEvent.keyDown(window, { key: "s", altKey: true });
+    fireevent.keyDown(window, { key: "s", altKey: true });
     await waitFor(() => {
       expect(trigger).toHaveAttribute("aria-expanded", "false");
     });

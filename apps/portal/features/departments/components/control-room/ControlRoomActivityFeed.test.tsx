@@ -2,7 +2,7 @@ import {
   render,
   screen,
   waitFor,
-  fireEvent,
+  fireevent,
   act,
 } from "@testing-library/react";
 import { ControlRoomActivityFeed } from "./ControlRoomActivityFeed";
@@ -111,7 +111,7 @@ describe("ControlRoomActivityFeed", () => {
       expect(screen.getByText(/Crusher 1 updated/)).toBeInTheDocument();
     });
 
-    fireEvent.click(screen.getByText("insert"));
+    fireevent.click(screen.getByText("insert"));
 
     await waitFor(() => {
       expect(screen.queryByText(/Crusher 1 updated/)).not.toBeInTheDocument();

@@ -144,7 +144,7 @@ class PluginOrchestrator {
   }
 
   /**
-   * Sandboxed Lifecycle Event Dispatcher.
+   * Sandboxed Lifecycle event Dispatcher.
    * Triggers plugin background listeners in parallel using parallel settle bounds.
    */
   public async triggerHook(

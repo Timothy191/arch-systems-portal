@@ -24,7 +24,7 @@ jest.mock("next/cache", () => ({
 }));
 
 jest.mock("@/lib/audit", () => ({
-  logAuditEvent: jest.fn().mockResolvedValue(undefined),
+  logAuditevent: jest.fn().mockResolvedValue(undefined),
 }));
 
 const { createServerSupabaseClient } = jest.requireMock(

@@ -1,4 +1,4 @@
-import { render, screen, waitFor, fireEvent } from "@testing-library/react";
+import { render, screen, waitFor, fireevent } from "@testing-library/react";
 import { DailyLogForm } from "./DailyLogForm";
 
 // Mock the Supabase client
@@ -73,7 +73,7 @@ describe("DailyLogForm", () => {
     expect(submitButton).toBeEnabled();
 
     // Click submit
-    fireEvent.click(submitButton);
+    fireevent.click(submitButton);
 
     // Should show saving state
     expect(submitButton).toHaveTextContent(/saving/i);
@@ -106,7 +106,7 @@ describe("DailyLogForm", () => {
     const submitButton = screen.getByRole("button", {
       name: /save daily log/i,
     });
-    fireEvent.click(submitButton);
+    fireevent.click(submitButton);
 
     // Should show saving state
     expect(submitButton).toHaveTextContent(/saving/i);

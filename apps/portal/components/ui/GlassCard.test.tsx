@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireevent } from "@testing-library/react";
 import { GlassCard } from "@repo/ui/GlassCard";
 
 describe("GlassCard", () => {
@@ -28,7 +28,7 @@ describe("GlassCard", () => {
     expect(element).toBeInTheDocument();
 
     if (element) {
-      fireEvent.mouseMove(element, { clientX: 100, clientY: 100 });
+      fireevent.mouseMove(element, { clientX: 100, clientY: 100 });
     }
   });
 
@@ -69,7 +69,7 @@ describe("GlassCard", () => {
     expect(initialSheen).toBeInTheDocument();
 
     if (card) {
-      fireEvent.mouseEnter(card);
+      fireevent.mouseEnter(card);
     }
 
     const nextSheen = container.querySelector(".liquid-sheen-sweep");

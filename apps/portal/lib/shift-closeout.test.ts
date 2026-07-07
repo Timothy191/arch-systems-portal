@@ -24,7 +24,7 @@ jest.mock("next/cache", () => ({
 }));
 
 jest.mock("./audit", () => ({
-  logAuditEvent: jest.fn().mockResolvedValue(undefined),
+  logAuditevent: jest.fn().mockResolvedValue(undefined),
 }));
 
 const { createServerSupabaseClient } = jest.requireMock(
@@ -914,7 +914,7 @@ describe("closeShift (validateOnly=false)", () => {
   });
 
   it("returns success when PIN is valid and shift is closed", async () => {
-    const { logAuditEvent } = jest.requireMock("./audit");
+    const { logAuditevent } = jest.requireMock("./audit");
     let employeeCallCount = 0;
     buildSupabaseMock({
       from: jest.fn().mockImplementation((table: string) => {
@@ -1005,7 +1005,7 @@ describe("closeShift (validateOnly=false)", () => {
     );
     expect(result.success).toBe(true);
     expect(result.shiftStatusId).toBe("status-99");
-    expect(logAuditEvent).toHaveBeenCalledWith(
+    expect(logAuditevent).toHaveBeenCalledWith(
       expect.objectContaining({
         tableName: "shift_status",
         recordId: "status-99",

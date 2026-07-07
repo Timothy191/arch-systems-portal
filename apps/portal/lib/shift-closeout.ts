@@ -2,7 +2,7 @@
 
 import { createServerSupabaseClient } from "@repo/supabase/server";
 import { revalidatePath } from "next/cache";
-import { logAuditEvent } from "./audit";
+import { logAuditevent } from "./audit";
 import {
   AuthError,
   NotFoundError,
@@ -296,7 +296,7 @@ export async function closeShift(
     return { success: false, errors: ["Failed to close shift"] };
   }
 
-  await logAuditEvent({
+  await logAuditevent({
     action: "insert",
     tableName: "shift_status",
     recordId: inserted.id,

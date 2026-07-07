@@ -14,7 +14,7 @@ export interface PluginContext {
   lastLoadedAt?: number;
 }
 
-export type PluginEvent =
+export type Pluginevent =
   | { type: "LOAD" }
   | { type: "RETRY" }
   | { type: "DISABLE" }
@@ -45,7 +45,7 @@ export interface HealthReport {
   failedPlugins: Array<{ name: string; error: string; at: string }>;
 }
 
-export type OrchestratorEvent =
+export type Orchestratorevent =
   | { type: "INITIALIZE" }
   | { type: "LOAD_PLUGINS" }
   | { type: "RETRY_PLUGIN"; pluginName: string }

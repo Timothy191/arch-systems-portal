@@ -278,7 +278,7 @@ function EditEmployeeForm({
     employee?.accessible_departments || [],
   );
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.Formevent) => {
     e.preventDefault();
     onSubmit({
       role,

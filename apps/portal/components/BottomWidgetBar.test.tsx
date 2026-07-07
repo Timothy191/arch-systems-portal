@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, fireevent, waitFor } from "@testing-library/react";
 import { BottomWidgetBar } from "./BottomWidgetBar";
 
 jest.mock("next/navigation", () => ({
@@ -48,7 +48,7 @@ describe("BottomWidgetBar", () => {
     const bubble = screen.getByLabelText("Open dock");
 
     // Click to open
-    fireEvent.click(bubble);
+    fireevent.click(bubble);
 
     await waitFor(() => {
       expect(screen.getByText("Ops")).toBeInTheDocument();
@@ -58,7 +58,7 @@ describe("BottomWidgetBar", () => {
     });
 
     // Click again to close
-    fireEvent.click(bubble);
+    fireevent.click(bubble);
 
     await waitFor(() => {
       expect(screen.queryByText("Ops")).not.toBeInTheDocument();
@@ -70,14 +70,14 @@ describe("BottomWidgetBar", () => {
     render(<BottomWidgetBar />);
 
     const bubble = screen.getByLabelText("Open dock");
-    fireEvent.click(bubble);
+    fireevent.click(bubble);
 
     await waitFor(() => {
       expect(screen.getByText("Ops")).toBeInTheDocument();
     });
 
     // Click outside
-    fireEvent.mouseDown(document.body);
+    fireevent.mouseDown(document.body);
 
     await waitFor(() => {
       expect(screen.queryByText("Ops")).not.toBeInTheDocument();
@@ -88,7 +88,7 @@ describe("BottomWidgetBar", () => {
     render(<BottomWidgetBar />);
 
     const bubble = screen.getByLabelText("Open dock");
-    fireEvent.click(bubble);
+    fireevent.click(bubble);
 
     await waitFor(() => {
       expect(screen.getByText("Ops")).toBeInTheDocument();
@@ -102,7 +102,7 @@ describe("BottomWidgetBar", () => {
     render(<BottomWidgetBar />);
 
     const bubble = screen.getByLabelText("Open dock");
-    fireEvent.click(bubble);
+    fireevent.click(bubble);
 
     await waitFor(() => {
       expect(screen.getByText("Tools")).toBeInTheDocument();
@@ -116,7 +116,7 @@ describe("BottomWidgetBar", () => {
     render(<BottomWidgetBar />);
 
     const bubble = screen.getByLabelText("Open dock");
-    fireEvent.click(bubble);
+    fireevent.click(bubble);
 
     await waitFor(() => {
       // "/drilling" is mock-active, so it should render the indicator dot
@@ -132,13 +132,13 @@ describe("BottomWidgetBar", () => {
     expect(screen.queryByText("Ops")).not.toBeInTheDocument();
 
     // Toggle on
-    fireEvent.keyDown(window, { key: "d", altKey: true });
+    fireevent.keyDown(window, { key: "d", altKey: true });
     await waitFor(() => {
       expect(screen.getByText("Ops")).toBeInTheDocument();
     });
 
     // Toggle off
-    fireEvent.keyDown(window, { key: "d", altKey: true });
+    fireevent.keyDown(window, { key: "d", altKey: true });
     await waitFor(() => {
       expect(screen.queryByText("Ops")).not.toBeInTheDocument();
     });

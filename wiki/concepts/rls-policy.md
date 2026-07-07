@@ -1,149 +1,104 @@
----
-title: RLS Policy Standards
-created: 2026-05-14
-updated: 2026-05-14
-type: concept
-tags: [security, policy, convention, database]
-sources:
-  [
-    raw/articles/arch-systems-project-overview.md,
-    raw/articles/supabase-local-dev-guide.md,
-  ]
-confidence: high
----
+# RLS Policy and Best Practices
 
-# RLS Policy Standards
+## Overview
 
-Row Level Security (RLS) policies in Arch-Systems are scoped by employee auth identity and department membership.
+Row Level Security (RLS) is a critical security feature in PostgreSQL, enforced by Supabase, that restricts which database rows users can access based on defined policies. It ensures that data access is automatically filtered and authorized at the database level, preventing unauthorized data exposure and ensuring compliance with data privacy regulations.
 
-## Requirements
+**RLS is mandatory for all tables containing sensitive or user-specific data.**
 
-- `ENABLE ROW LEVEL SECURITY` must be present on every new table
-- SELECT, INSERT, UPDATE policies defined for all relevant tables
-- DELETE restricted to admin or omitted for audit tables
+## Core Principles
 
-## Auth Helpers
+1.  **Default Deny**: All new tables should default to `RLS ENABLED` and `RLS FORCED` with a restrictive default policy (e.g., `FOR SELECT USING (false)`) until specific policies are defined. This ensures no data is accidentally exposed.
+2.  **Explicit Policies**: Access to data must be explicitly granted through RLS policies. Implicit access should be avoided.
+3.  **Least Privilege**: Policies should grant the minimum necessary permissions for users or roles to perform their intended functions.
+4.  **Security by Design**: RLS policies must be considered during schema design and data modeling, not as an afterthought.
+5.  **Auditability**: All RLS policies must be auditable, with clear documentation and version control.
 
-RLS policies should use the following security definer functions:
+## Implementation Guidelines
 
-- `auth.user_department_id()` — returns the employee's department
-- `auth.is_admin()` — checks admin role
-- `auth.has_department_access()` — checks cross-department access via `employees.accessible_departments`
+### 1. Enabling RLS
 
-## Enforcement
-
-- Middleware enforces auth + department isolation
-- Unauthenticated users redirect to `/login`
-- Department routes check employee role/department membership
-- `employees.accessible_departments` (UUID array) allows cross-department access without changing primary department
-
-## Policy Template
-
-Copy this template for new tables with a `department_id` column:
+Every table created or modified in `packages/database/migrations/` **MUST** include the following statement:
 
 ```sql
-ALTER TABLE new_table ENABLE ROW LEVEL SECURITY;
-
--- SELECT: Users see rows in their department or accessible departments
-CREATE POLICY "new_table_select" ON new_table FOR SELECT
-TO authenticated
-USING (
-  EXISTS (
-    SELECT 1 FROM employees e
-    WHERE e.auth_id = auth.uid()
-    AND (
-      e.role = 'admin'
-      OR e.department_id = new_table.department_id
-      OR new_table.department_id = ANY(e.accessible_departments)
-    )
-  )
-);
-
--- INSERT: Users insert into their own department only
-CREATE POLICY "new_table_insert" ON new_table FOR INSERT
-TO authenticated
-WITH CHECK (
-  EXISTS (
-    SELECT 1 FROM employees e
-    WHERE e.auth_id = auth.uid()
-    AND e.department_id = new_table.department_id
-  )
-);
-
--- UPDATE: Same scope as SELECT
-CREATE POLICY "new_table_update" ON new_table FOR UPDATE
-TO authenticated
-USING (
-  EXISTS (
-    SELECT 1 FROM employees e
-    WHERE e.auth_id = auth.uid()
-    AND (
-      e.role = 'admin'
-      OR e.department_id = new_table.department_id
-      OR new_table.department_id = ANY(e.accessible_departments)
-    )
-  )
-);
-
--- DELETE: Admin only (omit for audit tables)
-CREATE POLICY "new_table_delete" ON new_table FOR DELETE
-TO authenticated
-USING (auth.is_admin());
+ALTER TABLE your_table_name ENABLE ROW LEVEL SECURITY;
 ```
 
-## Auth Helper Function Bodies
+Additionally, ensure RLS is enforced:
 
 ```sql
--- Returns the current user's department UUID
-CREATE OR REPLACE FUNCTION auth.user_department_id()
-RETURNS UUID
-LANGUAGE sql SECURITY DEFINER
-AS $$
-  SELECT department_id FROM employees
-  WHERE auth_id = auth.uid()
-  LIMIT 1;
-$$;
-
--- Returns true if the current user is an admin
-CREATE OR REPLACE FUNCTION auth.is_admin()
-RETURNS BOOLEAN
-LANGUAGE sql SECURITY DEFINER
-AS $$
-  SELECT EXISTS (
-    SELECT 1 FROM employees
-    WHERE auth_id = auth.uid() AND role = 'admin'
-  );
-$$;
-
--- Returns true if the user has access to the given department
-CREATE OR REPLACE FUNCTION auth.has_department_access(dept_id UUID)
-RETURNS BOOLEAN
-LANGUAGE sql SECURITY DEFINER
-AS $$
-  SELECT EXISTS (
-    SELECT 1 FROM employees
-    WHERE auth_id = auth.uid()
-    AND (
-      role = 'admin'
-      OR department_id = dept_id
-      OR dept_id = ANY(accessible_departments)
-    )
-  );
-$$;
+ALTER TABLE your_table_name FORCE ROW LEVEL SECURITY; -- Generally recommended for maximum security
 ```
 
-## Role-Based Access Matrix
+### 2. Policy Creation
 
-| Role                    | Scope                        | Cross-Dept | Delete |
-| ----------------------- | ---------------------------- | ---------- | ------ |
-| `admin`                 | All departments              | Yes        | Yes    |
-| `supervisor`            | Own + accessible_departments | Via array  | No     |
-| `operator`              | Own department only          | Via array  | No     |
-| `control_room_operator` | Own department only          | Via array  | No     |
+Policies define *who* can access *what* data. They are typically defined for `SELECT`, `INSERT`, `UPDATE`, and `DELETE` operations.
 
-## Related
+*   **Syntax**:
+    ```sql
+    CREATE POLICY policy_name ON your_table_name
+    FOR { ALL | SELECT | INSERT | UPDATE | DELETE }
+    TO { PUBLIC | role_name | CURRENT_USER | SESSION_USER }
+    USING ( condition ); -- For SELECT, UPDATE, DELETE
+    WITH CHECK ( condition ); -- For INSERT, UPDATE
+    ```
 
-- [[supabase-local-dev]] — test RLS policies in local Studio before pushing
-- [[arch-systems]] — the portal using these policies
-- [[deepeval-integration]] — RLSCompletenessMetric checks these standards
-- [[auth-middleware]] — middleware enforcement of these policies
+*   **Common Conditions**:
+    *   `auth.uid()`: The current authenticated user's ID from Supabase Auth.
+    *   `auth.role()`: The current authenticated user's role.
+    *   `is_admin()`: A custom function to check if the user is an admin.
+    *   `department_id`: Check against the user's assigned department.
+
+*   **Examples**:
+
+    *   **Read access to own data**:
+        ```sql
+        CREATE POLICY "Users can view their own profiles" ON profiles
+        FOR SELECT
+        TO authenticated
+        USING ( auth.uid() = user_id );
+        ```
+
+    *   **Insert data with user ID**:
+        ```sql
+        CREATE POLICY "Users can create their own posts" ON posts
+        FOR INSERT
+        TO authenticated
+        WITH CHECK ( auth.uid() = user_id );
+        ```
+
+    *   **Department-based access**:
+        ```sql
+        CREATE POLICY "Drilling team can view drilling data" ON operational_data
+        FOR SELECT
+        TO authenticated
+        USING ( auth.role() = 'drilling_operator' AND department_id = (SELECT id FROM departments WHERE name = 'drilling') );
+        ```
+        (Note: complex `USING` clauses can impact performance. Consider views or security definer functions for optimization.)
+
+### 3. Testing and Validation
+
+*   **Automated Audit**: The `pnpm audit:rls` command (integrated into the CI quality gate) automatically checks if RLS is enabled on all tables. This **MUST** pass for all database-related PRs.
+*   **Unit/Integration Tests**: Write database integration tests that specifically verify RLS policies by performing operations with different user contexts (e.g., `supabase.auth.signIn({ user_id: '...' })`).
+*   **Manual Verification**: Use the Supabase SQL Editor to test policies manually by switching roles (`SET ROLE authenticated; SELECT * FROM your_table;`).
+
+### 4. Performance Considerations
+
+*   Complex RLS policies can introduce overhead. Profile queries with `EXPLAIN ANALYZE` to identify performance bottlenecks caused by RLS.
+*   Consider creating views with `SECURITY DEFINER` functions for complex policy logic, where the view handles the filtering.
+*   Ensure indexes are appropriate for columns used in RLS `USING` conditions.
+
+### 5. Common Pitfalls
+
+*   **Forgetting to enable RLS**: The most common mistake. `pnpm audit:rls` prevents this.
+*   **Overly broad policies**: Granting `ALL` permissions or using `true` as a condition without careful consideration.
+*   **Performance impact**: Inefficient policies can slow down queries.
+*   **`anon` role**: Ensure the `anon` role (unauthenticated users) has only the absolute minimum required access, typically none for sensitive data.
+*   **Bypassing RLS**: Be aware that `service_role` key and direct connections to the database bypass RLS. These should only be used by trusted backend services or administrators.
+
+## Documentation and Review
+
+*   All new or modified RLS policies **MUST** be documented within the migration files or in the `rls-policy.md` itself, explaining their purpose and the conditions they enforce.
+*   Database schema changes and RLS policies must undergo thorough code review, with a focus on security implications.
+
+---

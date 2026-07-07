@@ -3,9 +3,9 @@ import { spawn } from "node:child_process";
 import { Logger } from "../logger.js";
 import { config } from "../config.js";
 import {
-  type EveConfig,
-  type EveDispatch,
-  type EveId,
+  type eveConfig,
+  type eveDispatch,
+  type eveId,
   type DispatchStatus,
   type DispatchTask,
   DEFAULT_EVE_CONFIGS,
@@ -15,27 +15,27 @@ const logger = new Logger("eve-dispatcher");
 
 // ── State ──────────────────────────────────────────────────
 
-const eveConfigs: EveConfig[] = resolveEveConfigs();
-const pendingDispatches = new Map<string, EveDispatch>();
+const eveConfigs: eveConfig[] = resolveeveConfigs();
+const pendingDispatches = new Map<string, eveDispatch>();
 let dispatchCounter = 0;
 
 // ── Public API ─────────────────────────────────────────────
 
-export function getConfiguredEves(): EveConfig[] {
+export function getConfiguredeves(): eveConfig[] {
   return eveConfigs.filter((e) => e.enabled).map((e) => ({ ...e }));
 }
 
-export function getDispatches(): EveDispatch[] {
+export function getDispatches(): eveDispatch[] {
   return [...pendingDispatches.values()].sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
   );
 }
 
-export function getDispatch(id: string): EveDispatch | undefined {
+export function getDispatch(id: string): eveDispatch | undefined {
   return pendingDispatches.get(id);
 }
 
-export function resolveLatestDispatches(limit = 5): EveDispatch[] {
+export function resolveLatestDispatches(limit = 5): eveDispatch[] {
   return [...pendingDispatches.values()]
     .sort(
       (a, b) =>
@@ -44,13 +44,13 @@ export function resolveLatestDispatches(limit = 5): EveDispatch[] {
     .slice(0, limit);
 }
 
-export async function dispatchTask(task: DispatchTask): Promise<EveDispatch> {
-  const eve = pickEve(task.eve);
+export async function dispatchTask(task: DispatchTask): Promise<eveDispatch> {
+  const eve = pickeve(task.eve);
   if (!eve) {
-    throw new Error("No enabled Eve agent available");
+    throw new Error("No enabled eve agent available");
   }
 
-  const dispatch: EveDispatch = {
+  const dispatch: eveDispatch = {
     id: generateId(),
     eve: eve.id,
     task: task.task,
@@ -67,16 +67,16 @@ export async function dispatchTask(task: DispatchTask): Promise<EveDispatch> {
   );
 
   // Fire-and-forget spawn
-  spawnEveProcess(eve, dispatch).catch((err) => {
+  spawneveProcess(eve, dispatch).catch((err) => {
     logger.error(`Dispatch ${dispatch.id} failed: ${err.message}`);
   });
 
   return dispatch;
 }
 
-// ── Eve selection ──────────────────────────────────────────
+// ── eve selection ──────────────────────────────────────────
 
-function pickEve(preferred?: EveId): EveConfig | null {
+function pickeve(preferred?: eveId): eveConfig | null {
   if (preferred) {
     const eve = eveConfigs.find((e) => e.id === preferred && e.enabled);
     if (eve) return eve;
@@ -87,14 +87,14 @@ function pickEve(preferred?: EveId): EveConfig | null {
 
 // ── Process spawning ───────────────────────────────────────
 
-async function spawnEveProcess(
-  eve: EveConfig,
-  dispatch: EveDispatch,
+async function spawneveProcess(
+  eve: eveConfig,
+  dispatch: eveDispatch,
 ): Promise<void> {
   updateStatus(dispatch, "running");
 
   const cwd = config.projectRoot ?? process.cwd();
-  const args = buildEveArgs(eve, dispatch.prompt, cwd);
+  const args = buildeveArgs(eve, dispatch.prompt, cwd);
 
   logger.info(
     `Spawning ${eve.id} for dispatch ${dispatch.id}: ${eve.cliPath} ${args.join(" ")}`,
@@ -135,7 +135,7 @@ async function spawnEveProcess(
   }
 }
 
-function buildEveArgs(eve: EveConfig, prompt: string, cwd: string): string[] {
+function buildeveArgs(eve: eveConfig, prompt: string, cwd: string): string[] {
   switch (eve.id) {
     case "opencode":
       return buildOpencodeArgs(prompt, cwd, eve.autoApprove);
@@ -178,18 +178,18 @@ function buildAgyArgs(
 
 // ── Status helpers ─────────────────────────────────────────
 
-function updateStatus(dispatch: EveDispatch, status: DispatchStatus): void {
+function updateStatus(dispatch: eveDispatch, status: DispatchStatus): void {
   dispatch.status = status;
 }
 
-function completeDispatch(dispatch: EveDispatch, output: string): void {
+function completeDispatch(dispatch: eveDispatch, output: string): void {
   dispatch.status = "completed";
   dispatch.completedAt = new Date().toISOString();
   dispatch.output = output;
   logger.info(`Dispatch ${dispatch.id} completed (${output.length} bytes)`);
 }
 
-function failDispatch(dispatch: EveDispatch, error: string): void {
+function failDispatch(dispatch: eveDispatch, error: string): void {
   dispatch.status = "failed";
   dispatch.completedAt = new Date().toISOString();
   dispatch.error = error;
@@ -198,7 +198,7 @@ function failDispatch(dispatch: EveDispatch, error: string): void {
 
 // ── Config resolution ─────────────────────────────────────
 
-function resolveEveConfigs(): EveConfig[] {
+function resolveeveConfigs(): eveConfig[] {
   return DEFAULT_EVE_CONFIGS.map((defaultConfig) => {
     const prefix = `EVE_${defaultConfig.id.toUpperCase()}`;
     return {

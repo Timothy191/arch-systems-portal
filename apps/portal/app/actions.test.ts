@@ -43,7 +43,7 @@ jest.mock("@repo/utils/inngest", () => ({
   inngest: {
     send: jest.fn().mockResolvedValue({}),
   },
-  aiGenerateEmbeddingEvent: "ai/generate-embedding",
+  aiGenerateEmbeddingevent: "ai/generate-embedding",
 }));
 
 const { createServerSupabaseClient } = jest.requireMock(

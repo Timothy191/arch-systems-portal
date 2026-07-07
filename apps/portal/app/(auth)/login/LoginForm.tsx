@@ -68,11 +68,11 @@ export function LoginForm() {
 
   // Auth action is now handled securely via Server Action
 
-  function handleCapsLockKey(e: React.KeyboardEvent) {
+  function handleCapsLockKey(e: React.Keyboardevent) {
     setCapsLock(e.getModifierState("CapsLock"));
   }
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.Formevent) {
     e.preventDefault();
     setError("");
     setLoading(true);

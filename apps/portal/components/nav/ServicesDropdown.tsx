@@ -143,14 +143,14 @@ export function ServicesDropdown() {
   }, []);
 
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
+    const handleKeyDown = (e: Keyboardevent) => {
       if (e.altKey && e.key.toLowerCase() === "s") {
         e.preventDefault();
         setOpen((prev) => !prev);
       }
     };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    window.addeventListener("keydown", handleKeyDown);
+    return () => window.removeeventListener("keydown", handleKeyDown);
   }, []);
 
   return (

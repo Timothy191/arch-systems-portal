@@ -108,6 +108,24 @@ jobs:
         working-directory: packages/rate-limiter
         run: ./node_modules/.bin/jest --no-cache --verbose --coverage 2>&1 | tail -10
 
+  rls-audit:
+    name: RLS Audit
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: "9.15.9"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "pnpm"
+      - run: pnpm install --frozen-lockfile
+      - name: Run RLS Audit
+        run: pnpm audit:rls
+
   test-portal:
     name: Test Portal
     needs: prepare

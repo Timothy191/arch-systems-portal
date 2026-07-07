@@ -2,7 +2,7 @@ import Link from "next/link";
 import { AlertTriangle, Wrench, Clock } from "lucide-react";
 import { cn } from "@repo/ui/lib/utils";
 
-export interface AlertEvent {
+export interface Alertevent {
   id: string;
   type: "incident" | "breakdown" | "offline";
   title: string;
@@ -13,7 +13,7 @@ export interface AlertEvent {
 }
 
 interface AlertTickerProps {
-  events: AlertEvent[];
+  events: Alertevent[];
 }
 
 function timeAgo(dateString: string): string {

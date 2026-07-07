@@ -144,8 +144,8 @@ export default function DashboardKPIGrid({ metrics }: DashboardKPIGridProps) {
     },
     {
       id: "kpi-access-today",
-      title: "Access Events Today",
-      value: metrics.accessEventsToday.toLocaleString(),
+      title: "Access events Today",
+      value: metrics.accesseventsToday.toLocaleString(),
       subtext: "Total scans across all entry points",
       icon: ScanLine,
       trend: { direction: "neutral", label: "Normal range" },

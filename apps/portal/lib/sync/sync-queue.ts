@@ -28,7 +28,7 @@ class SyncQueue {
     if (typeof window !== "undefined") {
       this.initDB().then(() => {
         this.processQueue();
-        window.addEventListener("online", () => {
+        window.addeventListener("online", () => {
           this.processQueue();
         });
       });

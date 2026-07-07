@@ -106,7 +106,7 @@ describe("useHourlyLoadsMutations", () => {
             return null;
           },
         },
-      } as unknown as React.MouseEvent;
+      } as unknown as React.Mouseevent;
 
       await result.current.handleGridClick(event);
 
@@ -133,7 +133,7 @@ describe("useHourlyLoadsMutations", () => {
             return null;
           },
         },
-      } as unknown as React.MouseEvent;
+      } as unknown as React.Mouseevent;
 
       await result.current.handleGridClick(event);
 
@@ -163,7 +163,7 @@ describe("useHourlyLoadsMutations", () => {
             return null;
           },
         },
-      } as unknown as React.MouseEvent;
+      } as unknown as React.Mouseevent;
 
       await result.current.handleGridClick(event);
 
@@ -184,7 +184,7 @@ describe("useHourlyLoadsMutations", () => {
             return null;
           },
         },
-      } as unknown as React.MouseEvent;
+      } as unknown as React.Mouseevent;
 
       await result.current.handleGridClick(event);
 
@@ -207,7 +207,7 @@ describe("useHourlyLoadsMutations", () => {
             return null;
           },
         },
-      } as unknown as React.MouseEvent;
+      } as unknown as React.Mouseevent;
 
       await result.current.handleGridClick(event);
 
@@ -229,7 +229,7 @@ describe("useHourlyLoadsMutations", () => {
             return null;
           },
         },
-      } as unknown as React.MouseEvent;
+      } as unknown as React.Mouseevent;
 
       await result.current.handleGridClick(event);
 
@@ -246,7 +246,7 @@ describe("useHourlyLoadsMutations", () => {
         target: {
           closest: () => null,
         },
-      } as unknown as React.MouseEvent;
+      } as unknown as React.Mouseevent;
 
       await result.current.handleGridClick(event);
 
@@ -266,7 +266,7 @@ describe("useHourlyLoadsMutations", () => {
           dataset: { action: "select-site", row: "0" },
           value: "site-2",
         },
-      } as unknown as React.FormEvent;
+      } as unknown as React.Formevent;
 
       await result.current.handleGridChange(event);
 
@@ -284,7 +284,7 @@ describe("useHourlyLoadsMutations", () => {
           dataset: { action: "other" },
           value: "site-2",
         },
-      } as unknown as React.FormEvent;
+      } as unknown as React.Formevent;
 
       await result.current.handleGridChange(event);
 
@@ -374,7 +374,7 @@ describe("useHourlyLoadsMutations", () => {
             return null;
           },
         },
-      } as unknown as React.MouseEvent;
+      } as unknown as React.Mouseevent;
 
       await result.current.handleGridClick(event);
 

@@ -42,11 +42,11 @@ export function SmoothScrollProvider({
       }
     }
 
-    document.addEventListener("visibilitychange", onVisibilityChange);
+    document.addeventListener("visibilitychange", onVisibilityChange);
 
     return () => {
       cancelAnimationFrame(rafId);
-      document.removeEventListener("visibilitychange", onVisibilityChange);
+      document.removeeventListener("visibilitychange", onVisibilityChange);
       lenis.destroy();
       lenisRef.current = null;
     };

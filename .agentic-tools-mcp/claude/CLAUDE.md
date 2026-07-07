@@ -11,7 +11,7 @@
 > (documentation, ownership, history, decisions). **Always verify against
 > actual source files before making changes** — the index may be stale.
 
-Last indexed: 2026-07-07 (commit f7d4f91b)
+Last indexed: 2026-07-07 (commit f61df04c)
 ### Entry Points
 - `packages/supabase/src/server.ts`
 - `apps/ai-agents/src/main.py`
@@ -28,15 +28,15 @@ Last indexed: 2026-07-07 (commit f7d4f91b)
 **Infra:** Turborepo### Architectural Layers
 | Layer | Files | Purpose |
 |-------|-------|---------|
-| Application | 517 |  |
-| Config | 9960 |  |
+| Application | 524 |  |
+| Config | 9961 |  |
 | API | 74 |  |
 | Middleware | 2 |  |
 | UI | 148 |  |
 | Data | 14 |  |
 | Utility | 51 |  |
 | Service | 21 |  |
-| Docs & Tooling | 46 |  |
+| Docs & Tooling | 48 |  |
 | Test | 1126 |  |
 
 ### Guided Tour (12 steps)
@@ -50,9 +50,9 @@ Last indexed: 2026-07-07 (commit f7d4f91b)
 ### Hotspots (High Churn)
 | File | Churn | 90d Commits | Owner |
 |------|-------|-------------|-------|
-| `apps/ops-gateway/src/mcp/tools.ts` | 100.0th %ile | 4 | Timothy191 |
+| `apps/ops-gateway/src/mcp/tools.ts` | 100.0th %ile | 5 | Timothy191 |
 | `apps/api/src/control-room/control-room.service.spec.ts` | 100.0th %ile | 3 | Timothy191 |
-| `apps/portal/proxy.ts` | 100.0th %ile | 5 | Timothy191 |
+| `apps/portal/proxy.ts` | 99.9th %ile | 5 | Timothy191 |
 | `apps/portal/lib/env.ts` | 99.9th %ile | 6 | Timothy191 |
 | `apps/portal/app/(hub)/page.tsx` | 99.9th %ile | 6 | Timothy191 |
 

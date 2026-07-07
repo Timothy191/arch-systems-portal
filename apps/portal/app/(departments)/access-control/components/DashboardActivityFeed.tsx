@@ -46,7 +46,7 @@ export default function DashboardActivityFeed({
       <div className="flex items-center justify-between px-5 py-4 border-b border-border">
         <div>
           <h2 className="text-sm font-bold text-foreground">
-            Recent Access Events
+            Recent Access events
           </h2>
           <p className="text-xs text-muted-foreground mt-0.5">
             Last {activity.length} scan events across all zones

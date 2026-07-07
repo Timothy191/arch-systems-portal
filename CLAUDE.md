@@ -113,7 +113,7 @@ Supabase helpers live in `packages/database/package.json` and `packages/supabase
 ## Critical Rules
 
 1. **Data access boundary:** Apps import `@repo/supabase`, not `@repo/database`.
-2. **RLS:** Every migration table must enable RLS. Run `pnpm audit:rls` after schema changes and inspect `.audit/rls-report.md`.
+2. **RLS mandatory**: Every table migration must `ENABLE ROW LEVEL SECURITY`. Run `pnpm audit:rls` after schema changes. It's now also enforced as a quality gate in CI for every PR. For detailed RLS best practices and policy, refer to `wiki/concepts/rls-policy.md`.
 3. **Next.js 16 proxy:** Use `apps/portal/proxy.ts`, not `middleware.ts`.
 4. **Agent tracing:** When modifying an app or package, append an entry to its `AGENT_TRACER.md` (timestamp, purpose, changes, next-agent context). Add inline `// AGENT-TRACE: ...` comments for non-obvious logic.
 5. **Conventional Commits:** use `feat:`, `fix:`, `refactor:`, `docs:`, etc.

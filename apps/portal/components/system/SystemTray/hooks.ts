@@ -3,26 +3,26 @@ import { useState, useEffect, useCallback, useRef } from "react";
 /* ------------------------------------------------------------------ */
 //  Types for APIs not in all TS lib definitions
 /* ------------------------------------------------------------------ */
-interface BatteryManager extends EventTarget {
+interface BatteryManager extends eventTarget {
   charging: boolean;
   level: number;
   chargingTime: number;
   dischargingTime: number;
-  addEventListener(
+  addeventListener(
     _type:
       | "chargingchange"
       | "levelchange"
       | "chargingtimechange"
       | "dischargingtimechange",
-    _listener: EventListenerOrEventListenerObject,
+    _listener: eventListenerOreventListenerObject,
   ): void;
-  removeEventListener(
+  removeeventListener(
     _type:
       | "chargingchange"
       | "levelchange"
       | "chargingtimechange"
       | "dischargingtimechange",
-    _listener: EventListenerOrEventListenerObject,
+    _listener: eventListenerOreventListenerObject,
   ): void;
 }
 
@@ -30,7 +30,7 @@ interface NavigatorWithBattery extends Navigator {
   getBattery?: () => Promise<BatteryManager>;
 }
 
-interface NetworkConnection extends EventTarget {
+interface NetworkConnection extends eventTarget {
   effectiveType?: "4g" | "3g" | "2g" | "slow-2g";
   type?:
     | "bluetooth"
@@ -82,8 +82,8 @@ export function useNetworkStatus() {
     const handleOnline = () => setOnline(true);
     const handleOffline = () => setOnline(false);
     setOnline(navigator.onLine);
-    window.addEventListener("online", handleOnline);
-    window.addEventListener("offline", handleOffline);
+    window.addeventListener("online", handleOnline);
+    window.addeventListener("offline", handleOffline);
 
     const nav = navigator as NavigatorWithConnection;
     const connection =
@@ -100,17 +100,17 @@ export function useNetworkStatus() {
         setRtt(connection.rtt);
       };
       sync();
-      connection.addEventListener("change", sync);
+      connection.addeventListener("change", sync);
       return () => {
-        window.removeEventListener("online", handleOnline);
-        window.removeEventListener("offline", handleOffline);
-        connection.removeEventListener("change", sync);
+        window.removeeventListener("online", handleOnline);
+        window.removeeventListener("offline", handleOffline);
+        connection.removeeventListener("change", sync);
       };
     }
 
     return () => {
-      window.removeEventListener("online", handleOnline);
-      window.removeEventListener("offline", handleOffline);
+      window.removeeventListener("online", handleOnline);
+      window.removeeventListener("offline", handleOffline);
     };
   }, []);
 
@@ -148,16 +148,16 @@ export function useBatteryStatus() {
       };
       sync();
 
-      b.addEventListener("chargingchange", sync);
-      b.addEventListener("levelchange", sync);
-      b.addEventListener("chargingtimechange", sync);
-      b.addEventListener("dischargingtimechange", sync);
+      b.addeventListener("chargingchange", sync);
+      b.addeventListener("levelchange", sync);
+      b.addeventListener("chargingtimechange", sync);
+      b.addeventListener("dischargingtimechange", sync);
 
       cleanupRef.current = () => {
-        b.removeEventListener("chargingchange", sync);
-        b.removeEventListener("levelchange", sync);
-        b.removeEventListener("chargingtimechange", sync);
-        b.removeEventListener("dischargingtimechange", sync);
+        b.removeeventListener("chargingchange", sync);
+        b.removeeventListener("levelchange", sync);
+        b.removeeventListener("chargingtimechange", sync);
+        b.removeeventListener("dischargingtimechange", sync);
       };
     });
 

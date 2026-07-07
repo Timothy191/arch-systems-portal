@@ -8,7 +8,7 @@ import { Card } from "@repo/ui/components/ui/card";
 import { Trash2, Plus, RefreshCw, CheckCircle, XCircle } from "lucide-react";
 import { toast } from "sonner";
 
-type WebhookEventType =
+type WebhookeventType =
   | "daily_log.created"
   | "daily_log.updated"
   | "breakdown.created"
@@ -26,7 +26,7 @@ interface WebhookEndpoint {
   id: string;
   url: string;
   description: string | null;
-  event_types: WebhookEventType[];
+  event_types: WebhookeventType[];
   department_id: string | null;
   active: boolean;
   secret: string | null;
@@ -35,7 +35,7 @@ interface WebhookEndpoint {
   updated_at: string | null;
 }
 
-const EVENT_TYPES: WebhookEventType[] = [
+const EVENT_TYPES: WebhookeventType[] = [
   "daily_log.created",
   "daily_log.updated",
   "breakdown.created",
@@ -60,7 +60,7 @@ export function WebhookManager() {
   const [formData, setFormData] = useState({
     url: "",
     description: "",
-    event_types: [] as WebhookEventType[],
+    event_types: [] as WebhookeventType[],
     active: true,
   });
 
@@ -82,7 +82,7 @@ export function WebhookManager() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.Formevent) => {
     e.preventDefault();
 
     if (!formData.url || formData.event_types.length === 0) {
@@ -176,7 +176,7 @@ export function WebhookManager() {
     setShowForm(true);
   };
 
-  const toggleEventType = (eventType: WebhookEventType) => {
+  const toggleeventType = (eventType: WebhookeventType) => {
     setFormData((prev) => ({
       ...prev,
       event_types: prev.event_types.includes(eventType)
@@ -267,14 +267,14 @@ export function WebhookManager() {
 
             <div>
               <label className="block text-sm font-medium text-arch-text-secondary mb-2">
-                Event Types
+                event Types
               </label>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-2">
                 {EVENT_TYPES.map((eventType) => (
                   <button
                     key={eventType}
                     type="button"
-                    onClick={() => toggleEventType(eventType)}
+                    onClick={() => toggleeventType(eventType)}
                     className={`text-left px-3 py-2 rounded-lg border transition-all text-xs ${
                       formData.event_types.includes(eventType)
                         ? "bg-arch-accent-green/10 border-arch-accent-green text-arch-accent-green font-medium"
@@ -377,7 +377,7 @@ export function WebhookManager() {
                     </p>
                   )}
                   <div className="flex flex-wrap gap-1">
-                    {webhook.event_types.map((eventType: WebhookEventType) => (
+                    {webhook.event_types.map((eventType: WebhookeventType) => (
                       <Badge
                         key={eventType}
                         variant="secondary"

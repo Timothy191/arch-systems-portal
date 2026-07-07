@@ -4,14 +4,14 @@ import { startMetricsPoller } from "./poller/metrics-poller.js";
 import { runAuditCheck } from "./poller/audit-poller.js";
 import {
   startRedisSubscriber,
-  setEventHandler,
+  seteventHandler,
 } from "./subscriber/redis-subscriber.js";
 import {
-  handleTriggerEvent,
+  handleTriggerevent,
   periodicIncidentCheck,
 } from "./incident/engine.js";
 import { Logger } from "./logger.js";
-import { getConfiguredEves } from "./dispatcher/eve-dispatcher.js";
+import { getConfiguredeves } from "./dispatcher/eve-dispatcher.js";
 import { config } from "./config.js";
 
 const logger = new Logger("main");
@@ -37,7 +37,7 @@ async function main(): Promise<void> {
   });
 
   // 2. Connect to Redis and subscribe to trigger stream
-  setEventHandler(handleTriggerEvent);
+  seteventHandler(handleTriggerevent);
   await startRedisSubscriber().catch((error) => {
     logger.error(
       `Redis subscriber failed: ${error instanceof Error ? error.message : String(error)}`,
@@ -45,11 +45,11 @@ async function main(): Promise<void> {
     logger.warn("Continuing without Redis subscription — manual triggers only");
   });
 
-  const availableEves = getConfiguredEves().map(
+  const availableeves = getConfiguredeves().map(
     (e: any) => `${e.id}${e.autoApprove ? " (auto)" : ""}`,
   );
-  if (availableEves.length > 0) {
-    logger.info(`TUI agents available: ${availableEves.join(", ")}`);
+  if (availableeves.length > 0) {
+    logger.info(`TUI agents available: ${availableeves.join(", ")}`);
   } else {
     logger.warn("No TUI agents configured — agent dispatch disabled");
   }

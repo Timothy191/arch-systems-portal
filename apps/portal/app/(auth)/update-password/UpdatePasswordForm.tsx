@@ -43,7 +43,7 @@ export function UpdatePasswordForm() {
     });
   }, []);
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.Formevent) {
     e.preventDefault();
     setError("");
 

@@ -1,4 +1,4 @@
-import { render, screen, waitFor, fireEvent } from "@testing-library/react";
+import { render, screen, waitFor, fireevent } from "@testing-library/react";
 import { AlertPanel } from "./AlertPanel";
 
 jest.mock("@repo/supabase/client", () => ({
@@ -77,7 +77,7 @@ describe("AlertPanel", () => {
       expect(screen.getByText(/Conveyor 1 is offline/)).toBeInTheDocument();
     });
 
-    fireEvent.click(screen.getByText("Acknowledge"));
+    fireevent.click(screen.getByText("Acknowledge"));
 
     await waitFor(() => {
       expect(screen.queryByText("Acknowledge")).not.toBeInTheDocument();
@@ -92,7 +92,7 @@ describe("AlertPanel", () => {
       expect(screen.getByText(/Conveyor 1 is offline/)).toBeInTheDocument();
     });
 
-    fireEvent.click(screen.getByText("Dismiss"));
+    fireevent.click(screen.getByText("Dismiss"));
 
     await waitFor(() => {
       expect(

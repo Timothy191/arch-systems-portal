@@ -168,7 +168,7 @@ export function useHourlyLoadsMutations({
   );
 
   const handleGridClick = useCallback(
-    async (e: React.MouseEvent) => {
+    async (e: React.Mouseevent) => {
       const target = e.target as HTMLElement;
 
       const toggleBtn = target.closest(
@@ -198,7 +198,7 @@ export function useHourlyLoadsMutations({
   );
 
   const handleGridChange = useCallback(
-    async (e: React.FormEvent) => {
+    async (e: React.Formevent) => {
       const target = e.target as HTMLSelectElement;
       if (target.dataset.action !== "select-site") return;
 

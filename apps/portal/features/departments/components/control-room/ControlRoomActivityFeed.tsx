@@ -39,11 +39,11 @@ export function ControlRoomActivityFeed({
           filter: `department_id=eq.${departmentId}`,
         },
         (payload) => {
-          const rawEvent = payload.eventType;
+          const rawevent = payload.eventType;
           const eventType: ActivityType =
-            rawEvent === "INSERT"
+            rawevent === "INSERT"
               ? "insert"
-              : rawEvent === "UPDATE"
+              : rawevent === "UPDATE"
                 ? "update"
                 : "delete";
           const machine = (payload.new || payload.old) as {

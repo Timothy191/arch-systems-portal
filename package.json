@@ -65,7 +65,7 @@
     "analyze": "ANALYZE=true pnpm --filter portal build",
     "audit:rls": "node tools/audit-rls.cjs",
     "build": "turbo run build",
-    "build:native": "cd support/rust-support/bindings/node-napi && pnpm build",
+    "build:native": "cd support/rust-support/bindings/node-napi && npx napi build --release --platform",
     "bundlesize": "bundlesize",
     "checksum:verify": "node tools/preflight-mcp/index.js --tool mpc_checksum_verify --directory .agentic-tools-mcp/memories",
     "cleanup": "bash tools/cleanup.sh",

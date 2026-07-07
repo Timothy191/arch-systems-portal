@@ -60,7 +60,7 @@ async function AccessLogsTable({ deptId }: { deptId: string }) {
       <div className="p-4 border-b border-[var(--border-default)] bg-[var(--bg-secondary)]/50 flex justify-between items-center">
         <h3 className="font-semibold text-[var(--text-heading)] flex items-center">
           <Clock className="w-4 h-4 mr-2 text-[var(--text-muted)]" />
-          Recent Events
+          Recent events
         </h3>
         <span className="text-xs text-[var(--text-muted)]">
           {resolvedLogs.length} events

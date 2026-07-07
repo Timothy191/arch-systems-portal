@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect, useRef } from "react";
+import { EveDrawer } from "../eve/eve-drawer";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { AnimatePresence } from "framer-motion";
@@ -27,6 +28,7 @@ export function BottomWidgetBar({
 }) {
   const { enabled: isFocusMode } = useFocusMode();
   const [isOpen, setIsOpen] = useState(false);
+  const [isEveOpen, setIsEveOpen] = useState(false);
   const pathname = usePathname();
 
   const isTopMerged =
@@ -45,26 +47,26 @@ export function BottomWidgetBar({
   /* Click outside to close */
   useEffect(() => {
     if (!isOpen) return;
-    const handleClick = (e: MouseEvent) => {
+    const handleClick = (e: Mouseevent) => {
       const target = e.target as HTMLElement;
       if (!target.closest("[data-dock-root]")) {
         setIsOpen(false);
       }
     };
-    document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
+    document.addeventListener("mousedown", handleClick);
+    return () => document.removeeventListener("mousedown", handleClick);
   }, [isOpen]);
 
   /* Keyboard shortcut */
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
+    const handleKeyDown = (e: Keyboardevent) => {
       if (e.altKey && e.key.toLowerCase() === "d") {
         e.preventDefault();
         setIsOpen((prev) => !prev);
       }
     };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    window.addeventListener("keydown", handleKeyDown);
+    return () => window.removeeventListener("keydown", handleKeyDown);
   }, []);
 
   /* ── Drag state ── */
@@ -93,12 +95,12 @@ export function BottomWidgetBar({
     const onResize = () => {
       setPos((prev) => (prev ? clampDockPosition(prev) : null));
     };
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
+    window.addeventListener("resize", onResize);
+    return () => window.removeeventListener("resize", onResize);
   }, [isFloating]);
 
   const handlePointerDown = useCallback(
-    (e: React.PointerEvent) => {
+    (e: React.Pointerevent) => {
       if (e.button !== 0) return;
       suppressNextClick.current = false;
 
@@ -112,7 +114,7 @@ export function BottomWidgetBar({
 
       setIsDragging(true);
 
-      const onMove = (ev: PointerEvent) => {
+      const onMove = (ev: Pointerevent) => {
         const dx = ev.clientX - e.clientX;
         const dy = ev.clientY - e.clientY;
         if (
@@ -133,9 +135,9 @@ export function BottomWidgetBar({
       };
 
       const onUp = () => {
-        window.removeEventListener("pointermove", onMove);
-        window.removeEventListener("pointerup", onUp);
-        window.removeEventListener("pointercancel", onUp);
+        window.removeeventListener("pointermove", onMove);
+        window.removeeventListener("pointerup", onUp);
+        window.removeeventListener("pointercancel", onUp);
         setIsDragging(false);
         if (hasMoved) {
           suppressNextClick.current = true;
@@ -151,14 +153,14 @@ export function BottomWidgetBar({
         }
       };
 
-      window.addEventListener("pointermove", onMove);
-      window.addEventListener("pointerup", onUp);
-      window.addEventListener("pointercancel", onUp);
+      window.addeventListener("pointermove", onMove);
+      window.addeventListener("pointerup", onUp);
+      window.addeventListener("pointercancel", onUp);
     },
     [setIsOpen],
   );
 
-  const handleClickCapture = useCallback((e: React.MouseEvent) => {
+  const handleClickCapture = useCallback((e: React.Mouseevent) => {
     if (suppressNextClick.current) {
       e.stopPropagation();
       suppressNextClick.current = false;
@@ -236,7 +238,7 @@ export function BottomWidgetBar({
           )}
         >
           <Image
-            src={isFocusMode ? "/assets/logo-focused.jpeg" : "/assets/logo.png"}
+            src={isFocusMode ? "/assets/focused/focused.jpeg" : "/assets/logo.png"}
             alt="Arch"
             width={isTopMerged ? 18 : 28}
             height={isTopMerged ? 18 : 28}
@@ -286,15 +288,29 @@ export function BottomWidgetBar({
                       ? 82
                       : 108
                     : innerRadius;
+                  
+                  // Special handler for eve
+                  const handleNavigate = () => {
+                    if (item.label === 'eve') {
+                        setIsEveOpen(true);
+                        close();
+                    } else {
+                        close();
+                    }
+                  };
+
+                  // If it's eve, we give it a dummy href so it renders as a Link
+                  const itemProps = item.label === 'eve' ? { ...item, href: "#" } : item;
+
                   return (
                     <WheelItem
                       key={item.label}
-                      item={item}
+                      item={itemProps}
                       angle={angle}
                       radius={radius}
                       index={OUTER_ITEMS.length + i}
                       isActive={false}
-                      onNavigate={close}
+                      onNavigate={handleNavigate}
                       side={isLeftDocked ? "right" : "top"}
                     />
                   );
@@ -305,5 +321,6 @@ export function BottomWidgetBar({
         </div>
       </div>
     </div>
+      <EveDrawer open={isEveOpen} onClose={() => setIsEveOpen(false)} />
   );
 }

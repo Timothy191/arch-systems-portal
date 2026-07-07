@@ -53,8 +53,8 @@ export function useSystemMetrics(): SystemMetrics {
       setMetrics((prev) => ({ ...prev, online: false }));
 
     if (typeof window !== "undefined") {
-      window.addEventListener("online", handleOnline);
-      window.addEventListener("offline", handleOffline);
+      window.addeventListener("online", handleOnline);
+      window.addeventListener("offline", handleOffline);
     }
 
     // Tick clock and update shift every second
@@ -96,8 +96,8 @@ export function useSystemMetrics(): SystemMetrics {
       clearInterval(clockInterval);
       clearInterval(latencyInterval);
       if (typeof window !== "undefined") {
-        window.removeEventListener("online", handleOnline);
-        window.removeEventListener("offline", handleOffline);
+        window.removeeventListener("online", handleOnline);
+        window.removeeventListener("offline", handleOffline);
       }
     };
   }, []);

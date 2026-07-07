@@ -3,7 +3,7 @@
 import { createServerSupabaseClient } from "@repo/supabase/server";
 import { revalidatePath } from "next/cache";
 import { revalidateBreakdownsCache } from "@/lib/cache/revalidate";
-import { logAuditEvent } from "@/lib/audit";
+import { logAuditevent } from "@/lib/audit";
 import { AuthError, DatabaseError } from "@/lib/errors/error-classes";
 import { logError } from "@/lib/errors/error-logger";
 import type {
@@ -48,7 +48,7 @@ export async function createBreakdown(
     });
   }
 
-  await logAuditEvent({
+  await logAuditevent({
     action: "insert",
     tableName: "breakdowns",
     newData: { fleet_id: input.fleet_id.toUpperCase(), reason: input.reason },
@@ -102,7 +102,7 @@ export async function bookOutBreakdown(
     });
   }
 
-  await logAuditEvent({
+  await logAuditevent({
     action: "update",
     tableName: "breakdowns",
     recordId: breakdownId,
@@ -161,7 +161,7 @@ export async function directCheckout(
     });
   }
 
-  await logAuditEvent({
+  await logAuditevent({
     action: "insert",
     tableName: "breakdowns",
     newData: {
@@ -210,7 +210,7 @@ export async function softDeleteBreakdown(breakdownId: string) {
     });
   }
 
-  await logAuditEvent({
+  await logAuditevent({
     action: "delete",
     tableName: "breakdowns",
     recordId: breakdownId,

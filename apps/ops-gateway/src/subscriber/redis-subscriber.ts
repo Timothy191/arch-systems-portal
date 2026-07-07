@@ -4,7 +4,7 @@ import { Logger } from "../logger.js";
 
 const logger = new Logger("redis-subscriber");
 
-export interface TriggerEvent {
+export interface Triggerevent {
   id: string;
   triggerType: string;
   severity: string;
@@ -13,13 +13,13 @@ export interface TriggerEvent {
   timestamp: string;
 }
 
-export type EventCallback = (event: TriggerEvent) => void | Promise<void>;
+export type eventCallback = (event: Triggerevent) => void | Promise<void>;
 
 let subscriber: RedisClientType | null = null;
-let onEvent: EventCallback | null = null;
+let onevent: eventCallback | null = null;
 
-export function setEventHandler(callback: EventCallback): void {
-  onEvent = callback;
+export function seteventHandler(callback: eventCallback): void {
+  onevent = callback;
 }
 
 export async function startRedisSubscriber(): Promise<void> {
@@ -112,7 +112,7 @@ async function processMessage(
     }
 
     const payload = JSON.parse(payloadRaw) as Record<string, unknown>;
-    const event: TriggerEvent = {
+    const event: Triggerevent = {
       id,
       triggerType: String(payload["triggerType"] ?? "UNKNOWN"),
       severity: String(payload["severity"] ?? "info"),
@@ -121,11 +121,11 @@ async function processMessage(
       timestamp: String(payload["timestamp"] ?? new Date().toISOString()),
     };
 
-    logger.info(`Event: ${event.severity}/${event.triggerType} (${id})`);
+    logger.info(`event: ${event.severity}/${event.triggerType} (${id})`);
 
     // Notify the incident engine
-    if (onEvent) {
-      await onEvent(event);
+    if (onevent) {
+      await onevent(event);
     }
 
     await ack(id);

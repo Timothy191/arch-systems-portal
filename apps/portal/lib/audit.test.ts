@@ -1,4 +1,4 @@
-import { logAuditEvent } from "./audit";
+import { logAuditevent } from "./audit";
 
 jest.mock("@repo/supabase/server", () => ({
   createServerSupabaseClient: jest.fn(),
@@ -46,7 +46,7 @@ function buildMockSupabase({
   return { mockInsert };
 }
 
-describe("logAuditEvent", () => {
+describe("logAuditevent", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -54,7 +54,7 @@ describe("logAuditEvent", () => {
   it("inserts an audit log with correct fields", async () => {
     const { mockInsert } = buildMockSupabase();
 
-    await logAuditEvent({
+    await logAuditevent({
       action: "insert",
       tableName: "daily_logs",
       recordId: "record-123",
@@ -75,7 +75,7 @@ describe("logAuditEvent", () => {
   it("sets performed_by to null when employee is not found", async () => {
     const { mockInsert } = buildMockSupabase({ employeeId: null });
 
-    await logAuditEvent({
+    await logAuditevent({
       action: "delete",
       tableName: "machines",
       recordId: "machine-1",
@@ -89,7 +89,7 @@ describe("logAuditEvent", () => {
   it("sets old_data and new_data for update actions", async () => {
     const { mockInsert } = buildMockSupabase();
 
-    await logAuditEvent({
+    await logAuditevent({
       action: "update",
       tableName: "breakdowns",
       recordId: "bd-5",
@@ -107,7 +107,7 @@ describe("logAuditEvent", () => {
   it("handles missing optional fields gracefully", async () => {
     const { mockInsert } = buildMockSupabase();
 
-    await logAuditEvent({
+    await logAuditevent({
       action: "delete",
       tableName: "audit_logs",
     });

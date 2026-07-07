@@ -76,7 +76,7 @@
 - **MCP tool**: `db-repair-status` — show pending/scheduled repairs
 - **Low risk**: Complements existing auto-mitigation
 
-### 7. Eve Framework Migration Path
+### 7. eve Framework Migration Path
 
 - **Reference**: Vercel's eve framework (filesystem-first durable backend agents)
 - **Benefit**: Could replace custom polling with `'use step'` durability, eliminate `x-ops-secret` via Vercel Connect

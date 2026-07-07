@@ -1,6 +1,6 @@
 import { setup, assign, fromPromise } from "xstate";
 import { ArchPlugin } from "../types";
-import { PluginContext, PluginEvent, isRetryableError } from "./types";
+import { PluginContext, Pluginevent, isRetryableError } from "./types";
 import { logError } from "@/lib/errors/error-logger";
 import { ValidationError } from "@/lib/errors/error-classes";
 
@@ -29,7 +29,7 @@ async function loadPluginModule(pluginName: string): Promise<ArchPlugin> {
 export const pluginMachine = setup({
   types: {
     context: {} as PluginContext,
-    events: {} as PluginEvent,
+    events: {} as Pluginevent,
   },
   actions: {
     logTransition: assign({

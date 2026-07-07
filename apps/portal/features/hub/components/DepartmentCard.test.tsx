@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireevent } from "@testing-library/react";
 import { DepartmentCard } from "./DepartmentCard";
 import { useRouter } from "next/navigation";
 import type { Department } from "~/lib/departments";
@@ -63,7 +63,7 @@ describe("DepartmentCard", () => {
       .closest(".interactive-element");
     expect(card).toBeInTheDocument();
     if (card) {
-      fireEvent.click(card);
+      fireevent.click(card);
     }
     expect(mockPush).toHaveBeenCalledWith("/drilling");
   });
@@ -75,7 +75,7 @@ describe("DepartmentCard", () => {
       .closest(".interactive-element");
     expect(card).toBeInTheDocument();
     if (card) {
-      fireEvent.keyDown(card, { key: "Enter" });
+      fireevent.keyDown(card, { key: "Enter" });
     }
     expect(mockPush).toHaveBeenCalledWith("/drilling");
   });
@@ -87,7 +87,7 @@ describe("DepartmentCard", () => {
       .closest(".interactive-element");
     expect(card).toBeInTheDocument();
     if (card) {
-      fireEvent.keyDown(card, { key: " " });
+      fireevent.keyDown(card, { key: " " });
     }
     expect(mockPush).toHaveBeenCalledWith("/drilling");
   });

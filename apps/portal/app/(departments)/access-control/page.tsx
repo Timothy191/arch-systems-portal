@@ -74,7 +74,7 @@ export default async function AccessControlDashboardPage() {
                 Active Visitors
               </p>
               <p className="text-2xl font-bold text-[var(--accent-cyan)] mt-1">
-                {metrics.accessEventsToday}
+                {metrics.accesseventsToday}
               </p>
             </div>
           </div>

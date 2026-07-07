@@ -2,7 +2,7 @@ import { setup, assign, type SnapshotFrom } from "xstate";
 import { pluginMachine } from "./plugin.machine";
 import {
   OrchestratorContext,
-  OrchestratorEvent,
+  Orchestratorevent,
   HealthReport,
   PluginActor,
 } from "./types";
@@ -77,7 +77,7 @@ function computeHealthReport(plugins: Map<string, PluginActor>): HealthReport {
 export const orchestratorMachine = setup({
   types: {
     context: {} as OrchestratorContext,
-    events: {} as OrchestratorEvent,
+    events: {} as Orchestratorevent,
   },
   actions: {
     spawnPlugins: assign({

@@ -5,7 +5,7 @@ import { getLatestAudit, runAuditCheck } from "../poller/audit-poller.js";
 import { opsClient } from "../ops-client.js";
 import { Logger } from "../logger.js";
 import { dispatchTask } from "../dispatcher/eve-dispatcher.js";
-import type { TriggerEvent } from "../subscriber/redis-subscriber.js";
+import type { Triggerevent } from "../subscriber/redis-subscriber.js";
 
 const logger = new Logger("incident-engine");
 
@@ -46,9 +46,9 @@ export function getCompletedIncidents(): Incident[] {
   return [...completedIncidents];
 }
 
-// ── Event handler (called by Redis subscriber) ─────────────
+// ── event handler (called by Redis subscriber) ─────────────
 
-export async function handleTriggerEvent(event: TriggerEvent): Promise<void> {
+export async function handleTriggerevent(event: Triggerevent): Promise<void> {
   const incident: Incident = {
     id: event.id,
     severity: event.severity as Incident["severity"],

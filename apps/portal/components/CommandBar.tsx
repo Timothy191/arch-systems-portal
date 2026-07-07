@@ -179,7 +179,7 @@ export function CommandBar() {
   );
 
   useEffect(() => {
-    const onKeyDown = (e: KeyboardEvent) => {
+    const onKeyDown = (e: Keyboardevent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
         setOpen((prev) => !prev);
@@ -188,8 +188,8 @@ export function CommandBar() {
         setOpen(false);
       }
     };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+    window.addeventListener("keydown", onKeyDown);
+    return () => window.removeeventListener("keydown", onKeyDown);
   }, []);
 
   useEffect(() => {
@@ -198,7 +198,7 @@ export function CommandBar() {
 
   useEffect(() => {
     if (!open || flatList.length === 0) return;
-    const onKeyDown = (e: KeyboardEvent) => {
+    const onKeyDown = (e: Keyboardevent) => {
       if (e.key === "ArrowDown") {
         e.preventDefault();
         setSelectedIndex((i) => (i + 1) % flatList.length);
@@ -211,8 +211,8 @@ export function CommandBar() {
         if (item) handleSelect(item);
       }
     };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+    window.addeventListener("keydown", onKeyDown);
+    return () => window.removeeventListener("keydown", onKeyDown);
   }, [open, flatList, selectedIndex, handleSelect]);
 
   useEffect(() => {

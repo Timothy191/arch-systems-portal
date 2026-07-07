@@ -15,7 +15,7 @@ interface AuditLogInput {
   departmentId?: string;
 }
 
-export async function logAuditEvent(input: AuditLogInput) {
+export async function logAuditevent(input: AuditLogInput) {
   const supabase = await createServerSupabaseClient();
 
   const {
@@ -24,7 +24,7 @@ export async function logAuditEvent(input: AuditLogInput) {
   } = await supabase.auth.getUser();
   if (authError || !user) {
     throw new AuthError("Unauthorized: valid session required", {
-      context: { operation: "logAuditEvent" },
+      context: { operation: "logAuditevent" },
     });
   }
 

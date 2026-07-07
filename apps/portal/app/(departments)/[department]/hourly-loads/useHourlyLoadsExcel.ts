@@ -59,7 +59,7 @@ export function useHourlyLoadsExcel({
     );
   };
 
-  const handleImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImport = async (e: React.Changeevent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 

@@ -19,7 +19,7 @@ export interface AccessControlMetrics {
   activeQrCodes: number;
   expiringSoon: number;
   deniedToday: number;
-  accessEventsToday: number;
+  accesseventsToday: number;
   expiredAssigned: number;
   entityCoverage: number;
 }
@@ -122,7 +122,7 @@ export async function getAccessControlMetrics(
         activeQrCodes,
         expiringSoon: metrics?.expiring_soon ?? 0,
         deniedToday: metrics?.denied_today ?? 0,
-        accessEventsToday: metrics?.access_events_today ?? 0,
+        accesseventsToday: metrics?.access_events_today ?? 0,
         expiredAssigned: metrics?.expired_assigned ?? 0,
         entityCoverage,
       };

@@ -31,12 +31,12 @@ export function OfflineBanner() {
       setTimeout(() => setState("hidden"), 3000);
     };
 
-    window.addEventListener("offline", handleOffline);
-    window.addEventListener("online", handleOnline);
+    window.addeventListener("offline", handleOffline);
+    window.addeventListener("online", handleOnline);
 
     return () => {
-      window.removeEventListener("offline", handleOffline);
-      window.removeEventListener("online", handleOnline);
+      window.removeeventListener("offline", handleOffline);
+      window.removeeventListener("online", handleOnline);
     };
   }, []);
 

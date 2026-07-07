@@ -117,9 +117,9 @@ if (typeof window !== "undefined") {
       onchange: null,
       addListener: jest.fn(), // Deprecated
       removeListener: jest.fn(), // Deprecated
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
-      dispatchEvent: jest.fn(),
+      addeventListener: jest.fn(),
+      removeeventListener: jest.fn(),
+      dispatchevent: jest.fn(),
     })),
   });
 
