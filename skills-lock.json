@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "skills": {
+    "next-dev-loop": {
+      "source": "vercel/next.js",
+      "ref": "canary",
+      "sourceType": "github",
+      "skillPath": "skills/next-dev-loop/SKILL.md",
+      "computedHash": "aad97b32ba6efd31e92d063ec77120a694fe0d4a9401daf9af4c205cd5e21b07"
+    },
+    "next-code-review": {
+      "source": "local",
+      "ref": "main",
+      "sourceType": "local",
+      "skillPath": ".claude/skills/next-code-review/SKILL.md",
+      "computedHash": "local-next-code-review"
+    },
+    "react-performance": {
+      "source": "local",
+      "ref": "main",
+      "sourceType": "local",
+      "skillPath": ".claude/skills/react-performance/SKILL.md",
+      "computedHash": "local-react-performance"
+    },
+    "supabase-rls": {
+      "source": "local",
+      "ref": "main",
+      "sourceType": "local",
+      "skillPath": ".claude/skills/supabase-rls/SKILL.md",
+      "computedHash": "local-supabase-rls"
+    },
+    "playwright-e2e": {
+      "source": "local",
+      "ref": "main",
+      "sourceType": "local",
+      "skillPath": ".claude/skills/playwright-e2e/SKILL.md",
+      "computedHash": "local-playwright-e2e"
+    },
+    "docker-optimizer": {
+      "source": "local",
+      "ref": "main",
+      "sourceType": "local",
+      "skillPath": ".claude/skills/docker-optimizer/SKILL.md",
+      "computedHash": "local-docker-optimizer"
+    },
+    "github-actions": {
+      "source": "local",
+      "ref": "main",
+      "sourceType": "local",
+      "skillPath": ".claude/skills/github-actions/SKILL.md",
+      "computedHash": "local-github-actions"
+    },
+    "monitoring-setup": {
+      "source": "local",
+      "ref": "main",
+      "sourceType": "local",
+      "skillPath": ".claude/skills/monitoring-setup/SKILL.md",
+      "computedHash": "local-monitoring-setup"
+    }
+  }
+}

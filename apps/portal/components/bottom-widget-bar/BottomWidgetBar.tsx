@@ -1,0 +1,1 @@
+export { BottomWidgetBar } from "./index";

@@ -1,0 +1,13 @@
+{
+  "$schema": "https://charm.land/crush.json",
+  "mcp": {
+    "stitch": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["@_davideast/stitch-mcp", "proxy"],
+      "env": {
+        "STITCH_API_KEY": "AQ.Ab8RN6KPyy_ZkLx7ZaPGGspSO6mPqrR9Zm6gc86FeEVO_aMyTAAQ.Ab8RN6KPyy_ZkLx7ZaPGGspSO6mPqrR9Zm6gc86FeEVO_aMyTA"
+      }
+    }
+  }
+}

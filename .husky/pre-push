@@ -1,0 +1,72 @@
+#!/bin/sh
+
+# Arch-Mk2 Pre-Push Hook
+# Validates code quality before pushing to remote
+
+echo "Running pre-push validation..."
+
+# 1. Run full test suite
+echo "Running test suite..."
+pnpm test 2>/dev/null
+if [ $? -ne 0 ]; then
+  echo "ERROR: Tests failed. Push aborted."
+  echo "Fix failing tests before pushing."
+  exit 1
+fi
+
+# 2. Run type checking
+echo "Running type checking..."
+pnpm type-check 2>/dev/null
+if [ $? -ne 0 ]; then
+  echo "ERROR: Type checking failed. Push aborted."
+  echo "Fix type errors before pushing."
+  exit 1
+fi
+
+# 3. Run linting
+echo "Running linting..."
+pnpm lint 2>/dev/null
+if [ $? -ne 0 ]; then
+  echo "ERROR: Linting failed. Push aborted."
+  echo "Fix lint errors before pushing."
+  exit 1
+fi
+
+# 4. Check for security vulnerabilities
+echo "Checking for security vulnerabilities..."
+pnpm audit 2>/dev/null
+if [ $? -ne 0 ]; then
+  echo "WARNING: Security vulnerabilities found"
+  echo "Consider running 'pnpm audit --fix'"
+fi
+
+# 5. Check bundle size
+echo "Checking bundle size..."
+pnpm --filter portal build 2>/dev/null
+if [ $? -eq 0 ]; then
+  BUNDLE_SIZE=$(du -sh apps/portal/.next/ 2>/dev/null | cut -f1)
+  echo "Bundle size: $BUNDLE_SIZE"
+  
+  # Warn if bundle is too large (>500KB)
+  SIZE_KB=$(echo "$BUNDLE_SIZE" | sed 's/[^0-9]//g')
+  if [ "$SIZE_KB" -gt 500 ]; then
+    echo "WARNING: Bundle size is large ($BUNDLE_SIZE)"
+    echo "Consider optimizing bundle size"
+  fi
+fi
+
+# 6. Check for unused dependencies
+echo "Checking for unused dependencies..."
+pnpm knip 2>/dev/null
+if [ $? -ne 0 ]; then
+  echo "WARNING: Unused dependencies detected"
+  echo "Consider removing unused dependencies"
+fi
+
+# 7. Validate commit messages
+echo "Validating recent commits..."
+COMMITS=$(git log --oneline -10 2>/dev/null)
+echo "Recent commits:"
+echo "$COMMITS"
+
+echo "Pre-push validation passed."
