@@ -7,30 +7,14 @@ import { Input } from "@repo/ui/Input";
 import { AnimatedButton } from "@repo/ui/AnimatedButton";
 import { Lock, Check, AlertTriangle, Loader2 } from "lucide-react";
 
-/**
- * Maps raw Supabase user profile update errors to precise, readable user instructions.
- * Resolves password validation issues such as weak password complexity or using the current password.
- *
- * @param raw - The raw error message string from the user update process.
- * @returns A safe, human-readable error description.
- */
-function mapUpdateError(raw: string): string {
-  const lower = raw.toLowerCase();
-  if (lower.includes("weak")) {
-    return "Password is too weak. Use at least 8 characters with a mix of letters, numbers, and symbols.";
-  }
-  if (lower.includes("same")) {
-    return "New password must be different from your current password.";
-  }
-  return "Unable to update password. Please try again.";
-}
+
 
 export function UpdatePasswordForm() {
   const router = useRouter();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [checkingSession, setCheckingSession] = useState(true);
+  const [isCheckingSession, setIsCheckingSession] = useState(true);
   const [hasSession, setHasSession] = useState(false);
   const [updated, setUpdated] = useState(false);
   const [error, setError] = useState("");
@@ -38,46 +22,72 @@ export function UpdatePasswordForm() {
   useEffect(() => {
     const supabase = createBrowserSupabaseClient();
     supabase.auth.getSession().then(({ data }) => {
-      setCheckingSession(false);
+      setIsCheckingSession(false);
       setHasSession(!!data.session);
     });
   }, []);
 
-  async function handleSubmit(e: React.Formevent) {
+  if (isCheckingSession) {
+    return (
+      <div className="w-full max-w-md space-y-3">
+        <div className="rounded-xl overflow-hidden border border-[var(--border-default)] bg-white/70 backdrop-blur-2xl shadow-window p-6 text-center space-y-4">
+          <Loader2 className="w-8 h-8 text-[var(--accent-blue)] animate-spin mx-auto" />
+          <p className="text-sm text-[var(--text-muted)]">
+            Verifying session...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  function validatePasswords() {
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return false;
+    }
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters.");
+      return false;
+    }
+    return true;
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
 
-    if (password !== confirmPassword) {
-      setError("Passwords do not match.");
-      return;
-    }
-
-    if (password.length < 8) {
-      setError("Password must be at least 8 characters.");
+    if (!validatePasswords()) {
       return;
     }
 
     setLoading(true);
 
-    const supabase = createBrowserSupabaseClient();
-    const { error: updateError } = await supabase.auth.updateUser({
-      password,
-    });
+    try {
+      const supabase = createBrowserSupabaseClient();
+      const { error: authError } = await supabase.auth.updateUser({ password });
 
-    setLoading(false);
+      if (authError) {
+        const lower = authError.message.toLowerCase();
+        if (lower.includes("weak")) {
+          setError("Password is too weak. Use at least 8 characters with a mix of letters, numbers, and symbols.");
+        } else if (lower.includes("same")) {
+          setError("New password must be different from your current password.");
+        } else {
+          setError("Unable to update password. Please try again.");
+        }
+        return;
+      }
 
-    if (updateError) {
-      setError(mapUpdateError(updateError.message));
-      return;
+      setUpdated(true);
+      setTimeout(() => {
+        router.push("/login");
+      }, 3000);
+    } finally {
+      setLoading(false);
     }
-
-    setUpdated(true);
-    setTimeout(() => {
-      router.push("/login");
-    }, 3000);
   }
 
-  if (checkingSession) {
+  if (isCheckingSession) {
     return (
       <div className="w-full max-w-md space-y-3">
         <div className="rounded-xl overflow-hidden border border-[var(--border-default)] bg-white/70 backdrop-blur-2xl shadow-window p-6 text-center space-y-4">
