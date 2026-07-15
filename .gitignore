@@ -99,7 +99,6 @@ cognee/
 .cache/aistack/
 spec.yaml.aistack-backup-*
 # --- end ai-stack-kit
-node_modules
 
 # Ignore large AI cache files
 .agentic-tools-mcp/repowise/*.pkl
