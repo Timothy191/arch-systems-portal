@@ -53,12 +53,12 @@ function isValidPageRedirect(path: string): boolean {
 export function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const rawRedirect = searchParams.get("redirect") || "/";
-  const redirectTo = isValidPageRedirect(rawRedirect) ? rawRedirect : "/";
+  const rawRedirectPath = searchParams.get("redirect") || "/";
+  const redirectTo = isValidPageRedirect(rawRedirectPath) ? rawRedirectPath : "/";
 
-  const emailParam =
+  const emailOrEmployeeIdParam =
     searchParams.get("email") || searchParams.get("employeeId") || "";
-  const [employeeId, setEmployeeId] = useState(emailParam);
+  const [emailOrEmployeeId, setEmailOrEmployeeId] = useState(emailOrEmployeeIdParam);
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
@@ -68,16 +68,16 @@ export function LoginForm() {
 
   // Auth action is now handled securely via Server Action
 
-  function handleCapsLockKey(e: React.Keyboardevent) {
+  function handleCapsLockKey(e: React.KeyboardEvent) {
     setCapsLock(e.getModifierState("CapsLock"));
   }
 
-  async function handleSubmit(e: React.Formevent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
     setLoading(true);
 
-    // Helper: fire telemetry push (fire-and-forget)
+    // Telemetry utility (fire-and-forget)
     const pushTelemetry = async (name: string) => {
       try {
         await fetch("/api/telemetry/push", {
@@ -85,14 +85,14 @@ export function LoginForm() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ name, value: 1 }),
         });
-      } catch (e) {
-        // Ignore telemetry failures in the client
+      } catch {
+        // Telemetry failures are non-critical
       }
     };
 
     try {
       const result = await loginAction({
-        email: employeeId,
+        email: emailOrEmployeeId,
         password,
       });
 
@@ -100,40 +100,27 @@ export function LoginForm() {
         setError(result.error || "Sign in failed. Please try again.");
         setPassword("");
 
-        // Record Sentry breadcrumb (avoid PII)
-        try {
-          Sentry.addBreadcrumb({
-            message: "Auth failed",
-            category: "auth",
-            level: "error",
-            data: { reason: result.error || "Unknown error" },
-          });
-          // eslint-disable-next-line no-empty
-        } catch {}
-
-        // Push lightweight telemetry tag (fire-and-forget)
+        Sentry.addBreadcrumb({
+          message: "Auth failed",
+          category: "auth",
+          level: "error",
+          data: { reason: result.error || "Unknown error" },
+        });
         void pushTelemetry("auth.failure");
-
-        setLoading(false);
         return;
       }
 
-      // Success telemetry + breadcrumb (no PII)
-      try {
-        Sentry.addBreadcrumb({
-          message: "Auth succeeded",
-          category: "auth",
-          level: "info",
-        });
-        // eslint-disable-next-line no-empty
-      } catch {}
+      Sentry.addBreadcrumb({
+        message: "Auth succeeded",
+        category: "auth",
+        level: "info",
+      });
       void pushTelemetry("auth.success");
-
-      setLoading(false);
       router.push(redirectTo);
       router.refresh();
     } catch {
       setError("Network error. Please try again.");
+    } finally {
       setLoading(false);
     }
   }
@@ -149,7 +136,7 @@ export function LoginForm() {
           htmlFor="email"
           className="block text-xs font-medium text-[var(--text-secondary)] transition-colors duration-200 liquid-text-lift select-none"
         >
-          Employee ID / Email
+          Email or Employee ID
         </label>
         <div className="relative group">
           <Input
@@ -159,12 +146,12 @@ export function LoginForm() {
             minLength={3}
             maxLength={254}
             disabled={loading}
-            value={employeeId}
-            onChange={(e) => setEmployeeId(e.target.value)}
+            value={emailOrEmployeeId}
+            onChange={(e) => setEmailOrEmployeeId(e.target.value)}
             variant="login"
             className="px-4 py-3.5 pr-10 transition-all duration-200 focus:outline-none focus:border-arch-accent-blue focus:ring-4 focus:ring-arch-accent-blue/20 liquid-glass-input focus-ring-arch-blue"
-            placeholder="Employee ID or email"
-            aria-label="Employee ID / Email"
+            placeholder="Email or Employee ID"
+            aria-label="Email or Employee ID"
             autoComplete="username"
             aria-describedby={error ? "login-error email-hint" : "email-hint"}
             aria-invalid={error ? "true" : "false"}
