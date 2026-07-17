@@ -139,3 +139,16 @@ Run the local checks before pushing code changes:
 - Build package: `pnpm --filter @repo/theme build`
 - Lint CSS files: `pnpm --filter @repo/theme lint:css`
 - Verify variables mapping: `pnpm --filter @repo/theme lint:tokens`
+
+---
+
+## 🔐 Login page (reference surface)
+
+The canonical sign-in UI lives at `apps/portal/src/app/(auth)/login/page.tsx`. It demonstrates the light-only macOS glass system end-to-end:
+
+- **Shell**: `.os-shell.os-shell--login` (24px radius, liquid glass tokens from `variables.css`)
+- **Typography**: `font-display` for “Arch-System”; 13px medium labels via `--text-secondary`
+- **Components**: `LoginForm`, `LoginBrandBanner`, `LoginSecureBadge`, folded `@repo/ui/Logo`
+- **Specs**: `.kiro/specs/unified-os-shell/`, `login-form-redesign/`, `login-brand-banner/`, `arch-typography/`
+
+See `GEMINI.md` for the full element table. Do not copy patterns from the legacy duplicate at `apps/portal/app/(auth)/login/page.tsx`.

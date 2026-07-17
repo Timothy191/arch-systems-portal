@@ -29,6 +29,23 @@ Single source of truth for visual design, tokens, and Tailwind configuration.
 - **Durations**: 150ms (micro), 250ms (structural), 400ms (modal).
 - **Restrictions**: Never animate layout properties (`width`, `height`, etc.). Only `opacity`, `transform`, and colors.
 
+### Login page — reference implementation
+
+Canonical sign-in surface: `apps/portal/src/app/(auth)/login/page.tsx`.
+
+| Element | Implementation |
+|---|---|
+| Shell | `.os-shell.os-shell--login` + `.os-shell-enter-2` (see `unified-os-shell` spec) |
+| Card width | `max-w-[420px]`, `min-h-[720px]` |
+| Title bar | macOS traffic lights (`bg-mac-red/yellow/green`) + centered “Arch — System Sign In” |
+| Brand mark | Folded `@repo/ui/Logo` (`.login-brand-mark`, `.login-brand-fold`) |
+| Heading | `font-display` “Arch-System” (`--font-display` / Anurati), 13px secondary labels |
+| Form | `LoginForm`: remember me, forgot password, OAuth (Google / Microsoft / GitHub) |
+| Footer | `LoginBrandBanner` marquee — partner + AI logos from `/branding/ai/` |
+| Notice | VPN callout with info icon, `border-border-subtle`, `--overlay-dim` background |
+
+Do **not** treat `apps/portal/app/(auth)/login/page.tsx` as canonical — it is a legacy duplicate (company JPEG branding, `liquid-glass-light`, enterprise footer).
+
 ### Agent Tracing & Context Hand-off (MANDATORY RULE)
 
 - **Workflow Traces**: All agents MUST update the `AGENT_TRACER.md` file in the root of the package/app they are modifying. You must log a timestamp, your purpose, the changes made, and what the next agent should know.

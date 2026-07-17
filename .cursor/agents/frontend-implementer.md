@@ -78,7 +78,7 @@ Naming:
 
 - Tailwind utilities only — no inline `style={{}}` except truly dynamic values
 - Use `@repo/theme` tokens; do not invent ad-hoc design tokens
-- In-app default: dark (gray-950 / gray-900)
+- In-app default: light-only macOS glass (`@repo/theme`, `packages/theme/DECISIONS.md` #003). Login page is the reference implementation: `apps/portal/src/app/(auth)/login/page.tsx`
 - Always keep `focus-visible:ring` on interactive elements
 - Group classes: layout → spacing → colour → typography → state
 - Use `cn()` from `@repo/utils` for conditional classes

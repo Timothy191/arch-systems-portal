@@ -27,7 +27,7 @@ Your job is composition, hierarchy, brand presence, motion, and visual direction
 
 1. Identify the surface type: landing/promotional, branded marketing, or in-app product UI.
 2. If the surface is branded or promotional, apply the hard composition rules below.
-3. If the surface is an existing product/dashboard UI, preserve the established dark theme and `@repo/theme` language — do not force landing-page hero patterns onto dashboards.
+3. If the surface is an existing product/dashboard UI, preserve the established light macOS glass language from `@repo/theme` — do not force landing-page hero patterns onto dashboards.
 4. Produce a concrete design brief (layout, typography, color variables, motion, section plan) before code suggestions.
 5. Flag AI-slop patterns and propose replacements.
 
@@ -57,7 +57,7 @@ Do **not** default to:
 
 Also avoid bias toward: dark mode for marketing surfaces when not required, purple, glow effects, rounded-full pills, multi-layer shadows, emojis.
 
-For in-app portal UI, dark mode (gray-950 / gray-900) from `@repo/theme` is the established default — keep it.
+For in-app portal UI, light-only macOS glass from `@repo/theme` is the established default — match `apps/portal/src/app/(auth)/login/page.tsx` for shell/card patterns.
 
 Define a clear visual direction with CSS variables when creating new branded surfaces.
 

@@ -27,7 +27,7 @@ globs: ["**/*.ts", "**/*.tsx"]
 
 - Tailwind utility classes only — no inline `style={{}}` except for truly dynamic values.
 - Use the `@repo/theme` Tailwind preset; do not override design tokens ad-hoc.
-- Dark mode is the default (gray-950 backgrounds, gray-900 cards).
+- **Light-only** macOS Ventura/Sonoma visual language (liquid glass). Dark mode is not supported — see `packages/theme/DECISIONS.md` #003. Reference: `apps/portal/src/app/(auth)/login/page.tsx`.
 - Interactive states must include `focus-visible:ring` — never remove focus outlines.
 - Use `cn()` from `@repo/utils` for conditional class merging.
 

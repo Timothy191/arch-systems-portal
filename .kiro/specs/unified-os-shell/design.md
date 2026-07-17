@@ -47,6 +47,8 @@ Variants only set radius: `--taskbar` = capsule (9999px), `--login` and `--dock`
 
 Interior chrome (login title bar / banner footer) uses 8pt-grid spacing: `px-4 py-3`.
 
+Login card wrapper width: `max-w-[420px]`; card min-height: `720px` (see `login-form-redesign` spec).
+
 ## Motion (animations.css)
 
 - `@keyframes os-shell-reflect` (renamed from `mac-menu-gold-reflect`).

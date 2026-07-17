@@ -10,11 +10,15 @@
 
 `RefractionGlow` remains re-exported from `@repo/auth/ui`. Package form stub stays for legacy importers but portal uses its own form.
 
-## Layout
+## Layout (as implemented)
 
-- Wrapper: `w-full max-w-[480px]` (was `w-[380px]`), `my-auto`, drop large `-top-16` (use modest `-top-4` or none).
-- Card body: slightly tighter vertical rhythm (`space-y-6`), OAuth as `grid grid-cols-3 gap-2`.
-- Glow behind card scales with larger width.
+- **Canonical page**: `apps/portal/src/app/(auth)/login/page.tsx` (not `apps/portal/app/(auth)/login/` — legacy duplicate).
+- Wrapper: `w-full max-w-[420px]`, centered (`my-auto mt-24`), entrance via `os-shell-enter-2` (see `unified-os-shell` spec).
+- Card: `os-shell os-shell--login`, `min-h-[720px]`, macOS title bar (traffic lights + “Arch — System Sign In”).
+- Body: `px-8 sm:px-10 pt-5 pb-9`, vertical rhythm `space-y-6`.
+- Header: “Welcome Back” + `LoginSecureBadge`; title block uses folded `@repo/ui/Logo` (`.login-brand-mark`) + `font-display` “Arch-System” heading.
+- Footer: `LoginBrandBanner` marquee (replaces legacy enterprise footer with language selector / version strip).
+- OAuth row: `grid grid-cols-3 gap-2`.
 
 ## Form behavior
 

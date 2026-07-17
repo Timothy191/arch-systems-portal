@@ -6,7 +6,7 @@ Enlarge and reposition the Arch System Sign In card, and add commonly expected l
 
 ## Acceptance Criteria
 
-1. Login card is wider than 380px (target ~480px) and better vertically centered on the viewport (reduced awkward `-top-16` offset).
+1. Login card is wider than 380px (implemented `max-w-[420px]`), vertically centered between taskbar and dock (`my-auto mt-24`), using unified OS shell glass (`os-shell os-shell--login`).
 2. Form includes a **Remember me** checkbox that, when checked, persists the employee ID/email in `localStorage` and restores it on next visit.
 3. Form includes a **Forgot password?** link to `/reset-password`.
 4. Form includes an “or continue with” divider and social buttons for **Google**, **Microsoft**, and **GitHub**.

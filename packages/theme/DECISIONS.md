@@ -100,7 +100,7 @@ Three tiers enforced by `scripts/validate-tokens.mjs` and documented inline in `
 | Tier           | Tokens                                                                                                       | Rule                                                                              |
 | -------------- | ------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------- |
 | **Primitive**  | `--arch0`–`--arch15`                                                                                         | Raw values only. Never referenced in components or `preset.ts` semantic sections. |
-| **Semantic**   | `--bg-primary`, `--text-body`, `--shadow-card`, etc.                                                         | All component and utility references. Auto-updated by dark mode.                  |
+| **Semantic**   | `--bg-primary`, `--text-body`, `--shadow-card`, etc.                                                         | All component and utility references. Light-only set in `:root` (no dark variants). |
 | **Deprecated** | `--accent-cyan`, `--accent-indigo`, `--accent-violet`, `--accent-alert`, `--accent-blue`, `--accent-emerald` | Map to canonical Tier 2. Stylelint warns. Migrate on touch.                       |
 
 ---

@@ -6,14 +6,12 @@ import localFont from "next/font/local";
 import Script from "next/script";
 import ClientProviders from "./ClientProviders";
 import { OfflineBanner } from "@/components/OfflineBanner";
-import { FocusModeProvider } from "@/components/FocusModeProvider";
 import { PerformanceListener } from "@/components/PerformanceListener";
 import { CommandBar } from "@/components/CommandBar";
 import { RouteAnnouncer } from "@/components/RouteAnnouncer";
 import { AIAssistantWrapper } from "@/components/ai/AIAssistantWrapper";
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
-import { FocusModeToggle } from "@/components/FocusModeToggle";
 import { SystemTrayPill } from "@/components/system/SystemTray";
 import { WebVitalsReporter } from "@/components/WebVitalsReporter";
 import { MacMenuBar } from "@repo/ui/MacMenuBar";
@@ -153,45 +151,39 @@ export default function RootLayout({
 
         <ArchThemeProvider>
           <ClientProviders>
-            <FocusModeProvider>
-              <RouteBackground />
-              <PerformanceListener />
-              <WebVitalsReporter />
-              <OfflineBanner />
-              <AIAssistantWrapper />
+            <RouteBackground />
+            <PerformanceListener />
+            <WebVitalsReporter />
+            <OfflineBanner />
+            <AIAssistantWrapper />
 
-              {/* Global Navigation Header with proper landmark */}
-              <header role="banner" className="flex items-center gap-3">
-                <MacMenuBar
-                  rightSlot={
-                    <nav role="navigation" aria-label="Global">
-                      <div className="flex items-center gap-3">
-                        <FocusModeToggle variant="icon" />
-                        <SystemTrayPill />
-                        <HeaderWidgets />
-                      </div>
-                    </nav>
-                  }
-                />
-              </header>
+            {/* Global Navigation Header with proper landmark */}
+            <header role="banner" className="flex items-center gap-3">
+              <MacMenuBar
+                rightSlot={
+                  <nav role="navigation" aria-label="Global">
+                    <div className="flex items-center gap-3">
+                      <SystemTrayPill />
+                      <HeaderWidgets />
+                    </div>
+                  </nav>
+                }
+              />
+            </header>
 
-              {/* Content wrapper with main landmark */}
-              <main
-                id="main-content"
-                role="main"
-                className="relative z-primary-card pt-16"
-              >
-                <SplitWindowLayout>{children}</SplitWindowLayout>
-              </main>
+            {/* Content wrapper with main landmark */}
+            <main
+              id="main-content"
+              role="main"
+              className="relative z-primary-card pt-16"
+            >
+              <SplitWindowLayout>{children}</SplitWindowLayout>
+            </main>
 
-              <CommandBar />
-              <Suspense fallback={null}>
-                <ViewportBoundaries />
-              </Suspense>
-
-              {/* Footer landmark - if exists, otherwise contentinfo on body or create footer */}
-              {/* We'll add a proper footer or ensure contentinfo is on appropriate element */}
-            </FocusModeProvider>
+            <CommandBar />
+            <Suspense fallback={null}>
+              <ViewportBoundaries />
+            </Suspense>
           </ClientProviders>
         </ArchThemeProvider>
       </body>
