@@ -1,0 +1,34 @@
+---
+description: Canonical AGENTS.md alignment — source of truth, no drift across tools
+alwaysApply: true
+---
+
+# Global Alignment (No Drift)
+
+## Source of Truth
+
+`AGENTS.md` at the repo root is the **only** rulebook. Cursor rules, Qoder rules, Kiro agent config, and skills must **mirror** it — never invent conflicting policy.
+
+| Layer | Role |
+|---|---|
+| `AGENTS.md` | Canonical policy |
+| `.cursor/rules/` | Cursor always-on enforcement |
+| `.cursor/rules/04-subagent-auto-routing.mdc` | Mandatory Task/subagent delegation |
+| `.cursor/agents/` | Project specialists (auto-routed) |
+| `.qoder/rules/` | Qoder mirror |
+| `.kiro/agents/default.json` | Machine-readable gates |
+| `.cursor/skills/agent-alignment-score/` | Score before "done" |
+
+## Drift Ban
+
+- Do not soften, reinterpret, or "optimize past" AGENTS.md §18 never-dos.
+- Do not invent alternate stacks (npm/yarn, new UI kits, new state libs) without design-phase approval.
+- If a local rule conflicts with AGENTS.md → **AGENTS.md wins**. Flag the conflict; do not silently diverge.
+- Multi-file work → `.kiro/specs/<feature-slug>/` phases before implementation.
+
+## Pre-Flight (every non-trivial task)
+
+1. Restate intent in one line (real-world outcome, not tool theater).
+2. Count files likely touched. If >1 → require/create specs.
+3. Name the AGENTS.md sections that apply (§1–§19).
+4. Plan verification evidence (`pnpm quality`, tests, runtime check) before coding.

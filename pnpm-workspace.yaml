@@ -1,0 +1,7 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+  - "packages/auth/*"
+  - "packages/shared/*"
+  - "packages/departments/*"
+  - "packages/hub/*"

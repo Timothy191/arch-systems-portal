@@ -1,0 +1,100 @@
+{
+  "name": "default",
+  "version": "1.0.0",
+  "description": "Default Kiro CLI agent configuration for Arch Systems monorepo",
+  "workflow": {
+    "type": "spec-driven",
+    "requires": ["requirements", "design", "tasks"],
+    "enforced": true,
+    "spec_location": ".kiro/specs/{feature-slug}",
+    "templates": {
+      "requirements": ".kiro/templates/requirements.md",
+      "design": ".kiro/templates/design.md",
+      "tasks": ".kiro/templates/tasks.md"
+    }
+  },
+  "rules": {
+    "source": "AGENTS.md",
+    "enforced": true,
+    "no_drift": true,
+    "thought_process": ["observe", "hypothesize", "verify", "act", "score"],
+    "real_world_principles": {
+      "enabled": true,
+      "practical_thinking": true,
+      "engineering_heuristics": ["yagni", "kiss", "dry", "fail_fast", "measure"],
+      "evidence_based": true,
+      "production_mindset": true
+    },
+    "validation": {
+      "pre_task": "pnpm quality",
+      "post_task": "pnpm quality",
+      "self_check": "AGENTS.md §17",
+      "alignment_score": {
+        "enabled": true,
+        "pass_threshold": 80,
+        "hard_fail_on": "AGENTS.md §18",
+        "script": ".cursor/skills/agent-alignment-score/scripts/score.mjs",
+        "dimensions": {
+          "spec": 20,
+          "stack": 15,
+          "boundaries": 15,
+          "security": 20,
+          "quality": 15,
+          "verify": 15
+        }
+      }
+    },
+    "mirrors": [
+      ".cursor/rules/",
+      ".qoder/rules/",
+      "AGENTS.md §20"
+    ]
+  },
+  "permissions": {
+    "read": ["**/*"],
+    "write": ["**/*"],
+    "execute": ["pnpm dev", "pnpm build", "pnpm lint", "pnpm type-check", "pnpm test", "pnpm quality", "pnpm format"],
+    "restricted": [
+      ".env*.local",
+      "**/*secret*",
+      "**/*private*"
+    ]
+  },
+  "technology_stack": {
+    "framework": "Next.js 16 (App Router)",
+    "language": "TypeScript 5.7 strict",
+    "styling": "Tailwind CSS 3 with @repo/theme preset",
+    "ui_primitives": "@repo/ui",
+    "state": "Zustand 5",
+    "validation": "Zod 3",
+    "auth_db": "Supabase via @repo/supabase",
+    "package_manager": "pnpm 9",
+    "build_orchestration": "Turborepo 2"
+  },
+  "monorepo_layout": {
+    "apps": {
+      "portal": "Next.js 16 app (App Router, src/ layout) — the only deployable app"
+    },
+    "packages": {
+      "errors": "@repo/errors — typed AppError classes",
+      "redis": "@repo/redis — shared ioredis singleton",
+      "supabase": "@repo/supabase — server-only admin client + browser client",
+      "theme": "@repo/theme — Tailwind preset & design tokens",
+      "ui": "@repo/ui — shared headless React components",
+      "utils": "@repo/utils — pure utility helpers",
+      "logger": "@repo/logger — structured logging",
+      "rate_limiter": "@repo/rate-limiter — Redis-backed rate limiting",
+      "contract": "@repo/contract — shared Zod schemas / API contracts",
+      "auth": "@repo/auth/ui, @repo/auth/data-access, @repo/auth/utils",
+      "shared": "@repo/shared/data-access, @repo/shared/hooks, @repo/shared/utils",
+      "departments": "@repo/departments/ui",
+      "hub": "@repo/hub/ui"
+    },
+    "rules": [
+      "Never add application logic to packages/",
+      "Never import from apps/ inside packages/",
+      "Always add new workspace packages to pnpm-workspace.yaml and turbo.json",
+      "Use workspace:* for internal package references"
+    ]
+  }
+}

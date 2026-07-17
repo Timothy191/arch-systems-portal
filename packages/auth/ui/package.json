@@ -1,0 +1,15 @@
+{
+  "name": "@repo/auth/ui",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./index.tsx",
+  "types": "./index.tsx",
+  "dependencies": {
+    "@repo/ui": "workspace:*",
+    "@repo/utils": "workspace:*",
+    "react": "^19.0.0",
+    "next": "^16.2.6",
+    "sonner": "^2.0.1",
+    "lucide-react": "^0.469.0"
+  }
+}

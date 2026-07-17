@@ -1,0 +1,38 @@
+---
+description: Alignment scoring gate — must pass before claiming done
+alwaysApply: true
+---
+
+# Agent Alignment Scoring
+
+Before saying a task is done, compute an **Alignment Score (0–100)**. Pass threshold: **≥ 80**. Any §18 never-do violation → **hard fail (score = 0)**.
+
+## Rubric
+
+| Dimension | Pts | Pass criteria (real evidence) |
+|---|---:|---|
+| Spec compliance | 20 | Multi-file → requirements/design/tasks exist & followed; single-file → N/A full pts |
+| Stack fidelity | 15 | pnpm, Next 16 patterns, `@repo/*`, no banned deps |
+| Boundaries | 15 | Server/client correct; no server-only imports in client |
+| Security | 20 | Zod on input; no secrets; no service-role leakage |
+| Quality gate | 15 | `pnpm quality` (or scoped equivalent) passed this session |
+| Real-world verify | 15 | Observed runtime/test/read evidence for the claim |
+
+## Output Format (required when finishing non-trivial work)
+
+```
+Alignment: <score>/100 [<PASS|FAIL>]
+- Spec: <n>/20 — <one-line evidence>
+- Stack: <n>/15 — ...
+- Boundaries: <n>/15 — ...
+- Security: <n>/20 — ...
+- Quality: <n>/15 — ...
+- Verify: <n>/15 — ...
+Hard fails: <none | list>
+```
+
+## Enforcement
+
+- Score **FAIL** → do not mark done; fix gaps or state blockers.
+- Prefer running: `node .cursor/skills/agent-alignment-score/scripts/score.mjs --interactive`
+- Skill: `.cursor/skills/agent-alignment-score/SKILL.md`

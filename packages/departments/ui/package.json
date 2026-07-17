@@ -1,0 +1,11 @@
+{
+  "name": "@repo/departments/ui",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "dependencies": {
+    "@repo/ui": "workspace:*",
+    "react": "^19.0.0"
+  }
+}

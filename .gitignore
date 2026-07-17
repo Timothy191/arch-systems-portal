@@ -1,0 +1,63 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Build outputs
+.next
+dist
+out
+build
+*.tsbuildinfo
+
+# Turbo
+.turbo
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.tools
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+portal.log
+api.log
+
+# Process / PID files
+*.pid
+.portal.pid
+.api.pid
+.portal.start
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/settings.json
+.idea
+
+# Testing
+coverage
+.playwright
+
+# Archives / backups (do not commit)
+Archive.tar.gz
+*.tar.gz
+
+# Misc
+.vercel
+.kilo
+.remember
+.venv
+__pycache__
+*.pyc
+deployment-logs
+skills-lock.json

@@ -1,0 +1,10 @@
+{
+  "enabledPlugins": {
+    "code-review@claude-plugins-official": true
+  },
+  "permissions": {
+    "allow": [
+      "Bash(pnpm -v)"
+    ]
+  }
+}

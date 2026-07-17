@@ -1,0 +1,25 @@
+{
+  "name": "@repo/theme",
+  "version": "0.0.1",
+  "private": true,
+  "license": "MIT",
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./css": "./src/css/index.css",
+    "./tokens": "./src/tokens/index.ts",
+    "./react": "./src/react/index.ts",
+    "./tailwind": "./src/tailwind/preset.ts",
+    "./motion": "./src/tokens/motion.ts"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.7.0",
+    "tailwindcss-animate": "^1.0.7"
+  },
+  "dependencies": {}
+}
