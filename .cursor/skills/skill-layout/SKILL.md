@@ -11,7 +11,7 @@ description: >-
 
 **Canonical reference:** [`.cursor/standards/agent-skills/STANDARD.md`](../../standards/agent-skills/STANDARD.md)
 
-Every project skill follows the [Agent Skills open standard](https://agentskills.io/home) (DeepWiki: awesome-agent-skills §1.1–1.2).
+Every project skill follows the [Agent Skills open standard](https://agentskills.io/home).
 
 ## Required structure
 
@@ -25,9 +25,9 @@ skill-name/                 # kebab-case folder name
 
 ## SKILL.md rules
 
-1. Frontmatter: `name`, `description` (when + anti-triggers)
-2. Body: workflow, links to scripts/references/assets
-3. Keep ≤ ~60 lines — depth in `references/`
+1. Frontmatter: `name`, `description` (imperative when-to-use + anti-triggers; ≤1024 chars)
+2. Body: workflow, links to scripts/references/assets — lean core only
+3. Keep ≤ ~60 lines in project skills — depth in `references/` (official max ~500 lines / 5k tokens)
 
 ## Runtime (all agents)
 
@@ -48,8 +48,6 @@ npx skills find <query>
 npx skills add <owner/repo>
 ```
 
-Paths: [`../../standards/agent-skills/references/04-programming-tool-integration.md`](../../standards/agent-skills/references/04-programming-tool-integration.md)
-
 ## This repo paths
 
 | Surface        | Path              |
@@ -62,7 +60,7 @@ Paths: [`../../standards/agent-skills/references/04-programming-tool-integration
 
 - [`references/checklist.md`](references/checklist.md) — new skill checklist
 - [`assets/TEMPLATE-SKILL.md`](assets/TEMPLATE-SKILL.md) — starter SKILL.md
-- Full standard library: `.cursor/standards/agent-skills/references/`
+- Project compliance: `../../standards/agent-skills/references/16-agent-compliance.md`
 
 ## Examples
 

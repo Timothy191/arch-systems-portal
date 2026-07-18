@@ -147,7 +147,7 @@ Canonical policy remains this file. Agents and skills **mirror** it — never fo
 
 ### Project subagents (Cursor)
 
-Six specialists under `.cursor/agents/`. Auto-routing: `.cursor/rules/04-subagent-auto-routing.mdc`.
+Six specialists under `.cursor/agents/`. **Hybrid layout:** entry `<name>.md` + collateral `<name>/`. Standard: `.cursor/standards/agent-layout/STANDARD.md`. Auto-routing: `.cursor/rules/04-subagent-auto-routing.mdc`.
 
 | Agent                  | Role                                        |
 | ---------------------- | ------------------------------------------- |
@@ -158,7 +158,13 @@ Six specialists under `.cursor/agents/`. Auto-routing: `.cursor/rules/04-subagen
 | `sceptic`              | Adversarial review + alignment **estimate** |
 | `idle-runner`          | Safe parallel work while blocked            |
 
-Each agent has a **Gold Standard Contract** (required output, evidence rule, Next owner). Template: `.cursor/agents/references/gold-standard-contract.md`.
+Gold contract: `.cursor/agents/_shared/references/gold-standard-contract.md`
+
+### Claude Code (Anthropic)
+
+Native surfaces under `.claude/`: `CLAUDE.md`, `settings.json`, `rules/`, synced `skills/` + `agents/`. Standard: `.cursor/standards/claude-code/STANDARD.md`. Sync: `.claude/scripts/sync-surfaces.sh`.
+
+Reasoning contract: `SOUL.md` (project extension — import via `.claude/CLAUDE.md`).
 
 ### Project skills
 
@@ -170,11 +176,17 @@ Each agent has a **Gold Standard Contract** (required output, evidence rule, Nex
 
 Standard layout per skill folder: `SKILL.md` + `scripts/` + `references/` + `assets/` (when needed).
 
-**Canonical Agent Skills reference:** `.cursor/standards/agent-skills/STANDARD.md` (agentskills.io + awesome-agent-skills DeepWiki index).
+**Canonical references:**
+
+- Claude Code surfaces: `.cursor/standards/claude-code/STANDARD.md` (Anthropic official)
+- Skill folders: `.cursor/standards/agent-skills/STANDARD.md`
+- Agent layout: `.cursor/standards/agent-layout/STANDARD.md`
 
 | Skill                                 | Owner                              |
 | ------------------------------------- | ---------------------------------- |
 | `agent-alignment-score`               | Formal Alignment Score (0–100)     |
+| `skill-layout` / `agent-layout`       | Skill + agent folder standards     |
+| `claude-code-layout`                  | Claude Code `.claude/` surfaces    |
 | `quality` / `verify`                  | Quality gate (full / portal alias) |
 | `specs`, `dev`, `deploy`, `rls-audit` | Qoder workflow commands            |
 

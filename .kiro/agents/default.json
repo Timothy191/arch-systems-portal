@@ -46,19 +46,42 @@
     },
     "mirrors": [
       ".cursor/rules/",
+      ".cursor/agents/",
+      ".cursor/standards/agent-layout/",
+      ".cursor/standards/agent-skills/",
+      ".cursor/standards/claude-code/",
+      ".claude/",
       ".qoder/rules/",
       "AGENTS.md §20"
-    ]
+    ],
+    "agents_layout": {
+      "standard": ".cursor/standards/agent-layout/STANDARD.md",
+      "entry_pattern": ".cursor/agents/{name}.md",
+      "collateral_pattern": ".cursor/agents/{name}/",
+      "validate_script": ".cursor/standards/agent-layout/scripts/validate-agents.sh",
+      "inventory": [
+        "fast-outliner",
+        "frontend-design",
+        "frontend-implementer",
+        "ai-docs-sync",
+        "sceptic",
+        "idle-runner"
+      ]
+    }
   },
   "permissions": {
     "read": ["**/*"],
     "write": ["**/*"],
-    "execute": ["pnpm dev", "pnpm build", "pnpm lint", "pnpm type-check", "pnpm test", "pnpm quality", "pnpm format"],
-    "restricted": [
-      ".env*.local",
-      "**/*secret*",
-      "**/*private*"
-    ]
+    "execute": [
+      "pnpm dev",
+      "pnpm build",
+      "pnpm lint",
+      "pnpm type-check",
+      "pnpm test",
+      "pnpm quality",
+      "pnpm format"
+    ],
+    "restricted": [".env*.local", "**/*secret*", "**/*private*"]
   },
   "technology_stack": {
     "framework": "Next.js 16 (App Router)",

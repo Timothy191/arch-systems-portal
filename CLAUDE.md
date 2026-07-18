@@ -208,6 +208,10 @@ Discovery index for project-local AI surfaces (policy source: `AGENTS.md`).
 
 ### Subagents (`.cursor/agents/`)
 
+### Claude Code (Anthropic)
+
+Hybrid layout: entry `<name>.md` + folder `<name>/`. Native mirror: `.claude/agents/`. Standard: [`.cursor/standards/claude-code/STANDARD.md`](.cursor/standards/claude-code/STANDARD.md).
+
 | Agent                  | When to delegate                             |
 | ---------------------- | -------------------------------------------- |
 | `fast-outliner`        | Multi-step work — outline before specialists |
@@ -217,13 +221,13 @@ Discovery index for project-local AI surfaces (policy source: `AGENTS.md`).
 | `sceptic`              | Before claiming done — adversarial review    |
 | `idle-runner`          | Independent work while other agents blocked  |
 
-Routing rule: `.cursor/rules/04-subagent-auto-routing.mdc` (includes anti-triggers).
+Routing: `.cursor/rules/04-subagent-auto-routing.mdc` · Hooks: `.cursor/hooks/README.md`
 
 ### Skills
 
 | Location          | Skills                                                                              |
 | ----------------- | ----------------------------------------------------------------------------------- |
-| `.cursor/skills/` | `agent-alignment-score` (formal score)                                              |
+| `.cursor/skills/` | `agent-alignment-score`, `skill-layout`, `agent-layout`, `claude-code-layout`       |
 | `.qoder/skills/`  | `quality`, `verify` (portal alias), `specs`, `dev`, `deploy`, `rls-audit`           |
 | `.github/skills/` | `verify-changes`, `frontend-api-integration-patterns`, `acquire-codebase-knowledge` |
 
@@ -231,8 +235,10 @@ Each skill folder: `SKILL.md` + `scripts/` + `references/` + `assets/`. See `.cu
 
 **Canonical standard:** `.cursor/standards/agent-skills/STANDARD.md` — full index (install, discovery, marketplaces, curated collections).
 
-**Validate:** `.cursor/standards/agent-skills/scripts/validate.sh`
+**Validate:** `.cursor/standards/agent-skills/scripts/validate.sh` (skills + agents)
+
+**Agents:** hybrid layout per `.cursor/standards/agent-layout/STANDARD.md`
+
+**Claude Code:** `.claude/` + [`.cursor/standards/claude-code/STANDARD.md`](.cursor/standards/claude-code/STANDARD.md)
 
 **Score split:** `sceptic` → verdict + estimate; `agent-alignment-score` → formal score block.
-
-**Agents** must include Gold Standard Contract + Agent Skills Standard section (`.cursor/agents/references/gold-standard-contract.md`).

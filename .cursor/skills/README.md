@@ -18,6 +18,8 @@ skill-name/
 | ----------------------------------------------- | ------------------------------------------ | -------------------------- |
 | [agent-alignment-score](agent-alignment-score/) | Formal Alignment Score (0–100)             | `scripts/score.mjs`        |
 | [skill-layout](skill-layout/)                   | Meta-skill for creating/refactoring skills | `assets/TEMPLATE-SKILL.md` |
+| [agent-layout](agent-layout/)                   | Meta-skill for hybrid agent layout         | `scripts/validate.sh`      |
+| [claude-code-layout](claude-code-layout/)       | Claude Code `.claude/` surfaces            | `scripts/validate.sh`      |
 
 ## Usage
 

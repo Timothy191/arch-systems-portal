@@ -23,10 +23,10 @@ else
 fi
 
 ref_count=$(find "$STANDARD_DIR/references" -maxdepth 1 -name '*.md' | wc -l)
-if [[ "$ref_count" -lt 16 ]]; then
-  fail "expected 16 reference files, found $ref_count"
+if [[ "$ref_count" -lt 20 ]]; then
+  fail "expected 20 reference files, found $ref_count"
 else
-  ok "16 reference sections present ($ref_count files)"
+  ok "20 reference sections present ($ref_count files)"
 fi
 
 [[ -f "$STANDARD_DIR/assets/tool-paths.json" ]] && ok "tool-paths.json" || fail "missing tool-paths.json"
@@ -61,9 +61,9 @@ for agent in .cursor/agents/*.md; do
   [[ -f "$agent" ]] || continue
   base=$(basename "$agent")
   [[ "$base" == "README.md" ]] && continue
-  grep -q 'Gold Standard Contract' "$agent" || fail "$base: missing Gold Standard Contract"
+  grep -q 'gold-standard-contract\|Gold Standard Contract' "$agent" || fail "$base: missing Gold Standard Contract"
   grep -qi 'anti-trigger' "$agent" || fail "$base: missing anti-triggers in description"
-  grep -q 'Agent Skills Standard' "$agent" || fail "$base: missing Agent Skills Standard section"
+  grep -q 'agent-skills-runtime\|Agent Skills' "$agent" || warn "$base: missing skills runtime pointer"
   grep -q 'Next owner:' "$agent" || warn "$base: no Next owner in output format"
 done
 ok "agents scanned"
@@ -75,4 +75,17 @@ done
 
 echo ""
 echo "Pass $PASS complete: $ERR error(s), $WARN warning(s)"
+
+# Agent layout (hybrid .md + collateral folders)
+if [[ -x .cursor/standards/agent-layout/scripts/validate-agents.sh ]]; then
+  echo ""
+  .cursor/standards/agent-layout/scripts/validate-agents.sh || ERR=$((ERR + 1))
+fi
+
+# Claude Code native surfaces
+if [[ -x .cursor/standards/claude-code/scripts/validate-claude-code.sh ]]; then
+  echo ""
+  .cursor/standards/claude-code/scripts/validate-claude-code.sh || ERR=$((ERR + 1))
+fi
+
 [[ $ERR -eq 0 ]]

@@ -71,13 +71,15 @@ The `default.json` agent configuration enforces:
 
 ## Project agents & skills (Cursor)
 
-| Surface       | Path                                         |
-| ------------- | -------------------------------------------- |
-| Subagents     | `.cursor/agents/` (6 specialists)            |
-| Auto-routing  | `.cursor/rules/04-subagent-auto-routing.mdc` |
-| Cursor skills | `.cursor/skills/`                            |
-| Qoder skills  | `.qoder/skills/`                             |
-| GitHub skills | `.github/skills/`                            |
+| Surface         | Path                                                |
+| --------------- | --------------------------------------------------- |
+| Subagents       | `.cursor/agents/` — hybrid: `<name>.md` + `<name>/` |
+| Claude Code     | `.claude/` — rules, settings, synced skills/agents  |
+| Claude standard | `.cursor/standards/claude-code/STANDARD.md`         |
+| Auto-routing    | `.cursor/rules/04-subagent-auto-routing.mdc`        |
+| Cursor skills   | `.cursor/skills/`                                   |
+| Qoder skills    | `.qoder/skills/`                                    |
+| GitHub skills   | `.github/skills/`                                   |
 
 See `AGENTS.md` § Project Agents & Skills and `CLAUDE.md` § Agents & Skills.
 

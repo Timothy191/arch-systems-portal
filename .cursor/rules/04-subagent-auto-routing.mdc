@@ -30,15 +30,16 @@ Project subagents live in `.cursor/agents/`. When a user task matches a row belo
 
 ## Inventory (keep in sync)
 
-| Agent | Path |
-|---|---|
-| fast-outliner | `.cursor/agents/fast-outliner.md` |
-| frontend-design | `.cursor/agents/frontend-design.md` |
-| frontend-implementer | `.cursor/agents/frontend-implementer.md` |
-| ai-docs-sync | `.cursor/agents/ai-docs-sync.md` |
-| sceptic | `.cursor/agents/sceptic.md` |
-| idle-runner | `.cursor/agents/idle-runner.md` |
+| Agent | Entry | Collateral | Anti-triggers (summary) |
+|---|---|---|---|
+| fast-outliner | `fast-outliner.md` | `fast-outliner/` | No implementation, design, docs, idle, sceptic |
+| frontend-design | `frontend-design.md` | `frontend-design/` | No plumbing, CRUD-only, docs, outline, sceptic |
+| frontend-implementer | `frontend-implementer.md` | `frontend-implementer/` | No branded hero, docs, outline, idle, sceptic |
+| ai-docs-sync | `ai-docs-sync.md` | `ai-docs-sync/` | No UI, design, formal score, sceptic |
+| sceptic | `sceptic.md` | `sceptic/` | No formal score, UI, docs, outline |
+| idle-runner | `idle-runner.md` | `idle-runner/` | No critical path, main feature, done-claims |
 
-Shared contract template: `.cursor/agents/references/gold-standard-contract.md`
+Layout standard: `.cursor/standards/agent-layout/STANDARD.md`  
+Shared refs: `.cursor/agents/_shared/references/`
 
 When adding a new project agent, update this table in the same change.

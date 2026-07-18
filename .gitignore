@@ -62,6 +62,7 @@ __pycache__
 deployment-logs
 skills-lock.json
 AGENTS.local.md
+CLAUDE.local.md
 
 # Third-party agent runtime (Claude Code, claude-flow, swarm)
 .claude-flow/
