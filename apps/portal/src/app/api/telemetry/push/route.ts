@@ -97,7 +97,7 @@ import { applyCors } from "@/lib/api/cors";
 import { withBodyLimit } from "@/lib/api/body-limit";
 
 // L1 cache (in-memory)
-let localLastValues = new Map<string, number>();
+const localLastValues = new Map<string, number>();
 
 export function clearTelemetryCache() {
   localLastValues.clear();
@@ -162,7 +162,7 @@ const handleDirectTag = withValidation(telemetryPushSchema, async (_req, data) =
           warning: `FUXA SCADA server returned status ${fuxaRes.status}`,
           synced: false,
         },
-        { status: 200 },
+        { status: 200 }
       );
     }
 
@@ -176,7 +176,7 @@ const handleDirectTag = withValidation(telemetryPushSchema, async (_req, data) =
         warning: "FUXA SCADA server is unreachable",
         synced: false,
       },
-      { status: 200 },
+      { status: 200 }
     );
   }
 });
@@ -190,7 +190,7 @@ export async function POST(req: Request) {
       // NextResponse. At runtime NextResponse extends Response so the cast is safe.
       return applyCors(req, response as NextResponse);
     },
-    { maxSize: 10485760 },
+    { maxSize: 10485760 }
   );
 }
 
@@ -285,12 +285,12 @@ async function handlePost(req: Request) {
         headers: req.headers,
         body: JSON.stringify(body),
       }),
-      { params: Promise.resolve({}) },
+      { params: Promise.resolve({}) }
     );
-  } catch (err: any) {
+  } catch (err: unknown) {
     return NextResponse.json(
-      { error: err.message || "Failed to forward telemetry" },
-      { status: 500 },
+      { error: err instanceof Error ? err.message : "Failed to forward telemetry" },
+      { status: 500 }
     );
   }
 }

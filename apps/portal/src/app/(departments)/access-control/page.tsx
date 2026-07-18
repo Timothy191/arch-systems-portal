@@ -1,4 +1,4 @@
-import { getDepartmentContext } from "~/lib/dept-context";
+import { getDepartmentContext } from "@/lib/dept-context";
 import { GlassCard } from "@repo/ui/GlassCard";
 import nextDynamic from "next/dynamic";
 import { Skeleton } from "@repo/ui/components/ui/skeleton";

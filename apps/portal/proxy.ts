@@ -37,6 +37,7 @@ export function isValidRedirect(path: string): boolean {
     /^\/training(?:\/.*)?$/,
     /^\/satellite-monitoring(?:\/.*)?$/,
     /^\/hub(?:\/.*)?$/,
+    /^\/executive(?:\/.*)?$/,
     /^\/admin(?:\/.*)?$/,
   ];
 
@@ -70,17 +71,10 @@ export function isTokenExpiredError(error: unknown): boolean {
     return false;
   }
   const msg = String((error as { message: unknown }).message);
-  return (
-    msg.includes("Invalid Refresh Token") ||
-    msg.includes("Refresh Token Not Found")
-  );
+  return msg.includes("Invalid Refresh Token") || msg.includes("Refresh Token Not Found");
 }
 
-function redirectWithError(
-  request: NextRequest,
-  error: string,
-  clientResponse?: NextResponse,
-) {
+function redirectWithError(request: NextRequest, error: string, clientResponse?: NextResponse) {
   const url = new URL("/", request.url);
   url.searchParams.set("error", error);
   const res = NextResponse.redirect(url);
@@ -117,17 +111,13 @@ function copyCookies(source: NextResponse, target: NextResponse) {
 
 async function resolveDeptUuid(
   supabase: Awaited<ReturnType<typeof createMiddlewareClient>>["supabase"],
-  slug: string,
+  slug: string
 ): Promise<string | null> {
   const cacheKey = `dept:uuid:${slug}`;
   const cached = await cacheGet<string>(cacheKey);
   if (cached) return cached;
 
-  const { data } = await supabase
-    .from("departments")
-    .select("id")
-    .eq("name", slug)
-    .single();
+  const { data } = await supabase.from("departments").select("id").eq("name", slug).single();
   if (data?.id) {
     await cacheSet(cacheKey, data.id, 3600);
   }
@@ -160,12 +150,11 @@ function isPublicPath(pathname: string): boolean {
 type MiddlewareClient = Awaited<ReturnType<typeof createMiddlewareClient>>;
 
 async function getSessionUser(
-  client: MiddlewareClient,
+  client: MiddlewareClient
 ): Promise<{ user: { id: string } | null; shouldSignOut: boolean }> {
   try {
     const result = await client.supabase.auth.getUser();
-    const shouldSignOut =
-      result.error !== null && isTokenExpiredError(result.error);
+    const shouldSignOut = result.error !== null && isTokenExpiredError(result.error);
     return { user: result.data.user ?? null, shouldSignOut };
   } catch (error) {
     return { user: null, shouldSignOut: isTokenExpiredError(error) };
@@ -174,7 +163,7 @@ async function getSessionUser(
 
 async function signOutAndRedirectToRoot(
   request: NextRequest,
-  client: MiddlewareClient,
+  client: MiddlewareClient
 ): Promise<NextResponse> {
   await client.supabase.auth.signOut();
   return client.response;
@@ -184,7 +173,7 @@ function hasSessionCookie(request: NextRequest): boolean {
   return (
     request.cookies.has("sb-access-token") ||
     [...request.cookies.getAll()].some(
-      (c) => c.name.startsWith("sb-") && c.name.endsWith("-auth-token"),
+      (c) => c.name.startsWith("sb-") && c.name.endsWith("-auth-token")
     )
   );
 }
@@ -197,7 +186,7 @@ interface EmployeeAuth {
 
 async function resolveEmployee(
   supabase: MiddlewareClient["supabase"],
-  userId: string,
+  userId: string
 ): Promise<EmployeeAuth | null> {
   const cacheKey = `arch:auth:employee:${userId}`;
   const cached = await cacheGet<EmployeeAuth | null>(cacheKey);
@@ -217,7 +206,7 @@ async function resolveEmployee(
 function isRestrictedRouteAllowed(
   pathname: string,
   secondSegment: string | undefined,
-  role: string,
+  role: string
 ): boolean {
   for (const [route, allowedRoles] of Object.entries(RESTRICTED_ROUTES)) {
     if (pathname.startsWith(`/${route}`) && !allowedRoles.includes(role)) {
@@ -239,7 +228,7 @@ function isRestrictedRouteAllowed(
 async function isDepartmentAllowed(
   supabase: MiddlewareClient["supabase"],
   topSegment: string,
-  employee: EmployeeAuth,
+  employee: EmployeeAuth
 ): Promise<"ok" | "unknown" | "unauthorized"> {
   if (!DEPARTMENT_ROUTES.includes(topSegment)) return "ok";
 
@@ -268,10 +257,7 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  if (
-    pathname.startsWith("/reset-password") ||
-    pathname.startsWith("/update-password")
-  ) {
+  if (pathname.startsWith("/reset-password") || pathname.startsWith("/update-password")) {
     return NextResponse.next();
   }
 
@@ -326,11 +312,7 @@ export async function proxy(request: NextRequest) {
   const secondSegment = pathSegments[1];
 
   if (!isRestrictedRouteAllowed(pathname, secondSegment, userRole)) {
-    return redirectWithError(
-      request,
-      "unauthorized_department",
-      client.response,
-    );
+    return redirectWithError(request, "unauthorized_department", client.response);
   }
 
   if (topSegment) {
@@ -341,17 +323,13 @@ export async function proxy(request: NextRequest) {
         role: userRole,
         department_id: "",
         accessible_departments: [],
-      },
+      }
     );
     if (deptStatus === "unknown") {
       return redirectWithError(request, "unknown_department", client.response);
     }
     if (deptStatus === "unauthorized") {
-      return redirectWithError(
-        request,
-        "unauthorized_department",
-        client.response,
-      );
+      return redirectWithError(request, "unauthorized_department", client.response);
     }
   }
 

@@ -9,8 +9,8 @@ import { ValidationError } from "@/lib/errors/error-classes";
 // =============================================================================
 
 async function loadPluginModule(pluginName: string): Promise<ArchPlugin> {
-  const module = await import(`../../plugins/${pluginName}/index`);
-  const plugin: ArchPlugin = module.default;
+  const pluginModule = await import(`../../plugins/${pluginName}/index`);
+  const plugin: ArchPlugin = pluginModule.default;
 
   if (!plugin || !plugin.metadata || !plugin.metadata.id) {
     throw new ValidationError(`Plugin ${pluginName} is missing valid metadata contract`, {

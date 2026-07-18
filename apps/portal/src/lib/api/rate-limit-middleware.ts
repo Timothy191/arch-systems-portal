@@ -67,7 +67,7 @@ class TokenBucketStrategy {
     key: string,
     limit: number,
     windowMs: number,
-    store: MemoryStore | RedisStore,
+    store: MemoryStore | RedisStore
   ): Promise<RateLimitResult> {
     const result = await store.increment(key, windowMs);
     const allowed = result.count <= limit;
@@ -89,7 +89,7 @@ class SlidingWindowStrategy {
     key: string,
     limit: number,
     windowMs: number,
-    store: MemoryStore | RedisStore,
+    store: MemoryStore | RedisStore
   ): Promise<RateLimitResult> {
     const result = await store.increment(key, windowMs);
     const allowed = result.count <= limit;
@@ -116,7 +116,7 @@ interface RateLimitResult {
 const WHITELISTED_IPS = new Set(
   (process.env.RATE_LIMIT_IP_WHITELIST || "127.0.0.1,::1,::ffff:127.0.0.1")
     .split(",")
-    .map((ip) => ip.trim()),
+    .map((ip) => ip.trim())
 );
 
 function isIpWhitelisted(ip: string): boolean {
@@ -126,7 +126,7 @@ function isIpWhitelisted(ip: string): boolean {
 function getClientIp(request: Request | NextRequest): string {
   const forwarded = request.headers.get("x-forwarded-for");
   const realIp =
-    forwarded?.split(",")[0]?.trim() || ("ip" in request ? (request as any).ip : undefined);
+    forwarded?.split(",")[0]?.trim() || ("ip" in request ? (request as NextRequest).ip : undefined);
   return realIp || "unknown";
 }
 
@@ -155,7 +155,7 @@ const tokenBucketStrategy = new TokenBucketStrategy();
 async function checkRateLimit(
   identifier: string,
   config: { windowMs: number; maxRequests: number },
-  path: string,
+  path: string
 ): Promise<RateLimitResult> {
   let store;
   try {
@@ -201,7 +201,7 @@ export async function withRateLimit(
   options?: {
     customLimit?: { windowMs: number; maxRequests: number };
     skipIf?: (_request: Request | NextRequest) => boolean;
-  },
+  }
 ): Promise<NextResponse> {
   // Allow disabling rate limit for load testing and development
   if (process.env.DISABLE_RATE_LIMIT === "true") {
@@ -249,7 +249,7 @@ export async function withRateLimit(
           "X-RateLimit-Reset": result.resetTime.toString(),
           "Retry-After": (result.retryAfter || 60).toString(),
         },
-      },
+      }
     );
   }
 

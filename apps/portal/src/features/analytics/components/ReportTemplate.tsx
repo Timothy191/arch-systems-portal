@@ -16,13 +16,15 @@ const styles = StyleSheet.create({
   },
 });
 
-export function ReportTemplate({ data }: { data: any }) {
+export function ReportTemplate({ data }: { data: Record<string, unknown> }) {
   return (
     <Document>
       <Page size="A4" style={styles.page}>
         <View style={styles.section}>
           <Text style={styles.title}>Arch Systems Operational Report</Text>
-          <Text style={{ fontSize: 12, marginBottom: 10 }}>Generated operational metrics report.</Text>
+          <Text style={{ fontSize: 12, marginBottom: 10 }}>
+            Generated operational metrics report.
+          </Text>
           <Text style={{ fontSize: 10 }}>Data: {JSON.stringify(data)}</Text>
         </View>
       </Page>

@@ -15,7 +15,7 @@ import { recordJobExecution } from "@/lib/observability/metrics";
  * Shift Hours: Day (06:00-18:00), Night (18:00-06:00)
  */
 
-export const shiftCompletenessCheckFn: any = inngest.createFunction(
+export const shiftCompletenessCheckFn = inngest.createFunction(
   {
     id: "shift-completeness-check",
     // AGENT-TRACE: Run every 15 minutes
@@ -57,12 +57,12 @@ export const shiftCompletenessCheckFn: any = inngest.createFunction(
           department.id,
           null,
           today,
-          shiftType,
+          shiftType
         );
 
         // AGENT-TRACE: Identify machines without entries
         const missingMachines = completeness.statuses.filter(
-          (status) => !status.exempt && !status.hasEntry,
+          (status) => !status.exempt && !status.hasEntry
         );
 
         // AGENT-TRACE: Check if we're >30 minutes into shift
@@ -110,5 +110,5 @@ export const shiftCompletenessCheckFn: any = inngest.createFunction(
     } finally {
       recordJobExecution("shift-completeness-check", performance.now() - start, success);
     }
-  },
+  }
 );

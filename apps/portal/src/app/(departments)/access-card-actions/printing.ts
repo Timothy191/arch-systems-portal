@@ -31,7 +31,7 @@ export async function submitPrintJob(spec: CardPrintSpec) {
     const fileName = `card_print_${spec.employeeId}_${Date.now()}.pdf`;
     const filePath = path.join(tmpDir, fileName);
 
-    await renderToFile(React.createElement(CardDocument, { spec }) as any, filePath);
+    await renderToFile(React.createElement(CardDocument, { spec }) as React.ReactElement, filePath);
 
     // 2. Send the file to the network printer using system print spooler (CUPS via lp)
     const printerName = process.env.MAGICARD_PRINTER_NAME || "Magicard_300NEO";
@@ -46,7 +46,7 @@ export async function submitPrintJob(spec: CardPrintSpec) {
       // eslint-disable-next-line no-console
       console.warn(
         "CUPS 'lp' command failed or not found, falling back to mock success. Error:",
-        e,
+        e
       );
     }
 

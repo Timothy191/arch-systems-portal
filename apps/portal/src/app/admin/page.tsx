@@ -1,8 +1,8 @@
 import { redirect } from "next/navigation";
 import { createServerSupabaseClient, getUserSafely } from "@repo/supabase/server";
-import { AdminTabsClient } from "~/features/admin/components/AdminTabsClient";
-import { UsersTab } from "~/features/admin/tabs/UsersTab";
-import { DepartmentsTab } from "~/features/admin/tabs/DepartmentsTab";
+import { AdminTabsClient } from "@/features/admin/components/AdminTabsClient";
+import { UsersTab } from "@/features/admin/tabs/UsersTab";
+import { DepartmentsTab } from "@/features/admin/tabs/DepartmentsTab";
 
 const TABS = ["users", "departments"];
 

@@ -86,14 +86,15 @@ describe("LoginForm", () => {
   it("renders employee ID and password inputs", () => {
     render(<LoginForm />);
 
-    expect(screen.getByPlaceholderText("Employee ID or email")).toBeInTheDocument();
-    expect(screen.getByPlaceholderText("Enter your password")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("Enter your ID or email…")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("Enter your password…")).toBeInTheDocument();
 
     const signInBtn = screen.getByRole("button", { name: /^Sign In$/i });
     expect(signInBtn).toBeInTheDocument();
-    expect(signInBtn.className).toContain("liquid-glass-button");
-    expect(signInBtn.className).toContain("bg-[var(--color-action-primary)]");
-    expect(signInBtn.className).toContain("text-white");
+    expect(signInBtn.className).toContain("login-cta");
+
+    const emailInput = screen.getByPlaceholderText("Enter your ID or email…");
+    expect(emailInput.className).toContain("login-field");
   });
 
   it("submits form and redirects on success", async () => {
@@ -105,10 +106,10 @@ describe("LoginForm", () => {
 
     render(<LoginForm />);
 
-    fireEvent.change(screen.getByPlaceholderText("Employee ID or email"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter your ID or email…"), {
       target: { value: "PC-12345" },
     });
-    fireEvent.change(screen.getByPlaceholderText("Enter your password"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter your password…"), {
       target: { value: "testpass" },
     });
     fireEvent.submit(screen.getByTestId("login-form"));
@@ -119,7 +120,7 @@ describe("LoginForm", () => {
         expect.objectContaining({
           method: "POST",
           body: JSON.stringify({ email: "PC-12345", password: "testpass" }),
-        }),
+        })
       );
     });
 
@@ -138,10 +139,10 @@ describe("LoginForm", () => {
 
     render(<LoginForm />);
 
-    fireEvent.change(screen.getByPlaceholderText("Employee ID or email"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter your ID or email…"), {
       target: { value: "PC-12345" },
     });
-    fireEvent.change(screen.getByPlaceholderText("Enter your password"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter your password…"), {
       target: { value: "wrongpass" },
     });
     fireEvent.submit(screen.getByTestId("login-form"));
@@ -158,10 +159,10 @@ describe("LoginForm", () => {
 
     render(<LoginForm />);
 
-    fireEvent.change(screen.getByPlaceholderText("Employee ID or email"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter your ID or email…"), {
       target: { value: "PC-12345" },
     });
-    fireEvent.change(screen.getByPlaceholderText("Enter your password"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter your password…"), {
       target: { value: "testpass" },
     });
     fireEvent.submit(screen.getByTestId("login-form"));
@@ -184,10 +185,10 @@ describe("LoginForm", () => {
 
     render(<LoginForm />);
 
-    fireEvent.change(screen.getByPlaceholderText("Employee ID or email"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter your ID or email…"), {
       target: { value: "PC-12345" },
     });
-    fireEvent.change(screen.getByPlaceholderText("Enter your password"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter your password…"), {
       target: { value: "testpass" },
     });
     fireEvent.submit(screen.getByTestId("login-form"));
@@ -202,7 +203,7 @@ describe("LoginForm", () => {
     // After resolution, button should be enabled again
     await waitFor(() => {
       expect(
-        screen.getByRole("button", { name: /^Sign In$|^Signing in\.\.\.$/i }),
+        screen.getByRole("button", { name: /^Sign In$|^Signing in\.\.\.$/i })
       ).not.toBeDisabled();
     });
   });
@@ -221,10 +222,10 @@ describe("LoginForm", () => {
 
     render(<LoginForm />);
 
-    fireEvent.change(screen.getByPlaceholderText("Employee ID or email"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter your ID or email…"), {
       target: { value: "PC-12345" },
     });
-    fireEvent.change(screen.getByPlaceholderText("Enter your password"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter your password…"), {
       target: { value: "testpass" },
     });
     fireEvent.submit(screen.getByTestId("login-form"));
@@ -236,7 +237,7 @@ describe("LoginForm", () => {
 
   it("toggles password visibility when the eye button is clicked", () => {
     render(<LoginForm />);
-    const passwordInput = screen.getByPlaceholderText("Enter your password");
+    const passwordInput = screen.getByPlaceholderText("Enter your password…");
     const toggleButton = screen.getByRole("button", { name: /show password/i });
 
     expect(passwordInput).toHaveAttribute("type", "password");
@@ -254,7 +255,7 @@ describe("LoginForm", () => {
 
   it("detects Caps Lock key down and up states", () => {
     render(<LoginForm />);
-    const passwordInput = screen.getByPlaceholderText("Enter your password");
+    const passwordInput = screen.getByPlaceholderText("Enter your password…");
 
     // Press key with CapsLock active
     const keyDownEvent = new KeyboardEvent("keydown", {
@@ -289,9 +290,11 @@ describe("LoginForm", () => {
     expect(screen.getByLabelText(/remember me/i)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /forgot password/i })).toHaveAttribute(
       "href",
-      "/reset-password",
+      "/reset-password"
     );
-    expect(screen.getByRole("button", { name: /sign in with google/i })).toBeInTheDocument();
+    const googleBtn = screen.getByRole("button", { name: /sign in with google/i });
+    expect(googleBtn).toBeInTheDocument();
+    expect(googleBtn.className).toContain("login-oauth");
     expect(screen.getByRole("button", { name: /sign in with microsoft/i })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /sign in with github/i })).toBeInTheDocument();
   });
@@ -305,10 +308,10 @@ describe("LoginForm", () => {
 
     render(<LoginForm />);
 
-    fireEvent.change(screen.getByPlaceholderText("Employee ID or email"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter your ID or email…"), {
       target: { value: "user@arch.systems" },
     });
-    fireEvent.change(screen.getByPlaceholderText("Enter your password"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter your password…"), {
       target: { value: "testpass" },
     });
     fireEvent.click(screen.getByLabelText(/remember me/i));
@@ -323,7 +326,9 @@ describe("LoginForm", () => {
   it("restores remembered email on mount", () => {
     window.localStorage.setItem("arch-login-remember-email", "saved@arch.systems");
     render(<LoginForm />);
-    expect(screen.getByPlaceholderText("Employee ID or email")).toHaveValue("saved@arch.systems");
+    expect(screen.getByPlaceholderText("Enter your ID or email…")).toHaveValue(
+      "saved@arch.systems"
+    );
     expect(screen.getByLabelText(/remember me/i)).toBeChecked();
   });
 
@@ -338,7 +343,7 @@ describe("LoginForm", () => {
           options: expect.objectContaining({
             redirectTo: expect.stringContaining("/auth/callback"),
           }),
-        }),
+        })
       );
     });
   });
@@ -359,10 +364,10 @@ describe("LoginForm", () => {
 
       const { unmount } = render(<LoginForm />);
 
-      fireEvent.change(screen.getByPlaceholderText("Employee ID or email"), {
+      fireEvent.change(screen.getByPlaceholderText("Enter your ID or email…"), {
         target: { value: "PC-12345" },
       });
-      fireEvent.change(screen.getByPlaceholderText("Enter your password"), {
+      fireEvent.change(screen.getByPlaceholderText("Enter your password…"), {
         target: { value: "testpass" },
       });
       fireEvent.submit(screen.getByTestId("login-form"));

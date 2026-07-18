@@ -18,7 +18,7 @@ import {
   Wrench,
 } from "lucide-react";
 import { cn } from "@repo/ui/lib/utils";
-import type { Department } from "~/lib/departments";
+import type { Department } from "@/lib/departments";
 import { Sparkline } from "./Sparkline";
 import { toast } from "sonner";
 
@@ -134,9 +134,7 @@ export function DepartmentCard({ department, index }: DepartmentCardProps) {
             <Bookmark
               className={cn(
                 "w-3.5 h-3.5 transition-all duration-200",
-                isPinned
-                  ? "fill-arch-accent-blue text-arch-accent-blue"
-                  : "text-arch-text-tertiary",
+                isPinned ? "fill-arch-accent-blue text-arch-accent-blue" : "text-arch-text-tertiary"
               )}
             />
           </button>
@@ -159,7 +157,7 @@ export function DepartmentCard({ department, index }: DepartmentCardProps) {
                       "w-1.5 h-1.5 rounded-full animate-pulse",
                       department.status === "active" && "bg-accent-green",
                       department.status === "maintenance" && "bg-accent-amber",
-                      department.status === "alert" && "bg-accent-red",
+                      department.status === "alert" && "bg-accent-red"
                     )}
                   />
                   <span className="text-[10px] font-medium uppercase tracking-[0.05em] text-arch-text-tertiary">

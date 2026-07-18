@@ -58,7 +58,10 @@ export async function revalidateRSC(tags: string[]) {
   return { success: true };
 }
 
-export async function generateMonthlyReport(reportData: any, departmentId?: string) {
+export async function generateMonthlyReport(
+  reportData: Record<string, unknown>,
+  departmentId?: string
+) {
   // Validate that the user is authenticated (Always validate the user at the top)
   const supabase = await createServerSupabaseClient();
   const {
@@ -92,7 +95,7 @@ export async function generateMonthlyReport(reportData: any, departmentId?: stri
     }
 
     const doc = React.createElement(ReportTemplate, { data: reportData });
-    const buffer = await pdf(doc as any).toBuffer();
+    const buffer = await pdf(doc as React.ReactElement).toBuffer();
 
     const filename = `${deptId}/${user.id}/report-${Date.now()}.pdf`;
 

@@ -18,9 +18,10 @@ export function Sparkline({
   strokeWidth = 1.5,
   className,
 }: SparklineProps) {
+  const id = React.useId();
+
   if (data.length < 2) return null;
 
-  const id = React.useId();
   const lineGradId = `sparkLineGrad-${id}`;
   const areaGradId = `sparkAreaGrad-${id}`;
   const glowId = `sparkGlow-${id}`;

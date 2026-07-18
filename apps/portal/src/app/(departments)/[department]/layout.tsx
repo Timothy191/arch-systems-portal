@@ -1,11 +1,15 @@
 import { DepartmentLayout } from "@repo/ui/DepartmentLayout";
-import { DEPARTMENTS, getDepartmentTabs } from "~/lib/departments";
+import { DEPARTMENTS, getDepartmentTabs } from "@/lib/departments";
 import { notFound } from "next/navigation";
 import { ActiveDepartmentSetter } from "@/components/nav/ActiveDepartmentSetter";
 import { AIAssistantWrapper } from "@/components/ai/AIAssistantWrapper";
 import type { Metadata } from "next";
 
-export async function generateMetadata({ params }: { params: Promise<any> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ department: string }>;
+}): Promise<Metadata> {
   const { department } = await params;
   const dept = DEPARTMENTS.find((d) => d.name === department);
   return {
@@ -18,7 +22,7 @@ export default async function DepartmentRootLayout({
   params,
 }: {
   children: React.ReactNode;
-  params: Promise<any>;
+  params: Promise<{ department: string }>;
 }) {
   const { department } = await params;
   const dept = DEPARTMENTS.find((d) => d.name === department);

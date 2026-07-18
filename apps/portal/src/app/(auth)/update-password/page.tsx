@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createBrowserSupabaseClient } from "@repo/supabase/client";
 import { Input } from "@repo/ui/Input";
@@ -106,12 +107,12 @@ export default function UpdatePasswordPage() {
           <p className="text-sm text-[var(--text-muted)]">
             This password reset link is invalid or has expired. Please request a new one.
           </p>
-          <a
+          <Link
             href="/reset-password"
             className="inline-block w-full text-center px-4 py-2.5 rounded-full bg-[var(--accent-blue)] text-white text-sm font-medium hover:opacity-90 transition-opacity"
           >
             Request New Link
-          </a>
+          </Link>
         </div>
       </div>
     );

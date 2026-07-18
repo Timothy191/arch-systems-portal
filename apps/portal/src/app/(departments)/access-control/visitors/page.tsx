@@ -1,4 +1,4 @@
-import { getDepartmentContext } from "~/lib/dept-context";
+import { getDepartmentContext } from "@/lib/dept-context";
 import { GlassCard } from "@repo/ui/GlassCard";
 import { Pagination } from "@repo/ui/components/ui/pagination";
 import { EmptyState } from "@repo/ui/EmptyState";

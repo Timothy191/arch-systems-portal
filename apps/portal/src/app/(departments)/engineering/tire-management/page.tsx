@@ -1,4 +1,4 @@
-import { getDepartmentContext } from "~/lib/dept-context";
+import { getDepartmentContext } from "@/lib/dept-context";
 import { GlassCard } from "@repo/ui/GlassCard";
 import { CircleDot, Plus, Wrench, ClipboardList } from "lucide-react";
 

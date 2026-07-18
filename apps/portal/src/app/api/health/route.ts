@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 export async function GET() {
   const startedAt = Date.now();
-  const checks: Record<string, any> = {};
+  const checks: Record<string, unknown> = {};
   let status: "healthy" | "degraded" | "unhealthy" = "healthy";
 
   // 1. Check Supabase / PostgreSQL Database connectivity
@@ -21,8 +21,11 @@ export async function GET() {
     } else {
       checks.database = { status: "healthy" };
     }
-  } catch (err: any) {
-    checks.database = { status: "unhealthy", error: err.message || String(err) };
+  } catch (err: unknown) {
+    checks.database = {
+      status: "unhealthy",
+      error: err instanceof Error ? err.message : String(err),
+    };
     status = "unhealthy";
   }
 
@@ -39,8 +42,11 @@ export async function GET() {
         status = "degraded";
       }
     }
-  } catch (err: any) {
-    checks.redis = { status: "unhealthy", error: err.message || String(err) };
+  } catch (err: unknown) {
+    checks.redis = {
+      status: "unhealthy",
+      error: err instanceof Error ? err.message : String(err),
+    };
     status = "unhealthy";
   }
 
@@ -53,6 +59,6 @@ export async function GET() {
       latencyMs: Date.now() - startedAt,
       checks,
     },
-    { status: responseStatus },
+    { status: responseStatus }
   );
 }

@@ -90,7 +90,7 @@ function StatusPill({ status }: { status: string }) {
         "inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full border",
         isActive
           ? "bg-accent-green/10 border-accent-green/20 text-accent-green"
-          : "bg-amber-50/70 border-amber-200/50 text-amber-700",
+          : "bg-amber-50/70 border-amber-200/50 text-amber-700"
       )}
     >
       {status}
@@ -187,7 +187,7 @@ export function CardActionsView({ initialQuery, initialSelectedId }: CardActions
         doSearch(value);
       }, 300);
     },
-    [router, searchParams, doSearch],
+    [router, searchParams, doSearch]
   );
 
   /* ── Detail selection ── */
@@ -208,7 +208,7 @@ export function CardActionsView({ initialQuery, initialSelectedId }: CardActions
         setLoadingDetail(false);
       }
     },
-    [router, searchParams],
+    [router, searchParams]
   );
 
   /* ── Print ── */
@@ -245,7 +245,7 @@ export function CardActionsView({ initialQuery, initialSelectedId }: CardActions
     try {
       const results = await bulkPrintCardsForPersonnel(
         Array.from(selectedForBulk),
-        selectedTemplateId || undefined,
+        selectedTemplateId || undefined
       );
       const successes = results.filter((r) => r.status === "success").length;
       const errors = results.filter((r) => r.status === "error").length;
@@ -263,7 +263,7 @@ export function CardActionsView({ initialQuery, initialSelectedId }: CardActions
     } finally {
       setBulkPrinting(false);
     }
-  }, [selectedForBulk]);
+  }, [selectedForBulk, selectedTemplateId]);
 
   /* ── Initial load ── */
 
@@ -282,6 +282,7 @@ export function CardActionsView({ initialQuery, initialSelectedId }: CardActions
         }
       })
       .catch(() => {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional: run once on mount
   }, []);
 
   /* ── Render ── */
@@ -379,7 +380,7 @@ export function CardActionsView({ initialQuery, initialSelectedId }: CardActions
                   key={person.id}
                   className={cn(
                     "flex items-center w-full px-4 transition-colors hover:bg-[var(--bg-tertiary)] group",
-                    selectedId === person.id && "bg-[var(--accent-blue)]/5",
+                    selectedId === person.id && "bg-[var(--accent-blue)]/5"
                   )}
                 >
                   <div className="py-3 pr-3" onClick={(e) => e.stopPropagation()}>
@@ -439,6 +440,7 @@ export function CardActionsView({ initialQuery, initialSelectedId }: CardActions
               <div className="flex items-start gap-5">
                 <div className="w-20 h-20 rounded-xl bg-[var(--bg-tertiary)] overflow-hidden shrink-0 flex items-center justify-center">
                   {detail.photo_signed_url ? (
+                    // eslint-disable-next-line @next/next/no-img-element -- signed URL from Supabase storage
                     <img
                       src={detail.photo_signed_url}
                       alt={`${detail.first_name} ${detail.surname}`}
@@ -523,7 +525,7 @@ export function CardActionsView({ initialQuery, initialSelectedId }: CardActions
                       "inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full border",
                       detail.badge.is_active
                         ? "bg-accent-green/10 border-accent-green/20 text-accent-green"
-                        : "bg-red-50/70 border-red-200/50 text-red-700",
+                        : "bg-red-50/70 border-red-200/50 text-red-700"
                     )}
                   >
                     {detail.badge.is_active ? "Active" : "Revoked"}

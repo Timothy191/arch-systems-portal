@@ -1,4 +1,4 @@
-import { getDepartmentContext } from "~/lib/dept-context";
+import { getDepartmentContext } from "@/lib/dept-context";
 import { GlassCard } from "@repo/ui/GlassCard";
 import { SecondaryButton } from "@repo/ui/SecondaryButton";
 import { Input } from "@repo/ui/Input";
@@ -54,7 +54,7 @@ export default async function DrillingReportsPage({
       delay_other,
       status,
       machines!inner(name)
-    `,
+    `
     )
     .eq("department_id", deptId)
     .gte("operation_date", from)

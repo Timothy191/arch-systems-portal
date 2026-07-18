@@ -35,17 +35,13 @@ function getActionLink(error: Error): { href: string; label: string } {
 
 export default function DepartmentError({ error, reset }: DepartmentErrorProps) {
   useEffect(() => {
-    if (isAppError(error)) {
-      logError(error);
-    } else {
-      logError((error as any) instanceof Error ? error : new Error(String(error)));
-    }
+    logError(error);
   }, [error]);
 
   const title = getErrorTitle(error);
   const message = getErrorMessage(error);
   const action = getActionLink(error);
-  const appError = isAppError(error) ? (error as any) : null;
+  const appError = isAppError(error) ? error : null;
 
   return (
     <div className="space-y-6">

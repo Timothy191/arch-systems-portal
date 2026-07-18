@@ -3,7 +3,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { ArchStartMenu } from "./ArchStartMenu";
 import { ARCH_LOCK_EVENT, ArchLockOverlay } from "./ArchLockOverlay";
 
-jest.mock("~/app/actions", () => ({
+jest.mock("@/app/actions", () => ({
   logout: jest.fn(),
 }));
 

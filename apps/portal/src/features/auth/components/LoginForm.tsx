@@ -19,7 +19,9 @@ interface LoginFormProps {
 }
 
 const LOGIN_FIELD_CLASS =
-  "login-field block w-full min-w-0 max-w-full h-11 box-border rounded-lg border border-border-subtle bg-white/80 px-3 text-[14px] font-medium text-[var(--text-heading)] placeholder:text-[var(--text-secondary)] shadow-sm outline-none transition-[border-color,box-shadow,background-color] duration-200 hover:border-border-default disabled:opacity-50";
+  "login-field block w-full min-w-0 max-w-full h-11 box-border px-3 text-[14px] font-medium text-[var(--text-heading)] placeholder:text-[var(--text-secondary)] placeholder:opacity-55 outline-none transition-[border-color,box-shadow,background-color] duration-200 hover:border-border-default disabled:opacity-50";
+
+const LOGIN_LABEL_CLASS = "login-field-label";
 
 export function LoginForm({ className }: LoginFormProps) {
   const router = useRouter();
@@ -136,16 +138,16 @@ export function LoginForm({ className }: LoginFormProps) {
       data-testid="login-form"
       className={className ?? "flex w-full flex-col space-y-4"}
     >
-      <div className="w-full min-w-0">
-        <label htmlFor="login-email" className="sr-only">
-          Employee ID or email
+      <div className="w-full min-w-0 space-y-1.5">
+        <label htmlFor="login-email" className={LOGIN_LABEL_CLASS}>
+          Employee ID or Email
         </label>
         <Input
           id="login-email"
           type="text"
           name="email"
           autoComplete="username"
-          placeholder="Employee ID or email"
+          placeholder="Enter your ID or email…"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
@@ -154,38 +156,40 @@ export function LoginForm({ className }: LoginFormProps) {
         />
       </div>
 
-      <div className="relative w-full min-w-0">
-        <label htmlFor="login-password" className="sr-only">
+      <div className="w-full min-w-0 space-y-1.5">
+        <label htmlFor="login-password" className={LOGIN_LABEL_CLASS}>
           Password
         </label>
-        <Input
-          id="login-password"
-          type={showPassword ? "text" : "password"}
-          name="password"
-          autoComplete="current-password"
-          placeholder="Enter your password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          onKeyDown={handleKeyDown}
-          onKeyUp={handleKeyUp}
-          required
-          disabled={busy}
-          className={`${LOGIN_FIELD_CLASS} pr-10`}
-        />
-        <button
-          type="button"
-          onClick={() => setShowPassword(!showPassword)}
-          aria-label={showPassword ? "Hide password" : "Show password"}
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-secondary)] hover:text-[var(--text-heading)] focus-visible:outline-none rounded p-0.5"
-        >
-          {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-        </button>
-        {capsLockOn && (
-          <div className="absolute right-10 top-1/2 -translate-y-1/2 flex items-center gap-1 text-amber-600 text-xs">
-            <AlertCircle size={12} />
-            <span>Caps Lock is on</span>
-          </div>
-        )}
+        <div className="relative w-full min-w-0">
+          <Input
+            id="login-password"
+            type={showPassword ? "text" : "password"}
+            name="password"
+            autoComplete="current-password"
+            placeholder="Enter your password…"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={handleKeyDown}
+            onKeyUp={handleKeyUp}
+            required
+            disabled={busy}
+            className={`${LOGIN_FIELD_CLASS} pr-10`}
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            aria-label={showPassword ? "Hide password" : "Show password"}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-secondary)] hover:text-[var(--text-heading)] focus-visible:outline-none rounded p-0.5"
+          >
+            {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+          </button>
+          {capsLockOn && (
+            <div className="absolute right-10 top-1/2 -translate-y-1/2 flex items-center gap-1 text-amber-600 text-xs">
+              <AlertCircle size={12} />
+              <span>Caps Lock is on</span>
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="flex w-full min-w-0 items-center justify-between gap-3 pt-0.5">
@@ -199,7 +203,7 @@ export function LoginForm({ className }: LoginFormProps) {
             checked={rememberMe}
             onChange={(e) => setRememberMe(e.target.checked)}
             disabled={busy}
-            className="h-3.5 w-3.5 rounded border-border-subtle text-[var(--accent-blue)]"
+            className="login-checkbox h-3.5 w-3.5 shrink-0"
           />
           Remember me
         </label>
@@ -214,7 +218,7 @@ export function LoginForm({ className }: LoginFormProps) {
       <AnimatedButton
         type="submit"
         disabled={busy}
-        className="block h-11 w-full min-w-0 max-w-full rounded-lg border border-border-subtle bg-[rgba(28,28,30,0.72)] px-4 text-[14px] font-semibold text-white shadow-[0_2px_10px_rgba(0,0,0,0.18)] backdrop-blur-md transition-[background-color,box-shadow,border-color] duration-200 hover:border-border-default hover:bg-[rgba(28,28,30,0.86)] focus-visible:outline-none disabled:opacity-50"
+        className="login-cta inline-flex h-11 w-full min-w-0 max-w-full items-center justify-center px-4 text-[14px] font-semibold focus-visible:outline-none disabled:opacity-50"
       >
         {isLoading ? "Signing in..." : "Sign In"}
       </AnimatedButton>
@@ -276,7 +280,7 @@ function OAuthButton({ label, loading, disabled, onClick, children }: OAuthButto
       onClick={onClick}
       disabled={disabled}
       aria-label={`Sign in with ${label}`}
-      className="flex items-center justify-center gap-1.5 h-10 rounded-lg border border-border-subtle bg-white/70 hover:bg-white text-[13px] font-medium tracking-wide text-[var(--text-secondary)] transition-colors disabled:opacity-50 focus-visible:outline-none"
+      className="login-oauth flex items-center justify-center gap-1.5 h-10 text-[13px] font-medium tracking-wide text-[var(--text-secondary)] disabled:opacity-50 focus-visible:outline-none"
     >
       {children}
       <span className="hidden sm:inline">{loading ? "…" : label}</span>

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Play, Info, ArrowUpRight } from "lucide-react";
 import { cn } from "@repo/ui/lib/utils";
-import type { Department } from "~/lib/departments";
+import type { Department } from "@/lib/departments";
 
 interface HeroRotatorProps {
   defaultTitle: string;
@@ -89,7 +89,7 @@ export function HeroRotator({
             key={panel.id}
             className={cn(
               "w-full shrink-0 flex flex-col justify-start transition-opacity duration-700",
-              Math.abs(activeIndex - idx) <= 1 ? "opacity-100" : "opacity-0",
+              Math.abs(activeIndex - idx) <= 1 ? "opacity-100" : "opacity-0"
             )}
           >
             <div className="space-y-3">
@@ -133,7 +133,7 @@ export function HeroRotator({
               key={idx}
               className={cn(
                 "w-2 h-2 rounded-full transition-all duration-300",
-                idx === activeIndex ? "bg-[var(--accent-blue)] w-4" : "bg-arch-border-emphasis",
+                idx === activeIndex ? "bg-[var(--accent-blue)] w-4" : "bg-arch-border-emphasis"
               )}
             />
           ))}

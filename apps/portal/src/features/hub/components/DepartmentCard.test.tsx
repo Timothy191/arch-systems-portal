@@ -2,7 +2,7 @@ import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { DepartmentCard } from "./DepartmentCard";
 import { useRouter } from "next/navigation";
-import type { Department } from "~/lib/departments";
+import type { Department } from "@/lib/departments";
 
 jest.mock("next/navigation", () => ({
   useRouter: jest.fn(),
@@ -48,7 +48,7 @@ describe("DepartmentCard", () => {
     render(<DepartmentCard department={mockDepartment} index={0} />);
     expect(screen.getByText("Drilling Operations")).toBeInTheDocument();
     expect(
-      screen.getByText("Core drilling operations telemetry and systems control."),
+      screen.getByText("Core drilling operations telemetry and systems control.")
     ).toBeInTheDocument();
     expect(screen.getByText("1,240 m")).toBeInTheDocument();
     expect(screen.getByText("Daily Logs")).toBeInTheDocument();

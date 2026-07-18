@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { logout } from "~/app/actions";
+import { logout } from "@/app/actions";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -154,13 +154,13 @@ export function ServicesDropdown() {
               "transition-all duration-150 ease-in-out",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-blue)]/50",
               "cursor-default select-none",
-              open && "bg-black/[0.06]",
+              open && "bg-black/[0.06]"
             )}
           >
             <ChevronDown
               className={cn(
                 "w-3.5 h-3.5 transition-transform duration-200 ease-out",
-                open && "rotate-180",
+                open && "rotate-180"
               )}
             />
           </button>
@@ -247,7 +247,7 @@ export function ServicesDropdown() {
                       ? "text-[var(--accent-red)]"
                       : safety.warningCount > 0
                         ? "text-[var(--accent-orange)]"
-                        : "text-[var(--accent-green)]",
+                        : "text-[var(--accent-green)]"
                   )}
                 />
                 <span className="text-[12px] text-[var(--text-heading)] flex-1">
@@ -304,7 +304,9 @@ export function ServicesDropdown() {
               }}
             >
               <ClipboardList className="h-3.5 w-3.5 text-[var(--text-secondary)] shrink-0" />
-              <span className="text-[12px] font-medium text-[var(--text-heading)]">Daily Safety Log</span>
+              <span className="text-[12px] font-medium text-[var(--text-heading)]">
+                Daily Safety Log
+              </span>
             </DropdownMenuItem>
 
             <DropdownMenuItem
@@ -314,7 +316,9 @@ export function ServicesDropdown() {
               }}
             >
               <ShieldAlert className="h-3.5 w-3.5 text-[var(--text-secondary)] shrink-0" />
-              <span className="text-[12px] font-medium text-[var(--text-heading)]">Safety Dashboard</span>
+              <span className="text-[12px] font-medium text-[var(--text-heading)]">
+                Safety Dashboard
+              </span>
             </DropdownMenuItem>
 
             <DropdownMenuItem
@@ -322,7 +326,9 @@ export function ServicesDropdown() {
               onSelect={() => window.open("tel:+27170000000", "_self")}
             >
               <Phone className="h-3.5 w-3.5 text-[var(--accent-red)] shrink-0" />
-              <span className="text-[12px] font-semibold text-[var(--accent-red)]">Emergency Line</span>
+              <span className="text-[12px] font-semibold text-[var(--accent-red)]">
+                Emergency Line
+              </span>
             </DropdownMenuItem>
           </div>
 
@@ -335,7 +341,9 @@ export function ServicesDropdown() {
               onSelect={() => setLocked(true)}
             >
               <Lock className="h-3.5 w-3.5 text-[var(--text-secondary)] shrink-0" />
-              <span className="text-[12px] font-medium text-[var(--text-heading)]">Lock Screen</span>
+              <span className="text-[12px] font-medium text-[var(--text-heading)]">
+                Lock Screen
+              </span>
               <span className="ml-auto text-[10px] text-[var(--text-muted)]">⌃⌘Q</span>
             </DropdownMenuItem>
 
@@ -354,7 +362,9 @@ export function ServicesDropdown() {
                   className="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-left hover:bg-black/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-blue)]/50"
                 >
                   <LogOut className="h-3.5 w-3.5 text-[var(--text-secondary)] shrink-0" />
-                  <span className="text-[12px] font-medium text-[var(--text-heading)]">Log Out</span>
+                  <span className="text-[12px] font-medium text-[var(--text-heading)]">
+                    Log Out
+                  </span>
                   <span className="ml-auto text-[10px] text-[var(--text-muted)]">⇧⌘Q</span>
                 </button>
               </DropdownMenuItem>

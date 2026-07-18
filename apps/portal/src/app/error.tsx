@@ -54,18 +54,14 @@ function getErrorContext(error: Error): Record<string, unknown> | null {
 
 export default function RootError({ error, reset }: RootErrorProps) {
   useEffect(() => {
-    if (isAppError(error)) {
-      logError(error);
-    } else {
-      logError((error as any) instanceof Error ? error : new Error(String(error)));
-    }
+    logError(error);
   }, [error]);
 
   const title = getErrorTitle(error);
   const message = getErrorMessage(error);
   const context = getErrorContext(error);
   const isDev = process.env.NODE_ENV === "development";
-  const appError = isAppError(error) ? (error as any) : null;
+  const appError = isAppError(error) ? error : null;
 
   return (
     <div className="fixed inset-0 z-50 bg-[var(--bg-primary)] flex items-center justify-center p-4">

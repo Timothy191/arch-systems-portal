@@ -32,16 +32,16 @@ export function LoginBrandBanner() {
 
   return (
     <div className="w-full">
-      <p className="mb-2 text-center text-[13px] font-medium tracking-wide text-[var(--text-secondary)] select-none leading-relaxed px-1">
+      <p className="login-footer mb-2 text-center text-[13px] font-medium tracking-wide text-[var(--text-secondary)] select-none leading-relaxed px-1">
         Plantcor Mainframe · Powered by Arch Systems · Integrated Intelligence
       </p>
       <div
         role="separator"
         aria-hidden="true"
-        className="mx-auto mb-2.5 h-px w-full max-w-[280px] bg-border-subtle"
+        className="login-footer-divider mx-auto mb-2.5 h-px w-full max-w-[280px] bg-border-subtle"
       />
       <div
-        className="w-full overflow-hidden py-1 opacity-85 transition-opacity duration-300 hover:opacity-100"
+        className="login-footer-logos w-full overflow-hidden py-1"
         style={maskStyle}
         role="region"
         aria-label="Partner and AI provider brands"
@@ -50,11 +50,7 @@ export function LoginBrandBanner() {
           {BRAND_LOGOS.flatMap((logo, index) => {
             const key = logo.src ?? logo.name;
             const item = (
-              <div
-                key={key}
-                className="flex h-8 shrink-0 items-center gap-2"
-                title={logo.name}
-              >
+              <div key={key} className="flex h-8 shrink-0 items-center gap-2" title={logo.name}>
                 {logo.src ? (
                   <Image
                     src={logo.src}

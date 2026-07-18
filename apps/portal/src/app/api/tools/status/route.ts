@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabaseClient } from "@repo/supabase/server";
-import { EXTERNAL_TOOLS } from "~/lib/tools";
+import { EXTERNAL_TOOLS } from "@/lib/tools";
 import { cacheWrap } from "@repo/redis";
 
 /**
@@ -108,7 +108,7 @@ export async function GET(_request: NextRequest) {
     async () => {
       return await Promise.all(EXTERNAL_TOOLS.map(checkToolHealth));
     },
-    60, // Cache for 60 seconds
+    60 // Cache for 60 seconds
   );
 
   return NextResponse.json({ tools: statuses });

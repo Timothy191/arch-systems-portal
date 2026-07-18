@@ -10,7 +10,6 @@
     "lint": "eslint . --cache --cache-location node_modules/.cache/.eslintcache --max-warnings 0",
     "type-check": "tsc --noEmit",
     "test": "jest --passWithNoTests --maxWorkers=50%",
-    "prebuild": "rm -rf .next",
     "generate-openapi-spec": "node scripts/generate-openapi-spec.js"
   },
   "dependencies": {

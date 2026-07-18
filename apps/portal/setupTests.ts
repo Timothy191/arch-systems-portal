@@ -2,7 +2,8 @@ import "@testing-library/jest-dom";
 import { TextEncoder, TextDecoder } from "util";
 
 global.TextEncoder = global.TextEncoder || TextEncoder;
-global.TextDecoder = global.TextDecoder || (TextDecoder as any);
+global.TextDecoder =
+  global.TextDecoder || (TextDecoder as unknown as typeof globalThis.TextDecoder);
 
 // Override environment variables to prevent local development .env from polluting tests
 process.env.DISABLE_RATE_LIMIT = "false";
@@ -94,5 +95,5 @@ if (typeof window !== "undefined") {
     value: MockIntersectionObserver,
   });
 
-  global.IntersectionObserver = MockIntersectionObserver as any;
+  global.IntersectionObserver = MockIntersectionObserver as unknown as IntersectionObserver;
 }

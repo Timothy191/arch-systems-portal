@@ -1,4 +1,4 @@
-import { getDepartmentContext } from "~/lib/dept-context";
+import { getDepartmentContext } from "@/lib/dept-context";
 import { GlassCard } from "@repo/ui/GlassCard";
 import { Button } from "@repo/ui/components/ui/button";
 import { Pagination } from "@repo/ui/components/ui/pagination";

@@ -164,7 +164,7 @@ export default async function ReportsPage() {
                 </TableCell>
               </TableRow>
             )}
-            {terminalJobs.map((job: any) => (
+            {terminalJobs.map((job) => (
               <TableRow
                 key={job.id}
                 className="border-b border-[var(--border-default)]/50 hover:bg-[var(--bg-tertiary)] transition-colors"

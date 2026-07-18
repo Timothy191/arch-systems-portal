@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import Link from "next/link";
 import type { Metadata } from "next";
 import { createServerSupabaseClient, getUserSafely } from "@repo/supabase/server";
 import { LoginForm } from "@/features/auth/components/LoginForm";
@@ -44,7 +45,7 @@ export default async function LoginPage() {
   }
 
   return (
-    <main className="relative w-full min-h-[calc(100vh-28px)] flex flex-col items-center justify-center pb-16 pt-4 px-4 sm:px-8 md:px-12 lg:px-20 overflow-y-auto">
+    <div className="relative w-full min-h-[calc(100vh-28px)] flex flex-col items-center justify-center pb-16 pt-4 px-4 sm:px-8 md:px-12 lg:px-20 overflow-y-auto">
       {/* Login Card wrapper — centered between taskbar and dock */}
       <div className="relative z-10 w-full max-w-[420px] my-auto mt-24 os-shell-enter-2 flex flex-col justify-center">
         {systemUnavailable ? (
@@ -66,12 +67,12 @@ export default async function LoginPage() {
                 Unable to reach authentication services. Please try again shortly or contact IT
                 Support.
               </p>
-              <a
+              <Link
                 href="/login"
                 className="inline-block mt-4 px-4 py-2 text-sm font-medium text-white bg-arch-accent-blue hover:opacity-90 rounded-lg transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-arch-accent-blue/50"
               >
                 Retry
-              </a>
+              </Link>
             </div>
           </div>
         ) : (
@@ -117,7 +118,7 @@ export default async function LoginPage() {
                 </div>
                 <div className="space-y-1.5">
                   <h1 className="font-display text-3xl font-normal tracking-[0.12em] uppercase text-text-heading">
-                    Arch-System
+                    ARCH-SYSTEM
                   </h1>
                   <p className="text-[13px] font-medium tracking-wide text-[var(--text-secondary)]">
                     Sign in to Arch Systems
@@ -128,7 +129,7 @@ export default async function LoginPage() {
               <LoginForm />
 
               {/* Contextual System Notice */}
-              <div className="px-3.5 py-2.5 rounded-lg border border-border-subtle bg-[var(--overlay-dim)] text-[13px] font-medium tracking-wide text-[var(--text-secondary)] leading-relaxed flex items-start gap-2.5 select-none">
+              <div className="login-notice px-3.5 py-2.5 text-[13px] font-medium tracking-wide text-[var(--text-secondary)] leading-relaxed flex items-start gap-2.5 select-none">
                 <svg
                   className="w-3.5 h-3.5 text-[var(--text-secondary)] shrink-0 mt-0.5"
                   viewBox="0 0 24 24"
@@ -155,6 +156,6 @@ export default async function LoginPage() {
           </div>
         )}
       </div>
-    </main>
+    </div>
   );
 }

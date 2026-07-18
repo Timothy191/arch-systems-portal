@@ -1,4 +1,4 @@
-import { getDepartmentContext } from "~/lib/dept-context";
+import { getDepartmentContext } from "@/lib/dept-context";
 import { GlassCard } from "@repo/ui/GlassCard";
 import { createReadReplicaClient } from "@repo/supabase/read-replica";
 import { Drill, Clock, AlertTriangle } from "lucide-react";

@@ -121,8 +121,8 @@ async function handleExportRequest(req: NextRequest): Promise<NextResponse> {
       req,
       NextResponse.json(
         { error: "Invalid query parameters", details: parsed.error.issues },
-        { status: 400 },
-      ),
+        { status: 400 }
+      )
     );
   }
   const { from, to, dept, limit, offset } = parsed.data;
@@ -136,7 +136,7 @@ async function handleExportRequest(req: NextRequest): Promise<NextResponse> {
     .from("daily_logs")
     .select(
       "id, log_date, shift, department_id, fuel_logs(id, diesel_litres, machine_id, machines(name, machine_type))",
-      { count: "estimated" },
+      { count: "estimated" }
     )
     .gte("log_date", fromDate)
     .lte("log_date", toDate)
@@ -157,28 +157,55 @@ async function handleExportRequest(req: NextRequest): Promise<NextResponse> {
     return applyCors(req, NextResponse.json({ error: "Database query failed" }, { status: 500 }));
   }
 
-  const rows: any[] = [];
-  (data ?? []).forEach((log: any) => {
-    const fLogs = Array.isArray(log.fuel_logs)
-      ? log.fuel_logs
-      : log.fuel_logs
-        ? [log.fuel_logs]
-        : [];
-    fLogs.forEach((fl: any) => {
-      const machineName = fl.machines?.name ?? "Unknown";
-      const machineType = fl.machines?.machine_type ?? "Unknown";
-      rows.push({
-        id: fl.id,
-        log_date: log.log_date,
-        shift: log.shift,
-        department_id: log.department_id,
-        machine_id: fl.machine_id,
-        machine_name: machineName,
-        machine_type: machineType,
-        diesel_litres: Number(fl.diesel_litres ?? 0).toFixed(2),
-      });
-    });
-  });
+  const rows: Array<Record<string, string>> = [];
+  (data ?? []).forEach(
+    (log: {
+      log_date: string;
+      shift: string;
+      department_id: string;
+      fuel_logs:
+        | Array<{
+            id: string;
+            diesel_litres: number | null;
+            machine_id: string;
+            machines: { name: string | null; machine_type: string | null } | null;
+          }>
+        | {
+            id: string;
+            diesel_litres: number | null;
+            machine_id: string;
+            machines: { name: string | null; machine_type: string | null } | null;
+          }
+        | null;
+    }) => {
+      const fLogs = Array.isArray(log.fuel_logs)
+        ? log.fuel_logs
+        : log.fuel_logs
+          ? [log.fuel_logs]
+          : [];
+      fLogs.forEach(
+        (fl: {
+          id: string;
+          diesel_litres: number | null;
+          machine_id: string;
+          machines: { name: string | null; machine_type: string | null } | null;
+        }) => {
+          const machineName = fl.machines?.name ?? "Unknown";
+          const machineType = fl.machines?.machine_type ?? "Unknown";
+          rows.push({
+            id: fl.id,
+            log_date: log.log_date,
+            shift: log.shift,
+            department_id: log.department_id,
+            machine_id: fl.machine_id,
+            machine_name: machineName,
+            machine_type: machineType,
+            diesel_litres: Number(fl.diesel_litres ?? 0).toFixed(2),
+          });
+        }
+      );
+    }
+  );
 
   if (format === "csv") {
     const headers = [
@@ -194,7 +221,7 @@ async function handleExportRequest(req: NextRequest): Promise<NextResponse> {
     const csv = [
       headers.join(","),
       ...rows.map((r) =>
-        headers.map((h) => sanitizeCsvCell(String(r[h as keyof typeof r] ?? ""))).join(","),
+        headers.map((h) => sanitizeCsvCell(String(r[h as keyof typeof r] ?? ""))).join(",")
       ),
     ].join("\n");
     const response = new NextResponse(csv, {

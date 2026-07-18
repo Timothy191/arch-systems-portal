@@ -65,7 +65,7 @@ const outfit = Outfit({
   adjustFontFallback: true,
 });
 
-/** Display / brand stencil face (Anurati) — global UI typography via body + os-shell. */
+/** Display / brand stencil (Anurati) — logo/wordmark only via `font-display` utility. */
 const anurati = localFont({
   src: "../../public/fonts/Anurati-Regular.otf",
   variable: "--font-display",
@@ -152,7 +152,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }):
       </head>
       <body
         suppressHydrationWarning
-        className="text-text-heading min-h-screen font-display antialiased selection:bg-[var(--accent-blue)]/30 selection:text-[var(--accent-blue)] relative overflow-x-hidden bg-transparent"
+        className="text-text-heading min-h-screen font-sans antialiased selection:bg-[var(--accent-blue)]/30 selection:text-[var(--accent-blue)] relative overflow-x-hidden bg-transparent"
       >
         {/* Skip navigation link for keyboard users */}
         <a href="#main-content" className="skip-link">
@@ -187,7 +187,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }):
             </header>
 
             {/* Content wrapper with main landmark */}
-            <main id="main-content" role="main" className="relative z-primary-card pt-16 font-display">
+            <main id="main-content" role="main" className="relative z-primary-card pt-16 font-sans">
               <SplitWindowLayout>{children}</SplitWindowLayout>
             </main>
 
