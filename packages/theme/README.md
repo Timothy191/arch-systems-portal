@@ -144,11 +144,27 @@ Run the local checks before pushing code changes:
 
 ## 🔐 Login page (reference surface)
 
-The canonical sign-in UI lives at `apps/portal/src/app/(auth)/login/page.tsx`. It demonstrates the light-only macOS glass system end-to-end:
+The canonical sign-in UI lives at `apps/portal/src/app/(auth)/login/page.tsx` (+ `features/auth` `LoginForm`). It demonstrates light frosted glass on dark ambient wallpaper — **not** portal dark mode (DECISIONS #003).
 
-- **Shell**: `.os-shell.os-shell--login` (24px radius, liquid glass tokens from `variables.css`)
-- **Typography**: `font-display` for “Arch-System”; 13px medium labels via `--text-secondary`
-- **Components**: `LoginForm`, `LoginBrandBanner`, `LoginSecureBadge`, folded `@repo/ui/Logo`
-- **Specs**: `.kiro/specs/unified-os-shell/`, `login-form-redesign/`, `login-brand-banner/`, `arch-typography/`
+### Token ownership
 
-See `GEMINI.md` for the full element table. Do not copy patterns from the legacy duplicate at `apps/portal/app/(auth)/login/page.tsx`.
+| Concern        | SSOT                                 | Notes                                                                                             |
+| -------------- | ------------------------------------ | ------------------------------------------------------------------------------------------------- |
+| Card shell     | `--os-shell-*` ← `--palette-glass-*` | `.os-shell.os-shell--login`, 24px via `--os-shell-radius-lg`                                      |
+| Control paints | `--login-*` in `variables.css`       | Fields, CTA, OAuth, notice, brand neon, focus gold                                                |
+| Classes        | `glass.css`                          | `.login-field`, `.login-cta`, `.login-oauth`, `.login-notice` (+ `.login-brand-neon`, focus gold) |
+
+### `--login-*` control paints (do not hard-code in components)
+
+- **Radius**: `--login-control-radius` (aliases `--radius-lg` / 16px)
+- **Field**: `--login-field-bg`, `--login-field-bg-focus`, `--login-field-border`, `--login-field-shadow`, `--login-field-backdrop` (silver glass — not opaque white)
+- **CTA**: `--login-cta-bg`, `--login-cta-bg-hover`, `--login-cta-fg`, `--login-cta-border`, `--login-cta-shadow`
+- **OAuth**: `--login-oauth-bg`, `--login-oauth-bg-hover`, `--login-oauth-border`, `--login-oauth-backdrop` (muted silver; not bright white)
+- **Notice**: `--login-notice-bg`, `--login-notice-border`, `--login-notice-radius`
+- **Brand neon**: `--login-brand-neon-core`, `--login-brand-neon-mid`
+- **Focus gold**: `--login-focus-gold-*` (incl. `--login-focus-gold-glow-peak`)
+- **Classes**: `.login-field`, `.login-cta`, `.login-oauth`, `.login-notice`, `.login-checkbox`
+
+Also: `font-display` **ARCH-SYSTEM** wordmark only (all other login UI uses `--font-sans` via `--os-shell-font`); `LoginBrandBanner` / `LoginSecureBadge`; specs under `.kiro/specs/login-form-redesign/`, `unified-os-shell/`.
+
+See `GEMINI.md` for the element table. Do not copy `apps/portal/app/(auth)/login/page.tsx` (legacy duplicate).

@@ -31,20 +31,23 @@ Single source of truth for visual design, tokens, and Tailwind configuration.
 
 ### Login page — reference implementation
 
-Canonical sign-in surface: `apps/portal/src/app/(auth)/login/page.tsx`.
+Canonical sign-in surface: `apps/portal/src/app/(auth)/login/page.tsx` + `LoginForm`. Light frosted card on dark wallpaper ≠ dark-mode UI (DECISIONS #003 / #010).
 
-| Element | Implementation |
-|---|---|
-| Shell | `.os-shell.os-shell--login` + `.os-shell-enter-2` (see `unified-os-shell` spec) |
-| Card width | `max-w-[420px]`, `min-h-[720px]` |
-| Title bar | macOS traffic lights (`bg-mac-red/yellow/green`) + centered “Arch — System Sign In” |
-| Brand mark | Folded `@repo/ui/Logo` (`.login-brand-mark`, `.login-brand-fold`) |
-| Heading | `font-display` “Arch-System” (`--font-display` / Anurati), 13px secondary labels |
-| Form | `LoginForm`: remember me, forgot password, OAuth (Google / Microsoft / GitHub) |
-| Footer | `LoginBrandBanner` marquee — partner + AI logos from `/branding/ai/` |
-| Notice | VPN callout with info icon, `border-border-subtle`, `--overlay-dim` background |
+| Element              | Implementation                                                                                                                       |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| Shell                | `.os-shell.os-shell--login` + `.os-shell-enter-2`; paints via `--os-shell-*` ← `--palette-glass-*`                                   |
+| Card width           | `max-w-[420px]`, `min-h-[720px]`                                                                                                     |
+| Title bar            | macOS traffic lights (`bg-mac-red/yellow/green`) + centered “Arch — System Sign In”                                                  |
+| Brand mark           | Folded `@repo/ui/Logo` (`.login-brand-mark`, `.login-brand-fold`, `.login-brand-neon` ← `--login-brand-neon-*`)                      |
+| Wordmark             | `font-display` **ARCH-SYSTEM** only (uppercase + tracking; `--font-display` / Anurati)                                               |
+| Body copy            | `--font-sans` / Inter / SF Pro — title bar, labels, fields, buttons, notice, footer (shell uses `--os-shell-font: var(--font-sans)`) |
+| Fields / CTA / OAuth | `.login-field` / `.login-cta` / `.login-oauth` ← silver-glass `--login-*` (not opaque white) + `--login-control-radius` (16px)       |
+| Form behavior        | `LoginForm`: remember me, forgot password, OAuth (Google / Microsoft / GitHub)                                                       |
+| Notice               | `.login-notice` ← `--login-notice-*` (VPN callout + info icon)                                                                       |
+| Focus                | `--login-focus-gold-*` (incl. `--login-focus-gold-glow-peak`)                                                                        |
+| Footer               | `LoginBrandBanner` marquee — partner + AI logos from `/branding/ai/`                                                                 |
 
-Do **not** treat `apps/portal/app/(auth)/login/page.tsx` as canonical — it is a legacy duplicate (company JPEG branding, `liquid-glass-light`, enterprise footer).
+Control paints SSOT: `--login-*` in `variables.css` + classes in `glass.css`. Do **not** treat `apps/portal/app/(auth)/login/page.tsx` as canonical (legacy duplicate).
 
 ### Agent Tracing & Context Hand-off (MANDATORY RULE)
 

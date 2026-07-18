@@ -1,10 +1,19 @@
 /** @type {import("eslint").Linter.Config} */
 module.exports = {
-  extends: ["eslint:recommended"],
+  extends: ["eslint:recommended", "plugin:react-hooks/recommended"],
   parser: "@typescript-eslint/parser",
-  plugins: ["@typescript-eslint"],
+  plugins: ["@typescript-eslint", "react-hooks"],
   rules: {
-    "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      {
+        argsIgnorePattern: "^_",
+        varsIgnorePattern: "^_",
+        caughtErrorsIgnorePattern: "^_",
+        destructuredArrayIgnorePattern: "^_",
+        ignoreRestSiblings: true,
+      },
+    ],
     "@typescript-eslint/no-explicit-any": "warn",
   },
   env: {

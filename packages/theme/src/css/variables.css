@@ -290,9 +290,9 @@
   --canvas-bg-to: var(--palette-canvas-to);
   --canvas-gradient: linear-gradient(135deg, var(--canvas-bg-from) 0%, var(--canvas-bg-to) 100%);
   /* Wave layer tint — subtle charcoal/slate radial used by the animated orbs */
-  --canvas-wave-tint-a: rgba(28, 28, 30, 0.06);
-  --canvas-wave-tint-b: rgba(16, 185, 129, 0.04);
-  --canvas-wave-tint-c: rgba(228, 228, 231, 0.8);
+  --canvas-wave-tint-a: rgba(0, 102, 255, 0.09);
+  --canvas-wave-tint-b: rgba(16, 185, 129, 0.07);
+  --canvas-wave-tint-c: rgba(232, 236, 244, 0.72);
 
   /* ═══════════════════════════════════════════════════════════════
        DIFFUSION SHADOW SYSTEM — Light mode (softer)
@@ -455,12 +455,18 @@
   /* Concentric radii on the 8pt grid: capsule bars, 24px panels */
   --os-shell-radius-lg: 24px;
   --os-shell-radius-full: 9999px;
-  --os-shell-font: var(--font-display);
+  /* UI chrome — legible sans; brand stencil is opt-in via `font-display` utility only */
+  --os-shell-font: var(--font-sans);
   --os-shell-enter-duration: 700ms;
   --os-shell-enter-ease: cubic-bezier(0.16, 1, 0.3, 1);
   --os-shell-enter-delay-1: 0ms;
   --os-shell-enter-delay-2: 250ms;
   --os-shell-enter-delay-3: 500ms;
+
+  /* Login card shell — white catch-light edge over dark wave (not chrome-border gray) */
+  --login-shell-edge: var(--palette-border-glass-catch);
+  --login-shell-specular-inset: inset 0 1px 2px rgba(255, 255, 255, 0.28);
+  --login-shell-shadow: var(--os-shell-shadow), var(--login-shell-specular-inset);
 
   /* Login focus — golden chrome ring (macOS yellow family) */
   --login-focus-gold: var(--palette-chrome-yellow);
@@ -470,6 +476,35 @@
   --login-focus-gold-ring: rgba(255, 189, 46, 0.48);
   --login-focus-gold-glow: rgba(255, 189, 46, 0.22);
   --login-focus-gold-border: rgba(255, 189, 46, 0.72);
+  --login-focus-gold-glow-peak: rgba(255, 189, 46, 0.32);
+  --login-focus-inset-highlight: inset 0 1px 2px rgba(255, 255, 255, 0.85);
+  --login-focus-ring-outer: 0 0 0 2px rgba(255, 255, 255, 0.92);
+
+  /* Login controls — recessed glass (dark tint within milk card; not opaque white chips) */
+  --login-control-radius: var(--radius-lg);
+  --login-field-bg: rgba(0, 0, 0, 0.15);
+  --login-field-bg-focus: rgba(0, 0, 0, 0.22);
+  --login-field-border: rgba(255, 255, 255, 0.08);
+  --login-field-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  --login-field-backdrop: blur(4px) saturate(120%);
+  --login-cta-bg: var(--palette-neutral-950);
+  --login-cta-bg-hover: var(--palette-brand-primary-hover);
+  --login-cta-fg: var(--palette-brand-on-primary);
+  --login-cta-border: color-mix(in srgb, var(--palette-neutral-950) 82%, black);
+  --login-cta-border-hover: color-mix(in srgb, var(--palette-brand-primary-hover) 88%, black);
+  --login-cta-shadow: 0 2px 12px rgba(0, 0, 0, 0.24), 0 1px 3px rgba(0, 0, 0, 0.14);
+  --login-oauth-bg: rgba(0, 0, 0, 0.12);
+  --login-oauth-bg-hover: rgba(0, 0, 0, 0.18);
+  --login-oauth-border: rgba(255, 255, 255, 0.08);
+  --login-oauth-backdrop: blur(4px) saturate(120%);
+  --login-notice-bg: var(--overlay-dim);
+  --login-notice-border: var(--border-subtle);
+  --login-notice-radius: var(--login-control-radius);
+  --login-brand-neon-core: color-mix(in srgb, var(--palette-semantic-danger) 55%, transparent);
+  --login-brand-neon-mid: color-mix(in srgb, var(--palette-semantic-danger) 22%, transparent);
+  --login-footer-opacity: 0.45;
+  --login-footer-opacity-hover: 0.55;
+  --login-footer-divider-opacity: 0.4;
 
   /* ═══════════════════════════════════════════════════════════════
        THEME TRANSITION

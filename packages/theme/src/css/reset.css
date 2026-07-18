@@ -7,7 +7,7 @@
 }
 
 body {
-  font-family: var(--font-display), "Orbitron", ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-sans), sans-serif;
 }
 
 input,

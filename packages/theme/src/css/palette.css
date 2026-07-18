@@ -61,6 +61,8 @@
   --palette-border-strong: rgba(0, 0, 0, 0.3);
   --palette-border-glass: rgba(255, 255, 255, 0.68);
   --palette-border-glass-soft: rgba(255, 255, 255, 0.28);
+  /* Hairline catch-light on frosted glass over dark ambient backgrounds */
+  --palette-border-glass-catch: rgba(255, 255, 255, 0.2);
   --palette-border-focus: var(--palette-brand-primary);
 
   /* ── Text ──────────────────────────────────────────────────────────── */

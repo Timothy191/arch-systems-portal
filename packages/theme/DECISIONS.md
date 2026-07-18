@@ -48,6 +48,8 @@ Components are migrated as they are touched. No hard codemod (155 references in 
 
 **Implication**: Components reference only semantic tokens. No dark-mode inversions or `-dark` variants are supported.
 
+**Clarification**: A dark ambient wallpaper behind the login card is **not** portal dark mode. Login chrome stays light frosted glass; only the backdrop scene may be dark (see #010).
+
 ---
 
 ## 004 — Department accent colours as runtime Tailwind classes
@@ -97,11 +99,11 @@ it via `scripts/generate-tokens.mjs`. The JS values should never be edited manua
 
 Three tiers enforced by `scripts/validate-tokens.mjs` and documented inline in `variables.css`:
 
-| Tier           | Tokens                                                                                                       | Rule                                                                              |
-| -------------- | ------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------- |
-| **Primitive**  | `--arch0`–`--arch15`                                                                                         | Raw values only. Never referenced in components or `preset.ts` semantic sections. |
+| Tier           | Tokens                                                                                                       | Rule                                                                                |
+| -------------- | ------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- |
+| **Primitive**  | `--arch0`–`--arch15`                                                                                         | Raw values only. Never referenced in components or `preset.ts` semantic sections.   |
 | **Semantic**   | `--bg-primary`, `--text-body`, `--shadow-card`, etc.                                                         | All component and utility references. Light-only set in `:root` (no dark variants). |
-| **Deprecated** | `--accent-cyan`, `--accent-indigo`, `--accent-violet`, `--accent-alert`, `--accent-blue`, `--accent-emerald` | Map to canonical Tier 2. Stylelint warns. Migrate on touch.                       |
+| **Deprecated** | `--accent-cyan`, `--accent-indigo`, `--accent-violet`, `--accent-alert`, `--accent-blue`, `--accent-emerald` | Map to canonical Tier 2. Stylelint warns. Migrate on touch.                         |
 
 ---
 
@@ -146,3 +148,13 @@ output generation.
   }
 }
 ```
+
+---
+
+## 010 — Login control tokens (`--login-*`)
+
+**Decision**: Login control paints (fields, CTA, OAuth chips, VPN notice, brand neon, focus chrome including gold peak / inset highlight / outer ring) live under `--login-*` in `variables.css`, with CSS classes `.login-field`, `.login-cta`, `.login-oauth`, `.login-notice` in `glass.css`. The card shell remains `--os-shell-*` ← `--palette-glass-*`.
+
+**Why**: Keeps mock-aligned control paints as theme SSOT without inventing dark-mode UI tokens or hard-coding rgba in `LoginForm` / login page.
+
+**Reference**: `apps/portal/src/app/(auth)/login/page.tsx` + `features/auth` `LoginForm`. Spec: `.kiro/specs/login-form-redesign/`.
