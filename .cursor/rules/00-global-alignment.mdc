@@ -14,6 +14,7 @@ alwaysApply: true
 | `AGENTS.md` | Canonical policy |
 | `.cursor/rules/` | Cursor always-on enforcement |
 | `.cursor/rules/04-subagent-auto-routing.mdc` | Mandatory Task/subagent delegation |
+| `.cursor/rules/05-portal-dev-keepalive.mdc` | Portal `:3000` up after task batches; restart / fix-retry |
 | `.cursor/agents/` | Project specialists (auto-routed) |
 | `.qoder/rules/` | Qoder mirror |
 | `.kiro/agents/default.json` | Machine-readable gates |

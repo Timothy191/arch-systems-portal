@@ -2,6 +2,24 @@
 
 This file maintains a record of AI agent interventions, context hand-offs, and architectural breadcrumbs for this specific package/app.
 
+## [2026-07-18] Fix all lint errors & warnings surfaced by ESLint config repair
+
+- **Agent**: Qoder
+- **Purpose**: Fix 36 errors + 317 warnings that were previously hidden because ESLint wasn't actually running (broken `extends` path `@repo/eslint-config/next.js` → `@repo/eslint-config/next`, plus a broken root `eslint.config.mjs` flat config that imported uninstalled `@eslint/js`).
+- **Changes Made**:
+  - Deleted root `eslint.config.mjs` (broken flat config referencing uninstalled `@eslint/js`; ESLint 8.57 auto-detects flat config which took precedence over `.eslintrc.js`).
+  - Fixed `apps/portal/.eslintrc.js`: corrected `extends` path, added legacy root-level directories to `ignorePatterns`, added test-file overrides for `no-require-imports` / `no-explicit-any` / `no-unsafe-function-type`.
+  - Fixed `react-hooks/rules-of-hooks` violations (real bugs): moved `useId()` before early return in `Sparkline.tsx`; moved `useMemo` calls before early return in `DozerRollForm.tsx`.
+  - Converted ~12 source files from `any` to `unknown` + type guards (plugins, API routes, error boundaries, actions).
+  - Typed `ActorRefFrom<any>` → `ActorRefFrom<typeof pluginMachine>` in plugin machine types.
+  - Added `eslint-plugin-react-hooks` to `react-internal.js` config.
+  - Expanded `no-unused-vars` ignore patterns in `next.js` and `react-internal.js` to match `library.js`.
+  - Updated `rust-bindings` eslint-disable from deprecated `no-var-requires` to `no-require-imports`.
+  - Converted `<a>` → `<Link>` in login, update-password, satellite pages.
+  - Fixed stale `useCallback` deps in `card-actions-view.tsx` (`selectedTemplateId`).
+  - Result: `pnpm --filter portal lint` → 0 errors, 0 warnings.
+- **Next Agent Notes**: Pre-existing `tsc` errors in packages (`@repo/ui`, `@repo/supabase`, `@repo/theme`) remain — not caused by this work. Root-level legacy directories (`components/`, `features/`, `hooks/`, `lib/`, `plugins/` outside `src/`) are ignored by ESLint but still exist on disk.
+
 ## [2026-07-14] Document repository context and create deploy-server.sh
 
 - **Agent**: Claude Code

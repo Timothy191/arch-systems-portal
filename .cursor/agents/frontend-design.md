@@ -51,13 +51,14 @@ Your job is composition, hierarchy, brand presence, motion, and visual direction
 ## Color & look — avoid default AI clusters
 
 Do **not** default to:
+
 1. Purple-on-white or purple-to-indigo gradient themes
 2. Warm cream (~#F4F1EA) + high-contrast serif + terracotta accent
 3. Broadsheet layouts (hairline rules, zero radius, dense newspaper columns)
 
 Also avoid bias toward: dark mode for marketing surfaces when not required, purple, glow effects, rounded-full pills, multi-layer shadows, emojis.
 
-For in-app portal UI, light-only macOS glass from `@repo/theme` is the established default — match `apps/portal/src/app/(auth)/login/page.tsx` for shell/card patterns.
+For in-app portal UI, light-only macOS glass from `@repo/theme` is the established default — match `apps/portal/src/app/(auth)/login/page.tsx` as SSOT (shell `--os-shell-*` / `--palette-glass-*`; controls `--login-*` + `.login-field` / `.login-cta` / `.login-oauth` / `.login-notice`). Dark wallpaper behind login is not dark-mode UI (DECISIONS #003 / #010).
 
 Define a clear visual direction with CSS variables when creating new branded surfaces.
 

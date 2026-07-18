@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**Arch Systems** — a Next.js 16 portal monorepo (pnpm + Turborepo). Single deployable app (`apps/portal/`) with shared packages under `packages/`. Supabase for auth/DB, Redis for caching/rate-limiting, Inngest for background jobs, Sentry for error monitoring, OpenTelemetry for observability.
+**Arch Systems (Plantcor)** — Industrial mining-operations portal. pnpm + Turborepo monorepo with a Next.js 16 portal, NestJS API, and shared `@repo/*` packages. Supabase for auth/DB, Redis for caching/rate-limiting, Inngest for background jobs, Sentry for error monitoring, OpenTelemetry for observability.
 
 > **Canonical agent policy:** `AGENTS.md` (including §20 Alignment Score). Cursor rules in `.cursor/rules/` always apply. Do not drift.
 
@@ -30,17 +30,21 @@ pnpm --filter portal <cmd>  # Run a command for just the portal app
 ```
 apps/
   portal/             # Next.js 16 (App Router, src/ layout) — the only deployable app
-apps(legacy)/         # Deprecated — do not modify
+  api/                # NestJS backend (REST API)
+  ops-gateway/        # Operations gateway service
 packages/
   auth/               # @repo/auth/{ui,data-access,utils}
   contract/           # @repo/contract — shared Zod schemas / API contracts
+  database/           # @repo/database — SQL migrations source of truth
   departments/        # @repo/departments/ui
   errors/             # @repo/errors — typed AppError classes
   eslint-config/      # @repo/eslint-config
+  eval/               # @repo/eval — Python LLM eval suite
   hub/                # @repo/hub/ui
   logger/             # @repo/logger — structured logging
   rate-limiter/       # @repo/rate-limiter — Redis-backed
   redis/              # @repo/redis — shared ioredis singleton
+  rust-bindings/      # @repo/rust-bindings
   shared/             # @repo/shared/{data-access,hooks,utils}
   supabase/           # @repo/supabase — server admin client + browser client
   theme/              # @repo/theme — Tailwind preset & design tokens
@@ -64,23 +68,23 @@ src/
 
 ### Key Technology Choices
 
-| Concern | Choice |
-|---|---|
-| Framework | Next.js 16 (App Router, Turbopack in dev) |
-| Language | TypeScript 5.7 strict (no `any`, no `@ts-ignore`) |
-| Styling | Tailwind CSS 3 via `@repo/theme` preset |
-| UI primitives | `@repo/ui` (extend before reaching for Radix directly) |
-| Client state | Zustand 5 (global only) |
-| Validation | Zod 3 (all external input) |
-| Auth / DB | Supabase |
-| Caching / queues | Redis via `@repo/redis` |
-| Background jobs | Inngest 4 |
-| Observability | OpenTelemetry + Sentry |
-| Error classes | `@repo/errors` — AppError subclasses only |
-| Icons | lucide-react only |
-| Package manager | pnpm 9 (never npm/yarn) |
-| Build orchestration | Turborepo 2 |
-| Node | >= 22 (Volta pin: 24) |
+| Concern             | Choice                                                 |
+| ------------------- | ------------------------------------------------------ |
+| Framework           | Next.js 16 (App Router, Turbopack in dev)              |
+| Language            | TypeScript 5.7 strict (no `any`, no `@ts-ignore`)      |
+| Styling             | Tailwind CSS 3 via `@repo/theme` preset                |
+| UI primitives       | `@repo/ui` (extend before reaching for Radix directly) |
+| Client state        | Zustand 5 (global only)                                |
+| Validation          | Zod 3 (all external input)                             |
+| Auth / DB           | Supabase                                               |
+| Caching / queues    | Redis via `@repo/redis`                                |
+| Background jobs     | Inngest 4                                              |
+| Observability       | OpenTelemetry + Sentry                                 |
+| Error classes       | `@repo/errors` — AppError subclasses only              |
+| Icons               | lucide-react only                                      |
+| Package manager     | pnpm 9 (never npm/yarn)                                |
+| Build orchestration | Turborepo 2                                            |
+| Node                | >= 22 (Volta pin: 24)                                  |
 
 ## Spec-Driven Workflow (Mandatory)
 
@@ -134,15 +138,16 @@ Every non-trivial task follows a three-phase spec cycle. Spec files go in `.kiro
 - Application logic goes in `apps/portal/`, not in `packages/`
 - Packages never import from `apps/`
 - Throw `AppError` subclasses from `@repo/errors` — never raw `new Error()` for domain errors
+- **Light-only** UI (AGENTS.md §7 / DECISIONS #003). Login reference: `apps/portal/src/app/(auth)/login/page.tsx` — control paints via `--login-*`, shell via `--os-shell-*` (DECISIONS #010)
 - All interactive elements must be keyboard-navigable with visible focus rings
-- Use `next/image` for all images — never raw `<img>` tags
+- Use `next/image` for all images — never raw `<img>` tags. Exception: signed Supabase storage URLs with rotating signatures (e.g. `card-actions-view.tsx`) where `next/image` cannot handle URL expiry.
 - Lazy-load heavy Client Components with `next/dynamic` + `{ ssr: false }`
 - Never commit `.env.local` or any secrets
-- `apps(legacy)/` is deprecated — do not modify
 
 ## Real-World Thinking & Proven Methods
 
 ### Engineering Principles (AGENTS.md §20.2)
+
 - **Start with simplest solution** - Don't over-engineer; implement minimum viable solution first
 - **Progressive enhancement** - Make it work → make it right → make it fast
 - **Production mindset** - Consider monitoring, debugging, maintenance costs
@@ -151,13 +156,14 @@ Every non-trivial task follows a three-phase spec cycle. Spec files go in `.kiro
 - **Fail fast** - Detect problems early, don't silently swallow errors
 
 ### Engineering Heuristics
+
 - **YAGNI** - You Ain't Gonna Need It (don't build features before needed)
 - **KISS** - Keep It Simple, Stupid (complexity = reliability enemy)
 - **DRY** - Don't Repeat Yourself (but know when duplication beats wrong abstraction)
 - **Single Responsibility** - One reason to change, one thing to fix
 - **Measure everything** - Can't improve what you don't measure
 
-## Alignment Scoring (AGENTS.md §20.3)
+## Alignment Scoring (AGENTS.md §20)
 
 ```
 Alignment: <score>/100 [<PASS|FAIL>]
@@ -174,14 +180,14 @@ Hard fails: <none | list>
 
 ### Scoring Dimensions
 
-| Dimension | Pts | Evidence Required |
-|---|---|---|
-| Spec compliance | 20 | Multi-file → `.kiro/specs/` phases followed; single-file → N/A full pts |
-| Stack fidelity | 15 | pnpm, Next 16 patterns, `@repo/*`, no banned deps |
-| Boundaries | 15 | Server/client correct; no server-only imports in client |
-| Security | 20 | Zod on input; no secrets; no service-role leakage |
-| Quality gate | 15 | `pnpm quality` (or scoped equivalent) passed this session |
-| Real-world verify | 15 | Observed runtime/test/read evidence for the claim |
+| Dimension         | Pts | Evidence Required                                                       |
+| ----------------- | --- | ----------------------------------------------------------------------- |
+| Spec compliance   | 20  | Multi-file → `.kiro/specs/` phases followed; single-file → N/A full pts |
+| Stack fidelity    | 15  | pnpm, Next 16 patterns, `@repo/*`, no banned deps                       |
+| Boundaries        | 15  | Server/client correct; no server-only imports in client                 |
+| Security          | 20  | Zod on input; no secrets; no service-role leakage                       |
+| Quality gate      | 15  | `pnpm quality` (or scoped equivalent) passed this session               |
+| Real-world verify | 15  | Observed runtime/test/read evidence for the claim                       |
 
 ### Helper Commands
 

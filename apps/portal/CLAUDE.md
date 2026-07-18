@@ -28,7 +28,7 @@ All commands use `pnpm`. Root monorepo scripts live in `Arch-Mk2/package.json`; 
 - `pnpm build` — build the portal (`next build`). Standalone output is only generated when `CI=true` or `ENABLE_HEAVY_PLUGINS=true`.
 - `pnpm start` — start the production server (serves on `PORT`, default 3000).
 - `pnpm test` — run the Jest suite (`--runInBand --forceExit`). Run a single test with `pnpm test -- proxy.test.ts` or `pnpm test -- --testPathPattern=proxy`.
-- `pnpm lint` — run ESLint with the repo config (`@repo/eslint-config/next.js`).
+- `pnpm lint` — run ESLint with the repo config (`@repo/eslint-config/next`).
 - `pnpm type-check` — run `tsc --noEmit`.
 - `pnpm build:analyze` — build with the bundle analyzer enabled (`ANALYZE=true`).
 

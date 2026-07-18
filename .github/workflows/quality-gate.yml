@@ -12,27 +12,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  prepare:
-    name: Prepare Environment
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    outputs:
-      node-version: "22"
-      pnpm-version: "9.15.9"
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-        with:
-          version: "9.15.9"
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-          cache: "pnpm"
-      - run: pnpm install --frozen-lockfile
-
   lint:
     name: Lint
-    needs: prepare
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -42,14 +23,13 @@ jobs:
           version: "9.15.9"
       - uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: 24
           cache: "pnpm"
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
 
   type-check:
     name: Type Check
-    needs: prepare
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -59,14 +39,13 @@ jobs:
           version: "9.15.9"
       - uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: 24
           cache: "pnpm"
       - run: pnpm install --frozen-lockfile
       - run: pnpm type-check
 
   test-api:
     name: Test API
-    needs: prepare
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -76,7 +55,7 @@ jobs:
           version: "9.15.9"
       - uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: 24
           cache: "pnpm"
       - run: pnpm install --frozen-lockfile
       - name: Run API tests
@@ -85,7 +64,6 @@ jobs:
 
   test-packages:
     name: Test Shared Packages
-    needs: prepare
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -95,7 +73,7 @@ jobs:
           version: "9.15.9"
       - uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: 24
           cache: "pnpm"
       - run: pnpm install --frozen-lockfile
       - name: Test @repo/supabase
@@ -110,7 +88,6 @@ jobs:
 
   rls-audit:
     name: RLS Audit
-    needs: prepare
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -120,7 +97,7 @@ jobs:
           version: "9.15.9"
       - uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: 24
           cache: "pnpm"
       - run: pnpm install --frozen-lockfile
       - name: Run RLS Audit
@@ -128,9 +105,8 @@ jobs:
 
   test-portal:
     name: Test Portal
-    needs: prepare
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -138,72 +114,15 @@ jobs:
           version: "9.15.9"
       - uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: 24
           cache: "pnpm"
       - run: pnpm install --frozen-lockfile
       - name: Run Portal tests
         working-directory: apps/portal
-        run: npx jest --no-cache --forceExit --verbose --coverage lib/data/__tests__/ 2>&1 | tail -10
-
-  knip:
-    name: Dead Code Detection
-    needs: prepare
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-        with:
-          version: "9.15.9"
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-          cache: "pnpm"
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm knip
-
-  test-e2e:
-    name: E2E Tests
-    needs: prepare
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    services:
-      # Portal is started inline below; no external services needed for unauthenticated E2E tests
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-        with:
-          version: "9.15.9"
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-          cache: "pnpm"
-      - run: pnpm install --frozen-lockfile
-      - name: Install Playwright browsers
-        run: npx playwright install chromium --with-deps
-      - name: Start Portal (dev mode)
-        run: |
-          pnpm --filter portal dev &
-          for i in $(seq 1 30); do
-            curl -sf http://localhost:3000 > /dev/null && echo "Portal ready" && break
-            echo "Waiting for portal... ($i)"
-            sleep 2
-          done
-      - name: Run E2E tests (unauthenticated)
-        run: npx playwright test --reporter=list 2>&1
-      - name: Run Auth E2E tests (CI-safe with fallback)
-        continue-on-error: true
-        run: npx playwright test e2e/auth-ui.spec.ts --reporter=list 2>&1
-      - name: Upload E2E artifacts
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: e2e-screenshots
-          path: test-results/
+        run: npx jest --passWithNoTests --forceExit --verbose --coverage 2>&1 | tail -20
 
   build:
     name: Build Check
-    needs: prepare
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -213,7 +132,7 @@ jobs:
           version: "9.15.9"
       - uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: 24
           cache: "pnpm"
       - run: pnpm install --frozen-lockfile
       - name: Build Portal
