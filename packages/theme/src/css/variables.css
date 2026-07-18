@@ -19,7 +19,6 @@
 
   /* ARCH PALETTE — primitives alias the official palette (palette.css) */
   --arch0: var(--palette-surface-elevated);
-  --white: var(--palette-neutral-0);
   --arch1: var(--palette-surface-elevated);
   --arch2: var(--palette-surface-sunken);
   --arch3: var(--palette-surface-pressed);
@@ -45,14 +44,13 @@
   /* ═══════════════════════════════════════════════════════════════
        TIER 2 — SEMANTIC ALIASES
        These are the only tokens components and utilities should reference.
-       They map to primitives above and will be redefined in dark mode.
+       They map to primitives above.
        ═══════════════════════════════════════════════════════════════ */
   --bg-primary: var(--arch0);
   --bg-secondary: var(--arch1);
   --bg-tertiary: var(--arch2);
 
   --border-subtle: var(--arch4);
-  --chrome-border: var(--palette-chrome-border);
   --border-default: var(--arch5);
   --border-emphasis: var(--arch6);
 
@@ -63,9 +61,9 @@
   --text-heading: var(--arch11);
 
   --accent-red: var(--arch12);
-  /* Canonical brand interactive — deep charcoal (not macOS blue) */
+  /* Canonical brand interactive — deep charcoal */
   --accent-charcoal: var(--arch13);
-  /** @deprecated use --accent-charcoal — name retained for backward compatibility */
+  /** @deprecated use --accent-charcoal — retained for backward compatibility */
   --accent-blue: var(--arch13);
   --accent-green: var(--arch14);
 
@@ -73,11 +71,7 @@
   --arch-brand-blue: var(--palette-brand-primary);
   --arch-brand-blue-hover: var(--palette-brand-primary-hover);
 
-  /* ─── Extended Action & Status Palette ────────────────────────────────────
-     These complement the macOS system blue with vivid action tokens that
-     align with the premium glassmorphism spec. Components must use semantic
-     aliases (--color-action-*, --color-status-*) rather than these directly.
-     ─────────────────────────────────────────────────────────────────────── */
+  /* ─── Extended Action & Status Palette ──────────────────────────────────── */
 
   /* Vivid Electric Blue — primary CTA, interactive highlights */
   --accent-electric-blue: var(--palette-interactive-primary);
@@ -97,19 +91,14 @@
   --accent-amber-subtle: var(--palette-semantic-warning-subtle);
   --accent-amber-border: rgba(245, 158, 11, 0.28);
 
-  /* Semantic action aliases — use these in components */
+  /* Semantic action aliases */
   --color-action-primary: var(--accent-electric-blue);
   --color-action-primary-hover: var(--accent-electric-blue-hover);
   --color-status-positive: var(--accent-mint);
   --color-status-warning: var(--accent-amber);
   --color-status-danger: var(--accent-red);
 
-  /* Glow shadows for the extended palette */
-  --shadow-glow-electric-blue: 0 0 20px rgba(28, 28, 30, 0.18), 0 0 60px rgba(28, 28, 30, 0.06);
-  --shadow-glow-mint: 0 0 20px rgba(16, 185, 129, 0.2), 0 0 60px rgba(16, 185, 129, 0.07);
-  --shadow-glow-amber: 0 0 20px rgba(245, 158, 11, 0.2), 0 0 60px rgba(245, 158, 11, 0.07);
-
-  /* Semantic status colors — used by QR access control and similar modules */
+  /* Semantic status colors */
   --success: var(--palette-semantic-success);
   --success-foreground: 0 0% 100%;
   --warning: var(--palette-semantic-warning);
@@ -120,38 +109,18 @@
   --info-foreground: 0 0% 100%;
 
   /* ═══════════════════════════════════════════════════════════════
-       TIER 3 — DEPRECATED ALIASES
-       These map to their canonical Tier 2 equivalents.
-       @deprecated Use the canonical --accent-* tokens instead.
-       Migration tracked in packages/theme/DECISIONS.md.
-       
-       DEPRECATION NOTICE (2026-06-20):
-       All deprecated accent tokens have been migrated to their canonical equivalents:
-       - --accent-cyan → --accent-blue
-       - --accent-indigo → --accent-blue  
-       - --accent-violet → --accent-blue
-       - --accent-alert → --accent-red
-       - --accent-emerald → --accent-green
-       
-       These deprecated definitions are being removed as part of the style cleanup.
-       ═══════════════════════════════════════════════════════════════ */
-
-  /* ═══════════════════════════════════════════════════════════════
        DEPARTMENT COLOR TOKENS
-       Single source of truth for department-specific icon/badge colors.
-       Used by MacMenuBar, DepartmentLayout, KPI, and any component
-       that renders per-department color accents.
        ═══════════════════════════════════════════════════════════════ */
-  --dept-drilling: #2563eb; /* blue-600 */
-  --dept-production: #34c759; /* green / accent-green */
-  --dept-access-control: #0284c7; /* sky-600 */
-  --dept-access-card-actions: #3b82f6; /* blue-500 */
-  --dept-engineering: #7c3aed; /* violet-600 */
-  --dept-control-room: #dc2626; /* red-600 */
-  --dept-safety: #d97706; /* amber-600 */
-  --dept-training: #0891b2; /* cyan-600 */
-  --dept-satellite: #4f46e5; /* indigo-600 */
-  --dept-admin: #7c3aed; /* violet-600 */
+  --dept-drilling: #2563eb;
+  --dept-production: #34c759;
+  --dept-access-control: #0284c7;
+  --dept-access-card-actions: #3b82f6;
+  --dept-engineering: #7c3aed;
+  --dept-control-room: #dc2626;
+  --dept-safety: #d97706;
+  --dept-training: #0891b2;
+  --dept-satellite: #4f46e5;
+  --dept-admin: #7c3aed;
 
   /* macOS traffic light colors */
   --mac-red: var(--palette-chrome-red);
@@ -161,33 +130,33 @@
   /* ═══════════════════════════════════════════════════════════════
        SHADCN/UI HSL VARIABLES — macOS Light
        ═══════════════════════════════════════════════════════════════ */
-  --background: 240 5% 96%; /* #f5f5f7 */
-  --foreground: 240 6% 10%; /* #1d1d1f */
-  --card: 0 0% 100%; /* white */
+  --background: 240 5% 96%;
+  --foreground: 240 6% 10%;
+  --card: 0 0% 100%;
   --card-foreground: 240 6% 10%;
   --popover: 0 0% 100%;
   --popover-foreground: 240 6% 10%;
-  --primary: 240 6% 10%; /* #18181b Slate / Pitch Black */
+  --primary: 240 6% 10%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 240 5% 91%; /* #e8e8ed */
+  --secondary: 240 5% 91%;
   --secondary-foreground: 240 6% 10%;
   --muted: 240 5% 91%;
-  --muted-foreground: 240 3% 44%; /* #6e6e73 */
+  --muted-foreground: 240 3% 44%;
   --accent: 240 5% 91%;
   --accent-foreground: 240 6% 10%;
-  --destructive: 3 78% 46%; /* #d22118 — matches arch12 */
+  --destructive: 3 78% 46%;
   --destructive-foreground: 0 0% 100%;
-  --border: 240 6% 87%; /* rgba-ish light border */
+  --border: 240 6% 87%;
   --input: 240 5% 91%;
   --ring: 240 6% 10%;
   --radius: 0.75rem;
 
-  /* Charts — macOS system colors */
-  --chart-1: 240 6% 10%; /* Slate / Pitch Black */
-  --chart-2: 142 71% 45%; /* green */
-  --chart-3: 240 5% 45%; /* slate gray */
-  --chart-4: 3 78% 46%; /* red — matches arch12 */
-  --chart-5: 270 60% 55%; /* purple */
+  /* Charts */
+  --chart-1: 240 6% 10%;
+  --chart-2: 142 71% 45%;
+  --chart-3: 240 5% 45%;
+  --chart-4: 3 78% 46%;
+  --chart-5: 270 60% 55%;
 
   /* ═══════════════════════════════════════════════════════════════
        TREMOR BRAND — macOS Light
@@ -226,12 +195,7 @@
   --text-on-glass: var(--palette-text-on-glass);
   --text-on-glass-muted: var(--palette-text-on-glass-muted);
 
-  /* ── Glass-on-Video (translucent light glass over dark media) ──────────
-     These tokens produce a light-blurred-glass effect when layered over
-     the dark video scrim. The white surface at ~70 % opacity over a
-     dark background reads as a muted light gray — similar to macOS
-     vibrancy panels over a dark wallpaper.
-     Use these in place of inline dark-glass classes for maintainability. */
+  /* Glass-on-Video */
   --glass-video-surface: rgba(255, 255, 255, 0.7);
   --glass-video-surface-hover: rgba(255, 255, 255, 0.82);
   --glass-video-surface-strong: rgba(255, 255, 255, 0.9);
@@ -244,8 +208,7 @@
   --text-on-glass-video-muted: rgba(10, 10, 20, 0.55);
   --glass-video-radius: 20px;
 
-  /* Dark glass surface — opaque dark card for high-contrast sections
-     like data-heavy dashboards, chart containers, or alert panels. */
+  /* Dark glass surface */
   --dark-glass-surface: rgba(15, 23, 42, 0.75);
   --dark-glass-surface-hover: rgba(15, 23, 42, 0.85);
   --dark-glass-border: rgba(255, 255, 255, 0.12);
@@ -253,10 +216,7 @@
   --text-on-dark-glass: rgba(248, 250, 252, 0.95);
   --text-on-dark-glass-muted: rgba(203, 213, 225, 0.6);
 
-  /* Premium Glass Stack — exact spec for the highest-tier surfaces
-     (hero panels, drawer headers, command bar backdrop).
-     These tokens are intentionally more translucent and vivid
-     than the standard --glass-* set to create visual hierarchy. */
+  /* Premium Glass Stack */
   --glass-premium-bg: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.45) 0%,
@@ -268,12 +228,12 @@
   --glass-premium-shadow:
     0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 24px 35px -5px rgba(15, 23, 42, 0.06);
 
-  /* Vibrancy — macOS sidebar/toolbar tint */
+  /* Vibrancy */
   --vibrancy-surface: var(--palette-surface-vibrancy);
   --vibrancy-border: var(--palette-border-subtle);
 
   /* ═══════════════════════════════════════════════════════════════
-       Z-INDEX MATRIX — Single Source of Truth
+       Z-INDEX MATRIX
        ═══════════════════════════════════════════════════════════════ */
   --z-background: 10;
   --z-telemetry: 20;
@@ -281,21 +241,16 @@
   --z-navigation: 40;
   --z-overlay: 50;
 
-  /* ─── Canvas / Background Wave Tokens ──────────────────────────────────
-     Used by RouteBackground for the animated wave canvas fallback.
-     The gradient moves from soft gray to ice-blue to give depth
-     while keeping the surface light enough for glass to read cleanly.
-     ─────────────────────────────────────────────────────────────────── */
+  /* ─── Canvas / Background Wave Tokens ────────────────────────────────── */
   --canvas-bg-from: var(--palette-canvas-from);
   --canvas-bg-to: var(--palette-canvas-to);
   --canvas-gradient: linear-gradient(135deg, var(--canvas-bg-from) 0%, var(--canvas-bg-to) 100%);
-  /* Wave layer tint — subtle charcoal/slate radial used by the animated orbs */
   --canvas-wave-tint-a: rgba(0, 102, 255, 0.09);
   --canvas-wave-tint-b: rgba(16, 185, 129, 0.07);
   --canvas-wave-tint-c: rgba(232, 236, 244, 0.72);
 
   /* ═══════════════════════════════════════════════════════════════
-       DIFFUSION SHADOW SYSTEM — Light mode (softer)
+       SHADOW SYSTEM
        ═══════════════════════════════════════════════════════════════ */
   --shadow-diffusion-sm: 0 2px 4px -1px rgba(0, 0, 0, 0.04), 0 8px 12px -4px rgba(0, 0, 0, 0.03);
   --shadow-diffusion-md: 0 3px 5px -1px rgba(0, 0, 0, 0.04), 0 14px 18px -5px rgba(0, 0, 0, 0.03);
@@ -310,9 +265,11 @@
   --shadow-elevated:
     0 2px 4px rgba(0, 0, 0, 0.02), 0 8px 20px rgba(0, 0, 0, 0.03), 0 20px 48px rgba(0, 0, 0, 0.03),
     0 32px 72px rgba(0, 0, 0, 0.04), inset 0 0 0 0.5px rgba(255, 255, 255, 0.7);
-  --shadow-glow-blue: 0 0 20px rgba(28, 28, 30, 0.18), 0 0 60px rgba(28, 28, 30, 0.06);
   --shadow-glow-primary: 0 0 20px rgba(28, 28, 30, 0.18), 0 0 60px rgba(28, 28, 30, 0.06);
-  --shadow-glow-electric: 0 0 24px rgba(28, 28, 30, 0.28), 0 0 80px rgba(28, 28, 30, 0.1);
+  --shadow-glow-blue: 0 0 20px rgba(28, 28, 30, 0.18), 0 0 60px rgba(28, 28, 30, 0.06);
+  --shadow-glow-electric-blue: 0 0 20px rgba(28, 28, 30, 0.18), 0 0 60px rgba(28, 28, 30, 0.06);
+  --shadow-glow-mint: 0 0 20px rgba(16, 185, 129, 0.2), 0 0 60px rgba(16, 185, 129, 0.07);
+  --shadow-glow-amber: 0 0 20px rgba(245, 158, 11, 0.2), 0 0 60px rgba(245, 158, 11, 0.07);
   --shadow-window:
     0 2px 4px rgba(0, 0, 0, 0.02), 0 8px 24px rgba(0, 0, 0, 0.03), 0 24px 56px rgba(0, 0, 0, 0.04),
     0 40px 96px rgba(0, 0, 0, 0.05), inset 0 0 0 0.5px rgba(255, 255, 255, 0.8);
@@ -325,7 +282,7 @@
   --refraction-edge-light: inset 0 0 0 1px rgba(255, 255, 255, 0.6);
 
   /* ═══════════════════════════════════════════════════════════════
-       WAVE TOKENS — Light mode (subtle)
+       WAVE TOKENS
        ═══════════════════════════════════════════════════════════════ */
   --wave-intensity: 0.2;
   --wave-speed-mult: 0.5;
@@ -335,8 +292,7 @@
   /* ═══════════════════════════════════════════════════════════════
        RADIUS SCALE
        ═══════════════════════════════════════════════════════════════ */
-  /* radius-sm/md/lg/xl/card/button/full are generated from tokens.json */
-  /* and imported via variables-generated.css. Do not define duplicates here. */
+  /* radius-sm/md/lg/xl/card/button/full imported via variables-generated.css */
 
   /* Liquid Glass Radius Refinements */
   --liquid-glass-radius-card: 16px;
@@ -346,8 +302,9 @@
   --liquid-glass-radius-button: var(--radius-md);
   --liquid-glass-radius-button-hover: var(--radius-md);
 
-  /* ===== Design System Tokens ===== */
-  /* ---- Colors (Base Palette - DESIGN.md lines 20-39) ---- */
+  /* ═══════════════════════════════════════════════════════════════
+       DESIGN SYSTEM TOKENS
+       ═══════════════════════════════════════════════════════════════ */
   --color-bg-base: var(--palette-surface-canvas);
   --color-bg-elevated: var(--palette-surface-elevated);
   --color-bg-sunken: var(--palette-surface-sunken);
@@ -358,74 +315,37 @@
   --color-text-tertiary: var(--palette-text-tertiary);
   --color-accent-subtle: var(--palette-semantic-info-subtle);
 
-  /* ---- Colors (HUD & Overlays) ---- */
+  /* HUD & Overlays */
   --color-bg-hud: oklch(0% 0 0deg / 60%);
   --color-border-hud: oklch(100% 0 0deg / 10%);
   --color-text-hud-primary: oklch(100% 0 0deg);
   --color-text-hud-secondary: oklch(100% 0 0deg / 70%);
   --color-text-hud-tertiary: oklch(100% 0 0deg / 40%);
 
-  /* Uiverse.io by Spacious74 Button Foundation */
-  --bg-button-uiverse: radial-gradient(circle 80px at 80% -10%, #ffffff, #181b1b);
-  --bg-button-uiverse-inner: radial-gradient(circle 80px at 80% -50%, #777777, #0f1111);
-  --bg-button-uiverse-blob: radial-gradient(
-    circle 60px at 0% 100%,
-    #3fe9ff,
-    rgba(0, 0, 255, 0.5),
-    transparent
-  );
-  --bg-button-uiverse-inner-before: radial-gradient(
-    circle 60px at 0% 100%,
-    rgba(0, 225, 255, 0.1),
-    rgba(0, 0, 255, 0.06),
-    transparent
-  );
-  --shadow-button-uiverse-after: 0 0 20px rgba(255, 255, 255, 0.22);
-  --shadow-button-uiverse-blob: -10px 10px 30px rgba(0, 81, 255, 0.176);
-
-  /* Uiverse.io by uiverse-astronaut Circular Tabs Foundation */
-  --color-cloud: var(--arch0);
-  --color-edge: var(--arch4);
-  --color-mist: var(--arch9);
-  --color-ink: var(--arch11);
-  --shadow-cir-tabs: 0 1px 1px rgba(14, 17, 22, 0.04), 0 20px 40px -24px rgba(14, 17, 22, 0.18);
-  --shadow-cir-tabs-active:
-    0 1px 1px rgba(14, 17, 22, 0.06), 0 8px 18px -10px rgba(14, 17, 22, 0.5);
-
-  /* Uiverse.io by Nawsome Animated Loader */
-  --loader-ring-a: #f42f25;
-  --loader-ring-b: #f49725;
-  --loader-ring-c: #255ff4;
-  --loader-ring-d: #f42582;
-
-  /* Uiverse.io by uiverse-astronaut Circular Checklist Foundation */
-  --icon-cir-check-mark: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><polyline points='20 6 9 17 4 12'/></svg>");
-  --shadow-cir-check-focus: 0 0 0 3px rgba(46, 125, 239, 0.32);
-
-  /* ---- Opacity Tokens ---- */
+  /* Opacity Tokens */
   --opacity-focus-dim: 0.4;
   --opacity-disabled: 0.38;
   --opacity-hover: 0.08;
 
-  /* ---- Overlay/Backdrop Tokens ---- */
+  /* Overlay/Backdrop Tokens */
   --backdrop-dim: oklch(0% 0 0deg / 40%);
 
-  /* ---- Blur Tokens ---- */
+  /* Blur Tokens */
   --blur-focus-dim: 4px;
 
-  /* ---- Shadows (DESIGN.md Shadow Scale) ---- */
+  /* Shadows */
   --shadow-sm: 0 1px 2px oklch(0% 0 0deg / 0.05);
   --shadow-md: 0 4px 6px -1px oklch(0% 0 0deg / 0.08), 0 2px 4px -1px oklch(0% 0 0deg / 0.04);
   --shadow-lg: 0 10px 15px -3px oklch(0% 0 0deg / 0.1), 0 4px 6px -2px oklch(0% 0 0deg / 0.05);
 
-  /* ---- Z-Index Layers (DESIGN.md lines 117-123) ---- */
+  /* Z-Index Layers */
   --z-base: 0;
   --z-sticky: 10;
   --z-dropdown: 50;
   --z-modal: 100;
   --z-toast: 200;
 
-  /* ---- Focus Mode Tokens (DESIGN.md lines 203-205) ---- */
+  /* Focus Mode */
   --transition-focus: 400ms cubic-bezier(0.16, 1, 0.3, 1);
 
   /* macOS menu bar height */
@@ -434,8 +354,6 @@
   /* ═══════════════════════════════════════════════════════════════
        OS SHELL (taskbar / login card / dock)
        ═══════════════════════════════════════════════════════════════ */
-  /* Liquid Glass material: translucent layered surface, saturation-boosted
-     backdrop blur, hairline border and specular edge highlights. */
   --os-shell-surface:
     linear-gradient(
       180deg,
@@ -452,10 +370,8 @@
     inset 1px 0 0 var(--palette-glass-specular-side),
     inset -1px 0 0 var(--palette-glass-specular-side);
   --os-shell-backdrop: var(--palette-glass-backdrop);
-  /* Concentric radii on the 8pt grid: capsule bars, 24px panels */
   --os-shell-radius-lg: 24px;
   --os-shell-radius-full: 9999px;
-  /* UI chrome — legible sans; brand stencil is opt-in via `font-display` utility only */
   --os-shell-font: var(--font-sans);
   --os-shell-enter-duration: 700ms;
   --os-shell-enter-ease: cubic-bezier(0.16, 1, 0.3, 1);
@@ -463,12 +379,26 @@
   --os-shell-enter-delay-2: 250ms;
   --os-shell-enter-delay-3: 500ms;
 
-  /* Login card shell — white catch-light edge over dark wave (not chrome-border gray) */
+  /* Login supporting copy */
+  --login-text-muted: #848992;
+  --login-text-emphasis: var(--text-heading);
+  --login-text-placeholder: color-mix(in srgb, var(--login-text-muted) 78%, var(--text-heading) 22%);
+  --login-chrome-band: rgba(0, 0, 0, 0.04);
+  --login-card-max-width: 26.25rem;
+  --login-card-min-height: 40rem;
+  --login-viewport-taskbar-offset: 28px;
+  --login-card-page-offset-top: 4rem;
+  --login-card-padding-x: 2rem;
+  --login-card-padding-x-sm: 2.5rem;
+  --login-card-body-pt: 1.5rem;
+  --login-card-body-pb: 2rem;
+
+  /* Login card shell */
   --login-shell-edge: var(--palette-border-glass-catch);
   --login-shell-specular-inset: inset 0 1px 2px rgba(255, 255, 255, 0.28);
   --login-shell-shadow: var(--os-shell-shadow), var(--login-shell-specular-inset);
 
-  /* Login focus — golden chrome ring (macOS yellow family) */
+  /* Login focus — golden chrome ring */
   --login-focus-gold: var(--palette-chrome-yellow);
   --login-focus-gold-bright: #ffd966;
   --login-focus-gold-deep: #c9922a;
@@ -480,12 +410,13 @@
   --login-focus-inset-highlight: inset 0 1px 2px rgba(255, 255, 255, 0.85);
   --login-focus-ring-outer: 0 0 0 2px rgba(255, 255, 255, 0.92);
 
-  /* Login controls — recessed glass (dark tint within milk card; not opaque white chips) */
+  /* Login controls — light glass interior (white translucent, dark borders) */
   --login-control-radius: var(--radius-lg);
-  --login-field-bg: rgba(0, 0, 0, 0.15);
-  --login-field-bg-focus: rgba(0, 0, 0, 0.22);
-  --login-field-border: rgba(255, 255, 255, 0.08);
-  --login-field-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  --login-field-bg: rgba(255, 255, 255, 0.52);
+  --login-field-bg-focus: rgba(255, 255, 255, 0.68);
+  --login-field-border: rgba(15, 23, 42, 0.12);
+  --login-field-shadow:
+    var(--login-focus-inset-highlight), inset 0 1px 2px rgba(15, 23, 42, 0.04);
   --login-field-backdrop: blur(4px) saturate(120%);
   --login-cta-bg: var(--palette-neutral-950);
   --login-cta-bg-hover: var(--palette-brand-primary-hover);
@@ -493,17 +424,20 @@
   --login-cta-border: color-mix(in srgb, var(--palette-neutral-950) 82%, black);
   --login-cta-border-hover: color-mix(in srgb, var(--palette-brand-primary-hover) 88%, black);
   --login-cta-shadow: 0 2px 12px rgba(0, 0, 0, 0.24), 0 1px 3px rgba(0, 0, 0, 0.14);
-  --login-oauth-bg: rgba(0, 0, 0, 0.12);
-  --login-oauth-bg-hover: rgba(0, 0, 0, 0.18);
-  --login-oauth-border: rgba(255, 255, 255, 0.08);
+  --login-oauth-bg: rgba(255, 255, 255, 0.45);
+  --login-oauth-bg-hover: rgba(255, 255, 255, 0.62);
+  --login-oauth-border: rgba(15, 23, 42, 0.1);
   --login-oauth-backdrop: blur(4px) saturate(120%);
   --login-notice-bg: var(--overlay-dim);
   --login-notice-border: var(--border-subtle);
   --login-notice-radius: var(--login-control-radius);
   --login-brand-neon-core: color-mix(in srgb, var(--palette-semantic-danger) 55%, transparent);
   --login-brand-neon-mid: color-mix(in srgb, var(--palette-semantic-danger) 22%, transparent);
-  --login-footer-opacity: 0.45;
-  --login-footer-opacity-hover: 0.55;
+  --login-wordmark-color: var(--text-heading);
+  --login-wordmark-shadow: 0 1px 0 rgba(255, 255, 255, 0.75), 0 2px 4px rgba(15, 23, 42, 0.1);
+  --login-wordmark-drop: none;
+  --login-footer-opacity: 0.52;
+  --login-footer-opacity-hover: 0.62;
   --login-footer-divider-opacity: 0.4;
 
   /* ═══════════════════════════════════════════════════════════════
@@ -515,9 +449,7 @@
   --font-sans: "SF Pro", -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
   --font-inter:
     "SF Pro", -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
-  /* Fallback until next/font hydrates; portal layout overrides via Outfit.variable */
   --font-outfit: "Outfit", ui-sans-serif, system-ui, sans-serif;
-  /* Display stencil — portal layout sets Anurati via --font-display */
   --font-display: "Anurati", "Orbitron", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 

@@ -33,21 +33,21 @@ Single source of truth for visual design, tokens, and Tailwind configuration.
 
 Canonical sign-in surface: `apps/portal/src/app/(auth)/login/page.tsx` + `LoginForm`. Light frosted card on dark wallpaper ≠ dark-mode UI (DECISIONS #003 / #010).
 
-| Element              | Implementation                                                                                                                       |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| Shell                | `.os-shell.os-shell--login` + `.os-shell-enter-2`; paints via `--os-shell-*` ← `--palette-glass-*`                                   |
-| Card width           | `max-w-[420px]`, `min-h-[720px]`                                                                                                     |
-| Title bar            | macOS traffic lights (`bg-mac-red/yellow/green`) + centered “Arch — System Sign In”                                                  |
-| Brand mark           | Folded `@repo/ui/Logo` (`.login-brand-mark`, `.login-brand-fold`, `.login-brand-neon` ← `--login-brand-neon-*`)                      |
-| Wordmark             | `font-display` **ARCH-SYSTEM** only (uppercase + tracking; `--font-display` / Anurati)                                               |
-| Body copy            | `--font-sans` / Inter / SF Pro — title bar, labels, fields, buttons, notice, footer (shell uses `--os-shell-font: var(--font-sans)`) |
-| Fields / CTA / OAuth | `.login-field` / `.login-cta` / `.login-oauth` ← silver-glass `--login-*` (not opaque white) + `--login-control-radius` (16px)       |
-| Form behavior        | `LoginForm`: remember me, forgot password, OAuth (Google / Microsoft / GitHub)                                                       |
-| Notice               | `.login-notice` ← `--login-notice-*` (VPN callout + info icon)                                                                       |
-| Focus                | `--login-focus-gold-*` (incl. `--login-focus-gold-glow-peak`)                                                                        |
-| Footer               | `LoginBrandBanner` marquee — partner + AI logos from `/branding/ai/`                                                                 |
+| Element              | Implementation                                                                                                    |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| Shell                | `.os-shell.os-shell--login` + `.os-shell-enter-2`; paints via `--os-shell-*` ← `--palette-glass-*`                |
+| Card layout          | `--login-card-*` tokens + `.login-card-viewport`, `.login-card-shell`, `.login-card-body`, `.login-card-chrome-x` |
+| Title bar            | macOS traffic lights (decorative) + centered title + `LoginSecureBadge` in chrome row                             |
+| Brand mark           | Folded `@repo/ui/Logo` variant `display` (`.login-brand-mark`, `.login-brand-fold`, `.login-brand-neon`)          |
+| Wordmark             | `.login-wordmark` + `font-display` **ARCH-SYSTEM** (Anurati; elevated specular on light glass)                    |
+| Body copy            | `--font-sans` via `.login-muted-text`, `.login-text-emphasis`, `.login-field-label`                               |
+| Fields / CTA / OAuth | `.login-field` / `.login-cta` / `.login-oauth` ← light-glass `--login-*`; `Input variant="login"`                 |
+| Form behavior        | `LoginForm`: remember me, forgot password, OAuth (Google / Microsoft / GitHub)                                    |
+| Notice               | `LoginEveNotice` — eve integration status (`.login-notice--eve`)                                                  |
+| Focus                | `--login-focus-gold-*` (incl. `--login-focus-inset-highlight` on field focus)                                     |
+| Footer               | `LoginBrandBanner` marquee — partner + AI logos from `/branding/ai/`                                              |
 
-Control paints SSOT: `--login-*` in `variables.css` + classes in `glass.css`. Do **not** treat `apps/portal/app/(auth)/login/page.tsx` as canonical (legacy duplicate).
+Control paints SSOT: `--login-*` in `variables.css` + classes in `glass.css`. Canonical page: `apps/portal/src/app/(auth)/login/page.tsx`.
 
 ### Agent Tracing & Context Hand-off (MANDATORY RULE)
 

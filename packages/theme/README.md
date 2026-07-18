@@ -156,15 +156,18 @@ The canonical sign-in UI lives at `apps/portal/src/app/(auth)/login/page.tsx` (+
 
 ### `--login-*` control paints (do not hard-code in components)
 
-- **Radius**: `--login-control-radius` (aliases `--radius-lg` / 16px)
-- **Field**: `--login-field-bg`, `--login-field-bg-focus`, `--login-field-border`, `--login-field-shadow`, `--login-field-backdrop` (silver glass — not opaque white)
+- **Radius**: `--login-control-radius` (aliases `--radius-lg` / **16px**)
+- **Layout**: `--login-card-max-width`, `--login-card-min-height`, `--login-viewport-taskbar-offset`, `--login-card-page-offset-top`, `--login-card-padding-x` / `-sm`
+- **Field**: `--login-field-bg`, `--login-field-bg-focus`, `--login-field-border`, `--login-field-shadow`, `--login-field-backdrop` (light glass interior)
 - **CTA**: `--login-cta-bg`, `--login-cta-bg-hover`, `--login-cta-fg`, `--login-cta-border`, `--login-cta-shadow`
-- **OAuth**: `--login-oauth-bg`, `--login-oauth-bg-hover`, `--login-oauth-border`, `--login-oauth-backdrop` (muted silver; not bright white)
-- **Notice**: `--login-notice-bg`, `--login-notice-border`, `--login-notice-radius`
+- **OAuth**: `--login-oauth-bg`, `--login-oauth-bg-hover`, `--login-oauth-border`, `--login-oauth-backdrop`
+- **Notice**: `--login-notice-bg`, `--login-notice-border`, `--login-notice-radius`; Eve status via `LoginEveNotice`
+- **Wordmark**: `--login-wordmark-color`, `--login-wordmark-shadow` (`.login-wordmark`)
+- **Chrome band**: `--login-chrome-band` (`.login-chrome-band` on title bar + footer)
 - **Brand neon**: `--login-brand-neon-core`, `--login-brand-neon-mid`
-- **Focus gold**: `--login-focus-gold-*` (incl. `--login-focus-gold-glow-peak`)
-- **Classes**: `.login-field`, `.login-cta`, `.login-oauth`, `.login-notice`, `.login-checkbox`
+- **Focus gold**: `--login-focus-gold-*` (incl. `--login-focus-inset-highlight`, `--login-focus-gold-glow-peak`)
+- **Classes**: `.login-field`, `.login-cta`, `.login-oauth`, `.login-notice`, `.login-checkbox`, `.login-card-*` layout utilities
 
-Also: `font-display` **ARCH-SYSTEM** wordmark only (all other login UI uses `--font-sans` via `--os-shell-font`); `LoginBrandBanner` / `LoginSecureBadge`; specs under `.kiro/specs/login-form-redesign/`, `unified-os-shell/`.
+Also: `font-display` **ARCH-SYSTEM** wordmark only; `Input variant="login"` in `LoginForm`; `LoginBrandBanner` / `LoginSecureBadge`; specs under `.kiro/specs/login-form-redesign/`, `unified-os-shell/`.
 
-See `GEMINI.md` for the element table. Do not copy `apps/portal/app/(auth)/login/page.tsx` (legacy duplicate).
+Canonical page: `apps/portal/src/app/(auth)/login/page.tsx`.

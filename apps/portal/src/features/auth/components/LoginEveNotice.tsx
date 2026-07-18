@@ -8,7 +8,7 @@ import { EVE_BRAND } from "@/config/vercel-brands";
 export function LoginEveNotice() {
   return (
     <aside
-      className="login-notice login-notice--eve px-3.5 py-3 flex items-center gap-3 select-none"
+      className="login-notice login-notice--eve p-4 flex items-center gap-3 select-none"
       aria-label="eve backend optimization status"
     >
       <Link
@@ -16,7 +16,7 @@ export function LoginEveNotice() {
         target="_blank"
         rel="noopener noreferrer"
         title="eve — The agent framework"
-        className="login-eve-mark shrink-0 rounded-sm outline-none transition-opacity hover:opacity-80 focus-visible:ring-2 focus-visible:ring-[var(--accent-blue)]/50"
+        className="login-eve-mark shrink-0 rounded-sm outline-none transition-opacity hover:opacity-80 focus-visible:outline-none"
       >
         <Image
           src={EVE_BRAND.src}
@@ -30,7 +30,7 @@ export function LoginEveNotice() {
 
       <div className="min-w-0 flex flex-col gap-1">
         <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
-          <span className="text-[12px] font-semibold tracking-wide text-text-heading lowercase">
+          <span className="login-text-emphasis text-[12px] font-semibold tracking-wide lowercase">
             {EVE_BRAND.name}
           </span>
           <span className="login-eve-status text-[11px] font-medium tracking-wide">

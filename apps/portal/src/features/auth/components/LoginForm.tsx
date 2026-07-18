@@ -18,10 +18,6 @@ interface LoginFormProps {
   className?: string;
 }
 
-const LOGIN_FIELD_CLASS =
-  "login-field block w-full min-w-0 max-w-full h-11 box-border px-3 text-[14px] font-medium text-[var(--text-heading)] outline-none transition-[border-color,box-shadow,background-color] duration-200 hover:border-border-default disabled:opacity-50";
-
-const LOGIN_LABEL_CLASS = "login-field-label";
 const LOGIN_MUTED_TEXT = "login-muted-text text-[13px] font-medium tracking-wide";
 
 export function LoginForm({ className }: LoginFormProps) {
@@ -139,26 +135,26 @@ export function LoginForm({ className }: LoginFormProps) {
       data-testid="login-form"
       className={className ?? "flex w-full flex-col space-y-4"}
     >
-      <div className="w-full min-w-0 space-y-1.5">
-        <label htmlFor="login-email" className={LOGIN_LABEL_CLASS}>
+      <div className="w-full min-w-0 space-y-2">
+        <label htmlFor="login-email" className="login-field-label">
           Employee ID or Email
         </label>
         <Input
           id="login-email"
           type="text"
           name="email"
+          variant="login"
           autoComplete="username"
           placeholder="Enter your ID or email…"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
           disabled={busy}
-          className={LOGIN_FIELD_CLASS}
         />
       </div>
 
-      <div className="w-full min-w-0 space-y-1.5">
-        <label htmlFor="login-password" className={LOGIN_LABEL_CLASS}>
+      <div className="w-full min-w-0 space-y-2">
+        <label htmlFor="login-password" className="login-field-label">
           Password
         </label>
         <div className="relative w-full min-w-0">
@@ -166,6 +162,7 @@ export function LoginForm({ className }: LoginFormProps) {
             id="login-password"
             type={showPassword ? "text" : "password"}
             name="password"
+            variant="login"
             autoComplete="current-password"
             placeholder="Enter your password…"
             value={password}
@@ -174,18 +171,18 @@ export function LoginForm({ className }: LoginFormProps) {
             onKeyUp={handleKeyUp}
             required
             disabled={busy}
-            className={`${LOGIN_FIELD_CLASS} pr-10`}
+            className="pr-10"
           />
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
             aria-label={showPassword ? "Hide password" : "Show password"}
-            className="absolute right-3 top-1/2 -translate-y-1/2 login-muted-text hover:text-[var(--text-heading)] focus-visible:outline-none rounded p-0.5"
+            className="absolute right-3 top-1/2 -translate-y-1/2 login-muted-text hover:text-arch-text-primary focus-visible:outline-none rounded p-0.5"
           >
             {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
           </button>
           {capsLockOn && (
-            <div className="absolute right-10 top-1/2 -translate-y-1/2 flex items-center gap-1 text-amber-600 text-xs">
+            <div className="absolute right-10 top-1/2 -translate-y-1/2 flex items-center gap-1 text-accent-amber text-xs">
               <AlertCircle size={12} />
               <span>Caps Lock is on</span>
             </div>
@@ -210,7 +207,7 @@ export function LoginForm({ className }: LoginFormProps) {
         </label>
         <Link
           href="/reset-password"
-          className={`${LOGIN_MUTED_TEXT} hover:text-[var(--text-heading)] hover:underline focus-visible:outline-none rounded px-0.5`}
+          className={`${LOGIN_MUTED_TEXT} hover:text-arch-text-primary hover:underline focus-visible:outline-none rounded px-0.5`}
         >
           Forgot password?
         </Link>
@@ -279,7 +276,7 @@ function OAuthButton({ label, loading, disabled, onClick, children }: OAuthButto
       onClick={onClick}
       disabled={disabled}
       aria-label={`Sign in with ${label}`}
-      className={`login-oauth flex items-center justify-center gap-1.5 h-10 ${LOGIN_MUTED_TEXT} disabled:opacity-50 focus-visible:outline-none`}
+      className={`login-oauth flex items-center justify-center gap-1.5 h-11 ${LOGIN_MUTED_TEXT} disabled:opacity-50 focus-visible:outline-none`}
     >
       {children}
       <span className="hidden sm:inline">{loading ? "…" : label}</span>
