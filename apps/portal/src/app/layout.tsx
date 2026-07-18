@@ -13,6 +13,7 @@ import { PWAInstallButton } from "@/components/PWAInstallButton";
 import { SystemTrayPill } from "@/components/system/SystemTray";
 import { WebVitalsReporter } from "@/components/WebVitalsReporter";
 import { ArchMacMenuBar } from "@/components/system/ArchMacMenuBar";
+import { PartnerBrandStrip } from "@/components/system/PartnerBrandStrip";
 import { ArchLockOverlay } from "@/components/system/ArchLockOverlay";
 import { Toaster } from "@repo/ui/Toaster";
 import { CookieConsent } from "@repo/ui/CookieConsent";
@@ -174,6 +175,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }):
             {/* Global Navigation Header with proper landmark */}
             <header role="banner" className="flex items-center gap-3">
               <ArchMacMenuBar
+                leftSlot={<PartnerBrandStrip variant="taskbar" />}
                 rightSlot={
                   <nav role="navigation" aria-label="Global">
                     <div className="flex items-center gap-2">

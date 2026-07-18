@@ -7,6 +7,8 @@ import { Logo } from "./Logo";
 
 interface MacMenuBarProps {
   className?: string;
+  /** Platform partner marks — left cluster after window controls. */
+  leftSlot?: React.ReactNode;
   centerSlot?: React.ReactNode;
   rightSlot?: React.ReactNode;
   /** When provided, replaces the default Arch app menu with a custom panel. */
@@ -45,7 +47,13 @@ function MenuChevron({ open }: { open: boolean }) {
 /**
  * Floating pill taskbar chrome (traffic lights + Start/Apple-style app menu).
  */
-export function MacMenuBar({ className, centerSlot, rightSlot, appMenu }: MacMenuBarProps) {
+export function MacMenuBar({
+  className,
+  leftSlot,
+  centerSlot,
+  rightSlot,
+  appMenu,
+}: MacMenuBarProps) {
   const [appMenuOpen, setAppMenuOpen] = React.useState(false);
   const menuRef = React.useRef<HTMLDivElement>(null);
   const triggerRef = React.useRef<HTMLButtonElement>(null);
@@ -180,13 +188,13 @@ export function MacMenuBar({ className, centerSlot, rightSlot, appMenu }: MacMen
           onClick={() => {
             if (typeof window === "undefined") return;
             window.dispatchEvent(
-              new CustomEvent("open-split-view", { detail: { service: "whatsapp" } }),
+              new CustomEvent("open-split-view", { detail: { service: "whatsapp" } })
             );
           }}
           className={cn(
             "h-3 w-3 rounded-full border border-black/15 bg-mac-red",
             "transition-transform hover:scale-110 active:scale-95",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-blue)]/50 focus-visible:ring-offset-1",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-blue)]/50 focus-visible:ring-offset-1"
           )}
         />
         <button
@@ -204,6 +212,13 @@ export function MacMenuBar({ className, centerSlot, rightSlot, appMenu }: MacMen
           className="h-3 w-3 rounded-full border border-black/15 bg-mac-green opacity-80 disabled:cursor-not-allowed"
         />
       </div>
+
+      {leftSlot ? (
+        <>
+          <div role="separator" aria-hidden className="mx-0.5 h-4 w-px shrink-0 bg-border-subtle" />
+          <div className="flex shrink-0 items-center">{leftSlot}</div>
+        </>
+      ) : null}
 
       {centerSlot ? (
         <div className="mx-1 flex min-w-0 flex-1 justify-center">{centerSlot}</div>

@@ -1487,6 +1487,7 @@
 }
 
 @keyframes login-card-gold-glow {
+
   0%,
   100% {
     box-shadow:
@@ -1529,7 +1530,12 @@
   backdrop-filter: var(--login-field-backdrop);
 }
 
-/* Small muted field titles — crisp sans, does not compete with inputs */
+/* Login shell — single silver-tinted muted grey for all supporting copy */
+.login-muted-text {
+  color: var(--login-text-muted);
+}
+
+/* Small field titles — same muted grey as title bar, links, and notices */
 .login-field-label {
   display: block;
   font-family: var(--font-sans), sans-serif;
@@ -1537,8 +1543,12 @@
   font-weight: 600;
   letter-spacing: 0.02em;
   line-height: 1.25;
-  color: var(--text-secondary);
-  opacity: 0.7;
+  color: var(--login-text-muted);
+}
+
+.os-shell--login .login-field::placeholder {
+  color: var(--login-text-placeholder);
+  opacity: 1;
 }
 
 .os-shell--login .login-field {
@@ -1559,14 +1569,12 @@
   background-origin: padding-box, border-box !important;
   background-image:
     linear-gradient(var(--login-field-bg-focus), var(--login-field-bg-focus)),
-    linear-gradient(
-      120deg,
+    linear-gradient(120deg,
       var(--login-focus-gold-dim) 0%,
       var(--login-focus-gold) 22%,
       var(--login-focus-gold-bright) 50%,
       var(--login-focus-gold) 78%,
-      var(--login-focus-gold-deep) 100%
-    ) !important;
+      var(--login-focus-gold-deep) 100%) !important;
   background-size:
     100% 100%,
     220% 100% !important;
@@ -1647,8 +1655,34 @@
   background-color: var(--login-notice-bg);
 }
 
+.login-notice--eve {
+  background: linear-gradient(135deg,
+      color-mix(in srgb, var(--login-notice-bg) 92%, var(--accent-blue) 8%) 0%,
+      var(--login-notice-bg) 100%);
+}
+
+.login-eve-mark {
+  padding: 0.125rem 0.25rem;
+}
+
+.login-eve-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  color: var(--accent-green);
+}
+
+.login-eve-status::before {
+  content: "";
+  width: 0.375rem;
+  height: 0.375rem;
+  border-radius: 9999px;
+  background-color: var(--accent-green);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent-green) 25%, transparent);
+}
+
 .login-footer {
-  opacity: var(--login-footer-opacity);
+  opacity: 1;
 }
 
 .login-footer-divider {
@@ -1662,6 +1696,16 @@
 
 .login-footer-logos:hover {
   opacity: var(--login-footer-opacity-hover);
+}
+
+.taskbar-partner-logos {
+  opacity: var(--login-footer-opacity, 0.78);
+  transition: opacity 300ms, background-color 200ms;
+}
+
+.taskbar-partner-logos:hover {
+  opacity: 1;
+  background-color: color-mix(in srgb, var(--login-notice-bg) 88%, var(--accent-blue) 12%);
 }
 
 .login-checkbox {
@@ -1700,12 +1744,10 @@
       100% 100% !important;
     background-image:
       linear-gradient(var(--login-field-bg-focus), var(--login-field-bg-focus)),
-      linear-gradient(
-        120deg,
+      linear-gradient(120deg,
         var(--login-focus-gold-dim),
         var(--login-focus-gold),
-        var(--login-focus-gold-bright)
-      ) !important;
+        var(--login-focus-gold-bright)) !important;
   }
 }
 
@@ -1714,21 +1756,19 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 5rem;
-  height: 5rem;
-  perspective: 420px;
+  width: 6.5rem;
+  height: 6.5rem;
+  perspective: 480px;
 }
 
 .login-brand-neon {
   position: absolute;
   inset: 8%;
   border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    var(--login-brand-neon-core) 0%,
-    var(--login-brand-neon-mid) 42%,
-    transparent 72%
-  );
+  background: radial-gradient(circle,
+      var(--login-brand-neon-core) 0%,
+      var(--login-brand-neon-mid) 42%,
+      transparent 72%);
   filter: blur(10px);
   pointer-events: none;
   z-index: 0;
@@ -1787,31 +1827,37 @@
 }
 
 @keyframes login-brand-fold-left {
+
   0%,
   100% {
     transform: rotateY(16deg);
   }
+
   50% {
     transform: rotateY(14deg);
   }
 }
 
 @keyframes login-brand-fold-right {
+
   0%,
   100% {
     transform: rotateY(-16deg);
   }
+
   50% {
     transform: rotateY(-14deg);
   }
 }
 
 @keyframes login-brand-neon-pulse {
+
   0%,
   100% {
     opacity: 0.45;
     transform: scale(0.92);
   }
+
   50% {
     opacity: 0.9;
     transform: scale(1.08);

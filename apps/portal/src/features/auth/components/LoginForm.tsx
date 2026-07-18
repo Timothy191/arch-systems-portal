@@ -19,9 +19,10 @@ interface LoginFormProps {
 }
 
 const LOGIN_FIELD_CLASS =
-  "login-field block w-full min-w-0 max-w-full h-11 box-border px-3 text-[14px] font-medium text-[var(--text-heading)] placeholder:text-[var(--text-secondary)] placeholder:opacity-55 outline-none transition-[border-color,box-shadow,background-color] duration-200 hover:border-border-default disabled:opacity-50";
+  "login-field block w-full min-w-0 max-w-full h-11 box-border px-3 text-[14px] font-medium text-[var(--text-heading)] outline-none transition-[border-color,box-shadow,background-color] duration-200 hover:border-border-default disabled:opacity-50";
 
 const LOGIN_LABEL_CLASS = "login-field-label";
+const LOGIN_MUTED_TEXT = "login-muted-text text-[13px] font-medium tracking-wide";
 
 export function LoginForm({ className }: LoginFormProps) {
   const router = useRouter();
@@ -179,7 +180,7 @@ export function LoginForm({ className }: LoginFormProps) {
             type="button"
             onClick={() => setShowPassword(!showPassword)}
             aria-label={showPassword ? "Hide password" : "Show password"}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-secondary)] hover:text-[var(--text-heading)] focus-visible:outline-none rounded p-0.5"
+            className="absolute right-3 top-1/2 -translate-y-1/2 login-muted-text hover:text-[var(--text-heading)] focus-visible:outline-none rounded p-0.5"
           >
             {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
           </button>
@@ -195,7 +196,7 @@ export function LoginForm({ className }: LoginFormProps) {
       <div className="flex w-full min-w-0 items-center justify-between gap-3 pt-0.5">
         <label
           htmlFor="remember-me"
-          className="flex items-center gap-2 text-[13px] font-medium tracking-wide text-[var(--text-secondary)] cursor-pointer select-none"
+          className={`flex items-center gap-2 ${LOGIN_MUTED_TEXT} cursor-pointer select-none`}
         >
           <input
             id="remember-me"
@@ -209,7 +210,7 @@ export function LoginForm({ className }: LoginFormProps) {
         </label>
         <Link
           href="/reset-password"
-          className="text-[13px] font-medium tracking-wide text-[var(--text-secondary)] hover:text-[var(--text-heading)] hover:underline focus-visible:outline-none rounded px-0.5"
+          className={`${LOGIN_MUTED_TEXT} hover:text-[var(--text-heading)] hover:underline focus-visible:outline-none rounded px-0.5`}
         >
           Forgot password?
         </Link>
@@ -225,9 +226,7 @@ export function LoginForm({ className }: LoginFormProps) {
 
       <div className="flex items-center gap-3 py-1" role="separator">
         <div className="h-px flex-1 bg-border-subtle" aria-hidden="true" />
-        <span className="shrink-0 text-[13px] font-medium tracking-wide text-[var(--text-secondary)]">
-          or continue with
-        </span>
+        <span className={`shrink-0 ${LOGIN_MUTED_TEXT}`}>or continue with</span>
         <div className="h-px flex-1 bg-border-subtle" aria-hidden="true" />
       </div>
 
@@ -280,7 +279,7 @@ function OAuthButton({ label, loading, disabled, onClick, children }: OAuthButto
       onClick={onClick}
       disabled={disabled}
       aria-label={`Sign in with ${label}`}
-      className="login-oauth flex items-center justify-center gap-1.5 h-10 text-[13px] font-medium tracking-wide text-[var(--text-secondary)] disabled:opacity-50 focus-visible:outline-none"
+      className={`login-oauth flex items-center justify-center gap-1.5 h-10 ${LOGIN_MUTED_TEXT} disabled:opacity-50 focus-visible:outline-none`}
     >
       {children}
       <span className="hidden sm:inline">{loading ? "…" : label}</span>

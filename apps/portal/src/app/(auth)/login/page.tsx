@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { createServerSupabaseClient, getUserSafely } from "@repo/supabase/server";
 import { LoginForm } from "@/features/auth/components/LoginForm";
 import { LoginBrandBanner } from "@/features/auth/components/LoginBrandBanner";
+import { LoginEveNotice } from "@/features/auth/components/LoginEveNotice";
 import { LoginSecureBadge } from "@/features/auth/components/LoginSecureBadge";
 import { AlertTriangle } from "lucide-react";
 import { Logo } from "@repo/ui/Logo";
@@ -87,7 +88,7 @@ export default async function LoginPage() {
                 <span className="w-3 h-3 rounded-full bg-mac-yellow border border-border-subtle" />
                 <span className="w-3 h-3 rounded-full bg-mac-green border border-border-subtle" />
               </div>
-              <span className="flex-1 text-center text-[13px] font-medium tracking-wide text-[var(--text-secondary)] select-none pr-14">
+              <span className="flex-1 text-center login-muted-text text-[13px] font-medium tracking-wide select-none pr-14">
                 Arch — System Sign In
               </span>
             </div>
@@ -96,7 +97,7 @@ export default async function LoginPage() {
               {/* Header Bar */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 select-none">
-                  <span className="text-[13px] font-medium tracking-wide text-[var(--text-secondary)]">
+                  <span className="login-muted-text text-[13px] font-medium tracking-wide">
                     Welcome Back
                   </span>
                 </div>
@@ -104,15 +105,23 @@ export default async function LoginPage() {
               </div>
 
               {/* Title */}
-              <div className="flex items-center gap-5">
+              <div className="flex items-center gap-4">
                 <div className="login-brand-mark relative shrink-0" aria-hidden="true">
                   <span className="login-brand-neon" />
                   <div className="login-brand-fold">
                     <span className="login-brand-fold__face login-brand-fold__face--left">
-                      <Logo className="login-brand-logo text-text-heading" />
+                      <Logo
+                        variant="display"
+                        stencilId="login-left"
+                        className="login-brand-logo text-text-heading"
+                      />
                     </span>
                     <span className="login-brand-fold__face login-brand-fold__face--right">
-                      <Logo className="login-brand-logo text-text-heading" />
+                      <Logo
+                        variant="display"
+                        stencilId="login-right"
+                        className="login-brand-logo text-text-heading"
+                      />
                     </span>
                   </div>
                 </div>
@@ -120,7 +129,7 @@ export default async function LoginPage() {
                   <h1 className="font-display text-3xl font-normal tracking-[0.12em] uppercase text-text-heading">
                     ARCH-SYSTEM
                   </h1>
-                  <p className="text-[13px] font-medium tracking-wide text-[var(--text-secondary)]">
+                  <p className="login-muted-text text-[13px] font-medium tracking-wide">
                     Sign in to Arch Systems
                   </p>
                 </div>
@@ -128,25 +137,7 @@ export default async function LoginPage() {
 
               <LoginForm />
 
-              {/* Contextual System Notice */}
-              <div className="login-notice px-3.5 py-2.5 text-[13px] font-medium tracking-wide text-[var(--text-secondary)] leading-relaxed flex items-start gap-2.5 select-none">
-                <svg
-                  className="w-3.5 h-3.5 text-[var(--text-secondary)] shrink-0 mt-0.5"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <circle cx="12" cy="12" r="10" />
-                  <line x1="12" y1="16" x2="12" y2="12" />
-                  <line x1="12" y1="8" x2="12.01" y2="8" />
-                </svg>
-                <span>
-                  <strong>Notice:</strong> Please ensure you are connected to the corporate VPN.
-                </span>
-              </div>
+              <LoginEveNotice />
             </div>
 
             {/* Brand logo marquee */}

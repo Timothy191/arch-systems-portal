@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Marquee } from "@repo/ui/Marquee";
+import { VERCEL_FAMILY_MARQUEE_BRANDS } from "@/config/vercel-brands";
 
 interface BrandLogo {
   src?: string;
@@ -12,13 +13,10 @@ const BRAND_LOGOS: BrandLogo[] = [
   { src: "/logo.svg", name: "Arch", width: 72, height: 20 },
   { src: "/archlinux-logo-black-scalable.svg", name: "Arch Linux", width: 72, height: 20 },
   { name: "Plantcor", width: 80, height: 22 },
-  { src: "/branding/ai/openai.svg", name: "OpenAI", width: 20, height: 20 },
   { src: "/branding/ai/anthropic.svg", name: "Anthropic", width: 20, height: 20 },
   { src: "/branding/ai/google.svg", name: "Google", width: 20, height: 20 },
   { src: "/branding/ai/github.svg", name: "GitHub", width: 20, height: 20 },
-  { src: "/branding/ai/meta.svg", name: "Meta", width: 22, height: 20 },
-  { src: "/branding/ai/vercel.svg", name: "Vercel", width: 20, height: 20 },
-  { src: "/branding/ai/eve.svg", name: "Eve AI", width: 20, height: 20 },
+  ...VERCEL_FAMILY_MARQUEE_BRANDS,
 ];
 
 /**
@@ -32,7 +30,7 @@ export function LoginBrandBanner() {
 
   return (
     <div className="w-full">
-      <p className="login-footer mb-2 text-center text-[13px] font-medium tracking-wide text-[var(--text-secondary)] select-none leading-relaxed px-1">
+      <p className="login-footer mb-2 text-center login-muted-text text-[13px] font-medium tracking-wide select-none leading-relaxed px-1">
         Plantcor Mainframe · Powered by Arch Systems · Integrated Intelligence
       </p>
       <div
@@ -61,7 +59,7 @@ export function LoginBrandBanner() {
                     unoptimized
                   />
                 ) : null}
-                <span className="whitespace-nowrap text-[13px] font-medium tracking-wide text-[var(--text-secondary)]">
+                <span className="whitespace-nowrap login-muted-text text-[13px] font-medium tracking-wide">
                   {logo.name}
                 </span>
               </div>
@@ -73,7 +71,7 @@ export function LoginBrandBanner() {
               <span
                 key={`sep-${key}`}
                 aria-hidden
-                className="flex h-8 shrink-0 items-center text-[13px] leading-none text-[var(--text-secondary)] select-none"
+                className="flex h-8 shrink-0 items-center login-muted-text text-[13px] leading-none select-none"
               >
                 |
               </span>,

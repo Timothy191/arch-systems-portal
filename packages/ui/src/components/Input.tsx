@@ -1,3 +1,1 @@
-export function Input(props: React.InputHTMLAttributes<HTMLInputElement>) {
-  return <input {...props} />;
-}
+export { Input, type InputProps } from "./ui/input";
