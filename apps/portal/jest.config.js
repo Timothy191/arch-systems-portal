@@ -2,6 +2,7 @@ module.exports = {
   testEnvironment: "jsdom",
   forceExit: true,
   setupFilesAfterEnv: ["<rootDir>/setupTests.ts"],
+  testPathIgnorePatterns: ["<rootDir>/_app_legacy_shadow/"],
   transform: {
     "^.+\\.(t|j)sx?$": [
       "@swc/jest",
@@ -24,7 +25,6 @@ module.exports = {
   moduleNameMapper: {
     "^(\\.{1,2}/.*)\\.js$": "$1",
     "^@/(.*)$": "<rootDir>/src/$1",
-    "^~/(.*)$": "<rootDir>/src/$1",
     "^@repo/contract$": "<rootDir>/../../packages/contract/src/index.ts",
     "^@repo/supabase/(.*)$": "<rootDir>/../../packages/supabase/src/$1",
     "^@repo/supabase$": "<rootDir>/../../packages/supabase/src/index.ts",
@@ -62,20 +62,18 @@ module.exports = {
     "^@repo/ui/EmptyState$": "<rootDir>/../../packages/ui/src/components/EmptyState.tsx",
     "^@repo/ui/Marquee$": "<rootDir>/../../packages/ui/src/components/Marquee.tsx",
 
-    "^@repo/ui/AnimatedButton$":
-      "<rootDir>/../../packages/ui/src/components/AnimatedButton.tsx",
+    "^@repo/ui/AnimatedButton$": "<rootDir>/../../packages/ui/src/components/AnimatedButton.tsx",
     "^@repo/ui/(.*)$": "<rootDir>/../../packages/ui/src/$1",
   },
   collectCoverageFrom: [
-    "lib/**/*.{ts,tsx}",
-    "features/**/*.{ts,tsx}",
-    "app/**/*.{ts,tsx}",
-    "components/**/*.{ts,tsx}",
-    "hooks/**/*.{ts,tsx}",
-    "server/proxy.ts",
+    "src/**/*.{ts,tsx}",
+    "proxy.ts",
     "!**/*.test.{ts,tsx}",
     "!**/*.d.ts",
     "!**/node_modules/**",
+    "!**/_app_legacy_shadow/**",
+    "!**/_features_legacy_shadow/**",
+    "!**/src.backup/**",
   ],
   coverageReporters: ["text", "lcov", "html"],
   coverageThreshold: {

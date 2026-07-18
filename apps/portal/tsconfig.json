@@ -7,7 +7,6 @@
       }
     ],
     "paths": {
-      "~/*": ["./src/*"],
       "@/*": ["./src/*"],
       "@/app/*": ["./src/app/*"],
       "@/features/*": ["./src/features/*"],
@@ -32,5 +31,11 @@
     "**/*.ts",
     "**/*.tsx"
   ],
-  "exclude": ["node_modules", ".next"]
+  "exclude": [
+    "node_modules",
+    ".next",
+    "_app_legacy_shadow",
+    "_features_legacy_shadow",
+    "src.backup"
+  ]
 }
