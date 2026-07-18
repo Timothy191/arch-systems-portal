@@ -16,7 +16,7 @@ import {
 import type { AlertEvent } from "@/features/hub";
 import type { TrendDataPoint } from "@/features/hub";
 import { getTools } from "@/lib/tools";
-import { DEPARTMENTS } from "~/lib/departments";
+import { DEPARTMENTS } from "@/lib/departments";
 import { GlassCard } from "@repo/ui/GlassCard";
 import {
   Shield,
@@ -37,7 +37,7 @@ export const dynamic = "force-dynamic";
 
 async function getDashboardCounts(
   today: string,
-  cookieList: Array<{ name: string; value: string }>,
+  cookieList: Array<{ name: string; value: string }>
 ) {
   return cachedRSC(
     ["hub", "counts", today],
@@ -68,13 +68,13 @@ async function getDashboardCounts(
           category: CacheCategory.METRICS,
           keyParts: ["hub", "counts", today],
           tags: ["table:safety_incidents", "table:breakdowns", "table:machines"],
-        },
+        }
       );
     },
     {
       revalidate: 300,
       tags: ["table:safety_incidents", "table:breakdowns", "table:machines"],
-    },
+    }
   );
 }
 
@@ -88,7 +88,7 @@ const FALLBACK_TREND_DATA: TrendDataPoint[] = [
 ];
 
 async function getProductionTrendData(
-  cookieList: Array<{ name: string; value: string }>,
+  cookieList: Array<{ name: string; value: string }>
 ): Promise<TrendDataPoint[]> {
   return cachedRSC(
     ["hub", "production-trend"],
@@ -133,19 +133,19 @@ async function getProductionTrendData(
           category: CacheCategory.METRICS,
           keyParts: ["hub", "production-trend"],
           tags: ["table:hourly_loads", "table:machines"],
-        },
+        }
       );
     },
     {
       revalidate: 300,
       tags: ["table:hourly_loads", "table:machines"],
-    },
+    }
   );
 }
 
 async function getRecentAlertEvents(
   today: string,
-  cookieList: Array<{ name: string; value: string }>,
+  cookieList: Array<{ name: string; value: string }>
 ): Promise<AlertEvent[]> {
   return cachedRSC(
     ["hub", "alerts", today],
@@ -159,7 +159,7 @@ async function getRecentAlertEvents(
           const { data: incidents } = await db
             .from("safety_incidents")
             .select(
-              "id, description, created_at, severity_id, location, severity:safety_severities(level)",
+              "id, description, created_at, severity_id, location, severity:safety_severities(level)"
             )
             .eq("incident_date", today)
             .eq("status", "open")
@@ -233,19 +233,19 @@ async function getRecentAlertEvents(
           category: CacheCategory.METRICS,
           keyParts: ["hub", "alerts", today],
           tags: ["table:safety_incidents", "table:breakdowns"],
-        },
+        }
       );
     },
     {
       revalidate: 300,
       tags: ["table:safety_incidents", "table:breakdowns"],
-    },
+    }
   );
 }
 
 async function getEmployeeDepartments(
   userId: string,
-  cookieList: Array<{ name: string; value: string }>,
+  cookieList: Array<{ name: string; value: string }>
 ) {
   return cachedRSC(
     ["user", userId, "accessible-dept-names"],
@@ -273,13 +273,13 @@ async function getEmployeeDepartments(
           category: CacheCategory.AUTH,
           keyParts: ["user", userId, "accessible-dept-names"],
           tags: [`auth:${userId}`, "table:employees", "table:departments"],
-        },
+        }
       );
     },
     {
       revalidate: 3600,
       tags: [`auth:${userId}`, "table:employees", "table:departments"],
-    },
+    }
   );
 }
 

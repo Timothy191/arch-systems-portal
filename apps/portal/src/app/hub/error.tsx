@@ -23,16 +23,12 @@ function getErrorMessage(error: Error): string {
 
 export default function HubError({ error, reset }: HubErrorProps) {
   useEffect(() => {
-    if (isAppError(error)) {
-      logError(error);
-    } else {
-      logError((error as any) instanceof Error ? error : new Error(String(error)));
-    }
+    logError(error);
   }, [error]);
 
   const title = getErrorTitle(error);
   const message = getErrorMessage(error);
-  const appError = isAppError(error) ? (error as any) : null;
+  const appError = isAppError(error) ? error : null;
 
   return (
     <div className="space-y-6">
