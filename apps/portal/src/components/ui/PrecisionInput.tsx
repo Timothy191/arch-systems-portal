@@ -4,8 +4,10 @@ import * as React from "react";
 import { cn } from "@repo/ui/lib/utils";
 import { ChevronUp, ChevronDown } from "lucide-react";
 
-interface PrecisionInputProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange" | "value"> {
+interface PrecisionInputProps extends Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  "onChange" | "value"
+> {
   label?: string;
   suffix?: string;
   value?: number | null;
@@ -15,7 +17,7 @@ interface PrecisionInputProps
 export const PrecisionInput = React.forwardRef<HTMLInputElement, PrecisionInputProps>(
   function PrecisionInput(
     { label, suffix, className, value, onChange, min, max, step = 1, ...props },
-    ref,
+    ref
   ) {
     const internalRef = React.useRef<HTMLInputElement>(null);
 
@@ -53,7 +55,7 @@ export const PrecisionInput = React.forwardRef<HTMLInputElement, PrecisionInputP
         {label && (
           <label
             htmlFor={inputId}
-            className="text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-wider"
+            className="text-[10px] font-bold text-arch-text-secondary uppercase tracking-wider"
           >
             {label}
           </label>
@@ -61,8 +63,8 @@ export const PrecisionInput = React.forwardRef<HTMLInputElement, PrecisionInputP
         <div className="relative">
           <div
             className={cn(
-              "flex items-center rounded-lg border border-[var(--border-emphasis)] bg-[var(--bg-primary)] hover:border-[#424242] transition-all overflow-hidden focus-within:ring-1 focus-within:ring-[#3ecf8e] focus-within:border-[#3ecf8e]/50",
-              className,
+              "flex items-center rounded-lg border border-arch-border-emphasis bg-arch-surface-primary hover:border-[#424242] transition-all overflow-hidden focus-within:ring-1 focus-within:ring-[#3ecf8e] focus-within:border-[#3ecf8e]/50",
+              className
             )}
           >
             <input
@@ -78,15 +80,15 @@ export const PrecisionInput = React.forwardRef<HTMLInputElement, PrecisionInputP
               min={min}
               max={max}
               step={step}
-              className="w-full bg-transparent px-3 py-2 text-sm text-[var(--text-heading)] outline-none placeholder-[var(--text-secondary)]"
+              className="w-full bg-transparent px-3 py-2 text-sm text-arch-text-primary outline-none placeholder-[var(--text-secondary)]"
               {...props}
             />
-            <div className="flex flex-col border-l border-[var(--border-emphasis)]">
+            <div className="flex flex-col border-l border-arch-border-emphasis">
               <button
                 type="button"
                 onClick={handleIncrement}
                 aria-label="Increment"
-                className="flex items-center justify-center p-1 hover:bg-[var(--bg-tertiary)] text-[var(--text-secondary)] hover:text-[var(--text-heading)] transition-colors"
+                className="flex items-center justify-center p-1 hover:bg-arch-surface-tertiary text-arch-text-secondary hover:text-arch-text-primary transition-colors"
               >
                 <ChevronUp className="w-3 h-3" />
               </button>
@@ -94,7 +96,7 @@ export const PrecisionInput = React.forwardRef<HTMLInputElement, PrecisionInputP
                 type="button"
                 onClick={handleDecrement}
                 aria-label="Decrement"
-                className="flex items-center justify-center p-1 hover:bg-[var(--bg-tertiary)] text-[var(--text-secondary)] hover:text-[var(--text-heading)] border-t border-[var(--border-emphasis)] transition-colors"
+                className="flex items-center justify-center p-1 hover:bg-arch-surface-tertiary text-arch-text-secondary hover:text-arch-text-primary border-t border-arch-border-emphasis transition-colors"
               >
                 <ChevronDown className="w-3 h-3" />
               </button>
@@ -108,5 +110,5 @@ export const PrecisionInput = React.forwardRef<HTMLInputElement, PrecisionInputP
         </div>
       </div>
     );
-  },
+  }
 );

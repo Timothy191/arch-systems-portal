@@ -44,20 +44,20 @@ export function EmployeeSearch({ onSelect }: EmployeeSearchProps) {
   return (
     <div className="relative">
       <div className="relative">
-        <Search className="absolute left-2 top-2.5 h-4 w-4 text-[var(--text-muted)]" />
+        <Search className="absolute left-2 top-2.5 h-4 w-4 text-arch-text-muted" />
         <Input
           placeholder="Search by name or ID..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="pl-8 bg-[var(--bg-primary)] border-[var(--border-default)]"
+          className="pl-8 bg-arch-surface-primary border-arch-border-default"
         />
         {isSearching && (
-          <Loader2 className="absolute right-2 top-2.5 h-4 w-4 animate-spin text-[var(--text-muted)]" />
+          <Loader2 className="absolute right-2 top-2.5 h-4 w-4 animate-spin text-arch-text-muted" />
         )}
       </div>
 
       {isOpen && results.length > 0 && (
-        <div className="absolute top-full left-0 right-0 mt-1 bg-[var(--bg-primary)] border border-[var(--border-default)] rounded-md shadow-diffusion-md z-50 max-h-60 overflow-y-auto">
+        <div className="absolute top-full left-0 right-0 mt-1 bg-arch-surface-primary border border-arch-border-default rounded-md shadow-diffusion-md z-50 max-h-60 overflow-y-auto">
           {results.map((emp) => (
             <button
               key={emp.id}
@@ -66,12 +66,12 @@ export function EmployeeSearch({ onSelect }: EmployeeSearchProps) {
                 setIsOpen(false);
                 onSelect(emp);
               }}
-              className="w-full text-left px-4 py-2 hover:bg-[var(--bg-secondary)] focus:bg-[var(--bg-secondary)] border-b border-[var(--border-default)] last:border-0"
+              className="w-full text-left px-4 py-2 hover:bg-arch-surface-secondary focus:bg-arch-surface-secondary border-b border-arch-border-default last:border-0"
             >
-              <div className="font-medium text-[var(--text-heading)]">
+              <div className="font-medium text-arch-text-primary">
                 {emp.first_name} {emp.last_name}
               </div>
-              <div className="text-xs text-[var(--text-muted)]">
+              <div className="text-xs text-arch-text-muted">
                 ID: {emp.national_id} | {emp.job_title}
               </div>
             </button>

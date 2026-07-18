@@ -32,7 +32,7 @@ function BrandIcon({ brand, compact }: { brand: PartnerBrand; compact: boolean }
       target="_blank"
       rel="noopener noreferrer"
       title={brand.name}
-      className="rounded-sm outline-none transition-opacity hover:opacity-100 focus-visible:ring-2 focus-visible:ring-[var(--accent-blue)]/50"
+      className="rounded-sm outline-none transition-opacity hover:opacity-100 focus-visible:ring-2 focus-visible:ring-arch-accent-charcoal/50"
     >
       {image}
     </Link>

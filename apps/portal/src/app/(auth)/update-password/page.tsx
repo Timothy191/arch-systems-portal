@@ -91,8 +91,8 @@ export default function UpdatePasswordPage() {
     return (
       <div className="w-full max-w-md space-y-3">
         <div className="glass-card rounded-xl overflow-hidden p-6 text-center space-y-4">
-          <Loader2 className="w-8 h-8 text-[var(--accent-blue)] animate-spin mx-auto" />
-          <p className="text-sm text-[var(--text-muted)]">Verifying session...</p>
+          <Loader2 className="w-8 h-8 text-arch-accent-charcoal animate-spin mx-auto" />
+          <p className="text-sm text-arch-text-muted">Verifying session...</p>
         </div>
       </div>
     );
@@ -102,14 +102,14 @@ export default function UpdatePasswordPage() {
     return (
       <div className="w-full max-w-md space-y-3">
         <div className="glass-card rounded-xl overflow-hidden p-6 text-center space-y-4">
-          <AlertTriangle className="w-8 h-8 text-[var(--accent-red)] mx-auto" strokeWidth={1.5} />
-          <h1 className="text-lg font-medium text-[var(--text-heading)]">Link Expired</h1>
-          <p className="text-sm text-[var(--text-muted)]">
+          <AlertTriangle className="w-8 h-8 text-arch-accent-red mx-auto" strokeWidth={1.5} />
+          <h1 className="text-lg font-medium text-arch-text-primary">Link Expired</h1>
+          <p className="text-sm text-arch-text-muted">
             This password reset link is invalid or has expired. Please request a new one.
           </p>
           <Link
             href="/reset-password"
-            className="inline-block w-full text-center px-4 py-2.5 rounded-full bg-[var(--accent-blue)] text-white text-sm font-medium hover:opacity-90 transition-opacity"
+            className="inline-block w-full text-center px-4 py-2.5 rounded-full bg-arch-accent-charcoal text-white text-sm font-medium hover:opacity-90 transition-opacity"
           >
             Request New Link
           </Link>
@@ -121,13 +121,13 @@ export default function UpdatePasswordPage() {
   return (
     <div className="w-full max-w-md space-y-3">
       <div className="glass-card rounded-xl overflow-hidden animate-window-open glass-top-border">
-        <div className="flex items-center gap-3 px-4 py-2.5 border-b border-[var(--border-subtle)] bg-[var(--glass-surface-hover)]">
+        <div className="flex items-center gap-3 px-4 py-2.5 border-b border-arch-border-subtle bg-[var(--glass-surface-hover)]">
           <div className="flex items-center gap-1.5 shrink-0">
-            <span className="w-3 h-3 rounded-full bg-[var(--mac-red)] border border-[var(--border-subtle)]" />
-            <span className="w-3 h-3 rounded-full bg-[var(--mac-yellow)] border border-[var(--border-subtle)]" />
-            <span className="w-3 h-3 rounded-full bg-[var(--mac-green)] border border-[var(--border-subtle)]" />
+            <span className="w-3 h-3 rounded-full bg-[var(--mac-red)] border border-arch-border-subtle" />
+            <span className="w-3 h-3 rounded-full bg-[var(--mac-yellow)] border border-arch-border-subtle" />
+            <span className="w-3 h-3 rounded-full bg-[var(--mac-green)] border border-arch-border-subtle" />
           </div>
-          <span className="flex-1 text-center text-[13px] font-medium text-[var(--text-secondary)] select-none pr-14">
+          <span className="flex-1 text-center text-[13px] font-medium text-arch-text-secondary select-none pr-14">
             Arch — New Password
           </span>
         </div>
@@ -135,35 +135,32 @@ export default function UpdatePasswordPage() {
         <div className="p-6 space-y-4">
           {updated ? (
             <div className="space-y-4 text-center">
-              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-[var(--accent-green)]/10 mx-auto">
-                <Check className="w-6 h-6 text-[var(--accent-green)]" strokeWidth={1.5} />
+              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-arch-accent-green/10 mx-auto">
+                <Check className="w-6 h-6 text-arch-accent-green" strokeWidth={1.5} />
               </div>
               <div className="space-y-1">
-                <h1 className="text-lg font-medium text-[var(--text-heading)]">Password Updated</h1>
-                <p className="text-sm text-[var(--text-muted)]">
+                <h1 className="text-lg font-medium text-arch-text-primary">Password Updated</h1>
+                <p className="text-sm text-arch-text-muted">
                   Your password has been updated. Redirecting to sign in...
                 </p>
               </div>
             </div>
           ) : (
             <>
-              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-[var(--accent-blue)]/10 mx-auto">
-                <Lock className="w-6 h-6 text-[var(--accent-blue)]" strokeWidth={1.5} />
+              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-arch-accent-charcoal/10 mx-auto">
+                <Lock className="w-6 h-6 text-arch-accent-charcoal" strokeWidth={1.5} />
               </div>
 
               <div className="text-center space-y-1">
-                <h1 className="text-xl font-medium text-[var(--text-heading)]">Set New Password</h1>
-                <p className="text-sm text-[var(--text-muted)]">
+                <h1 className="text-xl font-medium text-arch-text-primary">Set New Password</h1>
+                <p className="text-sm text-arch-text-muted">
                   Choose a strong password you have not used before.
                 </p>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
-                  <label
-                    htmlFor="new-password"
-                    className="block text-sm text-[var(--text-secondary)]"
-                  >
+                  <label htmlFor="new-password" className="block text-sm text-arch-text-secondary">
                     New Password
                   </label>
                   <Input
@@ -186,7 +183,7 @@ export default function UpdatePasswordPage() {
                 <div className="space-y-2">
                   <label
                     htmlFor="confirm-password"
-                    className="block text-sm text-[var(--text-secondary)]"
+                    className="block text-sm text-arch-text-secondary"
                   >
                     Confirm Password
                   </label>

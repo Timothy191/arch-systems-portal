@@ -23,12 +23,12 @@ export function AdminTabs({ defaultValue, value, onValueChange, children }: Admi
       onValueChange={onValueChange}
       className="w-full"
     >
-      <TabsList className="w-full justify-start bg-[var(--bg-secondary)] border border-[var(--border-default)]">
+      <TabsList className="w-full justify-start bg-arch-surface-secondary border border-arch-border-default">
         {TABS.map((tab) => (
           <TabsTrigger
             key={tab.value}
             value={tab.value}
-            className="data-[state=active]:bg-[var(--bg-primary)] data-[state=active]:text-[var(--text-heading)]"
+            className="data-[state=active]:bg-arch-surface-primary data-[state=active]:text-arch-text-primary"
           >
             <tab.icon className="w-4 h-4 mr-2" />
             {tab.label}

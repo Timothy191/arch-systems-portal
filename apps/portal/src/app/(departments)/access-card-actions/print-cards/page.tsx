@@ -133,7 +133,7 @@ function JobStatusPill({ status }: { status: string }) {
     <span
       className={cn(
         "inline-flex items-center gap-1.5 text-xs font-medium px-2 py-0.5 rounded-full border",
-        pill.className,
+        pill.className
       )}
     >
       {pill.icon}
@@ -167,13 +167,13 @@ export default async function PrintCardsPage({
         {/* ────────── Left Panel: Printers ────────── */}
         <div className="space-y-4">
           <GlassCard className="p-0 overflow-hidden">
-            <div className="p-4 border-b border-[var(--border-default)] bg-[var(--bg-secondary)]/50 flex items-center justify-between">
-              <h3 className="font-medium text-[var(--text-heading)] flex items-center">
-                <Printer className="w-4 h-4 mr-2 text-[var(--text-muted)]" />
+            <div className="p-4 border-b border-arch-border-default bg-arch-surface-secondary/50 flex items-center justify-between">
+              <h3 className="font-medium text-arch-text-primary flex items-center">
+                <Printer className="w-4 h-4 mr-2 text-arch-text-muted" />
                 Printers
               </h3>
               <div className="flex items-center gap-2">
-                <span className="text-xs text-[var(--text-muted)]">{printers.length} detected</span>
+                <span className="text-xs text-arch-text-muted">{printers.length} detected</span>
                 <form action={rescanAction}>
                   <Button type="submit" size="sm" variant="outline" className="text-xs font-medium">
                     <RefreshCw className="w-3 h-3 mr-1" />
@@ -184,18 +184,18 @@ export default async function PrintCardsPage({
             </div>
             <Table>
               <TableHeader>
-                <TableRow className="border-b border-[var(--border-default)] hover:bg-transparent">
-                  <TableHead className="text-[var(--text-muted)]">Name</TableHead>
-                  <TableHead className="text-[var(--text-muted)]">Model</TableHead>
-                  <TableHead className="text-[var(--text-muted)]">CUPS Queue</TableHead>
-                  <TableHead className="text-[var(--text-muted)]">Status</TableHead>
-                  <TableHead className="text-right text-[var(--text-muted)]">Actions</TableHead>
+                <TableRow className="border-b border-arch-border-default hover:bg-transparent">
+                  <TableHead className="text-arch-text-muted">Name</TableHead>
+                  <TableHead className="text-arch-text-muted">Model</TableHead>
+                  <TableHead className="text-arch-text-muted">CUPS Queue</TableHead>
+                  <TableHead className="text-arch-text-muted">Status</TableHead>
+                  <TableHead className="text-right text-arch-text-muted">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {printers.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center py-8 text-[var(--text-muted)]">
+                    <TableCell colSpan={5} className="text-center py-8 text-arch-text-muted">
                       No printers detected. Run a rescan to discover printers.
                     </TableCell>
                   </TableRow>
@@ -203,13 +203,13 @@ export default async function PrintCardsPage({
                 {printers.map((printer) => (
                   <TableRow
                     key={printer.cupsName}
-                    className="border-b border-[var(--border-default)]/50 hover:bg-[var(--bg-tertiary)] transition-colors"
+                    className="border-b border-arch-border-default/50 hover:bg-arch-surface-tertiary transition-colors"
                   >
-                    <TableCell className="text-[var(--text-heading)]">{printer.cupsName}</TableCell>
-                    <TableCell className="text-[var(--text-secondary)] text-sm">
+                    <TableCell className="text-arch-text-primary">{printer.cupsName}</TableCell>
+                    <TableCell className="text-arch-text-secondary text-sm">
                       {printer.model}
                     </TableCell>
-                    <TableCell className="font-mono text-sm text-[var(--text-secondary)]">
+                    <TableCell className="font-mono text-sm text-arch-text-secondary">
                       {printer.cupsName}
                     </TableCell>
                     <TableCell>
@@ -250,13 +250,13 @@ export default async function PrintCardsPage({
         {/* ────────── Right Panel: Print Queue ────────── */}
         <div className="space-y-4">
           <GlassCard className="p-0 overflow-hidden">
-            <div className="p-4 border-b border-[var(--border-default)] bg-[var(--bg-secondary)]/50 flex items-center justify-between">
-              <h3 className="font-medium text-[var(--text-heading)] flex items-center">
-                <Clock className="w-4 h-4 mr-2 text-[var(--text-muted)]" />
+            <div className="p-4 border-b border-arch-border-default bg-arch-surface-secondary/50 flex items-center justify-between">
+              <h3 className="font-medium text-arch-text-primary flex items-center">
+                <Clock className="w-4 h-4 mr-2 text-arch-text-muted" />
                 Print Queue
               </h3>
               <div className="flex items-center gap-2">
-                <span className="text-xs text-[var(--text-muted)]">
+                <span className="text-xs text-arch-text-muted">
                   {jobs.length} job{jobs.length !== 1 ? "s" : ""}
                 </span>
                 <StatusFilter current={statusFilter} />
@@ -264,19 +264,19 @@ export default async function PrintCardsPage({
             </div>
             <Table>
               <TableHeader>
-                <TableRow className="border-b border-[var(--border-default)] hover:bg-transparent">
-                  <TableHead className="text-[var(--text-muted)]">Employee</TableHead>
-                  <TableHead className="text-[var(--text-muted)]">Department</TableHead>
-                  <TableHead className="text-[var(--text-muted)]">Status</TableHead>
-                  <TableHead className="text-[var(--text-muted)]">Queued At</TableHead>
-                  <TableHead className="text-[var(--text-muted)]">Printer</TableHead>
-                  <TableHead className="text-right text-[var(--text-muted)]">Actions</TableHead>
+                <TableRow className="border-b border-arch-border-default hover:bg-transparent">
+                  <TableHead className="text-arch-text-muted">Employee</TableHead>
+                  <TableHead className="text-arch-text-muted">Department</TableHead>
+                  <TableHead className="text-arch-text-muted">Status</TableHead>
+                  <TableHead className="text-arch-text-muted">Queued At</TableHead>
+                  <TableHead className="text-arch-text-muted">Printer</TableHead>
+                  <TableHead className="text-right text-arch-text-muted">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {jobs.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={6} className="text-center py-8 text-[var(--text-muted)]">
+                    <TableCell colSpan={6} className="text-center py-8 text-arch-text-muted">
                       No print jobs found.
                     </TableCell>
                   </TableRow>
@@ -284,18 +284,16 @@ export default async function PrintCardsPage({
                 {jobs.map((job) => (
                   <TableRow
                     key={job.id}
-                    className="border-b border-[var(--border-default)]/50 hover:bg-[var(--bg-tertiary)] transition-colors"
+                    className="border-b border-arch-border-default/50 hover:bg-arch-surface-tertiary transition-colors"
                   >
-                    <TableCell className="text-[var(--text-heading)]">
-                      {job.employee_name}
-                    </TableCell>
-                    <TableCell className="text-[var(--text-secondary)] text-sm">
+                    <TableCell className="text-arch-text-primary">{job.employee_name}</TableCell>
+                    <TableCell className="text-arch-text-secondary text-sm">
                       {job.department_name ?? "—"}
                     </TableCell>
                     <TableCell>
                       <JobStatusPill status={job.status} />
                     </TableCell>
-                    <TableCell className="text-[var(--text-secondary)] text-sm">
+                    <TableCell className="text-arch-text-secondary text-sm">
                       {new Date(job.queued_at).toLocaleString("en-ZA", {
                         day: "numeric",
                         month: "short",
@@ -303,7 +301,7 @@ export default async function PrintCardsPage({
                         minute: "2-digit",
                       })}
                     </TableCell>
-                    <TableCell className="text-[var(--text-secondary)] text-sm">
+                    <TableCell className="text-arch-text-secondary text-sm">
                       {job.printer?.name ?? "—"}
                     </TableCell>
                     <TableCell className="text-right">

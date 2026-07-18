@@ -17,16 +17,20 @@ Project subagents live in `.cursor/agents/`. When a user task matches a row belo
 | Skills, rules, agents, hooks, AGENTS drift, CLAUDE.md, wiki, docs sync | `ai-docs-sync` | **When** auditing/changing AI/docs surfaces | Product UI, visual design, formal alignment score, adversarial code review |
 | Review, reality-check, "is this done", verify fix, PR/diff critique, production readiness, sceptic/skeptic | `sceptic` | **After** non-trivial changes, **before** claiming done | Formal score emission, UI implementation, docs sync, outlining |
 | Independent side work while blocked/waiting, parallel idle tasks, fill wait time | `idle-runner` | **While** other agents wait/blocked | Critical path files, main feature implementation, marking done, quality/score |
+| Vercel, eve, v0 logos, Geist Brands, partner marks in taskbar/login chrome | `vercel-brand-sync` | **When** auditing/updating Vercel-family brand assets | General UI impl, docs sync, sceptic |
+| **Every user prompt** — background layout/sync/dedupe; parent awaits on AI-surface work | `ai-maintenance-checker` | **Start** of prompt (background) | Product features, AGENTS policy edits, ai-docs-sync rewrites, sceptic |
 
 ## Rules
 
 1. **Match → delegate.** Prefer the specialist; parent synthesizes results.
-2. **Multiple matches → parallel.** e.g. large task = `fast-outliner` first, then specialists; branded page = `frontend-design` then `frontend-implementer`; after code = `sceptic`; while blocked = `idle-runner` on independent work.
-3. **Always run `sceptic`** before saying done on multi-file or production-facing work (unless user explicitly skips review).
-4. **Formal Alignment Score** → `agent-alignment-score` skill after sceptic (or when scoring requested).
-5. **Descriptions win.** Each agent's `description` frontmatter is the trigger source of truth.
-6. **Do not invent agents.** Only route to files under `.cursor/agents/`.
-7. **User override.** If the user names an agent, use that agent even if another also matches.
+2. **Multiple matches → parallel.** e.g. user prompt → `ai-maintenance-checker` (background) + task specialists; large task = `fast-outliner` first; after code = `sceptic`; while blocked = `idle-runner`.
+3. **Always launch `ai-maintenance-checker`** at prompt start (background). Await before final reply when AI surfaces were touched. See `.cursor/rules/06-ai-maintenance-background.mdc`.
+4. **Always run `sceptic`** before saying done on multi-file or production-facing work (unless user explicitly skips review).
+5. **Formal Alignment Score** → `agent-alignment-score` skill after sceptic (or when scoring requested).
+6. **Unified AI check** → `pnpm ai` (not scattered validate scripts).
+7. **Descriptions win.** Each agent's `description` frontmatter is the trigger source of truth.
+8. **Do not invent agents.** Only route to files under `.cursor/agents/`.
+9. **User override.** If the user names an agent, use that agent even if another also matches.
 
 ## Inventory (keep in sync)
 
@@ -38,8 +42,11 @@ Project subagents live in `.cursor/agents/`. When a user task matches a row belo
 | ai-docs-sync | `ai-docs-sync.md` | `ai-docs-sync/` | No UI, design, formal score, sceptic |
 | sceptic | `sceptic.md` | `sceptic/` | No formal score, UI, docs, outline |
 | idle-runner | `idle-runner.md` | `idle-runner/` | No critical path, main feature, done-claims |
+| ai-maintenance-checker | `ai-maintenance-checker.md` | `ai-maintenance-checker/` | No product features, policy edits, docs rewrites |
+| vercel-brand-sync | `vercel-brand-sync.md` | `vercel-brand-sync/` | No general UI, docs sync, sceptic |
 
 Layout standard: `.cursor/standards/agent-layout/STANDARD.md`  
+AI system command: `pnpm ai` · `.cursor/standards/ai-system/STANDARD.md`  
 Shared refs: `.cursor/agents/_shared/references/`
 
 When adding a new project agent, update this table in the same change.

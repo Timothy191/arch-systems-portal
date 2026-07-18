@@ -149,10 +149,10 @@ export function ServicesDropdown() {
             className={cn(
               "relative flex items-center justify-center w-7 h-7 rounded-full",
               "bg-black/[0.03] hover:bg-black/[0.06] border border-border-subtle",
-              "text-[var(--text-secondary)]",
+              "text-arch-text-secondary",
               "active:scale-[0.97]",
               "transition-all duration-150 ease-in-out",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-blue)]/50",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-arch-accent-charcoal/50",
               "cursor-default select-none",
               open && "bg-black/[0.06]"
             )}
@@ -177,17 +177,17 @@ export function ServicesDropdown() {
             <div className="bg-black/[0.02] border border-black/[0.05] rounded-md p-2.5">
               {weatherLoading || !weather ? (
                 <div className="flex items-center gap-2">
-                  <CloudSun className="w-4 h-4 text-[var(--text-muted)] animate-pulse" />
-                  <span className="text-[11px] text-[var(--text-muted)]">Loading…</span>
+                  <CloudSun className="w-4 h-4 text-arch-text-muted animate-pulse" />
+                  <span className="text-[11px] text-arch-text-muted">Loading…</span>
                 </div>
               ) : (
                 <div className="flex items-center gap-2.5">
                   <span className="text-xl leading-none">{weather.icon}</span>
                   <div className="min-w-0">
-                    <div className="text-[13px] font-semibold text-[var(--text-heading)] leading-tight">
+                    <div className="text-[13px] font-semibold text-arch-text-primary leading-tight">
                       {weather.temperature}°C
                     </div>
-                    <div className="text-[10px] text-[var(--text-muted)] truncate">
+                    <div className="text-[10px] text-arch-text-muted truncate">
                       {weather.description}
                     </div>
                   </div>
@@ -201,13 +201,13 @@ export function ServicesDropdown() {
                 {shift.isDay ? (
                   <Sun className="w-4 h-4 text-[var(--accent-orange)] shrink-0" />
                 ) : (
-                  <Moon className="w-4 h-4 text-[var(--accent-blue)] shrink-0" />
+                  <Moon className="w-4 h-4 text-arch-accent-charcoal shrink-0" />
                 )}
                 <div className="min-w-0">
-                  <div className="text-[13px] font-semibold text-[var(--text-heading)] leading-tight">
+                  <div className="text-[13px] font-semibold text-arch-text-primary leading-tight">
                     {shift.label}
                   </div>
-                  <div className="text-[10px] text-[var(--text-muted)]">
+                  <div className="text-[10px] text-arch-text-muted">
                     {shift.hoursRemaining}h remaining
                   </div>
                 </div>
@@ -218,19 +218,19 @@ export function ServicesDropdown() {
             <div className="col-span-2 bg-black/[0.02] border border-black/[0.05] rounded-md p-2.5">
               {weatherLoading || !weather ? (
                 <div className="flex items-center gap-2">
-                  <Wind className="w-4 h-4 text-[var(--text-muted)] animate-pulse" />
-                  <span className="text-[11px] text-[var(--text-muted)]">Loading conditions…</span>
+                  <Wind className="w-4 h-4 text-arch-text-muted animate-pulse" />
+                  <span className="text-[11px] text-arch-text-muted">Loading conditions…</span>
                 </div>
               ) : (
                 <div className="flex items-center gap-2">
-                  <Wind className="w-4 h-4 text-[var(--text-secondary)] shrink-0" />
-                  <span className="text-[12px] font-medium text-[var(--text-heading)]">
+                  <Wind className="w-4 h-4 text-arch-text-secondary shrink-0" />
+                  <span className="text-[12px] font-medium text-arch-text-primary">
                     {weather.windSpeed} km/h
                   </span>
-                  <span className="text-[10px] text-[var(--text-muted)]">
+                  <span className="text-[10px] text-arch-text-muted">
                     {getWindDirection(weather.windDirection)}
                   </span>
-                  <span className="ml-auto text-[10px] text-[var(--accent-green)] font-medium">
+                  <span className="ml-auto text-[10px] text-arch-accent-green font-medium">
                     Visibility OK
                   </span>
                 </div>
@@ -244,19 +244,19 @@ export function ServicesDropdown() {
                   className={cn(
                     "w-4 h-4 shrink-0",
                     safety.criticalCount > 0
-                      ? "text-[var(--accent-red)]"
+                      ? "text-arch-accent-red"
                       : safety.warningCount > 0
                         ? "text-[var(--accent-orange)]"
-                        : "text-[var(--accent-green)]"
+                        : "text-arch-accent-green"
                   )}
                 />
-                <span className="text-[12px] text-[var(--text-heading)] flex-1">
+                <span className="text-[12px] text-arch-text-primary flex-1">
                   {safety.total === 0
                     ? "No active alerts"
                     : `${safety.total} active alert${safety.total === 1 ? "" : "s"}`}
                 </span>
                 {safety.criticalCount > 0 && (
-                  <span className="text-[10px] font-bold text-white bg-[var(--accent-red)] px-1.5 py-0.5 rounded-full">
+                  <span className="text-[10px] font-bold text-white bg-arch-accent-red px-1.5 py-0.5 rounded-full">
                     {safety.criticalCount}
                   </span>
                 )}
@@ -274,16 +274,16 @@ export function ServicesDropdown() {
           {/* ── Quick Actions (2-column grid) ── */}
           <div className="grid grid-cols-2 gap-1.5 p-2">
             <DropdownMenuItem
-              className="flex items-center gap-2 px-2.5 py-2 rounded-md bg-black/[0.02] border border-black/[0.05] text-left hover:bg-black/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-blue)]/50"
+              className="flex items-center gap-2 px-2.5 py-2 rounded-md bg-black/[0.02] border border-black/[0.05] text-left hover:bg-black/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-arch-accent-charcoal/50"
               onSelect={() => window.location.reload()}
             >
-              <RotateCcw className="h-3.5 w-3.5 text-[var(--text-secondary)] shrink-0" />
-              <span className="text-[12px] font-medium text-[var(--text-heading)]">Reload</span>
-              <span className="ml-auto text-[10px] text-[var(--text-muted)]">⌘R</span>
+              <RotateCcw className="h-3.5 w-3.5 text-arch-text-secondary shrink-0" />
+              <span className="text-[12px] font-medium text-arch-text-primary">Reload</span>
+              <span className="ml-auto text-[10px] text-arch-text-muted">⌘R</span>
             </DropdownMenuItem>
 
             <DropdownMenuItem
-              className="flex items-center gap-2 px-2.5 py-2 rounded-md bg-black/[0.02] border border-black/[0.05] text-left hover:bg-black/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-blue)]/50"
+              className="flex items-center gap-2 px-2.5 py-2 rounded-md bg-black/[0.02] border border-black/[0.05] text-left hover:bg-black/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-arch-accent-charcoal/50"
               onSelect={() => {
                 if (!document.fullscreenElement) {
                   document.documentElement.requestFullscreen().catch(() => {});
@@ -292,43 +292,41 @@ export function ServicesDropdown() {
                 }
               }}
             >
-              <Maximize2 className="h-3.5 w-3.5 text-[var(--text-secondary)] shrink-0" />
-              <span className="text-[12px] font-medium text-[var(--text-heading)]">Fullscreen</span>
-              <span className="ml-auto text-[10px] text-[var(--text-muted)]">⌃⌘F</span>
+              <Maximize2 className="h-3.5 w-3.5 text-arch-text-secondary shrink-0" />
+              <span className="text-[12px] font-medium text-arch-text-primary">Fullscreen</span>
+              <span className="ml-auto text-[10px] text-arch-text-muted">⌃⌘F</span>
             </DropdownMenuItem>
 
             <DropdownMenuItem
-              className="flex items-center gap-2 px-2.5 py-2 rounded-md bg-black/[0.02] border border-black/[0.05] text-left hover:bg-black/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-blue)]/50"
+              className="flex items-center gap-2 px-2.5 py-2 rounded-md bg-black/[0.02] border border-black/[0.05] text-left hover:bg-black/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-arch-accent-charcoal/50"
               onSelect={() => {
                 window.location.href = "/safety/daily-log";
               }}
             >
-              <ClipboardList className="h-3.5 w-3.5 text-[var(--text-secondary)] shrink-0" />
-              <span className="text-[12px] font-medium text-[var(--text-heading)]">
+              <ClipboardList className="h-3.5 w-3.5 text-arch-text-secondary shrink-0" />
+              <span className="text-[12px] font-medium text-arch-text-primary">
                 Daily Safety Log
               </span>
             </DropdownMenuItem>
 
             <DropdownMenuItem
-              className="flex items-center gap-2 px-2.5 py-2 rounded-md bg-black/[0.02] border border-black/[0.05] text-left hover:bg-black/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-blue)]/50"
+              className="flex items-center gap-2 px-2.5 py-2 rounded-md bg-black/[0.02] border border-black/[0.05] text-left hover:bg-black/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-arch-accent-charcoal/50"
               onSelect={() => {
                 window.location.href = "/safety";
               }}
             >
-              <ShieldAlert className="h-3.5 w-3.5 text-[var(--text-secondary)] shrink-0" />
-              <span className="text-[12px] font-medium text-[var(--text-heading)]">
+              <ShieldAlert className="h-3.5 w-3.5 text-arch-text-secondary shrink-0" />
+              <span className="text-[12px] font-medium text-arch-text-primary">
                 Safety Dashboard
               </span>
             </DropdownMenuItem>
 
             <DropdownMenuItem
-              className="col-span-2 flex items-center gap-2 px-2.5 py-2 rounded-md bg-[var(--accent-red)]/[0.06] border border-[var(--accent-red)]/20 text-left hover:bg-[var(--accent-red)]/[0.12] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-red)]/50"
+              className="col-span-2 flex items-center gap-2 px-2.5 py-2 rounded-md bg-arch-accent-red/[0.06] border border-arch-accent-red/20 text-left hover:bg-arch-accent-red/[0.12] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-arch-accent-red/50"
               onSelect={() => window.open("tel:+27170000000", "_self")}
             >
-              <Phone className="h-3.5 w-3.5 text-[var(--accent-red)] shrink-0" />
-              <span className="text-[12px] font-semibold text-[var(--accent-red)]">
-                Emergency Line
-              </span>
+              <Phone className="h-3.5 w-3.5 text-arch-accent-red shrink-0" />
+              <span className="text-[12px] font-semibold text-arch-accent-red">Emergency Line</span>
             </DropdownMenuItem>
           </div>
 
@@ -337,53 +335,49 @@ export function ServicesDropdown() {
           {/* ── Power Options footer ── */}
           <div className="p-1.5">
             <DropdownMenuItem
-              className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-left hover:bg-black/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-blue)]/50"
+              className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-left hover:bg-black/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-arch-accent-charcoal/50"
               onSelect={() => setLocked(true)}
             >
-              <Lock className="h-3.5 w-3.5 text-[var(--text-secondary)] shrink-0" />
-              <span className="text-[12px] font-medium text-[var(--text-heading)]">
-                Lock Screen
-              </span>
-              <span className="ml-auto text-[10px] text-[var(--text-muted)]">⌃⌘Q</span>
+              <Lock className="h-3.5 w-3.5 text-arch-text-secondary shrink-0" />
+              <span className="text-[12px] font-medium text-arch-text-primary">Lock Screen</span>
+              <span className="ml-auto text-[10px] text-arch-text-muted">⌃⌘Q</span>
             </DropdownMenuItem>
 
             <DropdownMenuItem
-              className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-left hover:bg-black/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-blue)]/50"
+              className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-left hover:bg-black/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-arch-accent-charcoal/50"
               onSelect={() => setSleeping(true)}
             >
-              <Moon className="h-3.5 w-3.5 text-[var(--text-secondary)] shrink-0" />
-              <span className="text-[12px] font-medium text-[var(--text-heading)]">Sleep</span>
+              <Moon className="h-3.5 w-3.5 text-arch-text-secondary shrink-0" />
+              <span className="text-[12px] font-medium text-arch-text-primary">Sleep</span>
             </DropdownMenuItem>
 
             <form action={logout}>
               <DropdownMenuItem asChild className="rounded-md">
                 <button
                   type="submit"
-                  className="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-left hover:bg-black/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-blue)]/50"
+                  className="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-left hover:bg-black/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-arch-accent-charcoal/50"
                 >
-                  <LogOut className="h-3.5 w-3.5 text-[var(--text-secondary)] shrink-0" />
-                  <span className="text-[12px] font-medium text-[var(--text-heading)]">
-                    Log Out
-                  </span>
-                  <span className="ml-auto text-[10px] text-[var(--text-muted)]">⇧⌘Q</span>
+                  <LogOut className="h-3.5 w-3.5 text-arch-text-secondary shrink-0" />
+                  <span className="text-[12px] font-medium text-arch-text-primary">Log Out</span>
+                  <span className="ml-auto text-[10px] text-arch-text-muted">⇧⌘Q</span>
                 </button>
               </DropdownMenuItem>
             </form>
 
             <DropdownMenuItem
-              className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-left hover:bg-black/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-blue)]/50"
+              className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-left hover:bg-black/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-arch-accent-charcoal/50"
               onSelect={() => window.location.reload()}
             >
-              <RotateCcw className="h-3.5 w-3.5 text-[var(--text-secondary)] shrink-0" />
-              <span className="text-[12px] font-medium text-[var(--text-heading)]">Restart…</span>
+              <RotateCcw className="h-3.5 w-3.5 text-arch-text-secondary shrink-0" />
+              <span className="text-[12px] font-medium text-arch-text-primary">Restart…</span>
             </DropdownMenuItem>
 
             <DropdownMenuItem
-              className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-left hover:bg-[var(--accent-red)]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-red)]/50"
+              className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-left hover:bg-arch-accent-red/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-arch-accent-red/50"
               onSelect={() => setShutDown(true)}
             >
-              <PowerOff className="h-3.5 w-3.5 text-[var(--accent-red)] shrink-0" />
-              <span className="text-[12px] font-medium text-[var(--accent-red)]">Shut Down…</span>
+              <PowerOff className="h-3.5 w-3.5 text-arch-accent-red shrink-0" />
+              <span className="text-[12px] font-medium text-arch-accent-red">Shut Down…</span>
             </DropdownMenuItem>
           </div>
         </DropdownMenuContent>

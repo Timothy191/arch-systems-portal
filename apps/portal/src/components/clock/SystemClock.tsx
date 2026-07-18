@@ -100,7 +100,7 @@ export function SystemClock() {
           <span className="font-mono text-[13px] font-medium tabular-nums text-text-heading leading-none">
             {timeStr}
           </span>
-          <span className="font-mono text-[10px] text-[var(--text-secondary)] opacity-60 font-medium tracking-wider leading-none uppercase">
+          <span className="font-mono text-[10px] text-arch-text-secondary opacity-60 font-medium tracking-wider leading-none uppercase">
             SAST
           </span>
         </button>
@@ -112,7 +112,7 @@ export function SystemClock() {
           sideOffset={6}
           className={cn(
             "bg-white/95 backdrop-blur-2xl border border-black/[0.08] shadow-window rounded-xl p-4 z-[120]",
-            "flex gap-5 select-none focus:outline-none",
+            "flex gap-5 select-none focus:outline-none"
           )}
         >
           {/* Left panel: Calendar */}
@@ -124,7 +124,7 @@ export function SystemClock() {
                   type="button"
                   onClick={prevYear}
                   title="Previous Year"
-                  className="w-5 h-5 flex items-center justify-center rounded hover:bg-black/[0.05] text-[12px] font-bold text-[var(--text-secondary)]"
+                  className="w-5 h-5 flex items-center justify-center rounded hover:bg-black/[0.05] text-[12px] font-bold text-arch-text-secondary"
                 >
                   &laquo;
                 </button>
@@ -132,12 +132,12 @@ export function SystemClock() {
                   type="button"
                   onClick={prevMonth}
                   title="Previous Month"
-                  className="w-5 h-5 flex items-center justify-center rounded hover:bg-black/[0.05] text-[12px] font-bold text-[var(--text-secondary)]"
+                  className="w-5 h-5 flex items-center justify-center rounded hover:bg-black/[0.05] text-[12px] font-bold text-arch-text-secondary"
                 >
                   &lsaquo;
                 </button>
               </div>
-              <span className="text-[12px] font-bold text-[var(--text-heading)]">
+              <span className="text-[12px] font-bold text-arch-text-primary">
                 {monthLabel.substring(0, 3)} {viewYear}
               </span>
               <div className="flex gap-0.5">
@@ -145,7 +145,7 @@ export function SystemClock() {
                   type="button"
                   onClick={nextMonth}
                   title="Next Month"
-                  className="w-5 h-5 flex items-center justify-center rounded hover:bg-black/[0.05] text-[12px] font-bold text-[var(--text-secondary)]"
+                  className="w-5 h-5 flex items-center justify-center rounded hover:bg-black/[0.05] text-[12px] font-bold text-arch-text-secondary"
                 >
                   &rsaquo;
                 </button>
@@ -153,7 +153,7 @@ export function SystemClock() {
                   type="button"
                   onClick={nextYear}
                   title="Next Year"
-                  className="w-5 h-5 flex items-center justify-center rounded hover:bg-black/[0.05] text-[12px] font-bold text-[var(--text-secondary)]"
+                  className="w-5 h-5 flex items-center justify-center rounded hover:bg-black/[0.05] text-[12px] font-bold text-arch-text-secondary"
                 >
                   &raquo;
                 </button>
@@ -161,7 +161,7 @@ export function SystemClock() {
             </div>
 
             {/* Weekdays header */}
-            <div className="grid grid-cols-7 gap-0.5 text-center text-[9px] font-bold text-[var(--text-muted)] mb-1.5">
+            <div className="grid grid-cols-7 gap-0.5 text-center text-[9px] font-bold text-arch-text-muted mb-1.5">
               <span>SU</span>
               <span>MO</span>
               <span>TU</span>
@@ -189,8 +189,8 @@ export function SystemClock() {
                     className={cn(
                       "w-[24px] h-[24px] rounded-full flex items-center justify-center text-[10.5px] font-medium transition-colors",
                       isToday
-                        ? "bg-[var(--accent-blue)] text-white font-bold shadow-card"
-                        : "text-[var(--text-heading)] hover:bg-black/[0.04]",
+                        ? "bg-arch-accent-charcoal text-white font-bold shadow-card"
+                        : "text-arch-text-primary hover:bg-black/[0.04]"
                     )}
                   >
                     {day}
@@ -231,7 +231,7 @@ export function SystemClock() {
               />
               {/* Second hand */}
               <div
-                className="absolute bottom-1/2 left-1/2 w-[1px] h-10 rounded-full bg-[var(--accent-red)] origin-bottom"
+                className="absolute bottom-1/2 left-1/2 w-[1px] h-10 rounded-full bg-arch-accent-red origin-bottom"
                 style={{
                   transform: `translate(-50%, 0) rotate(${secondDeg}deg)`,
                   transition: secondDeg === 0 ? "none" : "transform 0.1s ease-out",
@@ -249,7 +249,7 @@ export function SystemClock() {
             </div>
 
             {/* Digital Time text */}
-            <span className="text-[11px] font-semibold text-[var(--text-secondary)] mt-3 tabular-nums select-all">
+            <span className="text-[11px] font-semibold text-arch-text-secondary mt-3 tabular-nums select-all">
               {time.toLocaleTimeString([], {
                 hour: "2-digit",
                 minute: "2-digit",

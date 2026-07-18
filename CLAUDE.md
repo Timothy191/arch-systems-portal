@@ -212,30 +212,33 @@ Discovery index for project-local AI surfaces (policy source: `AGENTS.md`).
 
 Hybrid layout: entry `<name>.md` + folder `<name>/`. Native mirror: `.claude/agents/`. Standard: [`.cursor/standards/claude-code/STANDARD.md`](.cursor/standards/claude-code/STANDARD.md).
 
-| Agent                  | When to delegate                             |
-| ---------------------- | -------------------------------------------- |
-| `fast-outliner`        | Multi-step work — outline before specialists |
-| `frontend-design`      | Branded/landing visual composition           |
-| `frontend-implementer` | Portal pages, components, Server Actions UI  |
-| `ai-docs-sync`         | Skills, rules, agents, docs drift            |
-| `sceptic`              | Before claiming done — adversarial review    |
-| `idle-runner`          | Independent work while other agents blocked  |
+| Agent                    | When to delegate                             |
+| ------------------------ | -------------------------------------------- |
+| `fast-outliner`          | Multi-step work — outline before specialists |
+| `frontend-design`        | Branded/landing visual composition           |
+| `frontend-implementer`   | Portal pages, components, Server Actions UI  |
+| `ai-docs-sync`           | Skills, rules, agents, docs drift            |
+| `ai-maintenance-checker` | Background AI layout/sync every prompt       |
+| `sceptic`                | Before claiming done — adversarial review    |
+| `idle-runner`            | Independent work while other agents blocked  |
 
-Routing: `.cursor/rules/04-subagent-auto-routing.mdc` · Hooks: `.cursor/hooks/README.md`
+Routing: `.cursor/rules/04-subagent-auto-routing.mdc` · Maintenance: `.cursor/rules/06-ai-maintenance-background.mdc` · Hooks: `.cursor/hooks/README.md`
+
+**AI system:** `pnpm ai` · `.cursor/standards/ai-system/STANDARD.md`
 
 ### Skills
 
-| Location          | Skills                                                                              |
-| ----------------- | ----------------------------------------------------------------------------------- |
-| `.cursor/skills/` | `agent-alignment-score`, `skill-layout`, `agent-layout`, `claude-code-layout`       |
-| `.qoder/skills/`  | `quality`, `verify` (portal alias), `specs`, `dev`, `deploy`, `rls-audit`           |
-| `.github/skills/` | `verify-changes`, `frontend-api-integration-patterns`, `acquire-codebase-knowledge` |
+| Location          | Skills                                                                                     |
+| ----------------- | ------------------------------------------------------------------------------------------ |
+| `.cursor/skills/` | `agent-alignment-score`, `ai-system`, `skill-layout`, `agent-layout`, `claude-code-layout` |
+| `.qoder/skills/`  | `quality`, `verify` (portal alias), `specs`, `dev`, `deploy`, `rls-audit`                  |
+| `.github/skills/` | `verify-changes`, `frontend-api-integration-patterns`, `acquire-codebase-knowledge`        |
 
 Each skill folder: `SKILL.md` + `scripts/` + `references/` + `assets/`. See `.cursor/skills/README.md` for layout and commands.
 
 **Canonical standard:** `.cursor/standards/agent-skills/STANDARD.md` — full index (install, discovery, marketplaces, curated collections).
 
-**Validate:** `.cursor/standards/agent-skills/scripts/validate.sh` (skills + agents)
+**Validate:** `pnpm ai check` (unified — skills + agents + claude-code + guardrails)
 
 **Agents:** hybrid layout per `.cursor/standards/agent-layout/STANDARD.md`
 

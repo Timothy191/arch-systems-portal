@@ -40,11 +40,11 @@ interface BatteryManager extends EventTarget {
   dischargingTime: number;
   addEventListener(
     _type: "chargingchange" | "levelchange" | "chargingtimechange" | "dischargingtimechange",
-    _listener: EventListenerOrEventListenerObject,
+    _listener: EventListenerOrEventListenerObject
   ): void;
   removeEventListener(
     _type: "chargingchange" | "levelchange" | "chargingtimechange" | "dischargingtimechange",
-    _listener: EventListenerOrEventListenerObject,
+    _listener: EventListenerOrEventListenerObject
   ): void;
 }
 
@@ -215,7 +215,7 @@ export function useAppVolume() {
       setMuted(m);
       persist(clamped, m);
     },
-    [persist],
+    [persist]
   );
 
   return { volume, muted, toggleMute, adjust };
@@ -284,7 +284,7 @@ function useServerHealth() {
           } as const;
 
           const mapServiceStatus = (
-            s: { status: "healthy" | "degraded" | "down" } | null | undefined,
+            s: { status: "healthy" | "degraded" | "down" } | null | undefined
           ): "ok" | "degraded" | "unavailable" => {
             if (!s) return "unavailable";
             if (s.status === "healthy") return "ok";
@@ -361,35 +361,33 @@ export function NetworkStatusRow({
       <ConnQualityIcon
         className={cn(
           "w-4 h-4 shrink-0",
-          online ? "text-[var(--accent-green)]" : "text-[var(--accent-red)]",
+          online ? "text-arch-accent-green" : "text-arch-accent-red"
         )}
       />
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between">
-          <span className="text-[12px] font-medium text-[var(--text-heading)]">
+          <span className="text-[12px] font-medium text-arch-text-primary">
             {online ? "Connected" : "Offline"}
           </span>
           {effectiveType && (
-            <span className="text-[10px] uppercase text-[var(--text-muted)]">{effectiveType}</span>
+            <span className="text-[10px] uppercase text-arch-text-muted">{effectiveType}</span>
           )}
         </div>
         {supported && online && (
           <div className="flex items-center gap-2 mt-0.5">
             {connType && (
-              <span className="text-[10px] text-[var(--text-muted)] capitalize">{connType}</span>
+              <span className="text-[10px] text-arch-text-muted capitalize">{connType}</span>
             )}
             {typeof downlink === "number" && (
-              <span className="text-[10px] text-[var(--text-muted)]">
-                {downlink.toFixed(1)} Mbps
-              </span>
+              <span className="text-[10px] text-arch-text-muted">{downlink.toFixed(1)} Mbps</span>
             )}
             {typeof rtt === "number" && (
-              <span className="text-[10px] text-[var(--text-muted)]">{rtt} ms</span>
+              <span className="text-[10px] text-arch-text-muted">{rtt} ms</span>
             )}
           </div>
         )}
         {!supported && (
-          <p className="text-[10px] text-[var(--text-muted)] mt-0.5">Network API unavailable</p>
+          <p className="text-[10px] text-arch-text-muted mt-0.5">Network API unavailable</p>
         )}
       </div>
     </div>
@@ -406,8 +404,8 @@ export function BatteryStatusRow({
   if (!supported || level === null) {
     return (
       <div className="flex items-center gap-2.5 px-2 py-1.5 rounded-md">
-        <BatteryMedium className="w-4 h-4 text-[var(--text-secondary)]" />
-        <span className="text-[12px] text-[var(--text-muted)]">Battery status unavailable</span>
+        <BatteryMedium className="w-4 h-4 text-arch-text-secondary" />
+        <span className="text-[12px] text-arch-text-muted">Battery status unavailable</span>
       </div>
     );
   }
@@ -423,47 +421,47 @@ export function BatteryStatusRow({
           : BatteryMedium;
 
   const batteryColor = charging
-    ? "text-[var(--accent-green)]"
+    ? "text-arch-accent-green"
     : level < 0.5
-      ? "text-[var(--accent-red)]"
+      ? "text-arch-accent-red"
       : level < 0.7
-        ? "text-[var(--accent-amber)]"
-        : "text-[var(--accent-green)]";
+        ? "text-arch-accent-amber"
+        : "text-arch-accent-green";
 
   const barColor = charging
-    ? "bg-[var(--accent-green)]"
+    ? "bg-arch-accent-green"
     : level < 0.5
-      ? "bg-[var(--accent-red)]"
+      ? "bg-arch-accent-red"
       : level < 0.7
-        ? "bg-[var(--accent-amber)]"
-        : "bg-[var(--accent-green)]";
+        ? "bg-arch-accent-amber"
+        : "bg-arch-accent-green";
 
   return (
     <div className="px-2 py-1.5 rounded-md space-y-1.5">
       <div className="flex items-center gap-2.5">
         <BatteryIcon className={cn("w-4 h-4 shrink-0", batteryColor)} />
         <div className="flex-1 flex items-center justify-between">
-          <span className="text-[12px] font-medium text-[var(--text-heading)]">
+          <span className="text-[12px] font-medium text-arch-text-primary">
             {Math.round(level * 100)}%
           </span>
-          <span className="text-[10px] text-[var(--text-muted)]">
+          <span className="text-[10px] text-arch-text-muted">
             {charging ? "Charging" : "On Battery"}
           </span>
         </div>
       </div>
-      <div className="w-full h-1.5 rounded-full bg-[var(--bg-tertiary)] overflow-hidden">
+      <div className="w-full h-1.5 rounded-full bg-arch-surface-tertiary overflow-hidden">
         <div
           className={cn("h-full rounded-full transition-all duration-500", barColor)}
           style={{ width: `${Math.round(level * 100)}%` }}
         />
       </div>
       {charging && Number.isFinite(chargingTime) && chargingTime > 0 && (
-        <p className="text-[10px] text-[var(--accent-green)]">
+        <p className="text-[10px] text-arch-accent-green">
           {formatTimeSeconds(chargingTime)} to full
         </p>
       )}
       {!charging && Number.isFinite(dischargingTime) && dischargingTime > 0 && (
-        <p className="text-[10px] text-[var(--text-muted)]">
+        <p className="text-[10px] text-arch-text-muted">
           {formatTimeSeconds(dischargingTime)} remaining
         </p>
       )}
@@ -478,8 +476,7 @@ export function VolumeControlRow({
   adjust,
 }: ReturnType<typeof useAppVolume>) {
   const VolumeIcon = muted || volume === 0 ? VolumeX : volume < 50 ? Volume1 : Volume2;
-  const volumeColor =
-    muted || volume === 0 ? "text-[var(--text-muted)]" : "text-[var(--accent-blue)]";
+  const volumeColor = muted || volume === 0 ? "text-arch-text-muted" : "text-arch-accent-charcoal";
 
   return (
     <div className="px-2 py-1.5 rounded-md space-y-1.5">
@@ -492,7 +489,7 @@ export function VolumeControlRow({
         >
           <VolumeIcon className={cn("w-4 h-4", volumeColor)} />
         </button>
-        <span className="text-[12px] font-medium text-[var(--text-heading)] min-w-[2rem]">
+        <span className="text-[12px] font-medium text-arch-text-primary min-w-[2rem]">
           {muted ? "Muted" : `${volume}%`}
         </span>
       </div>
@@ -503,7 +500,7 @@ export function VolumeControlRow({
         value={muted ? 0 : volume}
         onChange={(e) => adjust(Number(e.target.value))}
         aria-label="Volume"
-        className="w-full accent-[var(--accent-blue)] h-1"
+        className="w-full accent-arch-accent-charcoal h-1"
       />
     </div>
   );
@@ -514,17 +511,17 @@ export function NotificationRow({ count, clear }: ReturnType<typeof useNotificat
     <div className="flex items-center gap-2.5 px-2 py-1.5 rounded-md">
       <div className="relative">
         {count > 0 ? (
-          <BellDot className="w-4 h-4 text-[var(--text-secondary)]" />
+          <BellDot className="w-4 h-4 text-arch-text-secondary" />
         ) : (
-          <Bell className="w-4 h-4 text-[var(--text-secondary)]" />
+          <Bell className="w-4 h-4 text-arch-text-secondary" />
         )}
         {count > 0 && (
-          <span className="absolute -top-1 -right-1 flex items-center justify-center min-w-[14px] h-[14px] px-[3px] rounded-full bg-[var(--accent-red)] text-white text-[9px] font-bold leading-none">
+          <span className="absolute -top-1 -right-1 flex items-center justify-center min-w-[14px] h-[14px] px-[3px] rounded-full bg-arch-accent-red text-white text-[9px] font-bold leading-none">
             {count}
           </span>
         )}
       </div>
-      <span className="text-[12px] text-[var(--text-heading)] flex-1">
+      <span className="text-[12px] text-arch-text-primary flex-1">
         {count > 0 ? `${count} notification${count === 1 ? "" : "s"}` : "No notifications"}
       </span>
       {count > 0 && (
@@ -532,7 +529,7 @@ export function NotificationRow({ count, clear }: ReturnType<typeof useNotificat
           type="button"
           onClick={clear}
           aria-label="Clear notifications"
-          className="text-[10px] text-[var(--text-muted)] hover:text-[var(--text-secondary)] transition-colors"
+          className="text-[10px] text-arch-text-muted hover:text-arch-text-secondary transition-colors"
         >
           Clear
         </button>
@@ -554,17 +551,17 @@ function HealthSubRow({
   icon: React.ComponentType<{ className?: string }>;
 }) {
   const config = {
-    ok: { color: "text-[var(--accent-green)]", label: "OK" },
-    degraded: { color: "text-[var(--accent-blue)]", label: "Degraded" },
-    unavailable: { color: "text-[var(--accent-red)]", label: "Unavailable" },
-    disabled: { color: "text-[var(--text-muted)]", label: "Disabled" },
+    ok: { color: "text-arch-accent-green", label: "OK" },
+    degraded: { color: "text-arch-accent-charcoal", label: "Degraded" },
+    unavailable: { color: "text-arch-accent-red", label: "Unavailable" },
+    disabled: { color: "text-arch-text-muted", label: "Disabled" },
   };
   const c = config[status] ?? config.ok;
 
   return (
     <div className="flex items-center gap-2">
       <Icon className={cn("w-3 h-3 shrink-0", c.color)} />
-      <span className="text-[11px] text-[var(--text-secondary)] flex-1">{label}</span>
+      <span className="text-[11px] text-arch-text-secondary flex-1">{label}</span>
       <span className={cn("text-[10px] font-medium", c.color)}>{c.label}</span>
     </div>
   );
@@ -581,17 +578,17 @@ export function ServerHealthRow({
   const statusConfig = {
     healthy: {
       icon: CheckCircle2,
-      color: "text-[var(--accent-green)]",
+      color: "text-arch-accent-green",
       label: "Healthy",
     },
     degraded: {
       icon: MinusCircle,
-      color: "text-[var(--accent-blue)]",
+      color: "text-arch-accent-charcoal",
       label: "Degraded",
     },
     error: {
       icon: AlertCircle,
-      color: "text-[var(--accent-red)]",
+      color: "text-arch-accent-red",
       label: "Error",
     },
   };
@@ -602,9 +599,7 @@ export function ServerHealthRow({
     <div className="px-2 py-1.5 rounded-md space-y-1.5">
       <div className="flex items-center gap-2.5">
         <current.icon className={cn("w-4 h-4 shrink-0", current.color)} />
-        <span className="text-[12px] font-medium text-[var(--text-heading)] flex-1">
-          Server Health
-        </span>
+        <span className="text-[12px] font-medium text-arch-text-primary flex-1">Server Health</span>
         <span className={cn("text-[10px] font-medium", current.color)}>{current.label}</span>
       </div>
 
@@ -614,7 +609,7 @@ export function ServerHealthRow({
         <HealthSubRow label="SCADA (FUXA)" status={fuxa} icon={Zap} />
       </div>
 
-      <div className="flex items-center gap-1.5 text-[var(--text-muted)]">
+      <div className="flex items-center gap-1.5 text-arch-text-muted">
         <Clock className="w-3 h-3" />
         <span className="text-[10px]">
           {loading ? "Checking…" : responseTime > 0 ? `${responseTime}ms` : "Unavailable"}
@@ -636,18 +631,18 @@ export function SystemTrayPill() {
   const healthDotColor = health.loading
     ? "bg-[var(--text-muted)]"
     : health.status === "healthy"
-      ? "bg-[var(--accent-green)]"
+      ? "bg-arch-accent-green"
       : health.status === "degraded"
-        ? "bg-[var(--accent-blue)]"
-        : "bg-[var(--accent-red)]";
+        ? "bg-arch-accent-charcoal"
+        : "bg-arch-accent-red";
 
   const VolumeIcon =
     volume.muted || volume.volume === 0 ? VolumeX : volume.volume < 50 ? Volume1 : Volume2;
   const volumeColor =
-    volume.muted || volume.volume === 0 ? "text-[var(--text-muted)]" : "text-[var(--accent-blue)]";
+    volume.muted || volume.volume === 0 ? "text-arch-text-muted" : "text-arch-accent-charcoal";
 
   const ConnIcon = !network.online ? WifiOff : Wifi;
-  const connColor = network.online ? "text-[var(--accent-green)]" : "text-[var(--accent-red)]";
+  const connColor = network.online ? "text-arch-accent-green" : "text-arch-accent-red";
 
   const BatteryIcon = battery.charging
     ? BatteryCharging
@@ -660,14 +655,14 @@ export function SystemTrayPill() {
           : BatteryMedium;
 
   const batteryColor = battery.charging
-    ? "text-[var(--accent-green)]"
+    ? "text-arch-accent-green"
     : battery.level === null
-      ? "text-[var(--text-secondary)]"
+      ? "text-arch-text-secondary"
       : battery.level < 0.5
-        ? "text-[var(--accent-red)]"
+        ? "text-arch-accent-red"
         : battery.level < 0.7
-          ? "text-[var(--accent-amber)]"
-          : "text-[var(--accent-green)]";
+          ? "text-arch-accent-amber"
+          : "text-arch-accent-green";
 
   return (
     <div className="flex items-center gap-1.5">
@@ -676,11 +671,11 @@ export function SystemTrayPill() {
         className={cn(
           "flex items-center justify-center w-[26px] h-[26px] rounded-full",
           "bg-black/[0.03] hover:bg-black/[0.06] border border-border-subtle",
-          "transition-colors active:scale-[0.97]",
+          "transition-colors active:scale-[0.97]"
         )}
         title="Task Manager"
       >
-        <CheckSquare className="w-3.5 h-3.5 text-[var(--text-secondary)]" />
+        <CheckSquare className="w-3.5 h-3.5 text-arch-text-secondary" />
       </Link>
 
       <Popover.Root>
@@ -692,13 +687,13 @@ export function SystemTrayPill() {
             className={cn(
               "flex items-center gap-2 h-[26px] px-2.5 rounded-full select-none cursor-default outline-none",
               "bg-black/[0.03] hover:bg-black/[0.06] border border-border-subtle",
-              "transition-colors active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-[var(--accent-blue)]/50",
+              "transition-colors active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-arch-accent-charcoal/50"
             )}
           >
             {/* Server health dot */}
             <span className="relative flex h-2 w-2">
               {health.status === "healthy" && !health.loading && (
-                <span className="animate-pulse absolute inline-flex h-full w-full rounded-full bg-[var(--accent-green)] opacity-75" />
+                <span className="animate-pulse absolute inline-flex h-full w-full rounded-full bg-arch-accent-green opacity-75" />
               )}
               <span className={cn("relative inline-flex rounded-full h-2 w-2", healthDotColor)} />
             </span>
@@ -711,7 +706,7 @@ export function SystemTrayPill() {
             <div className="flex items-center gap-0.5">
               <BatteryIcon className={cn("w-3.5 h-3.5", batteryColor)} />
               {battery.supported && battery.level !== null && (
-                <span className="text-[11px] font-medium text-[var(--text-heading)] leading-none">
+                <span className="text-[11px] font-medium text-arch-text-primary leading-none">
                   {Math.round(battery.level * 100)}%
                 </span>
               )}
@@ -724,7 +719,7 @@ export function SystemTrayPill() {
             sideOffset={6}
             className={cn(
               "w-64 bg-white/95 backdrop-blur-2xl border border-black/[0.08] shadow-window rounded-xl p-3 z-[120]",
-              "flex flex-col gap-2 select-none focus:outline-none",
+              "flex flex-col gap-2 select-none focus:outline-none"
             )}
           >
             <div className="space-y-3">

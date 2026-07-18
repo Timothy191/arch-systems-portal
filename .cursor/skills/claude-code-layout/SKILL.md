@@ -1,0 +1,15 @@
+---
+name: claude-code-layout
+description: >-
+  Validates and syncs Claude Code .claude/ surfaces. Use when adding Claude rules,
+  settings, or syncing skills/agents to .claude/. Anti-trigger: product UI work.
+---
+
+# Claude Code Layout
+
+Standard: `.cursor/standards/claude-code/STANDARD.md`
+
+## Workflow
+
+1. `.claude/scripts/sync-surfaces.sh`
+2. `scripts/validate.sh`

@@ -98,10 +98,10 @@ export function DepartmentsTab() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-medium text-[var(--text-heading)]">Departments</h2>
+        <h2 className="text-lg font-medium text-arch-text-primary">Departments</h2>
         <Button
           onClick={handleCreate}
-          className="bg-[var(--accent-emerald)] hover:bg-[var(--accent-green)] text-[var(--bg-void)]"
+          className="bg-arch-accent-green hover:bg-arch-accent-green text-[var(--bg-void)]"
         >
           <Plus className="w-4 h-4 mr-2" />
           Add Department
@@ -112,40 +112,40 @@ export function DepartmentsTab() {
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
-              <tr className="border-b border-[var(--border-default)]">
+              <tr className="border-b border-arch-border-default">
                 <th
                   scope="col"
-                  className="px-6 py-3 text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider"
+                  className="px-6 py-3 text-xs font-medium text-arch-text-muted uppercase tracking-wider"
                 >
                   Name
                 </th>
                 <th
                   scope="col"
-                  className="px-6 py-3 text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider"
+                  className="px-6 py-3 text-xs font-medium text-arch-text-muted uppercase tracking-wider"
                 >
                   Slug
                 </th>
                 <th
                   scope="col"
-                  className="px-6 py-3 text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider"
+                  className="px-6 py-3 text-xs font-medium text-arch-text-muted uppercase tracking-wider"
                 >
                   Icon
                 </th>
                 <th
                   scope="col"
-                  className="px-6 py-3 text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider"
+                  className="px-6 py-3 text-xs font-medium text-arch-text-muted uppercase tracking-wider"
                 >
                   Color
                 </th>
                 <th
                   scope="col"
-                  className="px-6 py-3 text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider"
+                  className="px-6 py-3 text-xs font-medium text-arch-text-muted uppercase tracking-wider"
                 >
                   Description
                 </th>
                 <th
                   scope="col"
-                  className="px-6 py-3 text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider text-right"
+                  className="px-6 py-3 text-xs font-medium text-arch-text-muted uppercase tracking-wider text-right"
                 >
                   Actions
                 </th>
@@ -154,26 +154,26 @@ export function DepartmentsTab() {
             <tbody className="divide-y divide-[var(--border-default)]">
               {loading ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center text-[var(--text-muted)]">
+                  <td colSpan={6} className="px-6 py-12 text-center text-arch-text-muted">
                     Loading...
                   </td>
                 </tr>
               ) : departments.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center text-[var(--text-muted)]">
+                  <td colSpan={6} className="px-6 py-12 text-center text-arch-text-muted">
                     No departments found.
                   </td>
                 </tr>
               ) : (
                 departments.map((dept) => (
-                  <tr key={dept.id} className="hover:bg-[var(--bg-tertiary)] transition-colors">
-                    <td className="px-6 py-4 text-[var(--text-heading)] text-sm font-medium">
+                  <tr key={dept.id} className="hover:bg-arch-surface-tertiary transition-colors">
+                    <td className="px-6 py-4 text-arch-text-primary text-sm font-medium">
                       {dept.display_name}
                     </td>
-                    <td className="px-6 py-4 text-[var(--text-muted)] text-sm font-mono">
+                    <td className="px-6 py-4 text-arch-text-muted text-sm font-mono">
                       {dept.name}
                     </td>
-                    <td className="px-6 py-4 text-[var(--text-muted)] text-sm">{dept.icon}</td>
+                    <td className="px-6 py-4 text-arch-text-muted text-sm">{dept.icon}</td>
                     <td className="px-6 py-4">
                       <Badge
                         variant="outline"
@@ -182,7 +182,7 @@ export function DepartmentsTab() {
                         {dept.color}
                       </Badge>
                     </td>
-                    <td className="px-6 py-4 text-[var(--text-muted)] text-sm max-w-xs truncate">
+                    <td className="px-6 py-4 text-arch-text-muted text-sm max-w-xs truncate">
                       {dept.description}
                     </td>
                     <td className="px-6 py-4 text-right">
@@ -209,7 +209,7 @@ export function DepartmentsTab() {
       </GlassCard>
 
       <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
-        <DialogContent className="bg-[var(--bg-primary)] border-[var(--border-default)]">
+        <DialogContent className="bg-arch-surface-primary border-arch-border-default">
           <DialogHeader>
             <DialogTitle>{editingDept ? "Edit Department" : "Create Department"}</DialogTitle>
           </DialogHeader>
@@ -258,7 +258,7 @@ function DepartmentForm({
       <div>
         <label
           htmlFor="displayName"
-          className="block text-sm font-medium text-[var(--text-body)] mb-2"
+          className="block text-sm font-medium text-arch-text-secondary mb-2"
         >
           Display Name
         </label>
@@ -266,33 +266,33 @@ function DepartmentForm({
           id="displayName"
           value={displayName}
           onChange={(e) => setDisplayName(e.target.value)}
-          className="bg-[var(--bg-secondary)] border-[var(--border-default)]"
+          className="bg-arch-surface-secondary border-arch-border-default"
           required
         />
       </div>
 
       <div>
-        <label htmlFor="name" className="block text-sm font-medium text-[var(--text-body)] mb-2">
+        <label htmlFor="name" className="block text-sm font-medium text-arch-text-secondary mb-2">
           Slug (URL-friendly name)
         </label>
         <Input
           id="name"
           value={name}
           onChange={(e) => setName(e.target.value.toLowerCase().replace(/\s+/g, "-"))}
-          className="bg-[var(--bg-secondary)] border-[var(--border-default)]"
+          className="bg-arch-surface-secondary border-arch-border-default"
           required
         />
       </div>
 
       <div>
-        <label htmlFor="icon" className="block text-sm font-medium text-[var(--text-body)] mb-2">
+        <label htmlFor="icon" className="block text-sm font-medium text-arch-text-secondary mb-2">
           Icon
         </label>
         <select
           id="icon"
           value={icon}
           onChange={(e) => setIcon(e.target.value)}
-          className="w-full px-3 py-2 bg-[var(--bg-secondary)] border-[var(--border-default)] rounded text-[var(--text-heading)]"
+          className="w-full px-3 py-2 bg-arch-surface-secondary border-arch-border-default rounded text-arch-text-primary"
         >
           {ICONS.map((iconName) => (
             <option key={iconName} value={iconName}>
@@ -303,14 +303,14 @@ function DepartmentForm({
       </div>
 
       <div>
-        <label htmlFor="color" className="block text-sm font-medium text-[var(--text-body)] mb-2">
+        <label htmlFor="color" className="block text-sm font-medium text-arch-text-secondary mb-2">
           Color
         </label>
         <select
           id="color"
           value={color}
           onChange={(e) => setColor(e.target.value)}
-          className="w-full px-3 py-2 bg-[var(--bg-secondary)] border-[var(--border-default)] rounded text-[var(--text-heading)]"
+          className="w-full px-3 py-2 bg-arch-surface-secondary border-arch-border-default rounded text-arch-text-primary"
         >
           {COLORS.map((colorName) => (
             <option key={colorName} value={colorName}>
@@ -323,7 +323,7 @@ function DepartmentForm({
       <div>
         <label
           htmlFor="description"
-          className="block text-sm font-medium text-[var(--text-body)] mb-2"
+          className="block text-sm font-medium text-arch-text-secondary mb-2"
         >
           Description
         </label>
@@ -333,7 +333,7 @@ function DepartmentForm({
           onChange={(e) => setDescription(e.target.value)}
           rows={3}
           placeholder="Brief description of the department"
-          className="w-full px-3 py-2 bg-[var(--bg-secondary)] border-[var(--border-default)] rounded text-[var(--text-heading)]"
+          className="w-full px-3 py-2 bg-arch-surface-secondary border-arch-border-default rounded text-arch-text-primary"
         />
       </div>
 
@@ -343,7 +343,7 @@ function DepartmentForm({
         </Button>
         <Button
           type="submit"
-          className="bg-[var(--accent-emerald)] hover:bg-[var(--accent-green)] text-[var(--bg-void)]"
+          className="bg-arch-accent-green hover:bg-arch-accent-green text-[var(--bg-void)]"
         >
           {department ? "Update" : "Create"}
         </Button>

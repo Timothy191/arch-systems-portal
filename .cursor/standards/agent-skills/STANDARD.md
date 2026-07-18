@@ -28,7 +28,7 @@ This directory is the **single canonical reference** for how skills and agents b
 ## Validation
 
 ```bash
-.cursor/standards/agent-skills/scripts/validate.sh
+pnpm ai check
 ```
 
 ## Related project surfaces

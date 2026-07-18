@@ -74,7 +74,7 @@ export function WeatherWidget({
           <button
             aria-label="Weather details"
             title="Weather details"
-            className="relative flex items-center justify-center w-7 h-7 bg-black/[0.03] hover:bg-black/[0.06] border border-border-subtle rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-blue)]/50 cursor-default outline-none active:scale-[0.97]"
+            className="relative flex items-center justify-center w-7 h-7 bg-black/[0.03] hover:bg-black/[0.06] border border-border-subtle rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-arch-accent-charcoal/50 cursor-default outline-none active:scale-[0.97]"
           >
             <span className="text-lg leading-none">{weather.icon}</span>
             {alert.level !== "none" && (
@@ -100,12 +100,12 @@ export function WeatherWidget({
               {/* Header */}
               <div className="flex items-center justify-between pb-1.5 border-b border-black/[0.05]">
                 <span
-                  className="text-[10px] font-bold text-[var(--text-muted)] tracking-wider uppercase truncate max-w-[130px]"
+                  className="text-[10px] font-bold text-arch-text-muted tracking-wider uppercase truncate max-w-[130px]"
                   title={weather.location.name || locationName}
                 >
                   {weather.location.name || locationName}
                 </span>
-                <span className="text-[9px] text-[var(--text-muted)] shrink-0">
+                <span className="text-[9px] text-arch-text-muted shrink-0">
                   Updated{" "}
                   {new Date(weather.timestamp).toLocaleTimeString([], {
                     hour: "2-digit",
@@ -118,30 +118,28 @@ export function WeatherWidget({
               <div className="flex items-center gap-3">
                 <span className="text-4xl">{weather.icon}</span>
                 <div>
-                  <p className="text-2xl font-semibold text-[var(--text-heading)]">
+                  <p className="text-2xl font-semibold text-arch-text-primary">
                     {weather.temperature}°C
                   </p>
-                  <p className="text-xs text-[var(--text-secondary)]">
+                  <p className="text-xs text-arch-text-secondary">
                     {weather.description} (Feels: {weather.feelsLike}°C)
                   </p>
                 </div>
               </div>
 
               {/* Details (Wind/Humidity) */}
-              <div className="grid grid-cols-2 gap-2 pt-1 text-xs text-[var(--text-secondary)]">
+              <div className="grid grid-cols-2 gap-2 pt-1 text-xs text-arch-text-secondary">
                 <div className="bg-black/[0.02] p-2 rounded-lg border border-black/[0.04] min-w-0">
-                  <p className="text-[9px] text-[var(--text-muted)] uppercase tracking-wider">
-                    Wind
-                  </p>
-                  <p className="font-semibold text-[var(--text-heading)] truncate">
+                  <p className="text-[9px] text-arch-text-muted uppercase tracking-wider">Wind</p>
+                  <p className="font-semibold text-arch-text-primary truncate">
                     💨 {weather.windSpeed} km/h {getWindDirection(weather.windDirection)}
                   </p>
                 </div>
                 <div className="bg-black/[0.02] p-2 rounded-lg border border-black/[0.04] min-w-0">
-                  <p className="text-[9px] text-[var(--text-muted)] uppercase tracking-wider">
+                  <p className="text-[9px] text-arch-text-muted uppercase tracking-wider">
                     Humidity
                   </p>
-                  <p className="font-semibold text-[var(--text-heading)] truncate">
+                  <p className="font-semibold text-arch-text-primary truncate">
                     💧 {weather.humidity}%
                   </p>
                 </div>
@@ -154,7 +152,7 @@ export function WeatherWidget({
                     "p-2.5 rounded-lg text-xs font-medium border",
                     alert.level === "critical"
                       ? "bg-accent-red/10 text-accent-red border-accent-red/20 animate-pulse"
-                      : "bg-accent-blue/10 text-accent-blue border-accent-blue/20",
+                      : "bg-accent-blue/10 text-accent-blue border-accent-blue/20"
                   )}
                 >
                   {alert.message}

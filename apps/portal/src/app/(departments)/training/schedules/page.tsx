@@ -112,13 +112,13 @@ export default async function SchedulesPage({
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-semibold text-[var(--text-heading)]">Training Schedules</h2>
-          <p className="text-[var(--text-muted)] text-sm mt-0.5">
+          <h2 className="text-2xl font-semibold text-arch-text-primary">Training Schedules</h2>
+          <p className="text-arch-text-muted text-sm mt-0.5">
             Book classrooms, configure instructors, and schedule heavy equipment practical
             evaluations.
           </p>
         </div>
-        <button className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--accent-blue)] text-[var(--bg-secondary)] text-sm font-medium rounded-lg hover:opacity-90 transition-all shadow-card">
+        <button className="flex items-center gap-1.5 px-3 py-1.5 bg-arch-accent-charcoal text-[var(--bg-secondary)] text-sm font-medium rounded-lg hover:opacity-90 transition-all shadow-card">
           <Plus className="w-4 h-4" />
           <span>Book Session</span>
         </button>
@@ -161,17 +161,15 @@ export default async function SchedulesPage({
                     {session.type}
                   </span>
                   <span
-                    className={`text-[10px] px-2.5 py-0.5 rounded-full font-medium bg-[var(--overlay-dim)] text-[var(--text-muted)]`}
+                    className={`text-[10px] px-2.5 py-0.5 rounded-full font-medium bg-arch-surface-chrome text-arch-text-muted`}
                   >
                     {session.status}
                   </span>
                 </div>
-                <h3 className="font-semibold text-base text-[var(--text-heading)]">
-                  {session.course}
-                </h3>
+                <h3 className="font-semibold text-base text-arch-text-primary">{session.course}</h3>
 
                 {/* Details line */}
-                <div className="flex flex-wrap gap-x-4 gap-y-1.5 text-xs text-[var(--text-muted)] mt-1.5">
+                <div className="flex flex-wrap gap-x-4 gap-y-1.5 text-xs text-arch-text-muted mt-1.5">
                   <div className="flex items-center gap-1">
                     <Calendar className="w-3.5 h-3.5" />
                     <span>{session.date}</span>
@@ -188,7 +186,7 @@ export default async function SchedulesPage({
                     <User className="w-3.5 h-3.5" />
                     <span>
                       Trainer:{" "}
-                      <strong className="font-medium text-[var(--text-secondary)]">
+                      <strong className="font-medium text-arch-text-secondary">
                         {session.instructor}
                       </strong>
                     </span>
@@ -199,31 +197,29 @@ export default async function SchedulesPage({
               {/* Registration statistics */}
               <div className="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-center w-full md:w-auto pt-3 md:pt-0 border-t md:border-t-0 border-black/[0.04] shrink-0 gap-3">
                 <div className="text-left md:text-right space-y-0.5">
-                  <p className="text-[10px] text-[var(--text-muted)] font-semibold uppercase tracking-wider">
+                  <p className="text-[10px] text-arch-text-muted font-semibold uppercase tracking-wider">
                     Registrations
                   </p>
-                  <p className="text-sm font-semibold text-[var(--text-heading)]">
+                  <p className="text-sm font-semibold text-arch-text-primary">
                     {session.filled} / {session.capacity} Slots
                   </p>
                 </div>
-                <div className="w-24 bg-[var(--overlay-subtle)] h-1.5 rounded-full overflow-hidden hidden sm:block">
+                <div className="w-24 bg-arch-surface-chrome-medium h-1.5 rounded-full overflow-hidden hidden sm:block">
                   <div
-                    className="h-full bg-[var(--accent-blue)] rounded-full"
+                    className="h-full bg-arch-accent-charcoal rounded-full"
                     style={{
                       width: `${(session.filled / Number(session.capacity)) * 100}%`,
                     }}
                   />
                 </div>
-                <button className="h-8 px-3 text-xs bg-[var(--overlay-dim)] border border-[var(--border-default)] hover:bg-[var(--overlay-subtle)] font-semibold text-[var(--text-heading)] rounded-lg transition-colors">
+                <button className="h-8 px-3 text-xs bg-arch-surface-chrome border border-arch-border-default hover:bg-arch-surface-chrome-medium font-semibold text-arch-text-primary rounded-lg transition-colors">
                   Manage Roster
                 </button>
               </div>
             </GlassCard>
           ))
         ) : (
-          <div className="py-12 text-center text-[var(--text-muted)]">
-            No training sessions found.
-          </div>
+          <div className="py-12 text-center text-arch-text-muted">No training sessions found.</div>
         )}
       </div>
     </div>

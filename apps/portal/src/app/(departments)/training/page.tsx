@@ -94,10 +94,8 @@ export default async function TrainingDashboardPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-semibold text-[var(--text-heading)]">
-          Training Overview & LMS
-        </h2>
-        <p className="text-[var(--text-muted)] text-sm">
+        <h2 className="text-2xl font-semibold text-arch-text-primary">Training Overview & LMS</h2>
+        <p className="text-arch-text-muted text-sm">
           {new Date().toLocaleDateString("en-ZA", {
             weekday: "long",
             year: "numeric",
@@ -114,13 +112,13 @@ export default async function TrainingDashboardPage() {
           return (
             <GlassCard key={i}>
               <div className="flex items-center justify-between">
-                <p className="text-[var(--text-muted)] text-xs font-semibold uppercase tracking-wider">
+                <p className="text-arch-text-muted text-xs font-semibold uppercase tracking-wider">
                   {stat.label}
                 </p>
                 <Icon className={`w-5 h-5 ${stat.color}`} />
               </div>
-              <p className="text-3xl font-bold text-[var(--text-heading)] mt-2">{stat.value}</p>
-              <p className="text-xs text-[var(--text-muted)] mt-1 flex items-center gap-1">
+              <p className="text-3xl font-bold text-arch-text-primary mt-2">{stat.value}</p>
+              <p className="text-xs text-arch-text-muted mt-1 flex items-center gap-1">
                 <span className="text-emerald-600 font-medium">{stat.change.split(" ")[0]}</span>
                 <span>{stat.change.substring(stat.change.indexOf(" "))}</span>
               </p>
@@ -135,19 +133,17 @@ export default async function TrainingDashboardPage() {
         <div className="lg:col-span-1 space-y-4">
           <GlassCard className="h-full">
             <div className="flex items-center justify-between pb-3 border-b border-black/[0.06]">
-              <h3 className="font-semibold text-sm text-[var(--text-heading)]">Today's Sessions</h3>
-              <Calendar className="w-4 h-4 text-[var(--text-muted)]" />
+              <h3 className="font-semibold text-sm text-arch-text-primary">Today's Sessions</h3>
+              <Calendar className="w-4 h-4 text-arch-text-muted" />
             </div>
             <div className="mt-4 space-y-4">
               {ongoingClasses.map((item) => (
                 <div
                   key={item.id}
-                  className="p-3 rounded-xl bg-[var(--overlay-dim)] border border-[var(--border-subtle)] space-y-2"
+                  className="p-3 rounded-xl bg-arch-surface-chrome border border-arch-border-subtle space-y-2"
                 >
                   <div className="flex justify-between items-start">
-                    <h4 className="font-medium text-sm text-[var(--text-heading)]">
-                      {item.course}
-                    </h4>
+                    <h4 className="font-medium text-sm text-arch-text-primary">{item.course}</h4>
                     <span
                       className={`text-[10px] px-2 py-0.5 rounded-full font-semibold ${
                         item.status === "In Progress"
@@ -160,11 +156,11 @@ export default async function TrainingDashboardPage() {
                       {item.status}
                     </span>
                   </div>
-                  <div className="flex justify-between text-xs text-[var(--text-muted)]">
+                  <div className="flex justify-between text-xs text-arch-text-muted">
                     <span>{item.trainer}</span>
                     <span>{item.time}</span>
                   </div>
-                  <div className="text-[11px] text-[var(--text-muted)]">
+                  <div className="text-[11px] text-arch-text-muted">
                     👥 <span className="font-semibold">{item.trainees} trainees</span> enrolled
                   </div>
                 </div>
@@ -178,19 +174,19 @@ export default async function TrainingDashboardPage() {
           <GlassCard className="h-full">
             <div className="flex items-center justify-between pb-3 border-b border-black/[0.06]">
               <div>
-                <h3 className="font-semibold text-sm text-[var(--text-heading)]">
+                <h3 className="font-semibold text-sm text-arch-text-primary">
                   Recent Certification Awards
                 </h3>
-                <p className="text-[var(--text-muted)] text-[11px]">
+                <p className="text-arch-text-muted text-[11px]">
                   Latest safety and equipment competence endorsements
                 </p>
               </div>
-              <Award className="w-4 h-4 text-[var(--text-muted)]" />
+              <Award className="w-4 h-4 text-arch-text-muted" />
             </div>
             <div className="mt-4 overflow-x-auto">
               <table className="w-full text-left text-xs">
                 <thead>
-                  <tr className="border-b border-black/[0.04] text-[var(--text-muted)] font-semibold">
+                  <tr className="border-b border-black/[0.04] text-arch-text-muted font-semibold">
                     <th className="pb-2">Employee</th>
                     <th className="pb-2">Role</th>
                     <th className="pb-2">Endorsement / Certification</th>
@@ -200,13 +196,11 @@ export default async function TrainingDashboardPage() {
                 </thead>
                 <tbody className="divide-y divide-[var(--overlay-dim)]">
                   {recentCertifications.map((cert, idx) => (
-                    <tr key={idx} className="hover:bg-[var(--overlay-dim)]">
-                      <td className="py-2.5 font-medium text-[var(--text-heading)]">
-                        {cert.employee}
-                      </td>
-                      <td className="py-2.5 text-[var(--text-muted)]">{cert.role}</td>
-                      <td className="py-2.5 text-[var(--text-heading)]">{cert.certification}</td>
-                      <td className="py-2.5 text-[var(--text-muted)]">{cert.issueDate}</td>
+                    <tr key={idx} className="hover:bg-arch-surface-chrome">
+                      <td className="py-2.5 font-medium text-arch-text-primary">{cert.employee}</td>
+                      <td className="py-2.5 text-arch-text-muted">{cert.role}</td>
+                      <td className="py-2.5 text-arch-text-primary">{cert.certification}</td>
+                      <td className="py-2.5 text-arch-text-muted">{cert.issueDate}</td>
                       <td className="py-2.5 text-right">
                         <span className="text-[10px] px-2 py-0.5 bg-emerald-500/10 text-emerald-600 font-semibold rounded-full">
                           {cert.status}

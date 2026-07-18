@@ -11,13 +11,13 @@ export default function PrivacyPage(): React.JSX.Element {
   return (
     <div className="max-w-4xl mx-auto py-12 px-6">
       <div className="flex items-center gap-4 mb-8">
-        <div className="p-3 bg-[var(--bg-tertiary)] rounded-xl">
-          <Shield className="w-8 h-8 text-[var(--text-heading)]" />
+        <div className="p-3 bg-arch-surface-tertiary rounded-xl">
+          <Shield className="w-8 h-8 text-arch-text-primary" />
         </div>
-        <h1 className="text-3xl font-semibold text-[var(--text-heading)]">Privacy Policy</h1>
+        <h1 className="text-3xl font-semibold text-arch-text-primary">Privacy Policy</h1>
       </div>
 
-      <div className="prose prose-neutral max-w-none text-[var(--text-muted)] space-y-6">
+      <div className="prose prose-neutral max-w-none text-arch-text-muted space-y-6">
         <p className="text-lg">
           Last updated:{" "}
           {new Date().toLocaleDateString("en-US", {
@@ -27,7 +27,7 @@ export default function PrivacyPage(): React.JSX.Element {
         </p>
 
         <section className="bg-white/70 backdrop-blur-xl border border-black/[0.08] p-8 rounded-2xl shadow-card">
-          <h2 className="text-xl font-medium text-[var(--text-heading)] mb-4">
+          <h2 className="text-xl font-medium text-arch-text-primary mb-4">
             1. Data Collection and Usage
           </h2>
           <p className="mb-4">
@@ -52,7 +52,7 @@ export default function PrivacyPage(): React.JSX.Element {
         </section>
 
         <section className="bg-white/70 backdrop-blur-xl border border-black/[0.08] p-8 rounded-2xl shadow-card">
-          <h2 className="text-xl font-medium text-[var(--text-heading)] mb-4">
+          <h2 className="text-xl font-medium text-arch-text-primary mb-4">
             2. Cookies and Tracking
           </h2>
           <p>
@@ -63,7 +63,7 @@ export default function PrivacyPage(): React.JSX.Element {
         </section>
 
         <section className="bg-white/70 backdrop-blur-xl border border-black/[0.08] p-8 rounded-2xl shadow-card">
-          <h2 className="text-xl font-medium text-[var(--text-heading)] mb-4">
+          <h2 className="text-xl font-medium text-arch-text-primary mb-4">
             3. Data Security and Isolation
           </h2>
           <p>
@@ -74,7 +74,7 @@ export default function PrivacyPage(): React.JSX.Element {
         </section>
 
         <section className="bg-white/70 backdrop-blur-xl border border-black/[0.08] p-8 rounded-2xl shadow-card">
-          <h2 className="text-xl font-medium text-[var(--text-heading)] mb-4">
+          <h2 className="text-xl font-medium text-arch-text-primary mb-4">
             4. Compliance and Contact
           </h2>
           <p>

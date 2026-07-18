@@ -65,8 +65,12 @@
         "frontend-implementer",
         "ai-docs-sync",
         "sceptic",
-        "idle-runner"
-      ]
+        "idle-runner",
+        "ai-maintenance-checker",
+        "vercel-brand-sync"
+      ],
+      "maintenance_script": "scripts/ai.sh",
+      "ai_system_standard": ".cursor/standards/ai-system/STANDARD.md"
     }
   },
   "permissions": {
@@ -79,7 +83,9 @@
       "pnpm type-check",
       "pnpm test",
       "pnpm quality",
-      "pnpm format"
+      "pnpm ai",
+      "pnpm ai:check",
+      "pnpm ai:fix"
     ],
     "restricted": [".env*.local", "**/*secret*", "**/*private*"]
   },

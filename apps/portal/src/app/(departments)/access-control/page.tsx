@@ -48,10 +48,10 @@ export default async function AccessControlDashboardPage() {
               <span className="text-accent-green font-bold text-sm">BADGES</span>
             </div>
             <div>
-              <p className="text-[var(--text-muted)] text-xs font-medium uppercase tracking-wider">
+              <p className="text-arch-text-muted text-xs font-medium uppercase tracking-wider">
                 Active Badges
               </p>
-              <p className="text-2xl font-bold text-[var(--text-heading)] mt-1">
+              <p className="text-2xl font-bold text-arch-text-primary mt-1">
                 {metrics.activeQrCodes}
               </p>
             </div>
@@ -63,7 +63,7 @@ export default async function AccessControlDashboardPage() {
               <span className="text-cyan-400 font-bold text-sm">VISITORS</span>
             </div>
             <div>
-              <p className="text-[var(--text-muted)] text-xs font-medium uppercase tracking-wider">
+              <p className="text-arch-text-muted text-xs font-medium uppercase tracking-wider">
                 Active Visitors
               </p>
               <p className="text-2xl font-bold text-cyan-400 mt-1">{metrics.accessEventsToday}</p>
@@ -76,7 +76,7 @@ export default async function AccessControlDashboardPage() {
               <span className="text-accent-blue font-bold text-sm">ALERTS</span>
             </div>
             <div>
-              <p className="text-[var(--text-muted)] text-xs font-medium uppercase tracking-wider">
+              <p className="text-arch-text-muted text-xs font-medium uppercase tracking-wider">
                 Alerts Today
               </p>
               <p className="text-2xl font-bold text-accent-blue mt-1">{metrics.deniedToday}</p>

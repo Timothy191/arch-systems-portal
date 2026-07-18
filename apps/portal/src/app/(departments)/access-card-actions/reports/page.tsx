@@ -136,30 +136,28 @@ export default async function ReportsPage() {
 
       {/* ────────── Recent Activity ────────── */}
       <GlassCard className="p-0 overflow-hidden">
-        <div className="p-4 border-b border-[var(--border-default)] bg-[var(--bg-secondary)]/50 flex items-center justify-between">
-          <h3 className="font-medium text-[var(--text-heading)] flex items-center">
-            <FileText className="w-4 h-4 mr-2 text-[var(--text-muted)]" />
+        <div className="p-4 border-b border-arch-border-default bg-arch-surface-secondary/50 flex items-center justify-between">
+          <h3 className="font-medium text-arch-text-primary flex items-center">
+            <FileText className="w-4 h-4 mr-2 text-arch-text-muted" />
             Print Job Activity
           </h3>
-          <span className="text-xs text-[var(--text-muted)]">
-            {terminalJobs.length} completed jobs
-          </span>
+          <span className="text-xs text-arch-text-muted">{terminalJobs.length} completed jobs</span>
         </div>
         <Table>
           <TableHeader>
-            <TableRow className="border-b border-[var(--border-default)] hover:bg-transparent">
-              <TableHead className="text-[var(--text-muted)]">Employee</TableHead>
-              <TableHead className="text-[var(--text-muted)]">Department</TableHead>
-              <TableHead className="text-[var(--text-muted)]">Status</TableHead>
-              <TableHead className="text-[var(--text-muted)]">Date</TableHead>
-              <TableHead className="text-[var(--text-muted)]">Printer</TableHead>
-              <TableHead className="text-right text-[var(--text-muted)]">Template</TableHead>
+            <TableRow className="border-b border-arch-border-default hover:bg-transparent">
+              <TableHead className="text-arch-text-muted">Employee</TableHead>
+              <TableHead className="text-arch-text-muted">Department</TableHead>
+              <TableHead className="text-arch-text-muted">Status</TableHead>
+              <TableHead className="text-arch-text-muted">Date</TableHead>
+              <TableHead className="text-arch-text-muted">Printer</TableHead>
+              <TableHead className="text-right text-arch-text-muted">Template</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {terminalJobs.length === 0 && (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-8 text-[var(--text-muted)]">
+                <TableCell colSpan={6} className="text-center py-8 text-arch-text-muted">
                   No completed print job activity yet.
                 </TableCell>
               </TableRow>
@@ -167,16 +165,16 @@ export default async function ReportsPage() {
             {terminalJobs.map((job) => (
               <TableRow
                 key={job.id}
-                className="border-b border-[var(--border-default)]/50 hover:bg-[var(--bg-tertiary)] transition-colors"
+                className="border-b border-arch-border-default/50 hover:bg-arch-surface-tertiary transition-colors"
               >
-                <TableCell className="text-[var(--text-heading)]">{job.employee_name}</TableCell>
-                <TableCell className="text-[var(--text-secondary)] text-sm">
+                <TableCell className="text-arch-text-primary">{job.employee_name}</TableCell>
+                <TableCell className="text-arch-text-secondary text-sm">
                   {job.department_name ?? "—"}
                 </TableCell>
                 <TableCell>
                   <ActivityPill status={job.status} />
                 </TableCell>
-                <TableCell className="text-[var(--text-secondary)] text-sm">
+                <TableCell className="text-arch-text-secondary text-sm">
                   {new Date(job.queued_at).toLocaleDateString("en-ZA", {
                     day: "numeric",
                     month: "short",
@@ -185,10 +183,10 @@ export default async function ReportsPage() {
                     minute: "2-digit",
                   })}
                 </TableCell>
-                <TableCell className="text-[var(--text-secondary)] text-sm">
+                <TableCell className="text-arch-text-secondary text-sm">
                   {job.printer?.name ?? "—"}
                 </TableCell>
-                <TableCell className="text-right text-[var(--text-secondary)] text-sm">
+                <TableCell className="text-right text-arch-text-secondary text-sm">
                   {job.template?.name ?? "—"}
                 </TableCell>
               </TableRow>
@@ -201,29 +199,29 @@ export default async function ReportsPage() {
       <GlassCard>
         <div className="flex items-center justify-between">
           <div className="flex items-start gap-4">
-            <div className="w-10 h-10 rounded-full bg-[var(--accent-blue)]/10 flex items-center justify-center border border-[var(--accent-blue)]/20 shrink-0">
-              <Download className="w-5 h-5 text-[var(--accent-blue)]" />
+            <div className="w-10 h-10 rounded-full bg-arch-accent-charcoal/10 flex items-center justify-center border border-arch-accent-charcoal/20 shrink-0">
+              <Download className="w-5 h-5 text-arch-accent-charcoal" />
             </div>
             <div>
-              <h3 className="font-medium text-[var(--text-heading)]">Export Reports</h3>
-              <p className="text-sm text-[var(--text-muted)] mt-1">
+              <h3 className="font-medium text-arch-text-primary">Export Reports</h3>
+              <p className="text-sm text-arch-text-muted mt-1">
                 Export print job history, card issuance logs, and printer activity as CSV or JSON
                 for external analysis and record-keeping.
               </p>
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg border border-[var(--border-default)] bg-white/50 text-[var(--text-muted)] cursor-not-allowed">
+            <span className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg border border-arch-border-default bg-white/50 text-arch-text-muted cursor-not-allowed">
               <Download className="w-3 h-3" />
               CSV Export
             </span>
-            <span className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg border border-[var(--border-default)] bg-white/50 text-[var(--text-muted)] cursor-not-allowed">
+            <span className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg border border-arch-border-default bg-white/50 text-arch-text-muted cursor-not-allowed">
               <Download className="w-3 h-3" />
               JSON
             </span>
           </div>
         </div>
-        <p className="text-xs text-[var(--text-muted)] mt-3 border-t border-[var(--border-default)] pt-3">
+        <p className="text-xs text-arch-text-muted mt-3 border-t border-arch-border-default pt-3">
           CSV and JSON export functionality is planned for a future release. Data shown on this page
           can be copied manually.
         </p>

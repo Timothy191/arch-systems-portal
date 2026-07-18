@@ -83,7 +83,7 @@ export function UsersTab() {
   };
 
   const filteredEmployees = employees.filter((emp) =>
-    emp.full_name.toLowerCase().includes(searchTerm.toLowerCase()),
+    emp.full_name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const deptMap = new Map(departments.map((d) => [d.id, d.display_name]));
@@ -92,15 +92,15 @@ export function UsersTab() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-muted)]" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-arch-text-muted" />
           <Input
             placeholder="Search employees..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10 bg-[var(--bg-secondary)] border-[var(--border-default)]"
+            className="pl-10 bg-arch-surface-secondary border-arch-border-default"
           />
         </div>
-        <Button className="bg-[var(--accent-emerald)] hover:bg-[var(--accent-green)] text-[var(--bg-void)]">
+        <Button className="bg-arch-accent-green hover:bg-arch-accent-green text-[var(--bg-void)]">
           <UserPlus className="w-4 h-4 mr-2" />
           Add Employee
         </Button>
@@ -110,40 +110,40 @@ export function UsersTab() {
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
-              <tr className="border-b border-[var(--border-default)]">
+              <tr className="border-b border-arch-border-default">
                 <th
                   scope="col"
-                  className="px-6 py-3 text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider"
+                  className="px-6 py-3 text-xs font-medium text-arch-text-muted uppercase tracking-wider"
                 >
                   Name
                 </th>
                 <th
                   scope="col"
-                  className="px-6 py-3 text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider"
+                  className="px-6 py-3 text-xs font-medium text-arch-text-muted uppercase tracking-wider"
                 >
                   Role
                 </th>
                 <th
                   scope="col"
-                  className="px-6 py-3 text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider"
+                  className="px-6 py-3 text-xs font-medium text-arch-text-muted uppercase tracking-wider"
                 >
                   Department
                 </th>
                 <th
                   scope="col"
-                  className="px-6 py-3 text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider"
+                  className="px-6 py-3 text-xs font-medium text-arch-text-muted uppercase tracking-wider"
                 >
                   Accessible Depts
                 </th>
                 <th
                   scope="col"
-                  className="px-6 py-3 text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider"
+                  className="px-6 py-3 text-xs font-medium text-arch-text-muted uppercase tracking-wider"
                 >
                   Created
                 </th>
                 <th
                   scope="col"
-                  className="px-6 py-3 text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider text-right"
+                  className="px-6 py-3 text-xs font-medium text-arch-text-muted uppercase tracking-wider text-right"
                 >
                   Actions
                 </th>
@@ -152,20 +152,20 @@ export function UsersTab() {
             <tbody className="divide-y divide-[var(--border-default)]">
               {loading ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center text-[var(--text-muted)]">
+                  <td colSpan={6} className="px-6 py-12 text-center text-arch-text-muted">
                     Loading...
                   </td>
                 </tr>
               ) : filteredEmployees.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center text-[var(--text-muted)]">
+                  <td colSpan={6} className="px-6 py-12 text-center text-arch-text-muted">
                     No employees found.
                   </td>
                 </tr>
               ) : (
                 filteredEmployees.map((emp) => (
-                  <tr key={emp.id} className="hover:bg-[var(--bg-tertiary)] transition-colors">
-                    <td className="px-6 py-4 text-[var(--text-heading)] text-sm font-medium">
+                  <tr key={emp.id} className="hover:bg-arch-surface-tertiary transition-colors">
+                    <td className="px-6 py-4 text-arch-text-primary text-sm font-medium">
                       {emp.full_name}
                     </td>
                     <td className="px-6 py-4">
@@ -182,13 +182,13 @@ export function UsersTab() {
                         {emp.role}
                       </Badge>
                     </td>
-                    <td className="px-6 py-4 text-[var(--text-muted)] text-sm">
+                    <td className="px-6 py-4 text-arch-text-muted text-sm">
                       {emp.department_id ? deptMap.get(emp.department_id) : "Unassigned"}
                     </td>
-                    <td className="px-6 py-4 text-[var(--text-muted)] text-sm">
+                    <td className="px-6 py-4 text-arch-text-muted text-sm">
                       {emp.accessible_departments?.length || 0} departments
                     </td>
-                    <td className="px-6 py-4 text-[var(--text-muted)] text-sm">
+                    <td className="px-6 py-4 text-arch-text-muted text-sm">
                       {new Date(emp.created_at).toLocaleDateString()}
                     </td>
                     <td className="px-6 py-4 text-right">
@@ -214,7 +214,7 @@ export function UsersTab() {
       </GlassCard>
 
       <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
-        <DialogContent className="bg-[var(--bg-primary)] border-[var(--border-default)]">
+        <DialogContent className="bg-arch-surface-primary border-arch-border-default">
           <DialogHeader>
             <DialogTitle>Edit Employee</DialogTitle>
           </DialogHeader>
@@ -251,7 +251,7 @@ function EditEmployeeForm({
   const [role, setRole] = useState(employee?.role || "operator");
   const [departmentId, setDepartmentId] = useState(employee?.department_id || "");
   const [accessibleDepts, setAccessibleDepts] = useState<string[]>(
-    employee?.accessible_departments || [],
+    employee?.accessible_departments || []
   );
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -265,21 +265,21 @@ function EditEmployeeForm({
 
   const toggleAccessibleDept = (deptId: string) => {
     setAccessibleDepts((prev) =>
-      prev.includes(deptId) ? prev.filter((d) => d !== deptId) : [...prev, deptId],
+      prev.includes(deptId) ? prev.filter((d) => d !== deptId) : [...prev, deptId]
     );
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label htmlFor="role" className="block text-sm font-medium text-[var(--text-body)] mb-2">
+        <label htmlFor="role" className="block text-sm font-medium text-arch-text-secondary mb-2">
           Role
         </label>
         <select
           id="role"
           value={role}
           onChange={(e) => setRole(e.target.value)}
-          className="w-full px-3 py-2 bg-[var(--bg-secondary)] border-[var(--border-default)] rounded text-[var(--text-heading)]"
+          className="w-full px-3 py-2 bg-arch-surface-secondary border-arch-border-default rounded text-arch-text-primary"
         >
           <option value="operator">Operator</option>
           <option value="supervisor">Supervisor</option>
@@ -291,7 +291,7 @@ function EditEmployeeForm({
       <div>
         <label
           htmlFor="department"
-          className="block text-sm font-medium text-[var(--text-body)] mb-2"
+          className="block text-sm font-medium text-arch-text-secondary mb-2"
         >
           Primary Department
         </label>
@@ -299,7 +299,7 @@ function EditEmployeeForm({
           id="department"
           value={departmentId}
           onChange={(e) => setDepartmentId(e.target.value)}
-          className="w-full px-3 py-2 bg-[var(--bg-secondary)] border-[var(--border-default)] rounded text-[var(--text-heading)]"
+          className="w-full px-3 py-2 bg-arch-surface-secondary border-arch-border-default rounded text-arch-text-primary"
         >
           <option value="">Select department</option>
           {departments.map((dept) => (
@@ -311,7 +311,7 @@ function EditEmployeeForm({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-[var(--text-body)] mb-2">
+        <label className="block text-sm font-medium text-arch-text-secondary mb-2">
           Accessible Departments
         </label>
         <div className="grid grid-cols-2 gap-2">
@@ -322,8 +322,8 @@ function EditEmployeeForm({
               onClick={() => toggleAccessibleDept(dept.id)}
               className={`text-left px-3 py-2 rounded border text-sm ${
                 accessibleDepts.includes(dept.id)
-                  ? "bg-[var(--accent-emerald)] border-[var(--accent-emerald)] text-[var(--bg-void)]"
-                  : "bg-[var(--bg-secondary)] border-[var(--border-default)] text-[var(--text-body)]"
+                  ? "bg-arch-accent-green border-arch-accent-green text-[var(--bg-void)]"
+                  : "bg-arch-surface-secondary border-arch-border-default text-arch-text-secondary"
               }`}
             >
               {dept.display_name}
@@ -338,7 +338,7 @@ function EditEmployeeForm({
         </Button>
         <Button
           type="submit"
-          className="bg-[var(--accent-emerald)] hover:bg-[var(--accent-green)] text-[var(--bg-void)]"
+          className="bg-arch-accent-green hover:bg-arch-accent-green text-[var(--bg-void)]"
         >
           Save Changes
         </Button>

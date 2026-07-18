@@ -38,8 +38,8 @@ export default async function VisitorsPage({
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-[var(--text-heading)]">Visitor Management</h2>
-          <p className="text-sm text-[var(--text-muted)] mt-1">
+          <h2 className="text-2xl font-bold text-arch-text-primary">Visitor Management</h2>
+          <p className="text-sm text-arch-text-muted mt-1">
             Register guests, assign temporary credentials, and track site hosts.
           </p>
         </div>
@@ -54,12 +54,12 @@ export default async function VisitorsPage({
         {/* Active Visitors Table (Right, 2 cols) */}
         <div className="lg:col-span-2">
           <GlassCard className="p-0 overflow-hidden h-full flex flex-col">
-            <div className="p-4 border-b border-[var(--border-default)] bg-[var(--bg-secondary)]/50 flex justify-between items-center">
-              <h3 className="font-semibold text-[var(--text-heading)] flex items-center">
-                <Clock className="w-4 h-4 mr-2 text-[var(--text-muted)]" />
+            <div className="p-4 border-b border-arch-border-default bg-arch-surface-secondary/50 flex justify-between items-center">
+              <h3 className="font-semibold text-arch-text-primary flex items-center">
+                <Clock className="w-4 h-4 mr-2 text-arch-text-muted" />
                 Today&apos;s Visitors
               </h3>
-              <span className="text-xs text-[var(--text-muted)]">{totalCount} total visitors</span>
+              <span className="text-xs text-arch-text-muted">{totalCount} total visitors</span>
             </div>
 
             <div className="flex-1">
@@ -74,30 +74,30 @@ export default async function VisitorsPage({
               ) : (
                 <Table>
                   <TableHeader>
-                    <TableRow className="border-b border-[var(--border-default)] hover:bg-transparent">
-                      <TableHead className="text-[var(--text-muted)]">Visitor Name</TableHead>
-                      <TableHead className="text-[var(--text-muted)]">Company</TableHead>
-                      <TableHead className="text-[var(--text-muted)]">Reason</TableHead>
-                      <TableHead className="text-[var(--text-muted)]">Check-In</TableHead>
-                      <TableHead className="text-right text-[var(--text-muted)]">Status</TableHead>
+                    <TableRow className="border-b border-arch-border-default hover:bg-transparent">
+                      <TableHead className="text-arch-text-muted">Visitor Name</TableHead>
+                      <TableHead className="text-arch-text-muted">Company</TableHead>
+                      <TableHead className="text-arch-text-muted">Reason</TableHead>
+                      <TableHead className="text-arch-text-muted">Check-In</TableHead>
+                      <TableHead className="text-right text-arch-text-muted">Status</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {visitors.map((visitor) => (
                       <TableRow
                         key={visitor.id}
-                        className="border-b border-[var(--border-default)]/50 hover:bg-[var(--bg-tertiary)] transition-colors"
+                        className="border-b border-arch-border-default/50 hover:bg-arch-surface-tertiary transition-colors"
                       >
-                        <TableCell className="font-medium text-[var(--text-heading)]">
+                        <TableCell className="font-medium text-arch-text-primary">
                           {visitor.first_name} {visitor.surname}
                         </TableCell>
-                        <TableCell className="text-[var(--text-secondary)]">
+                        <TableCell className="text-arch-text-secondary">
                           {visitor.company || "—"}
                         </TableCell>
-                        <TableCell className="text-[var(--text-secondary)]">
+                        <TableCell className="text-arch-text-secondary">
                           {visitor.reason_for_entry || "—"}
                         </TableCell>
-                        <TableCell className="font-mono text-sm text-[var(--text-secondary)]">
+                        <TableCell className="font-mono text-sm text-arch-text-secondary">
                           {visitor.check_in_time
                             ? new Date(visitor.check_in_time).toLocaleTimeString("en-US", {
                                 hour: "2-digit",
@@ -113,7 +113,7 @@ export default async function VisitorsPage({
                               Checked In
                             </span>
                           ) : (
-                            <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2 py-0.5 rounded-full border bg-[var(--bg-secondary)] text-[var(--text-muted)] border-[var(--border-default)]">
+                            <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2 py-0.5 rounded-full border bg-arch-surface-secondary text-arch-text-muted border-arch-border-default">
                               {visitor.status || "—"}
                             </span>
                           )}
@@ -127,7 +127,7 @@ export default async function VisitorsPage({
 
             {/* Pagination */}
             {totalCount > 0 && (
-              <div className="p-4 border-t border-[var(--border-default)]">
+              <div className="p-4 border-t border-arch-border-default">
                 <Pagination
                   currentPage={page}
                   totalPages={totalPages}

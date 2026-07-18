@@ -100,7 +100,7 @@ export function DrillingOperationsTable({ departmentId, drills, operators, initi
 
   const draftKey = useCallback(
     (machineId: string, shift: Shift, field: string) => `${machineId}:${shift}:${field}`,
-    [],
+    []
   );
 
   function getDraftValue(machineId: string, shift: Shift, field: keyof DrillOpRow): string {
@@ -124,7 +124,7 @@ export function DrillingOperationsTable({ departmentId, drills, operators, initi
     async (
       machineId: string,
       shift: Shift,
-      patch: Partial<DrillOpRow>,
+      patch: Partial<DrillOpRow>
     ): Promise<DrillOpRow | null> => {
       if (!departmentId) return null;
       const key = `${machineId}:${shift}`;
@@ -188,7 +188,7 @@ export function DrillingOperationsTable({ departmentId, drills, operators, initi
       }
       return (data as DrillOpRow) ?? null;
     },
-    [departmentId, rows, supabase],
+    [departmentId, rows, supabase]
   );
 
   async function commitField(machineId: string, shift: Shift, field: keyof DrillOpRow) {
@@ -231,16 +231,16 @@ export function DrillingOperationsTable({ departmentId, drills, operators, initi
   }
 
   const cellInputClass = cn(
-    "w-full bg-[var(--bg-secondary)] border border-[var(--border-default)]",
-    "rounded px-2 py-1 text-sm text-[var(--text-heading)]",
-    "focus:outline-none focus:border-[var(--accent-blue)]",
-    "min-w-0",
+    "w-full bg-arch-surface-secondary border border-arch-border-default",
+    "rounded px-2 py-1 text-sm text-arch-text-primary",
+    "focus:outline-none focus:border-arch-accent-charcoal",
+    "min-w-0"
   );
 
   if (drills.length === 0) {
     return (
       <GlassCard className="p-12 text-center">
-        <p className="text-[var(--text-muted)]">
+        <p className="text-arch-text-muted">
           No active drill rigs registered. Add rigs in the Machines section first.
         </p>
       </GlassCard>
@@ -249,14 +249,14 @@ export function DrillingOperationsTable({ departmentId, drills, operators, initi
 
   return (
     <GlassCard className="overflow-hidden p-0">
-      <div className="p-4 border-b border-[var(--border-subtle)] flex items-center justify-between">
+      <div className="p-4 border-b border-arch-border-subtle flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-semibold text-[var(--text-heading)]">{today} — Shift Log</h3>
-          <p className="text-sm text-[var(--text-muted)] mt-1">
+          <h3 className="text-lg font-semibold text-arch-text-primary">{today} — Shift Log</h3>
+          <p className="text-sm text-arch-text-muted mt-1">
             One row per drill rig. Toggle Day/Night inside each row to switch the active shift.
           </p>
         </div>
-        <div className="flex items-center gap-3 text-xs text-[var(--text-muted)]">
+        <div className="flex items-center gap-3 text-xs text-arch-text-muted">
           {saving && (
             <span className="inline-flex items-center gap-1.5">
               <Loader2 className="w-3 h-3 animate-spin" /> Saving…
@@ -273,44 +273,44 @@ export function DrillingOperationsTable({ departmentId, drills, operators, initi
       <div className="overflow-x-auto">
         <Table>
           <TableHeader>
-            <TableRow className="border-b border-[var(--border-subtle)] hover:bg-transparent">
-              <TableHead className="text-[var(--text-muted)] font-medium text-xs uppercase tracking-wider sticky left-0 bg-[var(--bg-primary)] z-10">
+            <TableRow className="border-b border-arch-border-subtle hover:bg-transparent">
+              <TableHead className="text-arch-text-muted font-medium text-xs uppercase tracking-wider sticky left-0 bg-arch-surface-primary z-10">
                 Machine
               </TableHead>
-              <TableHead className="text-[var(--text-muted)] font-medium text-xs uppercase tracking-wider">
+              <TableHead className="text-arch-text-muted font-medium text-xs uppercase tracking-wider">
                 Shift
               </TableHead>
-              <TableHead className="text-[var(--text-muted)] font-medium text-xs uppercase tracking-wider">
+              <TableHead className="text-arch-text-muted font-medium text-xs uppercase tracking-wider">
                 Block
               </TableHead>
-              <TableHead className="text-[var(--text-muted)] font-medium text-xs uppercase tracking-wider">
+              <TableHead className="text-arch-text-muted font-medium text-xs uppercase tracking-wider">
                 Site
               </TableHead>
-              <TableHead className="text-[var(--text-muted)] font-medium text-xs uppercase tracking-wider text-right">
+              <TableHead className="text-arch-text-muted font-medium text-xs uppercase tracking-wider text-right">
                 Open
               </TableHead>
-              <TableHead className="text-[var(--text-muted)] font-medium text-xs uppercase tracking-wider text-right">
+              <TableHead className="text-arch-text-muted font-medium text-xs uppercase tracking-wider text-right">
                 Close
               </TableHead>
-              <TableHead className="text-[var(--text-muted)] font-medium text-xs uppercase tracking-wider text-right">
+              <TableHead className="text-arch-text-muted font-medium text-xs uppercase tracking-wider text-right">
                 Total
               </TableHead>
-              <TableHead className="text-[var(--text-muted)] font-medium text-xs uppercase tracking-wider">
+              <TableHead className="text-arch-text-muted font-medium text-xs uppercase tracking-wider">
                 Operator
               </TableHead>
-              <TableHead className="text-[var(--text-muted)] font-medium text-xs uppercase tracking-wider text-right">
+              <TableHead className="text-arch-text-muted font-medium text-xs uppercase tracking-wider text-right">
                 Ext. (min)
               </TableHead>
-              <TableHead className="text-[var(--text-muted)] font-medium text-xs uppercase tracking-wider text-right">
+              <TableHead className="text-arch-text-muted font-medium text-xs uppercase tracking-wider text-right">
                 Std. (h)
               </TableHead>
-              <TableHead className="text-[var(--text-muted)] font-medium text-xs uppercase tracking-wider text-right">
+              <TableHead className="text-arch-text-muted font-medium text-xs uppercase tracking-wider text-right">
                 Prod (min)
               </TableHead>
-              <TableHead className="text-[var(--text-muted)] font-medium text-xs uppercase tracking-wider text-right">
+              <TableHead className="text-arch-text-muted font-medium text-xs uppercase tracking-wider text-right">
                 Eng (min)
               </TableHead>
-              <TableHead className="text-[var(--text-muted)] font-medium text-xs uppercase tracking-wider">
+              <TableHead className="text-arch-text-muted font-medium text-xs uppercase tracking-wider">
                 Comments
               </TableHead>
             </TableRow>
@@ -331,9 +331,9 @@ export function DrillingOperationsTable({ departmentId, drills, operators, initi
               return (
                 <TableRow
                   key={drill.id}
-                  className="border-b border-[var(--border-subtle)] hover:bg-[var(--bg-tertiary)]/30"
+                  className="border-b border-arch-border-subtle hover:bg-arch-surface-tertiary/30"
                 >
-                  <TableCell className="font-medium text-[var(--text-heading)] sticky left-0 bg-[var(--bg-primary)] z-10">
+                  <TableCell className="font-medium text-arch-text-primary sticky left-0 bg-arch-surface-primary z-10">
                     <div className="flex items-center gap-2">
                       <span>{drill.name}</span>
                       {error && (
@@ -342,7 +342,7 @@ export function DrillingOperationsTable({ departmentId, drills, operators, initi
                         </span>
                       )}
                       {isSaving && (
-                        <Loader2 className="w-3.5 h-3.5 animate-spin text-[var(--text-muted)]" />
+                        <Loader2 className="w-3.5 h-3.5 animate-spin text-arch-text-muted" />
                       )}
                       {isSaved && !isSaving && <Check className="w-3.5 h-3.5 text-accent-green" />}
                     </div>
@@ -350,15 +350,15 @@ export function DrillingOperationsTable({ departmentId, drills, operators, initi
 
                   {/* Shift toggle */}
                   <TableCell>
-                    <div className="inline-flex rounded border border-[var(--border-default)] overflow-hidden">
+                    <div className="inline-flex rounded border border-arch-border-default overflow-hidden">
                       <button
                         type="button"
                         onClick={() => setShift(drill.id, "day")}
                         className={cn(
                           "px-2 py-1 text-xs font-medium flex items-center gap-1",
                           shift === "day"
-                            ? "bg-[var(--accent-blue)] text-white"
-                            : "bg-[var(--bg-secondary)] text-[var(--text-muted)] hover:bg-[var(--bg-tertiary)]",
+                            ? "bg-arch-accent-charcoal text-white"
+                            : "bg-arch-surface-secondary text-arch-text-muted hover:bg-arch-surface-tertiary"
                         )}
                         aria-label="Day shift"
                       >
@@ -369,10 +369,10 @@ export function DrillingOperationsTable({ departmentId, drills, operators, initi
                         type="button"
                         onClick={() => setShift(drill.id, "night")}
                         className={cn(
-                          "px-2 py-1 text-xs font-medium flex items-center gap-1 border-l border-[var(--border-default)]",
+                          "px-2 py-1 text-xs font-medium flex items-center gap-1 border-l border-arch-border-default",
                           shift === "night"
-                            ? "bg-[var(--accent-blue)] text-white"
-                            : "bg-[var(--bg-secondary)] text-[var(--text-muted)] hover:bg-[var(--bg-tertiary)]",
+                            ? "bg-arch-accent-charcoal text-white"
+                            : "bg-arch-surface-secondary text-arch-text-muted hover:bg-arch-surface-tertiary"
                         )}
                         aria-label="Night shift"
                       >
@@ -428,7 +428,7 @@ export function DrillingOperationsTable({ departmentId, drills, operators, initi
                       className={cn(cellInputClass, "text-right")}
                     />
                   </TableCell>
-                  <TableCell className="text-right font-medium text-[var(--accent-blue)] tabular-nums">
+                  <TableCell className="text-right font-medium text-arch-accent-charcoal tabular-nums">
                     {fmt(liveTotal, 2) || "—"}
                   </TableCell>
                   <TableCell>

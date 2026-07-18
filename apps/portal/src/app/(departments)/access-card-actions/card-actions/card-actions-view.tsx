@@ -110,15 +110,13 @@ function DetailRow({
   children?: React.ReactNode;
 }) {
   return (
-    <div className="flex items-center gap-3 py-2.5 border-b border-[var(--border-default)]/50 last:border-0">
-      <div className="w-8 h-8 rounded-lg bg-[var(--bg-tertiary)] flex items-center justify-center text-[var(--text-muted)] shrink-0">
+    <div className="flex items-center gap-3 py-2.5 border-b border-arch-border-default/50 last:border-0">
+      <div className="w-8 h-8 rounded-lg bg-arch-surface-tertiary flex items-center justify-center text-arch-text-muted shrink-0">
         {icon}
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-xs text-[var(--text-muted)] font-medium uppercase tracking-wider">
-          {label}
-        </p>
-        {children ?? <p className="text-sm text-[var(--text-heading)] truncate">{value ?? "—"}</p>}
+        <p className="text-xs text-arch-text-muted font-medium uppercase tracking-wider">{label}</p>
+        {children ?? <p className="text-sm text-arch-text-primary truncate">{value ?? "—"}</p>}
       </div>
     </div>
   );
@@ -292,15 +290,15 @@ export function CardActionsView({ initialQuery, initialSelectedId }: CardActions
       {/* ── Left Panel: Search + Results ── */}
       <div className="lg:col-span-2 space-y-4">
         <GlassCard className="p-0 overflow-hidden">
-          <div className="p-3 border-b border-[var(--border-default)]">
+          <div className="p-3 border-b border-arch-border-default">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-muted)]" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-arch-text-muted" />
               <input
                 type="text"
                 value={query}
                 onChange={(e) => handleQueryChange(e.target.value)}
                 placeholder="Search by name or ID number..."
-                className="w-full h-10 pl-9 pr-3 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-default)] text-sm text-[var(--text-heading)] placeholder:text-[var(--text-muted)] outline-none focus:border-[var(--accent-blue)] transition-colors"
+                className="w-full h-10 pl-9 pr-3 rounded-lg bg-arch-surface-secondary border border-arch-border-default text-sm text-arch-text-primary placeholder:text-arch-text-muted outline-none focus:border-arch-accent-charcoal transition-colors"
                 aria-label="Search personnel"
               />
               {query && (
@@ -313,7 +311,7 @@ export function CardActionsView({ initialQuery, initialSelectedId }: CardActions
                     params.delete("selected");
                     router.replace(`?${params.toString()}`, { scroll: false });
                   }}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)] hover:text-[var(--text-heading)]"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-arch-text-muted hover:text-arch-text-primary"
                   aria-label="Clear search"
                 >
                   <X className="w-4 h-4" />
@@ -323,14 +321,14 @@ export function CardActionsView({ initialQuery, initialSelectedId }: CardActions
           </div>
 
           {selectedForBulk.size > 0 && (
-            <div className="p-3 border-b border-[var(--border-default)] bg-[var(--accent-blue)]/5 flex flex-col sm:flex-row items-center justify-between gap-3">
-              <span className="text-xs font-medium text-[var(--text-heading)]">
+            <div className="p-3 border-b border-arch-border-default bg-arch-accent-charcoal/5 flex flex-col sm:flex-row items-center justify-between gap-3">
+              <span className="text-xs font-medium text-arch-text-primary">
                 {selectedForBulk.size} selected for bulk print
               </span>
               <div className="flex items-center gap-3">
                 {templates.length > 0 && (
                   <select
-                    className="h-8 rounded-md bg-[var(--bg-primary)] border border-[var(--border-default)] text-xs text-[var(--text-heading)] outline-none px-2 focus:border-[var(--accent-blue)]"
+                    className="h-8 rounded-md bg-arch-surface-primary border border-arch-border-default text-xs text-arch-text-primary outline-none px-2 focus:border-arch-accent-charcoal"
                     value={selectedTemplateId}
                     onChange={(e) => setSelectedTemplateId(e.target.value)}
                   >
@@ -360,14 +358,14 @@ export function CardActionsView({ initialQuery, initialSelectedId }: CardActions
 
           <div className="divide-y divide-[var(--border-default)]/50" data-testid="search-results">
             {searching && (
-              <div className="flex items-center justify-center py-8 text-[var(--text-muted)]">
+              <div className="flex items-center justify-center py-8 text-arch-text-muted">
                 <Loader2 className="w-5 h-5 animate-spin mr-2" />
                 Searching...
               </div>
             )}
 
             {!searching && query.trim().length >= 2 && results.length === 0 && (
-              <div className="flex flex-col items-center justify-center py-8 text-[var(--text-muted)]">
+              <div className="flex flex-col items-center justify-center py-8 text-arch-text-muted">
                 <Search className="w-8 h-8 mb-2 opacity-50" />
                 <p className="text-sm">No personnel found</p>
                 <p className="text-xs">Try a different search term</p>
@@ -379,8 +377,8 @@ export function CardActionsView({ initialQuery, initialSelectedId }: CardActions
                 <div
                   key={person.id}
                   className={cn(
-                    "flex items-center w-full px-4 transition-colors hover:bg-[var(--bg-tertiary)] group",
-                    selectedId === person.id && "bg-[var(--accent-blue)]/5"
+                    "flex items-center w-full px-4 transition-colors hover:bg-arch-surface-tertiary group",
+                    selectedId === person.id && "bg-arch-accent-charcoal/5"
                   )}
                 >
                   <div className="py-3 pr-3" onClick={(e) => e.stopPropagation()}>
@@ -394,21 +392,21 @@ export function CardActionsView({ initialQuery, initialSelectedId }: CardActions
                     onClick={() => selectPersonnel(person.id)}
                     className="flex-1 text-left py-3 flex items-center gap-3 min-w-0"
                   >
-                    <div className="w-9 h-9 rounded-full bg-[var(--bg-tertiary)] flex items-center justify-center text-xs font-semibold text-[var(--text-muted)] shrink-0">
+                    <div className="w-9 h-9 rounded-full bg-arch-surface-tertiary flex items-center justify-center text-xs font-semibold text-arch-text-muted shrink-0">
                       {getInitials(person.first_name, person.surname)}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-[var(--text-heading)] truncate">
+                      <p className="text-sm font-medium text-arch-text-primary truncate">
                         {person.first_name} {person.surname}
                       </p>
-                      <p className="text-xs text-[var(--text-muted)] truncate">
+                      <p className="text-xs text-arch-text-muted truncate">
                         {person.job_title ?? "—"}
                         {person.area && ` · ${person.area}`}
                       </p>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
                       <StatusPill status={person.status} />
-                      <ChevronRight className="w-4 h-4 text-[var(--text-muted)] group-hover:translate-x-0.5 transition-transform" />
+                      <ChevronRight className="w-4 h-4 text-arch-text-muted group-hover:translate-x-0.5 transition-transform" />
                     </div>
                   </button>
                 </div>
@@ -421,12 +419,12 @@ export function CardActionsView({ initialQuery, initialSelectedId }: CardActions
       <div className="lg:col-span-3 space-y-4">
         {loadingDetail && (
           <GlassCard className="flex items-center justify-center py-16">
-            <Loader2 className="w-6 h-6 animate-spin text-[var(--text-muted)]" />
+            <Loader2 className="w-6 h-6 animate-spin text-arch-text-muted" />
           </GlassCard>
         )}
 
         {!loadingDetail && !detail && (
-          <GlassCard className="flex flex-col items-center justify-center py-16 text-[var(--text-muted)]">
+          <GlassCard className="flex flex-col items-center justify-center py-16 text-arch-text-muted">
             <User className="w-12 h-12 mb-3 opacity-30" />
             <p className="text-sm font-medium">Select an employee</p>
             <p className="text-xs">Search and select a person to view their details</p>
@@ -438,7 +436,7 @@ export function CardActionsView({ initialQuery, initialSelectedId }: CardActions
             {/* Photo + Name Header */}
             <GlassCard>
               <div className="flex items-start gap-5">
-                <div className="w-20 h-20 rounded-xl bg-[var(--bg-tertiary)] overflow-hidden shrink-0 flex items-center justify-center">
+                <div className="w-20 h-20 rounded-xl bg-arch-surface-tertiary overflow-hidden shrink-0 flex items-center justify-center">
                   {detail.photo_signed_url ? (
                     // eslint-disable-next-line @next/next/no-img-element -- signed URL from Supabase storage
                     <img
@@ -447,7 +445,7 @@ export function CardActionsView({ initialQuery, initialSelectedId }: CardActions
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <span className="text-2xl font-bold text-[var(--text-muted)]">
+                    <span className="text-2xl font-bold text-arch-text-muted">
                       {getInitials(detail.first_name, detail.surname)}
                     </span>
                   )}
@@ -455,16 +453,16 @@ export function CardActionsView({ initialQuery, initialSelectedId }: CardActions
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between gap-4">
                     <div>
-                      <h2 className="text-xl font-semibold text-[var(--text-heading)]">
+                      <h2 className="text-xl font-semibold text-arch-text-primary">
                         {detail.first_name} {detail.surname}
                       </h2>
-                      <p className="text-sm text-[var(--text-secondary)]">
+                      <p className="text-sm text-arch-text-secondary">
                         {detail.job_title ?? "No title"}
                       </p>
                     </div>
                     <StatusPill status={detail.status} />
                   </div>
-                  <div className="flex items-center gap-3 mt-2 text-xs text-[var(--text-muted)]">
+                  <div className="flex items-center gap-3 mt-2 text-xs text-arch-text-muted">
                     <span className="font-mono">#{detail.emp_code}</span>
                     {detail.area && (
                       <>
@@ -478,8 +476,8 @@ export function CardActionsView({ initialQuery, initialSelectedId }: CardActions
             </GlassCard>
             {/* Info Fields */}
             <GlassCard className="p-0 overflow-hidden">
-              <div className="p-4 border-b border-[var(--border-default)] bg-[var(--bg-secondary)]/50">
-                <h3 className="font-medium text-[var(--text-heading)]">Personal Details</h3>
+              <div className="p-4 border-b border-arch-border-default bg-arch-surface-secondary/50">
+                <h3 className="font-medium text-arch-text-primary">Personal Details</h3>
               </div>
               <div className="px-4">
                 <DetailRow
@@ -499,13 +497,13 @@ export function CardActionsView({ initialQuery, initialSelectedId }: CardActions
                 />
                 <DetailRow icon={<Stethoscope className="w-4 h-4" />} label="Medical Expiry">
                   <ExpiryPill date={detail.medical_expiry} />
-                  <p className="text-xs text-[var(--text-muted)] mt-0.5">
+                  <p className="text-xs text-arch-text-muted mt-0.5">
                     {formatDate(detail.medical_expiry)}
                   </p>
                 </DetailRow>
                 <DetailRow icon={<CalendarClock className="w-4 h-4" />} label="Induction Expiry">
                   <ExpiryPill date={detail.induction_expiry} />
-                  <p className="text-xs text-[var(--text-muted)] mt-0.5">
+                  <p className="text-xs text-arch-text-muted mt-0.5">
                     {formatDate(detail.induction_expiry)}
                   </p>
                 </DetailRow>
@@ -514,9 +512,9 @@ export function CardActionsView({ initialQuery, initialSelectedId }: CardActions
 
             {/* QR Code */}
             <GlassCard className="p-0 overflow-hidden">
-              <div className="p-4 border-b border-[var(--border-default)] bg-[var(--bg-secondary)]/50 flex items-center justify-between">
-                <h3 className="font-medium text-[var(--text-heading)] flex items-center gap-2">
-                  <QrCode className="w-4 h-4 text-[var(--text-muted)]" />
+              <div className="p-4 border-b border-arch-border-default bg-arch-surface-secondary/50 flex items-center justify-between">
+                <h3 className="font-medium text-arch-text-primary flex items-center gap-2">
+                  <QrCode className="w-4 h-4 text-arch-text-muted" />
                   Access Badge
                 </h3>
                 {detail.badge && (
@@ -537,23 +535,23 @@ export function CardActionsView({ initialQuery, initialSelectedId }: CardActions
                   {detail.badge?.qr_code ? (
                     <QRCodeSection data={detail.badge.qr_code} />
                   ) : (
-                    <div className="flex flex-col items-center gap-2 text-[var(--text-muted)]">
+                    <div className="flex flex-col items-center gap-2 text-arch-text-muted">
                       <QrCode className="w-12 h-12 opacity-30" />
                       <p className="text-sm">No badge assigned</p>
                     </div>
                   )}
                   {detail.issued_card && (
-                    <div className="flex items-center gap-4 text-xs text-[var(--text-muted)]">
+                    <div className="flex items-center gap-4 text-xs text-arch-text-muted">
                       <span>
                         Issued card:
-                        <span className="text-[var(--text-heading)] ml-1">
+                        <span className="text-arch-text-primary ml-1">
                           {detail.issued_card.status}
                         </span>
                       </span>
                       {detail.issued_card.expires_at && (
                         <span>
                           Expires:
-                          <span className="text-[var(--text-heading)] ml-1">
+                          <span className="text-arch-text-primary ml-1">
                             {formatDate(detail.issued_card.expires_at)}
                           </span>
                         </span>
@@ -568,9 +566,9 @@ export function CardActionsView({ initialQuery, initialSelectedId }: CardActions
             <div className="flex items-center justify-end gap-3">
               {templates.length > 0 && (
                 <div className="flex items-center gap-2">
-                  <label className="text-xs font-medium text-[var(--text-muted)]">Template:</label>
+                  <label className="text-xs font-medium text-arch-text-muted">Template:</label>
                   <select
-                    className="h-9 rounded-md bg-[var(--bg-primary)] border border-[var(--border-default)] text-sm text-[var(--text-heading)] outline-none px-3 focus:border-[var(--accent-blue)]"
+                    className="h-9 rounded-md bg-arch-surface-primary border border-arch-border-default text-sm text-arch-text-primary outline-none px-3 focus:border-arch-accent-charcoal"
                     value={selectedTemplateId}
                     onChange={(e) => setSelectedTemplateId(e.target.value)}
                   >

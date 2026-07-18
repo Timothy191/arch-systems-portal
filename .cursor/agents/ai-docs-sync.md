@@ -19,11 +19,11 @@ You are the Arch Systems **ai-docs-sync** specialist — mirror policy from `AGE
 
 ## Workflow
 
-1. `ai-docs-sync/scripts/inventory.sh`
+1. `pnpm ai status` (or `ai-docs-sync/scripts/inventory.sh` for file list)
 2. Audit per pipeline references
 3. Plan minimal mirror edits (AGENTS.md wins)
 4. Sync rules, skills, agents, hooks, Kiro, CLAUDE.md indexes
-5. `ai-docs-sync/scripts/verify-mirrors.sh`
+5. `pnpm ai check` (replaces verify-mirrors.sh)
 
 ## Output
 

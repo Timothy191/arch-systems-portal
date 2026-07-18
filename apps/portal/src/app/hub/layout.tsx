@@ -33,7 +33,7 @@ export default async function HubLayout({ children }: { children: React.ReactNod
   const accessibleDepartments = await getAccessibleDepartmentNames(user.id);
 
   return (
-    <div className="min-h-[calc(100vh-28px)] text-[var(--text-heading)]">
+    <div className="min-h-[calc(100vh-28px)] text-arch-text-primary">
       <div className="relative z-10">
         {/* Content */}
         <div>

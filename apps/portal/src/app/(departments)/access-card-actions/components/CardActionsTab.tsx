@@ -59,19 +59,19 @@ export function CardActionsTab() {
       <div className="xl:col-span-1 space-y-6">
         <GlassCard className="p-6">
           <div className="mb-6">
-            <h3 className="text-sm font-medium text-[var(--text-muted)] mb-2">Search Employee</h3>
+            <h3 className="text-sm font-medium text-arch-text-muted mb-2">Search Employee</h3>
             <EmployeeSearch onSelect={setEmployee} />
           </div>
 
-          <h3 className="text-lg font-medium text-[var(--text-heading)] mb-4 flex items-center">
-            <User className="w-5 h-5 mr-2 text-[var(--text-muted)]" />
+          <h3 className="text-lg font-medium text-arch-text-primary mb-4 flex items-center">
+            <User className="w-5 h-5 mr-2 text-arch-text-muted" />
             Employee Profile
           </h3>
 
           {employee ? (
             <div className="space-y-4">
               <div className="flex justify-center mb-6">
-                <div className="w-32 h-32 bg-[var(--bg-tertiary)] rounded-xl border border-[var(--border-default)] flex items-center justify-center overflow-hidden">
+                <div className="w-32 h-32 bg-arch-surface-tertiary rounded-xl border border-arch-border-default flex items-center justify-center overflow-hidden">
                   {employee.photo_url ? (
                     <img
                       src={employee.photo_url}
@@ -79,46 +79,46 @@ export function CardActionsTab() {
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <User className="w-12 h-12 text-[var(--text-muted)]" />
+                    <User className="w-12 h-12 text-arch-text-muted" />
                   )}
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-y-4 gap-x-2 text-sm">
-                <div className="text-[var(--text-muted)]">Name</div>
-                <div className="font-medium text-[var(--text-heading)]">
+                <div className="text-arch-text-muted">Name</div>
+                <div className="font-medium text-arch-text-primary">
                   {employee.first_name} {employee.last_name}
                 </div>
 
-                <div className="text-[var(--text-muted)]">ID</div>
-                <div className="font-medium text-[var(--text-heading)]">{employee.national_id}</div>
+                <div className="text-arch-text-muted">ID</div>
+                <div className="font-medium text-arch-text-primary">{employee.national_id}</div>
 
-                <div className="text-[var(--text-muted)]">Job Title</div>
-                <div className="font-medium text-[var(--text-heading)]">{employee.job_title}</div>
+                <div className="text-arch-text-muted">Job Title</div>
+                <div className="font-medium text-arch-text-primary">{employee.job_title}</div>
 
-                <div className="text-[var(--text-muted)]">Areas</div>
-                <div className="font-medium text-[var(--text-heading)]">
+                <div className="text-arch-text-muted">Areas</div>
+                <div className="font-medium text-arch-text-primary">
                   {(employee.areas || []).join(", ")}
                 </div>
 
-                <div className="text-[var(--text-muted)]">Medical Expiry</div>
-                <div className="font-medium text-[var(--text-heading)]">
+                <div className="text-arch-text-muted">Medical Expiry</div>
+                <div className="font-medium text-arch-text-primary">
                   {employee.medical_expiry_date || "N/A"}
                 </div>
 
-                <div className="text-[var(--text-muted)]">Induction Expiry</div>
-                <div className="font-medium text-[var(--text-heading)]">
+                <div className="text-arch-text-muted">Induction Expiry</div>
+                <div className="font-medium text-arch-text-primary">
                   {employee.induction_expiry_date || "N/A"}
                 </div>
 
-                <div className="text-[var(--text-muted)]">QR Code Data</div>
+                <div className="text-arch-text-muted">QR Code Data</div>
                 <div className="font-mono text-xs truncate" title={employee.qr_code_data || ""}>
                   {employee.qr_code_data || "N/A"}
                 </div>
               </div>
             </div>
           ) : (
-            <div className="text-center py-12 text-[var(--text-muted)]">
+            <div className="text-center py-12 text-arch-text-muted">
               <User className="w-12 h-12 mx-auto mb-3 opacity-20" />
               <p>Select an employee to view details and print a card.</p>
             </div>
@@ -129,7 +129,7 @@ export function CardActionsTab() {
       {/* Middle Column: Print Actions */}
       <div className="xl:col-span-1 space-y-6">
         <GlassCard className="p-6">
-          <h3 className="text-lg font-medium text-[var(--text-heading)] mb-4">
+          <h3 className="text-lg font-medium text-arch-text-primary mb-4">
             Card Encoding & Design
           </h3>
 
@@ -143,7 +143,7 @@ export function CardActionsTab() {
                 value={magStripeData}
                 onChange={(e) => setMagStripeData(e.target.value)}
                 placeholder="Track 1/2 Data"
-                className="font-mono bg-[var(--bg-primary)] border-[var(--border-default)]"
+                className="font-mono bg-arch-surface-primary border-arch-border-default"
               />
             </div>
 
@@ -152,7 +152,7 @@ export function CardActionsTab() {
               <select
                 value={holokoteDesign}
                 onChange={(e) => setHolokoteDesign(e.target.value)}
-                className="flex h-10 w-full items-center justify-between rounded-md border border-[var(--border-default)] bg-[var(--bg-primary)] px-3 py-2 text-sm text-arch-text-primary focus:outline-none focus:ring-2 focus:ring-[var(--accent-blue)] focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex h-10 w-full items-center justify-between rounded-md border border-arch-border-default bg-arch-surface-primary px-3 py-2 text-sm text-arch-text-primary focus:outline-none focus:ring-2 focus:ring-arch-accent-charcoal focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <option value="standard">Standard Security Pattern</option>
                 <option value="custom-logo">Company Logo</option>
@@ -160,11 +160,11 @@ export function CardActionsTab() {
               </select>
             </div>
 
-            <div className="pt-4 border-t border-[var(--border-default)]">
+            <div className="pt-4 border-t border-arch-border-default">
               <label className="text-sm font-medium text-arch-text-primary mb-2 block">
                 Printer Status
               </label>
-              <div className="bg-[var(--bg-secondary)] rounded-lg p-3 flex items-center justify-between border border-[var(--border-default)]">
+              <div className="bg-arch-surface-secondary rounded-lg p-3 flex items-center justify-between border border-arch-border-default">
                 <div className="flex items-center gap-2">
                   <Printer
                     className={cn(
@@ -173,7 +173,7 @@ export function CardActionsTab() {
                         ? "text-blue-500 animate-pulse"
                         : printerStatus === "error"
                           ? "text-red-500"
-                          : "text-green-500",
+                          : "text-green-500"
                     )}
                   />
                   <span className="text-sm font-medium">
@@ -211,8 +211,8 @@ export function CardActionsTab() {
       {/* Right Column: Preview */}
       <div className="xl:col-span-1 space-y-6">
         <GlassCard className="p-6">
-          <h3 className="text-lg font-medium text-[var(--text-heading)] mb-4 flex items-center">
-            <Info className="w-5 h-5 mr-2 text-[var(--text-muted)]" />
+          <h3 className="text-lg font-medium text-arch-text-primary mb-4 flex items-center">
+            <Info className="w-5 h-5 mr-2 text-arch-text-muted" />
             Print Preview
           </h3>
 
@@ -284,7 +284,7 @@ export function CardActionsTab() {
             )}
           </div>
 
-          <p className="text-xs text-center text-[var(--text-muted)] mt-6">
+          <p className="text-xs text-center text-arch-text-muted mt-6">
             Preview is an approximation. Colors may vary slightly when printed.
           </p>
         </GlassCard>

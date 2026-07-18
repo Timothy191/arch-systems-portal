@@ -51,7 +51,7 @@ export function AIAssistant({ context, className }: AIAssistantProps) {
       // Trap focus when panel is open
       if (isOpen && e.key === "Tab") {
         const focusableElements = panelRef.current?.querySelectorAll(
-          "button, [href], input, select, textarea, [tabindex]:not([tabindex='-1'])",
+          "button, [href], input, select, textarea, [tabindex]:not([tabindex='-1'])"
         );
         if (focusableElements && focusableElements.length > 0) {
           const firstElement = focusableElements[0] as HTMLElement;
@@ -104,7 +104,7 @@ export function AIAssistant({ context, className }: AIAssistantProps) {
         parts: [{ type: "text" as const, text: WELCOME_TEXT }],
       },
     ],
-    [],
+    []
   );
 
   const { messages, append, status, stop } = useChat({
@@ -134,7 +134,7 @@ export function AIAssistant({ context, className }: AIAssistantProps) {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-gradient-to-r from-[var(--accent-blue)] to-[var(--accent-electric-blue)] text-white flex items-center justify-center drop-shadow-[0_0_8px_rgba(0,102,255,0.5)] hover:from-[var(--accent-electric-blue)] hover:to-[var(--accent-blue)] hover:scale-110 active:scale-95 transition-all duration-200 z-50"
+          className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-gradient-to-r from-arch-accent-charcoal to-[var(--accent-electric-blue)] text-white flex items-center justify-center drop-shadow-[0_0_8px_rgba(0,102,255,0.5)] hover:from-[var(--accent-electric-blue)] hover:to-arch-accent-charcoal hover:scale-110 active:scale-95 transition-all duration-200 z-50"
           aria-label="Open AI Assistant"
         >
           <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -205,7 +205,7 @@ export function AIAssistant({ context, className }: AIAssistantProps) {
                 )}
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="p-1.5 rounded-lg text-arch-text-tertiary hover:text-arch-text-primary hover:bg-[var(--bg-tertiary)] transition-colors"
+                  className="p-1.5 rounded-lg text-arch-text-tertiary hover:text-arch-text-primary hover:bg-arch-surface-tertiary transition-colors"
                   aria-label="Close AI Assistant"
                 >
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -258,7 +258,7 @@ export function AIAssistant({ context, className }: AIAssistantProps) {
                       "max-w-[85%] p-3 rounded-xl text-sm",
                       message.role === "user"
                         ? "bg-arch-accent-blue text-white"
-                        : "bg-white/80 text-arch-text-primary border border-arch-border-subtle leading-relaxed",
+                        : "bg-white/80 text-arch-text-primary border border-arch-border-subtle leading-relaxed"
                     )}
                   >
                     {message.parts.map((part, i) => {
@@ -319,7 +319,7 @@ export function AIAssistant({ context, className }: AIAssistantProps) {
             </div>
 
             {/* Input */}
-            <form onSubmit={handleSubmit} className="p-4 border-t border-[var(--border-default)]">
+            <form onSubmit={handleSubmit} className="p-4 border-t border-arch-border-default">
               <div className="flex gap-2">
                 <input
                   type="text"
@@ -327,7 +327,7 @@ export function AIAssistant({ context, className }: AIAssistantProps) {
                   onChange={(e) => setInput(e.target.value)}
                   placeholder="Ask about equipment, shifts, safety..."
                   aria-label="Ask a question"
-                  className="flex-1 px-4 py-2.5 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-default)] text-[var(--text-heading)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--accent-blue)] focus:ring-2 focus:ring-[var(--accent-blue)]/15 transition-colors text-sm"
+                  className="flex-1 px-4 py-2.5 rounded-lg bg-arch-surface-secondary border border-arch-border-default text-arch-text-primary placeholder:text-arch-text-muted focus:outline-none focus:border-arch-accent-charcoal focus:ring-2 focus:ring-arch-accent-charcoal/15 transition-colors text-sm"
                   disabled={isLoading}
                 />
                 <button

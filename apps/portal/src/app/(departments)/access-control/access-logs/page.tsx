@@ -86,37 +86,37 @@ export default async function AccessLogsPage({
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-[var(--text-heading)]">Access Logs</h2>
-          <p className="text-sm text-[var(--text-muted)] mt-1">
+          <h2 className="text-2xl font-bold text-arch-text-primary">Access Logs</h2>
+          <p className="text-sm text-arch-text-muted mt-1">
             Recent scan events across all entry points for this department.
           </p>
         </div>
       </div>
 
       <GlassCard className="p-0 overflow-hidden">
-        <div className="p-4 border-b border-[var(--border-default)] bg-[var(--bg-secondary)]/50 flex justify-between items-center">
-          <h3 className="font-semibold text-[var(--text-heading)] flex items-center">
-            <Clock className="w-4 h-4 mr-2 text-[var(--text-muted)]" />
+        <div className="p-4 border-b border-arch-border-default bg-arch-surface-secondary/50 flex justify-between items-center">
+          <h3 className="font-semibold text-arch-text-primary flex items-center">
+            <Clock className="w-4 h-4 mr-2 text-arch-text-muted" />
             Recent Events
           </h3>
-          <span className="text-xs text-[var(--text-muted)]">{totalCount} total events</span>
+          <span className="text-xs text-arch-text-muted">{totalCount} total events</span>
         </div>
         <Table>
           <TableHeader>
-            <TableRow className="border-b border-[var(--border-default)] hover:bg-transparent">
-              <TableHead className="text-[var(--text-muted)]">Time</TableHead>
-              <TableHead className="text-[var(--text-muted)]">Entity</TableHead>
-              <TableHead className="text-[var(--text-muted)]">Type</TableHead>
-              <TableHead className="text-[var(--text-muted)]">QR Code</TableHead>
-              <TableHead className="text-[var(--text-muted)]">Zone</TableHead>
-              <TableHead className="text-[var(--text-muted)]">Direction</TableHead>
-              <TableHead className="text-right text-[var(--text-muted)]">Status</TableHead>
+            <TableRow className="border-b border-arch-border-default hover:bg-transparent">
+              <TableHead className="text-arch-text-muted">Time</TableHead>
+              <TableHead className="text-arch-text-muted">Entity</TableHead>
+              <TableHead className="text-arch-text-muted">Type</TableHead>
+              <TableHead className="text-arch-text-muted">QR Code</TableHead>
+              <TableHead className="text-arch-text-muted">Zone</TableHead>
+              <TableHead className="text-arch-text-muted">Direction</TableHead>
+              <TableHead className="text-right text-arch-text-muted">Status</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {resolvedLogs.length === 0 && (
               <TableRow>
-                <TableCell colSpan={7} className="text-center py-8 text-[var(--text-muted)]">
+                <TableCell colSpan={7} className="text-center py-8 text-arch-text-muted">
                   No access logs found for this department.
                 </TableCell>
               </TableRow>
@@ -124,9 +124,9 @@ export default async function AccessLogsPage({
             {resolvedLogs.map((log) => (
               <TableRow
                 key={log.id}
-                className="border-b border-[var(--border-default)]/50 hover:bg-[var(--bg-tertiary)] transition-colors"
+                className="border-b border-arch-border-default/50 hover:bg-arch-surface-tertiary transition-colors"
               >
-                <TableCell className="font-mono text-sm text-[var(--text-secondary)]">
+                <TableCell className="font-mono text-sm text-arch-text-secondary">
                   {new Date(log.timestamp).toLocaleTimeString("en-US", {
                     hour: "2-digit",
                     minute: "2-digit",
@@ -134,17 +134,17 @@ export default async function AccessLogsPage({
                     hour12: false,
                   })}
                 </TableCell>
-                <TableCell className="font-medium text-[var(--text-heading)]">
+                <TableCell className="font-medium text-arch-text-primary">
                   {log.entityName}
                 </TableCell>
-                <TableCell className="text-[var(--text-secondary)] capitalize">
+                <TableCell className="text-arch-text-secondary capitalize">
                   {log.entityType}
                 </TableCell>
-                <TableCell className="font-mono text-sm text-[var(--accent-blue)]">
+                <TableCell className="font-mono text-sm text-arch-accent-charcoal">
                   {log.qrCodeId}
                 </TableCell>
-                <TableCell className="text-[var(--text-secondary)]">{log.zone}</TableCell>
-                <TableCell className="text-[var(--text-secondary)]">{log.direction}</TableCell>
+                <TableCell className="text-arch-text-secondary">{log.zone}</TableCell>
+                <TableCell className="text-arch-text-secondary">{log.direction}</TableCell>
                 <TableCell className="text-right">
                   {log.status === "Granted" ? (
                     <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2 py-0.5 rounded-full border bg-emerald-50/70 border-emerald-200/50 text-emerald-700">
@@ -162,7 +162,7 @@ export default async function AccessLogsPage({
                       Expired
                     </span>
                   ) : (
-                    <span className="text-xs text-[var(--text-muted)] font-mono">{log.status}</span>
+                    <span className="text-xs text-arch-text-muted font-mono">{log.status}</span>
                   )}
                 </TableCell>
               </TableRow>
@@ -172,7 +172,7 @@ export default async function AccessLogsPage({
 
         {/* Pagination */}
         {totalCount > 0 && (
-          <div className="p-4 border-t border-[var(--border-default)]">
+          <div className="p-4 border-t border-arch-border-default">
             <Pagination
               currentPage={page}
               totalPages={totalPages}

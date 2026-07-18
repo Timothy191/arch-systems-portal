@@ -108,7 +108,7 @@ export function ArchStartMenu({ onClose }: ArchStartMenuProps) {
       <div className="border-b border-black/[0.06] p-3">
         <label className="relative flex items-center">
           <Search
-            className="pointer-events-none absolute left-3 h-4 w-4 text-[var(--text-muted)]"
+            className="pointer-events-none absolute left-3 h-4 w-4 text-arch-text-muted"
             aria-hidden
           />
           <input
@@ -119,8 +119,8 @@ export function ArchStartMenu({ onClose }: ArchStartMenuProps) {
             aria-label="Search Arch"
             className={cn(
               "h-10 w-full rounded-xl border border-black/[0.08] bg-black/[0.03] pl-9 pr-3",
-              "text-[13px] text-[var(--text-heading)] placeholder:text-[var(--text-muted)]",
-              "outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-blue)]/50"
+              "text-[13px] text-arch-text-primary placeholder:text-arch-text-muted",
+              "outline-none focus-visible:ring-2 focus-visible:ring-arch-accent-charcoal/50"
             )}
           />
         </label>
@@ -129,7 +129,7 @@ export function ArchStartMenu({ onClose }: ArchStartMenuProps) {
       <div className="min-h-0 flex-1 space-y-4 overflow-y-auto p-3">
         {pinned.length > 0 && (
           <section aria-label="Pinned">
-            <h2 className="mb-2 px-1 font-display text-[10px] font-normal uppercase tracking-[0.2em] text-[var(--text-muted)]">
+            <h2 className="mb-2 px-1 font-display text-[10px] font-normal uppercase tracking-[0.2em] text-arch-text-muted">
               Pinned
             </h2>
             <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
@@ -141,11 +141,11 @@ export function ArchStartMenu({ onClose }: ArchStartMenuProps) {
         )}
 
         <section aria-label="All apps">
-          <h2 className="mb-2 px-1 font-display text-[10px] font-normal uppercase tracking-[0.2em] text-[var(--text-muted)]">
+          <h2 className="mb-2 px-1 font-display text-[10px] font-normal uppercase tracking-[0.2em] text-arch-text-muted">
             All apps
           </h2>
           {allApps.length === 0 && pinned.length === 0 ? (
-            <p className="px-2 py-4 text-center text-[12px] text-[var(--text-muted)]">
+            <p className="px-2 py-4 text-center text-[12px] text-arch-text-muted">
               No matches for “{query}”
             </p>
           ) : (
@@ -163,14 +163,14 @@ export function ArchStartMenu({ onClose }: ArchStartMenuProps) {
       <div className="flex items-center justify-between gap-3 border-t border-black/[0.06] bg-black/[0.02] px-3 py-2.5">
         <div className="flex min-w-0 items-center gap-2.5">
           <span
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-black/[0.08] text-[12px] font-semibold text-[var(--text-heading)]"
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-black/[0.08] text-[12px] font-semibold text-arch-text-primary"
             aria-hidden
           >
             A
           </span>
           <div className="min-w-0">
-            <p className="truncate text-[13px] font-medium text-[var(--text-heading)]">Arch User</p>
-            <p className="truncate text-[11px] text-[var(--text-muted)]">Plantcor Mainframe</p>
+            <p className="truncate text-[13px] font-medium text-arch-text-primary">Arch User</p>
+            <p className="truncate text-[11px] text-arch-text-muted">Plantcor Mainframe</p>
           </div>
         </div>
         <div className="flex shrink-0 items-center gap-1.5">
@@ -182,8 +182,8 @@ export function ArchStartMenu({ onClose }: ArchStartMenuProps) {
             onClick={handleLock}
             className={cn(
               "flex h-8 w-8 items-center justify-center rounded-lg",
-              "text-[var(--text-secondary)] hover:bg-black/[0.06] hover:text-[var(--text-heading)]",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-blue)]/50"
+              "text-arch-text-secondary hover:bg-black/[0.06] hover:text-arch-text-primary",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-arch-accent-charcoal/50"
             )}
           >
             <Lock className="h-4 w-4" aria-hidden />
@@ -201,8 +201,8 @@ export function ArchStartMenu({ onClose }: ArchStartMenuProps) {
               title="Sign out"
               className={cn(
                 "flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-[12px] font-medium",
-                "text-[var(--text-secondary)] hover:bg-black/[0.06] hover:text-[var(--text-heading)]",
-                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-blue)]/50"
+                "text-arch-text-secondary hover:bg-black/[0.06] hover:text-arch-text-primary",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-arch-accent-charcoal/50"
               )}
             >
               <LogOut className="h-3.5 w-3.5" aria-hidden />
@@ -224,14 +224,14 @@ function StartTile({ app, onActivate }: StartItemProps) {
   const Icon = app.icon;
   const className = cn(
     "flex flex-col items-center gap-1.5 rounded-xl p-2.5 text-center",
-    "text-[var(--text-heading)] hover:bg-black/[0.06]",
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-blue)]/50"
+    "text-arch-text-primary hover:bg-black/[0.06]",
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-arch-accent-charcoal/50"
   );
 
   const body = (
     <>
       <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-black/[0.05] border border-black/[0.06]">
-        <Icon className="h-5 w-5 text-[var(--text-secondary)]" aria-hidden />
+        <Icon className="h-5 w-5 text-arch-text-secondary" aria-hidden />
       </span>
       <span className="line-clamp-2 w-full text-[11px] font-medium leading-tight">{app.label}</span>
     </>
@@ -256,14 +256,14 @@ function StartRow({ app, onActivate }: StartItemProps) {
   const Icon = app.icon;
   const className = cn(
     "flex w-full items-center gap-3 rounded-lg px-2.5 py-2 text-left",
-    "text-[var(--text-heading)] hover:bg-black/[0.06]",
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-blue)]/50"
+    "text-arch-text-primary hover:bg-black/[0.06]",
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-arch-accent-charcoal/50"
   );
 
   const body = (
     <>
       <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-black/[0.05]">
-        <Icon className="h-4 w-4 text-[var(--text-secondary)]" aria-hidden />
+        <Icon className="h-4 w-4 text-arch-text-secondary" aria-hidden />
       </span>
       <span className="truncate text-[13px] font-medium">{app.label}</span>
     </>

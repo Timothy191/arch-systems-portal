@@ -13,7 +13,9 @@ interface AuthCallbackLayoutProps {
 /** Suspense boundary required for useSearchParams in the client page. */
 export default function AuthCallbackLayout({ children }: AuthCallbackLayoutProps) {
   return (
-    <Suspense fallback={<p className="p-6 text-sm text-[var(--text-secondary)]">Completing sign-in…</p>}>
+    <Suspense
+      fallback={<p className="p-6 text-sm text-arch-text-secondary">Completing sign-in…</p>}
+    >
       {children}
     </Suspense>
   );

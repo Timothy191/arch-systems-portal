@@ -17,6 +17,7 @@ skill-name/
 | Skill                                           | Purpose                                    | Key script                 |
 | ----------------------------------------------- | ------------------------------------------ | -------------------------- |
 | [agent-alignment-score](agent-alignment-score/) | Formal Alignment Score (0–100)             | `scripts/score.mjs`        |
+| [ai-system](ai-system/)                         | Unified `pnpm ai` command                  | `scripts/ai.sh`            |
 | [skill-layout](skill-layout/)                   | Meta-skill for creating/refactoring skills | `assets/TEMPLATE-SKILL.md` |
 | [agent-layout](agent-layout/)                   | Meta-skill for hybrid agent layout         | `scripts/validate.sh`      |
 | [claude-code-layout](claude-code-layout/)       | Claude Code `.claude/` surfaces            | `scripts/validate.sh`      |
@@ -24,13 +25,14 @@ skill-name/
 ## Usage
 
 ```bash
+pnpm ai status
 node .cursor/skills/agent-alignment-score/scripts/score.mjs --interactive
 ```
 
 ## Validation
 
 ```bash
-.cursor/standards/agent-skills/scripts/validate.sh
+pnpm ai check
 ```
 
 ## Related surfaces

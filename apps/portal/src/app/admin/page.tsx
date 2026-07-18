@@ -32,10 +32,10 @@ export default async function AdminPage({
   const activeTab = typeof rawTab === "string" && TABS.includes(rawTab) ? rawTab : "users";
 
   return (
-    <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-heading)]">
-      <header className="sticky top-0 z-50 border-b border-[var(--border-default)] bg-[var(--bg-primary)]/80 backdrop-blur">
+    <div className="min-h-screen bg-arch-surface-primary text-arch-text-primary">
+      <header className="sticky top-0 z-50 border-b border-arch-border-default bg-arch-surface-primary/80 backdrop-blur">
         <div className="flex items-center justify-between px-6 py-3">
-          <span className="text-lg font-medium text-[var(--text-heading)]">Admin Dashboard</span>
+          <span className="text-lg font-medium text-arch-text-primary">Admin Dashboard</span>
         </div>
       </header>
 

@@ -84,19 +84,19 @@ export function PWAInstallButton() {
       className="fixed bottom-4 right-4 z-[9998] flex items-center gap-3 bg-white/90 backdrop-blur-xl border border-black/[0.08] shadow-card rounded-lg p-4 animate-in slide-in-from-bottom-4 fade-in duration-300"
     >
       <div className="flex-1">
-        <p className="text-sm font-medium text-[var(--text-heading)]">Install Arch Portal</p>
-        <p className="text-xs text-[var(--text-muted)]">Add to home screen for offline access</p>
+        <p className="text-sm font-medium text-arch-text-primary">Install Arch Portal</p>
+        <p className="text-xs text-arch-text-muted">Add to home screen for offline access</p>
       </div>
       <button
         onClick={handleInstallClick}
-        className="flex items-center gap-2 px-3 py-2 bg-[var(--accent-blue)] text-white rounded-md text-sm font-medium hover:opacity-90 transition-opacity"
+        className="flex items-center gap-2 px-3 py-2 bg-arch-accent-charcoal text-white rounded-md text-sm font-medium hover:opacity-90 transition-opacity"
       >
         <Download className="h-4 w-4" />
         Install
       </button>
       <button
         onClick={handleDismiss}
-        className="p-1 text-[var(--text-muted)] hover:text-[var(--text-heading)] transition-colors"
+        className="p-1 text-arch-text-muted hover:text-arch-text-primary transition-colors"
         aria-label="Dismiss"
       >
         <X className="h-4 w-4" />

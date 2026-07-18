@@ -68,7 +68,7 @@ export default function AuthCallbackPage() {
 
   return (
     <main className="min-h-[calc(100vh-28px)] flex items-center justify-center p-6">
-      <p className="text-sm text-[var(--text-secondary)]" role="status">
+      <p className="text-sm text-arch-text-secondary" role="status">
         {message}
       </p>
     </main>

@@ -151,10 +151,8 @@ export default async function DrillingReportsPage({
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-[var(--text-heading)]">
-            Drilling Production Report
-          </h2>
-          <p className="text-sm text-[var(--text-muted)] mt-1">
+          <h2 className="text-2xl font-bold text-arch-text-primary">Drilling Production Report</h2>
+          <p className="text-sm text-arch-text-muted mt-1">
             Drilling, holes, and operating hours summary report
           </p>
         </div>
@@ -173,28 +171,28 @@ export default async function DrillingReportsPage({
         <GlassCard>
           <div className="flex items-center gap-2">
             <Drill className="w-4 h-4 text-accent-green" />
-            <p className="text-[var(--text-muted)] text-sm font-medium">Total Meters Drilled</p>
+            <p className="text-arch-text-muted text-sm font-medium">Total Meters Drilled</p>
           </div>
           <p className="text-2xl font-semibold text-accent-green mt-2">{totalMeters.toFixed(1)}m</p>
         </GlassCard>
         <GlassCard>
           <div className="flex items-center gap-2">
-            <ClipboardList className="w-4 h-4 text-[var(--accent-blue)]" />
-            <p className="text-[var(--text-muted)] text-sm font-medium">Total Holes Drilled</p>
+            <ClipboardList className="w-4 h-4 text-arch-accent-charcoal" />
+            <p className="text-arch-text-muted text-sm font-medium">Total Holes Drilled</p>
           </div>
-          <p className="text-2xl font-semibold text-[var(--accent-blue)] mt-2">{totalHoles}</p>
+          <p className="text-2xl font-semibold text-arch-accent-charcoal mt-2">{totalHoles}</p>
         </GlassCard>
         <GlassCard>
           <div className="flex items-center gap-2">
             <Clock className="w-4 h-4 text-cyan-400" />
-            <p className="text-[var(--text-muted)] text-sm font-medium">Total Operating Hours</p>
+            <p className="text-arch-text-muted text-sm font-medium">Total Operating Hours</p>
           </div>
           <p className="text-2xl font-semibold text-cyan-400 mt-2">{totalHours.toFixed(1)}h</p>
         </GlassCard>
         <GlassCard>
           <div className="flex items-center gap-2">
             <AlertTriangle className="w-4 h-4 text-accent-blue" />
-            <p className="text-[var(--text-muted)] text-sm font-medium">Total Delays</p>
+            <p className="text-arch-text-muted text-sm font-medium">Total Delays</p>
           </div>
           <p className="text-2xl font-semibold text-accent-blue mt-2">{formatDelay(totalDelays)}</p>
         </GlassCard>
@@ -204,16 +202,16 @@ export default async function DrillingReportsPage({
       <GlassCard>
         <form method="GET" className="flex items-end gap-4">
           <div className="flex-1 max-w-[200px]">
-            <label className="block text-sm text-[var(--text-muted)] mb-1">From</label>
+            <label className="block text-sm text-arch-text-muted mb-1">From</label>
             <Input type="date" name="from" defaultValue={from} className="px-4 py-2" />
           </div>
           <div className="flex-1 max-w-[200px]">
-            <label className="block text-sm text-[var(--text-muted)] mb-1">To</label>
+            <label className="block text-sm text-arch-text-muted mb-1">To</label>
             <Input type="date" name="to" defaultValue={to} className="px-4 py-2" />
           </div>
           <button
             type="submit"
-            className="px-4 py-2 rounded-lg bg-[var(--bg-tertiary)] text-[var(--text-heading)] text-sm font-medium hover:bg-[var(--bg-tertiary)] transition-colors"
+            className="px-4 py-2 rounded-lg bg-arch-surface-tertiary text-arch-text-primary text-sm font-medium hover:bg-arch-surface-tertiary transition-colors"
           >
             Update
           </button>
@@ -228,55 +226,55 @@ export default async function DrillingReportsPage({
               <tr className="border-b border-white/10">
                 <th
                   scope="col"
-                  className="px-6 py-3 text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider"
+                  className="px-6 py-3 text-xs font-medium text-arch-text-muted uppercase tracking-wider"
                 >
                   Date
                 </th>
                 <th
                   scope="col"
-                  className="px-6 py-3 text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider"
+                  className="px-6 py-3 text-xs font-medium text-arch-text-muted uppercase tracking-wider"
                 >
                   Drill Rig
                 </th>
                 <th
                   scope="col"
-                  className="px-6 py-3 text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider"
+                  className="px-6 py-3 text-xs font-medium text-arch-text-muted uppercase tracking-wider"
                 >
                   Operator
                 </th>
                 <th
                   scope="col"
-                  className="px-6 py-3 text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider"
+                  className="px-6 py-3 text-xs font-medium text-arch-text-muted uppercase tracking-wider"
                 >
                   Block
                 </th>
                 <th
                   scope="col"
-                  className="px-6 py-3 text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider text-right"
+                  className="px-6 py-3 text-xs font-medium text-arch-text-muted uppercase tracking-wider text-right"
                 >
                   Hours
                 </th>
                 <th
                   scope="col"
-                  className="px-6 py-3 text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider text-right"
+                  className="px-6 py-3 text-xs font-medium text-arch-text-muted uppercase tracking-wider text-right"
                 >
                   Holes
                 </th>
                 <th
                   scope="col"
-                  className="px-6 py-3 text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider text-right"
+                  className="px-6 py-3 text-xs font-medium text-arch-text-muted uppercase tracking-wider text-right"
                 >
                   Meters
                 </th>
                 <th
                   scope="col"
-                  className="px-6 py-3 text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider text-right"
+                  className="px-6 py-3 text-xs font-medium text-arch-text-muted uppercase tracking-wider text-right"
                 >
                   Delays
                 </th>
                 <th
                   scope="col"
-                  className="px-6 py-3 text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider text-center"
+                  className="px-6 py-3 text-xs font-medium text-arch-text-muted uppercase tracking-wider text-center"
                 >
                   Status
                 </th>
@@ -303,23 +301,23 @@ export default async function DrillingReportsPage({
                 const totalOpDelays =
                   production_delays + non_productional_delays + engineering_delays;
                 return (
-                  <tr key={op.id} className="hover:bg-[var(--bg-tertiary)] transition-colors">
-                    <td className="px-6 py-4 text-[var(--text-heading)] text-sm">
+                  <tr key={op.id} className="hover:bg-arch-surface-tertiary transition-colors">
+                    <td className="px-6 py-4 text-arch-text-primary text-sm">
                       {op.operation_date}
                     </td>
-                    <td className="px-6 py-4 text-[var(--text-body)] text-sm">
+                    <td className="px-6 py-4 text-arch-text-secondary text-sm">
                       {(op.machines as unknown as { name: string } | undefined)?.name || "Unknown"}
                     </td>
-                    <td className="px-6 py-4 text-[var(--text-body)] text-sm">
+                    <td className="px-6 py-4 text-arch-text-secondary text-sm">
                       {op.operator_name || "—"}
                     </td>
-                    <td className="px-6 py-4 text-[var(--text-body)] text-sm">
+                    <td className="px-6 py-4 text-arch-text-secondary text-sm">
                       {op.block_drilled || "—"}
                     </td>
-                    <td className="px-6 py-4 text-[var(--text-muted)] text-sm text-right">
+                    <td className="px-6 py-4 text-arch-text-muted text-sm text-right">
                       {op.total_hours ? op.total_hours.toFixed(1) : "—"}
                     </td>
-                    <td className="px-6 py-4 text-[var(--text-muted)] text-sm text-right">
+                    <td className="px-6 py-4 text-arch-text-muted text-sm text-right">
                       {op.holes || 0}
                     </td>
                     <td className="px-6 py-4 text-accent-green text-sm text-right font-medium">
@@ -349,10 +347,7 @@ export default async function DrillingReportsPage({
               })}
               {(!operations || operations.length === 0) && (
                 <tr>
-                  <td
-                    colSpan={9}
-                    className="px-6 py-12 text-center text-[var(--text-muted)] text-sm"
-                  >
+                  <td colSpan={9} className="px-6 py-12 text-center text-arch-text-muted text-sm">
                     No drilling data found for the selected date range.
                   </td>
                 </tr>

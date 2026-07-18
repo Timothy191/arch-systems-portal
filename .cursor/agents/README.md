@@ -8,14 +8,16 @@ Collateral: `.cursor/agents/<name>/{references,scripts,assets}/`.
 
 ## Agents
 
-| Entry                                              | Role                               | Collateral                                     |
-| -------------------------------------------------- | ---------------------------------- | ---------------------------------------------- |
-| [fast-outliner.md](fast-outliner.md)               | Pre-flight scope, gaps, handoffs   | [fast-outliner/](fast-outliner/)               |
-| [frontend-design.md](frontend-design.md)           | Branded/landing visual composition | [frontend-design/](frontend-design/)           |
-| [frontend-implementer.md](frontend-implementer.md) | Portal UI implementation           | [frontend-implementer/](frontend-implementer/) |
-| [ai-docs-sync.md](ai-docs-sync.md)                 | AI surfaces + docs drift           | [ai-docs-sync/](ai-docs-sync/)                 |
-| [sceptic.md](sceptic.md)                           | Adversarial review                 | [sceptic/](sceptic/)                           |
-| [idle-runner.md](idle-runner.md)                   | Parallel safe work while blocked   | [idle-runner/](idle-runner/)                   |
+| Entry                                                  | Role                               | Collateral                                         |
+| ------------------------------------------------------ | ---------------------------------- | -------------------------------------------------- |
+| [fast-outliner.md](fast-outliner.md)                   | Pre-flight scope, gaps, handoffs   | [fast-outliner/](fast-outliner/)                   |
+| [frontend-design.md](frontend-design.md)               | Branded/landing visual composition | [frontend-design/](frontend-design/)               |
+| [frontend-implementer.md](frontend-implementer.md)     | Portal UI implementation           | [frontend-implementer/](frontend-implementer/)     |
+| [ai-docs-sync.md](ai-docs-sync.md)                     | AI surfaces + docs drift           | [ai-docs-sync/](ai-docs-sync/)                     |
+| [sceptic.md](sceptic.md)                               | Adversarial review                 | [sceptic/](sceptic/)                               |
+| [idle-runner.md](idle-runner.md)                       | Parallel safe work while blocked   | [idle-runner/](idle-runner/)                       |
+| [ai-maintenance-checker.md](ai-maintenance-checker.md) | Background AI layout janitor       | [ai-maintenance-checker/](ai-maintenance-checker/) |
+| [vercel-brand-sync.md](vercel-brand-sync.md)           | Vercel-family brand assets         | [vercel-brand-sync/](vercel-brand-sync/)           |
 
 ## Shared
 
@@ -24,7 +26,7 @@ Collateral: `.cursor/agents/<name>/{references,scripts,assets}/`.
 ## Validate
 
 ```bash
-.cursor/standards/agent-layout/scripts/validate-agents.sh
+pnpm ai check
 ```
 
 ## Related

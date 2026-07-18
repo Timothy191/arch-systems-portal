@@ -161,9 +161,7 @@ export function ViewportBoundaries({ className }: ViewportBoundariesProps) {
               "os-shell os-shell--dock px-3 py-2",
               "flex items-center gap-4 whitespace-nowrap",
               "transition-all duration-300 ease-glass motion-reduce:transition-none",
-              revealed
-                ? "opacity-100 pointer-events-auto"
-                : "opacity-0 pointer-events-none",
+              revealed ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none",
               revealed
                 ? splitWindowOpen
                   ? "-translate-x-1/2 sm:-translate-x-[calc(50%+200px)] translate-y-0"
@@ -181,8 +179,8 @@ export function ViewportBoundaries({ className }: ViewportBoundariesProps) {
                 tabIndex={revealed ? 0 : -1}
                 className="group relative flex items-center gap-2 p-2 px-3 rounded-xl hover:bg-black/5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-arch-accent-blue/50"
               >
-                <Command className="w-4 h-4 text-[var(--text-heading)] group-hover:scale-110 transition-transform duration-300 ease-glass" />
-                <span className="text-xs font-medium text-[var(--text-heading)]">Start</span>
+                <Command className="w-4 h-4 text-arch-text-primary group-hover:scale-110 transition-transform duration-300 ease-glass" />
+                <span className="text-xs font-medium text-arch-text-primary">Start</span>
               </button>
             </div>
 
@@ -207,8 +205,8 @@ export function ViewportBoundaries({ className }: ViewportBoundariesProps) {
                       className={cn(
                         "w-4 h-4 transition-transform duration-300 ease-glass group-hover:scale-110 group-hover:-translate-y-0.5",
                         isActive
-                          ? "text-[var(--accent-blue)]"
-                          : "text-[var(--text-secondary)] group-hover:text-[var(--text-heading)]"
+                          ? "text-arch-accent-charcoal"
+                          : "text-arch-text-secondary group-hover:text-arch-text-primary"
                       )}
                       strokeWidth={isActive ? 2.5 : 2}
                     />
@@ -216,15 +214,15 @@ export function ViewportBoundaries({ className }: ViewportBoundariesProps) {
                       className={cn(
                         "text-xs font-medium transition-colors duration-300",
                         isActive
-                          ? "text-[var(--accent-blue)]"
-                          : "text-[var(--text-secondary)] group-hover:text-[var(--text-heading)]"
+                          ? "text-arch-accent-charcoal"
+                          : "text-arch-text-secondary group-hover:text-arch-text-primary"
                       )}
                     >
                       {app.name}
                     </span>
 
                     {isActive && (
-                      <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[var(--accent-blue)] shadow-[0_0_8px_var(--accent-blue)]" />
+                      <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-arch-accent-charcoal shadow-[0_0_8px_var(--accent-blue)]" />
                     )}
                   </Link>
                 );
@@ -241,7 +239,7 @@ export function ViewportBoundaries({ className }: ViewportBoundariesProps) {
                 ) : (
                   <WifiOff className="w-3.5 h-3.5 text-rose-500" />
                 )}
-                <span className="text-[var(--text-secondary)] font-medium tabular-nums group-hover:text-[var(--text-heading)] transition-colors">
+                <span className="text-arch-text-secondary font-medium tabular-nums group-hover:text-arch-text-primary transition-colors">
                   {websocketLatency} ms
                 </span>
 
@@ -252,7 +250,7 @@ export function ViewportBoundaries({ className }: ViewportBoundariesProps) {
 
               <div className="group relative flex items-center gap-1.5 cursor-default">
                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-[var(--text-secondary)] font-medium group-hover:text-[var(--text-heading)] transition-colors">
+                <span className="text-arch-text-secondary font-medium group-hover:text-arch-text-primary transition-colors">
                   {currentShift.label}
                 </span>
 
@@ -261,8 +259,8 @@ export function ViewportBoundaries({ className }: ViewportBoundariesProps) {
                 </div>
               </div>
 
-              <div className="group relative flex items-center gap-1.5 text-[var(--text-heading)] font-semibold cursor-default">
-                <Clock className="w-3.5 h-3.5 text-[var(--accent-blue)]" />
+              <div className="group relative flex items-center gap-1.5 text-arch-text-primary font-semibold cursor-default">
+                <Clock className="w-3.5 h-3.5 text-arch-accent-charcoal" />
                 <span className="tabular-nums">{serverTimeSAST}</span>
 
                 <div className="absolute -top-10 right-0 opacity-0 group-hover:opacity-100 scale-95 group-hover:scale-100 pointer-events-none transition-all duration-200 px-2.5 py-1 rounded-md bg-black/80 text-white text-[10px] font-medium whitespace-nowrap shadow-card origin-bottom-right">
@@ -284,9 +282,9 @@ export function ViewportBoundaries({ className }: ViewportBoundariesProps) {
             className={cn(
               "relative z-10 flex h-7 items-center justify-center gap-1 rounded-full px-3",
               "bg-black/[0.03] hover:bg-black/[0.06] border border-black/[0.05]",
-              "text-[var(--text-secondary)] hover:text-[var(--text-heading)]",
+              "text-arch-text-secondary hover:text-arch-text-primary",
               "transition-all duration-200 ease-glass motion-reduce:transition-none",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-blue)]/50",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-arch-accent-charcoal/50",
               "active:scale-[0.97] cursor-default select-none",
               revealed && "opacity-60 hover:opacity-100"
             )}

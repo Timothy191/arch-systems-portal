@@ -10,15 +10,20 @@ Canonical skill standard: [`.cursor/standards/agent-skills/STANDARD.md`](../../.
 
 ## Agent → skill routing
 
-| Agent                | Delegate to skills                                      |
-| -------------------- | ------------------------------------------------------- |
-| fast-outliner        | `specs` (multi-file)                                    |
-| frontend-implementer | `frontend-api-integration-patterns`, `quality`/`verify` |
-| ai-docs-sync         | `skill-layout`, `agent-layout`                          |
-| sceptic              | `agent-alignment-score` (after estimate)                |
-| idle-runner          | read-only skill scripts only                            |
-| frontend-design      | — (visual brief only)                                   |
+| Agent                  | Delegate to skills                                                |
+| ---------------------- | ----------------------------------------------------------------- |
+| fast-outliner          | `specs` (multi-file)                                              |
+| frontend-implementer   | `frontend-api-integration-patterns`, `quality`/`verify`           |
+| ai-docs-sync           | `ai-system`, `skill-layout`, `agent-layout`, `claude-code-layout` |
+| sceptic                | `agent-alignment-score` (after estimate)                          |
+| idle-runner            | read-only skill scripts only                                      |
+| ai-maintenance-checker | `pnpm ai` — layout/sync/dedupe                                    |
+| frontend-design        | — (visual brief only)                                             |
 
-## Done pipeline (parent)
+## Unified validation
+
+```bash
+pnpm ai check
+```
 
 `sceptic` → `agent-alignment-score` → `quality`

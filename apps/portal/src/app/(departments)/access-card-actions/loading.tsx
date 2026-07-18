@@ -11,9 +11,9 @@ export default function AccessCardActionsLoading() {
         {Array.from({ length: 4 }).map((_, i) => (
           <GlassCard key={i}>
             <div className="space-y-3">
-              <div className="h-4 bg-[var(--bg-tertiary)] rounded w-24" />
-              <div className="h-8 bg-[var(--bg-tertiary)] rounded w-16" />
-              <div className="h-3 bg-[var(--bg-tertiary)] rounded w-32" />
+              <div className="h-4 bg-arch-surface-tertiary rounded w-24" />
+              <div className="h-8 bg-arch-surface-tertiary rounded w-16" />
+              <div className="h-3 bg-arch-surface-tertiary rounded w-32" />
             </div>
           </GlassCard>
         ))}
@@ -21,12 +21,12 @@ export default function AccessCardActionsLoading() {
 
       {/* Table skeleton */}
       <GlassCard className="p-0 overflow-hidden">
-        <div className="p-4 border-b border-[var(--border-default)]">
-          <div className="h-5 bg-[var(--bg-tertiary)] rounded w-32" />
+        <div className="p-4 border-b border-arch-border-default">
+          <div className="h-5 bg-arch-surface-tertiary rounded w-32" />
         </div>
         <div className="p-4 space-y-3">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="h-12 bg-[var(--bg-tertiary)]/50 rounded" />
+            <div key={i} className="h-12 bg-arch-surface-tertiary/50 rounded" />
           ))}
         </div>
       </GlassCard>

@@ -1,17 +1,53 @@
 /**
  * @repo/ui — shared React primitives (shadcn-style)
- * Re-export all components from a single entry point.
+ * Re-export all components from canonical locations.
+ *
+ * Canonical paths:
+ *   @repo/ui/components/ui/*  — full-featured shadcn-style components
+ *   @repo/ui/components/*     — legacy/large custom components
+ *
+ * Portal code should prefer @repo/ui/components/ui/* for standard primitives,
+ * but the named exports below provide shorthand access for common cases.
  */
 
-export { Button } from "./components/button";
-export { Card, CardHeader, CardTitle, CardContent } from "./components/card";
-export { Badge } from "./components/badge";
-export { Spinner } from "./components/spinner";
+// Canonical UI primitives (shadcn-style with Arch tokens)
+export { Button } from "./components/ui/button";
+export { Badge } from "./components/ui/badge";
+export { Input } from "./components/ui/input";
+export {
+  Card,
+  CardHeader,
+  CardFooter,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "./components/ui/card";
+export {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogTrigger,
+  DialogClose,
+} from "./components/ui/dialog";
+export { Table, TableHeader, TableRow, TableCell } from "./components/ui/table";
+export { Tabs, TabsList, TabsTrigger, TabsContent } from "./components/ui/tabs";
+export { ActionConfirmDialog } from "./components/ui/action-confirm-dialog";
+export { Skeleton } from "./components/ui/skeleton";
+export { GlassSkeleton } from "./components/ui/glass-skeleton";
+export { Pagination } from "./components/ui/pagination";
+export { Separator } from "./components/ui/separator";
+export { ScrollArea } from "./components/ui/scroll-area";
+export { DropdownMenu } from "./components/ui/dropdown-menu";
+export { DataGrid } from "./components/ui/data-grid";
+export { BentoGrid } from "./components/ui/bento-grid";
 
-// Legacy compatibility exports
+// Legacy/large custom components
 export { Logo } from "./components/Logo";
 export { GlassCard } from "./components/GlassCard";
-export { Input } from "./components/Input";
+export { Spinner } from "./components/spinner";
 export { AnimatedButton } from "./components/AnimatedButton";
 export { PageHeader } from "./components/PageHeader";
 export { DepartmentLayout } from "./components/DepartmentLayout";
@@ -21,14 +57,5 @@ export { AnimatedList } from "./components/AnimatedList";
 export { Marquee } from "./components/Marquee";
 export { Checkbox } from "./components/Checkbox";
 
-// UI components for sub-path imports
-export { Button as ButtonUI } from "./components/ui/button";
-export { Input as InputUI } from "./components/ui/input";
-export { Badge as BadgeUI } from "./components/ui/badge";
-export { Dialog } from "./components/ui/dialog";
-export { Table, TableHeader, TableRow, TableCell } from "./components/ui/table";
-export { Tabs, TabsList, TabsTrigger, TabsContent } from "./components/ui/tabs";
-export { ActionConfirmDialog } from "./components/ui/action-confirm-dialog";
-
-// Re-export utils
+// Re-export utilities
 export { cn } from "./lib/utils";

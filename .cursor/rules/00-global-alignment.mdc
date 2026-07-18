@@ -15,6 +15,7 @@ alwaysApply: true
 | `.cursor/rules/` | Cursor always-on enforcement |
 | `.cursor/rules/04-subagent-auto-routing.mdc` | Mandatory Task/subagent delegation |
 | `.cursor/rules/05-portal-dev-keepalive.mdc` | Portal `:3000` up after task batches; restart / fix-retry |
+| `.cursor/rules/06-ai-maintenance-background.mdc` | Background `ai-maintenance-checker` + `pnpm ai` |
 | `.cursor/agents/` | Project specialists (auto-routed) |
 | `.qoder/rules/` | Qoder mirror |
 | `.kiro/agents/default.json` | Machine-readable gates |
@@ -32,4 +33,4 @@ alwaysApply: true
 1. Restate intent in one line (real-world outcome, not tool theater).
 2. Count files likely touched. If >1 → require/create specs.
 3. Name the AGENTS.md sections that apply (§1–§19).
-4. Plan verification evidence (`pnpm quality`, tests, runtime check) before coding.
+4. Plan verification evidence (`pnpm quality`, `pnpm ai check` when AI surfaces change, tests, runtime check) before coding.

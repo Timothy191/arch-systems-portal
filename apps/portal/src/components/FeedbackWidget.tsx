@@ -77,7 +77,7 @@ export function FeedbackWidget() {
           "flex h-[26px] items-center gap-1.5 rounded-full border px-2.5 text-[12px] font-medium",
           "select-none outline-none transition-colors active:scale-[0.97]",
           "border-border-subtle bg-black/[0.03] text-text-heading",
-          "hover:bg-black/[0.06] focus-visible:ring-2 focus-visible:ring-[var(--accent-blue)]/50",
+          "hover:bg-black/[0.06] focus-visible:ring-2 focus-visible:ring-arch-accent-charcoal/50",
           isOpen && "border-border-default bg-black/[0.1] shadow-sm"
         )}
       >
@@ -96,7 +96,7 @@ export function FeedbackWidget() {
           )}
         >
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-[var(--text-heading)]">Send Feedback</h3>
+            <h3 className="text-sm font-semibold text-arch-text-primary">Send Feedback</h3>
             <Button variant="ghost" size="sm" onClick={closePanel} aria-label="Close feedback">
               <X className="h-4 w-4" aria-hidden />
             </Button>

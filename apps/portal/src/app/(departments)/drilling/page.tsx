@@ -70,8 +70,8 @@ export default async function DrillingDashboardPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-semibold text-[var(--text-heading)]">Drilling Dashboard</h2>
-        <p className="text-[var(--text-muted)] text-sm">
+        <h2 className="text-2xl font-semibold text-arch-text-primary">Drilling Dashboard</h2>
+        <p className="text-arch-text-muted text-sm">
           {new Date().toLocaleDateString("en-ZA", {
             weekday: "long",
             year: "numeric",
@@ -84,29 +84,29 @@ export default async function DrillingDashboardPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <GlassCard>
           <div className="flex items-center gap-2">
-            <Clock className="w-4 h-4 text-[var(--accent-blue)]" />
-            <p className="text-[var(--text-muted)] text-xs font-medium uppercase tracking-wider">
+            <Clock className="w-4 h-4 text-arch-accent-charcoal" />
+            <p className="text-arch-text-muted text-xs font-medium uppercase tracking-wider">
               Today's Log
             </p>
           </div>
-          <p className="text-2xl font-bold text-[var(--text-heading)] mt-2">
+          <p className="text-2xl font-bold text-arch-text-primary mt-2">
             {shiftCount > 0
               ? `${shiftCount} shift${shiftCount > 1 ? "s" : ""} logged`
               : "Not logged"}
           </p>
           {latestShift && (
-            <p className="text-[var(--text-muted)] text-xs mt-1">Latest: {latestShift}</p>
+            <p className="text-arch-text-muted text-xs mt-1">Latest: {latestShift}</p>
           )}
         </GlassCard>
 
         <GlassCard>
           <div className="flex items-center gap-2">
             <Drill className="w-4 h-4 text-accent-green" />
-            <p className="text-[var(--text-muted)] text-xs font-medium uppercase tracking-wider">
+            <p className="text-arch-text-muted text-xs font-medium uppercase tracking-wider">
               Active Drills
             </p>
           </div>
-          <p className="text-2xl font-bold text-[var(--text-heading)] mt-2">{machineCount}</p>
+          <p className="text-2xl font-bold text-arch-text-primary mt-2">{machineCount}</p>
           {activeOps > 0 && (
             <p className="text-accent-green text-xs mt-1">
               {activeOps} operation{activeOps > 1 ? "s" : ""} active
@@ -117,7 +117,7 @@ export default async function DrillingDashboardPage() {
         <GlassCard>
           <div className="flex items-center gap-2">
             <Clock className="w-4 h-4 text-cyan-400" />
-            <p className="text-[var(--text-muted)] text-xs font-medium uppercase tracking-wider">
+            <p className="text-arch-text-muted text-xs font-medium uppercase tracking-wider">
               Hours Today
             </p>
           </div>
@@ -127,13 +127,13 @@ export default async function DrillingDashboardPage() {
         <GlassCard>
           <div className="flex items-center gap-2">
             <AlertTriangle className="w-4 h-4 text-accent-blue" />
-            <p className="text-[var(--text-muted)] text-xs font-medium uppercase tracking-wider">
+            <p className="text-arch-text-muted text-xs font-medium uppercase tracking-wider">
               Delays
             </p>
           </div>
           <p className="text-2xl font-bold text-accent-blue mt-2">{delayCount}</p>
           {delayMinutes > 0 && (
-            <p className="text-[var(--text-muted)] text-xs mt-1">{delayMinutes} min lost</p>
+            <p className="text-arch-text-muted text-xs mt-1">{delayMinutes} min lost</p>
           )}
         </GlassCard>
       </div>

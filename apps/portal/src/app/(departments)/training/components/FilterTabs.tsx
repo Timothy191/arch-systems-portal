@@ -18,7 +18,7 @@ export function FilterTabs({
 }: FilterTabsProps) {
   return (
     <div className="flex items-center gap-2 w-full sm:w-auto overflow-x-auto">
-      <Filter className="w-4 h-4 text-[var(--text-muted)] shrink-0" />
+      <Filter className="w-4 h-4 text-arch-text-muted shrink-0" />
       {options.map((option) => {
         const params = new URLSearchParams();
         Object.entries(hiddenParams).forEach(([k, v]) => {
@@ -39,7 +39,7 @@ export function FilterTabs({
             className={`text-xs px-3 py-1.5 rounded-lg border font-medium transition-all shrink-0 ${
               isActive
                 ? "bg-[var(--text-heading)] text-white border-transparent"
-                : "bg-[var(--overlay-dim)] hover:bg-[var(--overlay-subtle)] text-[var(--text-secondary)] border-[var(--border-default)]"
+                : "bg-arch-surface-chrome hover:bg-arch-surface-chrome-medium text-arch-text-secondary border-arch-border-default"
             }`}
           >
             {option}

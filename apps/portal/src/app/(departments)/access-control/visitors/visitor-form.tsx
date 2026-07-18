@@ -62,17 +62,17 @@ export function VisitorForm() {
   return (
     <GlassCard>
       <div className="flex items-center space-x-2 mb-6">
-        <div className="p-2 bg-[var(--accent-blue)]/10 rounded-lg">
-          <Users className="w-5 h-5 text-[var(--accent-blue)]" />
+        <div className="p-2 bg-arch-accent-charcoal/10 rounded-lg">
+          <Users className="w-5 h-5 text-arch-accent-charcoal" />
         </div>
-        <h3 className="font-semibold text-[var(--text-heading)]">New Registration</h3>
+        <h3 className="font-semibold text-arch-text-primary">New Registration</h3>
       </div>
 
       <form ref={formRef} action={clientAction} className="space-y-4">
         <div className="space-y-2">
           <label
             htmlFor="first_name"
-            className="text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider block"
+            className="text-xs font-medium text-arch-text-muted uppercase tracking-wider block"
           >
             First Name
           </label>
@@ -81,14 +81,14 @@ export function VisitorForm() {
             name="first_name"
             placeholder="John"
             required
-            className="bg-[var(--bg-tertiary)] border-[var(--border-default)]"
+            className="bg-arch-surface-tertiary border-arch-border-default"
           />
         </div>
 
         <div className="space-y-2">
           <label
             htmlFor="surname"
-            className="text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider block"
+            className="text-xs font-medium text-arch-text-muted uppercase tracking-wider block"
           >
             Surname
           </label>
@@ -97,14 +97,14 @@ export function VisitorForm() {
             name="surname"
             placeholder="Doe"
             required
-            className="bg-[var(--bg-tertiary)] border-[var(--border-default)]"
+            className="bg-arch-surface-tertiary border-arch-border-default"
           />
         </div>
 
         <div className="space-y-2">
           <label
             htmlFor="company"
-            className="text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider block"
+            className="text-xs font-medium text-arch-text-muted uppercase tracking-wider block"
           >
             Company / Agency
           </label>
@@ -112,14 +112,14 @@ export function VisitorForm() {
             id="company"
             name="company"
             placeholder="Acme Corp"
-            className="bg-[var(--bg-tertiary)] border-[var(--border-default)]"
+            className="bg-arch-surface-tertiary border-arch-border-default"
           />
         </div>
 
         <div className="space-y-2">
           <label
             htmlFor="reason"
-            className="text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider block"
+            className="text-xs font-medium text-arch-text-muted uppercase tracking-wider block"
           >
             Reason for Visit
           </label>
@@ -127,7 +127,7 @@ export function VisitorForm() {
             id="reason"
             name="reason"
             placeholder="Maintenance, Audit, etc."
-            className="bg-[var(--bg-tertiary)] border-[var(--border-default)]"
+            className="bg-arch-surface-tertiary border-arch-border-default"
           />
         </div>
 

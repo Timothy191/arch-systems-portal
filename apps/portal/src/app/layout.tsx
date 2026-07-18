@@ -27,9 +27,9 @@ const HeaderWidgets = dynamic(
   {
     loading: () => (
       <div className="flex items-center gap-3" aria-hidden="true">
-        <div className="w-7 h-7 rounded-full bg-[var(--overlay-dim)] border border-[var(--border-subtle)] animate-pulse" />
-        <div className="w-20 h-7 rounded-full bg-[var(--overlay-dim)] border border-[var(--border-subtle)] animate-pulse" />
-        <div className="w-7 h-7 rounded-full bg-[var(--overlay-dim)] border border-[var(--border-subtle)] animate-pulse" />
+        <div className="w-7 h-7 rounded-full bg-overlay-dim border border-arch-border-subtle animate-pulse" />
+        <div className="w-20 h-7 rounded-full bg-overlay-dim border border-arch-border-subtle animate-pulse" />
+        <div className="w-7 h-7 rounded-full bg-overlay-dim border border-arch-border-subtle animate-pulse" />
       </div>
     ),
   }
@@ -153,7 +153,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }):
       </head>
       <body
         suppressHydrationWarning
-        className="text-text-heading min-h-screen font-sans antialiased selection:bg-[var(--accent-blue)]/30 selection:text-[var(--accent-blue)] relative overflow-x-hidden bg-transparent"
+        className="text-text-heading min-h-screen font-sans antialiased selection:bg-arch-accent-charcoal/30 selection:text-arch-accent-charcoal relative overflow-x-hidden bg-transparent"
       >
         {/* Skip navigation link for keyboard users */}
         <a href="#main-content" className="skip-link">

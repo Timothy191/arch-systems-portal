@@ -74,10 +74,8 @@ export default function ReportsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-semibold text-[var(--text-heading)]">
-            Training & LMS Audits
-          </h2>
-          <p className="text-[var(--text-muted)] text-sm mt-0.5">
+          <h2 className="text-2xl font-semibold text-arch-text-primary">Training & LMS Audits</h2>
+          <p className="text-arch-text-muted text-sm mt-0.5">
             Access training history, compliance audits, and legal certificate registry lists.
           </p>
         </div>
@@ -90,23 +88,23 @@ export default function ReportsPage() {
           <GlassCard className="h-full">
             <div className="flex items-center justify-between pb-3 border-b border-black/[0.06]">
               <div>
-                <h3 className="font-semibold text-sm text-[var(--text-heading)]">
+                <h3 className="font-semibold text-sm text-arch-text-primary">
                   Departmental Compliance Rates
                 </h3>
-                <p className="text-[var(--text-muted)] text-[11px]">
+                <p className="text-arch-text-muted text-[11px]">
                   Percentage of personnel with all active, non-expired credentials
                 </p>
               </div>
-              <BarChart3 className="w-4 h-4 text-[var(--text-muted)]" />
+              <BarChart3 className="w-4 h-4 text-arch-text-muted" />
             </div>
 
             <div className="mt-4 space-y-4">
               {complianceRates.map((dept, i) => (
                 <div key={i} className="space-y-1.5">
                   <div className="flex justify-between items-center text-xs">
-                    <span className="font-medium text-[var(--text-secondary)]">{dept.name}</span>
+                    <span className="font-medium text-arch-text-secondary">{dept.name}</span>
                     <div className="flex items-center gap-2">
-                      <span className="text-[10px] text-[var(--text-muted)]">
+                      <span className="text-[10px] text-arch-text-muted">
                         ({dept.trainees} active staff)
                       </span>
                       <span
@@ -122,7 +120,7 @@ export default function ReportsPage() {
                       </span>
                     </div>
                   </div>
-                  <div className="w-full bg-[var(--overlay-dim)] h-2 rounded-full overflow-hidden flex">
+                  <div className="w-full bg-arch-surface-chrome h-2 rounded-full overflow-hidden flex">
                     <div
                       className={`h-full rounded-full ${
                         dept.rate >= 95
@@ -148,10 +146,10 @@ export default function ReportsPage() {
                 <CheckCircle className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-[var(--text-muted)] text-[11px] font-semibold uppercase tracking-wider">
+                <p className="text-arch-text-muted text-[11px] font-semibold uppercase tracking-wider">
                   Overall Site Compliance
                 </p>
-                <p className="text-xl font-bold text-[var(--text-heading)]">94.2%</p>
+                <p className="text-xl font-bold text-arch-text-primary">94.2%</p>
               </div>
             </div>
           </GlassCard>
@@ -162,10 +160,10 @@ export default function ReportsPage() {
                 <ShieldAlert className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-[var(--text-muted)] text-[11px] font-semibold uppercase tracking-wider">
+                <p className="text-arch-text-muted text-[11px] font-semibold uppercase tracking-wider">
                   Pending Expirations (15d)
                 </p>
-                <p className="text-xl font-bold text-[var(--text-heading)]">5 Personnel</p>
+                <p className="text-xl font-bold text-arch-text-primary">5 Personnel</p>
               </div>
             </div>
           </GlassCard>
@@ -176,10 +174,10 @@ export default function ReportsPage() {
                 <TrendingUp className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-[var(--text-muted)] text-[11px] font-semibold uppercase tracking-wider">
+                <p className="text-arch-text-muted text-[11px] font-semibold uppercase tracking-wider">
                   LMS Course Completions MTD
                 </p>
-                <p className="text-xl font-bold text-[var(--text-heading)]">118 modules</p>
+                <p className="text-xl font-bold text-arch-text-primary">118 modules</p>
               </div>
             </div>
           </GlassCard>
@@ -188,11 +186,11 @@ export default function ReportsPage() {
 
       {/* Reports history */}
       <GlassCard>
-        <div className="pb-3 border-b border-[var(--border-default)] flex items-center justify-between">
-          <h3 className="font-semibold text-sm text-[var(--text-heading)]">
+        <div className="pb-3 border-b border-arch-border-default flex items-center justify-between">
+          <h3 className="font-semibold text-sm text-arch-text-primary">
             Generated Audits & Exports
           </h3>
-          <button className="text-xs px-2.5 py-1 bg-[var(--overlay-dim)] border border-[var(--border-default)] hover:bg-[var(--overlay-subtle)] rounded-md font-semibold transition-colors">
+          <button className="text-xs px-2.5 py-1 bg-arch-surface-chrome border border-arch-border-default hover:bg-arch-surface-chrome-medium rounded-md font-semibold transition-colors">
             Generate Custom Report
           </button>
         </div>
@@ -200,7 +198,7 @@ export default function ReportsPage() {
         <div className="mt-4 overflow-x-auto">
           <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr className="border-b border-[var(--border-default)] text-[var(--text-muted)] font-semibold">
+              <tr className="border-b border-arch-border-default text-arch-text-muted font-semibold">
                 <th className="pb-2">ID</th>
                 <th className="pb-2">Report Name</th>
                 <th className="pb-2">Format</th>
@@ -211,19 +209,19 @@ export default function ReportsPage() {
             </thead>
             <tbody className="divide-y divide-[var(--overlay-dim)]">
               {initialReports.map((report) => (
-                <tr key={report.id} className="hover:bg-[var(--overlay-dim)]">
-                  <td className="py-3 font-semibold text-[var(--text-muted)]">{report.id}</td>
-                  <td className="py-3 font-medium text-[var(--text-heading)] flex items-center gap-2">
+                <tr key={report.id} className="hover:bg-arch-surface-chrome">
+                  <td className="py-3 font-semibold text-arch-text-muted">{report.id}</td>
+                  <td className="py-3 font-medium text-arch-text-primary flex items-center gap-2">
                     <FileText className="w-3.5 h-3.5 text-blue-500" />
                     <span>{report.name}</span>
                   </td>
                   <td className="py-3">
-                    <span className="text-[10px] px-2 py-0.5 rounded bg-[var(--overlay-subtle)] font-medium text-[var(--text-secondary)]">
+                    <span className="text-[10px] px-2 py-0.5 rounded bg-arch-surface-chrome-medium font-medium text-arch-text-secondary">
                       {report.type}
                     </span>
                   </td>
-                  <td className="py-3 text-[var(--text-muted)]">{report.generatedDate}</td>
-                  <td className="py-3 text-[var(--text-muted)]">{report.author}</td>
+                  <td className="py-3 text-arch-text-muted">{report.generatedDate}</td>
+                  <td className="py-3 text-arch-text-muted">{report.author}</td>
                   <td className="py-3 text-right">
                     <ExportButton />
                   </td>

@@ -18,14 +18,25 @@ Agents **orchestrate**; skills (`.cursor/skills/`, `.qoder/skills/`, `.github/sk
 
 ## Agent → skill routing
 
-| Agent                | Primary skills                                               |
-| -------------------- | ------------------------------------------------------------ |
-| fast-outliner        | `specs` (if spec needed)                                     |
-| frontend-implementer | `frontend-api-integration-patterns` (review)                 |
-| ai-docs-sync         | `skill-layout`, `agent-layout`, `claude-code-layout` (audit) |
-| sceptic              | `agent-alignment-score` (formal score after estimate)        |
-| idle-runner          | any safe read-only skill scripts                             |
-| frontend-design      | — (visual brief; no skill duplication)                       |
+| Agent                  | Primary skills                                                    |
+| ---------------------- | ----------------------------------------------------------------- |
+| fast-outliner          | `specs` (if spec needed)                                          |
+| frontend-implementer   | `frontend-api-integration-patterns` (review)                      |
+| ai-docs-sync           | `ai-system`, `skill-layout`, `agent-layout`, `claude-code-layout` |
+| sceptic                | `agent-alignment-score` (formal score after estimate)             |
+| idle-runner            | any safe read-only skill scripts                                  |
+| ai-maintenance-checker | `pnpm ai fix` — unified layout/sync/dedupe                        |
+| frontend-design        | — (visual brief; no skill duplication)                            |
+
+## Background maintenance (every prompt)
+
+Launch `ai-maintenance-checker` at prompt start; parent awaits before final reply on AI-surface work (`.cursor/rules/06-ai-maintenance-background.mdc`).
+
+## Unified command
+
+```bash
+pnpm ai [init|onboard|status|check|fix]
+```
 
 ## Parent agent (orchestrator)
 
@@ -41,7 +52,7 @@ Before claiming done on multi-file work:
 - Skills: `skill-layout` + [agentskills.io skill-creation guides](https://agentskills.io/skill-creation/best-practices)
 
 ```bash
-.cursor/standards/agent-skills/scripts/validate.sh
+pnpm ai check
 ```
 
 ## Never

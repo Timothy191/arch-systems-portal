@@ -60,7 +60,7 @@ export function SplitWindowLayout({ children }: SplitWindowLayoutProps) {
       <div
         className={cn(
           "flex-1 min-w-0 transition-all duration-300 ease-in-out",
-          isOpen ? "pr-[400px] md:pr-[450px]" : "pr-0",
+          isOpen ? "pr-[400px] md:pr-[450px]" : "pr-0"
         )}
       >
         {children}
@@ -72,7 +72,7 @@ export function SplitWindowLayout({ children }: SplitWindowLayoutProps) {
           "fixed top-16 right-2 bottom-2 w-[390px] md:w-[440px] z-40",
           "liquid-glass-light border border-white/40 shadow-window rounded-2xl flex flex-col",
           "transition-all duration-300 ease-glass transform",
-          isOpen ? "translate-x-0 opacity-100" : "translate-x-full opacity-0 pointer-events-none",
+          isOpen ? "translate-x-0 opacity-100" : "translate-x-full opacity-0 pointer-events-none"
         )}
       >
         {/* Tab Bar */}
@@ -91,8 +91,8 @@ export function SplitWindowLayout({ children }: SplitWindowLayoutProps) {
                     "flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold",
                     "transition-colors select-none whitespace-nowrap",
                     isActive
-                      ? "bg-white border border-black/[0.08] shadow-card text-[var(--text-heading)]"
-                      : "text-[var(--text-muted)] hover:text-[var(--text-secondary)] hover:bg-black/[0.03]",
+                      ? "bg-white border border-black/[0.08] shadow-card text-arch-text-primary"
+                      : "text-arch-text-muted hover:text-arch-text-secondary hover:bg-black/[0.03]"
                   )}
                 >
                   <button
@@ -128,7 +128,7 @@ export function SplitWindowLayout({ children }: SplitWindowLayoutProps) {
             aria-label="Close all tabs"
             title="Close all"
           >
-            <X className="w-3.5 h-3.5 text-[var(--text-secondary)]" />
+            <X className="w-3.5 h-3.5 text-arch-text-secondary" />
           </button>
         </div>
 
@@ -136,7 +136,7 @@ export function SplitWindowLayout({ children }: SplitWindowLayoutProps) {
         <div
           className={cn(
             "flex-1 min-h-0",
-            activeTab?.service === "github" ? "overflow-y-auto" : "overflow-hidden",
+            activeTab?.service === "github" ? "overflow-y-auto" : "overflow-hidden"
           )}
         >
           {activeTab?.service === "github" && <GitHubMockView />}
@@ -178,10 +178,10 @@ function GitHubMockView() {
       {/* Branch & Status */}
       <div className="flex items-center justify-between bg-black/[0.02] border border-black/[0.05] p-3 rounded-xl">
         <div className="flex items-center gap-2">
-          <GitBranch className="w-4 h-4 text-[var(--text-secondary)]" />
-          <span className="font-semibold text-[var(--text-heading)]">master</span>
+          <GitBranch className="w-4 h-4 text-arch-text-secondary" />
+          <span className="font-semibold text-arch-text-primary">master</span>
         </div>
-        <div className="flex items-center gap-1.5 text-[var(--accent-green)] font-medium">
+        <div className="flex items-center gap-1.5 text-arch-accent-green font-medium">
           <svg
             className="w-4 h-4"
             viewBox="0 0 24 24"
@@ -199,15 +199,15 @@ function GitHubMockView() {
       </div>
 
       {/* Tabs */}
-      <div className="flex border-b border-black/[0.06] text-[12px] font-semibold text-[var(--text-muted)]">
+      <div className="flex border-b border-black/[0.06] text-[12px] font-semibold text-arch-text-muted">
         <button
           type="button"
           onClick={() => setTab("code")}
           className={cn(
             "pb-2 px-3 border-b-2 transition-all",
             tab === "code"
-              ? "border-[var(--accent-blue)] text-[var(--accent-blue)]"
-              : "border-transparent hover:text-[var(--text-secondary)]",
+              ? "border-arch-accent-charcoal text-arch-accent-charcoal"
+              : "border-transparent hover:text-arch-text-secondary"
           )}
         >
           Commits
@@ -218,8 +218,8 @@ function GitHubMockView() {
           className={cn(
             "pb-2 px-3 border-b-2 transition-all",
             tab === "pulls"
-              ? "border-[var(--accent-blue)] text-[var(--accent-blue)]"
-              : "border-transparent hover:text-[var(--text-secondary)]",
+              ? "border-arch-accent-charcoal text-arch-accent-charcoal"
+              : "border-transparent hover:text-arch-text-secondary"
           )}
         >
           Pull Requests (1)
@@ -230,8 +230,8 @@ function GitHubMockView() {
           className={cn(
             "pb-2 px-3 border-b-2 transition-all",
             tab === "issues"
-              ? "border-[var(--accent-blue)] text-[var(--accent-blue)]"
-              : "border-transparent hover:text-[var(--text-secondary)]",
+              ? "border-arch-accent-charcoal text-arch-accent-charcoal"
+              : "border-transparent hover:text-arch-text-secondary"
           )}
         >
           Issues (2)
@@ -242,7 +242,7 @@ function GitHubMockView() {
       <div className="space-y-3">
         {tab === "code" && (
           <div className="space-y-2.5">
-            <p className="font-semibold text-[11px] text-[var(--text-muted)] uppercase tracking-wider">
+            <p className="font-semibold text-[11px] text-arch-text-muted uppercase tracking-wider">
               Recent Commits
             </p>
             {commits.map((c) => (
@@ -254,10 +254,10 @@ function GitHubMockView() {
                   <span className="font-semibold text-blue-600 hover:underline cursor-pointer">
                     {c.hash}
                   </span>
-                  <span className="text-[11px] text-[var(--text-muted)]">{c.date}</span>
+                  <span className="text-[11px] text-arch-text-muted">{c.date}</span>
                 </div>
-                <p className="text-[12px] text-[var(--text-heading)] leading-snug">{c.msg}</p>
-                <span className="text-[10px] text-[var(--text-muted)]">By {c.author}</span>
+                <p className="text-[12px] text-arch-text-primary leading-snug">{c.msg}</p>
+                <span className="text-[10px] text-arch-text-muted">By {c.author}</span>
               </div>
             ))}
           </div>
@@ -267,7 +267,7 @@ function GitHubMockView() {
           <div className="bg-black/[0.015] border border-black/[0.04] p-4 rounded-lg space-y-2">
             <div className="flex items-start gap-2">
               <svg
-                className="w-4 h-4 text-[var(--accent-green)] mt-0.5 shrink-0"
+                className="w-4 h-4 text-arch-accent-green mt-0.5 shrink-0"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -279,10 +279,10 @@ function GitHubMockView() {
                 <polyline points="22 4 12 14.01 9 11.01" />
               </svg>
               <div>
-                <p className="font-bold text-[13px] text-[var(--text-heading)] leading-snug">
+                <p className="font-bold text-[13px] text-arch-text-primary leading-snug">
                   #104 Feature: Centered Connection Status & Clock Calendar Popover
                 </p>
-                <p className="text-[11px] text-[var(--text-muted)] mt-1">
+                <p className="text-[11px] text-arch-text-muted mt-1">
                   Opened by Timothy • 3 checks passed
                 </p>
               </div>
@@ -307,10 +307,10 @@ function GitHubMockView() {
                 <line x1="12" x2="12.01" y1="16" y2="16" />
               </svg>
               <div>
-                <p className="font-bold leading-snug text-[var(--text-heading)]">
+                <p className="font-bold leading-snug text-arch-text-primary">
                   #102 Alignment problem in ServicesDropdown
                 </p>
-                <p className="text-[10.5px] text-[var(--text-muted)] mt-0.5">
+                <p className="text-[10.5px] text-arch-text-muted mt-0.5">
                   Reported by Oper-3 • High priority
                 </p>
               </div>
@@ -330,10 +330,10 @@ function GitHubMockView() {
                 <line x1="12" x2="12.01" y1="16" y2="16" />
               </svg>
               <div>
-                <p className="font-bold leading-snug text-[var(--text-heading)]">
+                <p className="font-bold leading-snug text-arch-text-primary">
                   #98 Setup persistent location coordinates for weather widget
                 </p>
-                <p className="text-[10.5px] text-[var(--text-muted)] mt-0.5">
+                <p className="text-[10.5px] text-arch-text-muted mt-0.5">
                   Reported by ITAdmin • Backlog
                 </p>
               </div>

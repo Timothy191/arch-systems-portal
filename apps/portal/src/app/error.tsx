@@ -64,7 +64,7 @@ export default function RootError({ error, reset }: RootErrorProps) {
   const appError = isAppError(error) ? error : null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-[var(--bg-primary)] flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 bg-arch-surface-primary flex items-center justify-center p-4">
       <div className="max-w-md w-full text-center space-y-6">
         <div className="flex justify-center">
           <Image
@@ -77,13 +77,13 @@ export default function RootError({ error, reset }: RootErrorProps) {
           />
         </div>
         <div className="space-y-2" role="alert" aria-live="assertive">
-          <h1 className="text-3xl font-medium text-[var(--text-heading)]">{title}</h1>
-          <p className="text-[var(--text-muted)] text-sm">{message}</p>
+          <h1 className="text-3xl font-medium text-arch-text-primary">{title}</h1>
+          <p className="text-arch-text-muted text-sm">{message}</p>
         </div>
 
         {/* Show error code for AppErrors */}
         {appError && (
-          <div className="text-xs text-[var(--text-muted)] font-mono">
+          <div className="text-xs text-arch-text-muted font-mono">
             Error code: {appError.code}
             {appError.statusCode && ` (${appError.statusCode})`}
           </div>
@@ -92,10 +92,10 @@ export default function RootError({ error, reset }: RootErrorProps) {
         {/* Show context in development */}
         {isDev && context && (
           <details className="text-left">
-            <summary className="text-xs text-[var(--text-muted)] cursor-pointer">
+            <summary className="text-xs text-arch-text-muted cursor-pointer">
               Error details (dev only)
             </summary>
-            <pre className="mt-2 p-3 bg-[var(--bg-secondary)] rounded text-xs text-[var(--text-muted)] overflow-auto">
+            <pre className="mt-2 p-3 bg-arch-surface-secondary rounded text-xs text-arch-text-muted overflow-auto">
               {JSON.stringify(context, null, 2)}
             </pre>
           </details>

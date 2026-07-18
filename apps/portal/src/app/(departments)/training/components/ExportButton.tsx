@@ -18,7 +18,7 @@ export function ExportButton() {
     <button
       onClick={handleClick}
       disabled={loading}
-      className="inline-flex items-center gap-1.5 text-xs text-[var(--accent-blue)] hover:underline font-semibold disabled:opacity-50"
+      className="inline-flex items-center gap-1.5 text-xs text-arch-accent-charcoal hover:underline font-semibold disabled:opacity-50"
     >
       <Download className="w-3 h-3" />
       <span>{loading ? "Downloading..." : "Export"}</span>

@@ -28,6 +28,7 @@ if (event === "sessionStart" || (!event && payload.session_id)) {
         "ALIGNMENT ON: Follow AGENTS.md. OBSERVE→HYPOTHESIZE→VERIFY→ACT→SCORE.",
         "Before done: emit Alignment Score (≥80 PASS). Skill: agent-alignment-score.",
         "Hard fail on any §18 never-do. Source of truth: AGENTS.md — no drift.",
+        "AI surfaces: pnpm ai status · init/onboard/check/fix · background ai-maintenance-checker.",
       ].join(" "),
     }),
   );

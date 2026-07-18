@@ -124,28 +124,28 @@ export default async function AccessCardActionsDashboardPage() {
           </KPIGrid>
 
           <GlassCard className="p-0 overflow-hidden">
-            <div className="p-4 border-b border-[var(--border-default)] bg-[var(--bg-secondary)]/50 flex items-center justify-between">
-              <h3 className="font-medium text-[var(--text-heading)] flex items-center">
-                <Clock className="w-4 h-4 mr-2 text-[var(--text-muted)]" />
+            <div className="p-4 border-b border-arch-border-default bg-arch-surface-secondary/50 flex items-center justify-between">
+              <h3 className="font-medium text-arch-text-primary flex items-center">
+                <Clock className="w-4 h-4 mr-2 text-arch-text-muted" />
                 Expiring Cards
               </h3>
-              <span className="text-xs text-[var(--text-muted)]">
+              <span className="text-xs text-arch-text-muted">
                 {cards.length} card{cards.length !== 1 ? "s" : ""}
               </span>
             </div>
             <Table>
               <TableHeader>
-                <TableRow className="border-b border-[var(--border-default)] hover:bg-transparent">
-                  <TableHead className="text-[var(--text-muted)]">Personnel</TableHead>
-                  <TableHead className="text-[var(--text-muted)]">Expiry Date</TableHead>
-                  <TableHead className="text-[var(--text-muted)]">Days Remaining</TableHead>
-                  <TableHead className="text-right text-[var(--text-muted)]">Status</TableHead>
+                <TableRow className="border-b border-arch-border-default hover:bg-transparent">
+                  <TableHead className="text-arch-text-muted">Personnel</TableHead>
+                  <TableHead className="text-arch-text-muted">Expiry Date</TableHead>
+                  <TableHead className="text-arch-text-muted">Days Remaining</TableHead>
+                  <TableHead className="text-right text-arch-text-muted">Status</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {cards.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={4} className="text-center py-8 text-[var(--text-muted)]">
+                    <TableCell colSpan={4} className="text-center py-8 text-arch-text-muted">
                       No expiring cards found.
                     </TableCell>
                   </TableRow>
@@ -153,10 +153,10 @@ export default async function AccessCardActionsDashboardPage() {
                 {cards.map((card) => (
                   <TableRow
                     key={card.id}
-                    className="border-b border-[var(--border-default)]/50 hover:bg-[var(--bg-tertiary)] transition-colors"
+                    className="border-b border-arch-border-default/50 hover:bg-arch-surface-tertiary transition-colors"
                   >
-                    <TableCell className="text-[var(--text-heading)]">{card.entityName}</TableCell>
-                    <TableCell className="text-[var(--text-secondary)]">
+                    <TableCell className="text-arch-text-primary">{card.entityName}</TableCell>
+                    <TableCell className="text-arch-text-secondary">
                       {card.expires_at
                         ? new Date(card.expires_at).toLocaleDateString("en-ZA", {
                             day: "numeric",
@@ -165,14 +165,14 @@ export default async function AccessCardActionsDashboardPage() {
                           })
                         : "—"}
                     </TableCell>
-                    <TableCell className="font-mono text-sm text-[var(--text-secondary)]">
+                    <TableCell className="font-mono text-sm text-arch-text-secondary">
                       {card.daysRemaining < 0 ? "Overdue" : `${card.daysRemaining}d`}
                     </TableCell>
                     <TableCell className="text-right">
                       <span
                         className={cn(
                           "inline-flex items-center gap-1.5 text-xs font-medium px-2 py-0.5 rounded-full border",
-                          card.expiryStatus.pillClass,
+                          card.expiryStatus.pillClass
                         )}
                       >
                         {card.daysRemaining < 0 ? (

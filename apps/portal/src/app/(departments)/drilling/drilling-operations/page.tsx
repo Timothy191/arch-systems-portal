@@ -33,7 +33,7 @@ async function getDrillingOpsData() {
     supabase
       .from("drill_operations")
       .select(
-        "id, machine_id, shift_type, operation_date, open_hours, close_hours, total_hours, operator_name, block_drilled, site, external_delays_minutes, standard_delays_hours, production_delays_minutes, engineering_delays_minutes, comments, status",
+        "id, machine_id, shift_type, operation_date, open_hours, close_hours, total_hours, operator_name, block_drilled, site, external_delays_minutes, standard_delays_hours, production_delays_minutes, engineering_delays_minutes, comments, status"
       )
       .eq("department_id", dept.id)
       .eq("operation_date", today),
@@ -58,8 +58,8 @@ export default async function DrillingOperationsPage() {
   return (
     <div className="space-y-6">
       <header>
-        <h2 className="text-2xl font-semibold text-[var(--text-heading)]">Drilling Operations</h2>
-        <p className="text-sm text-[var(--text-muted)] mt-1">
+        <h2 className="text-2xl font-semibold text-arch-text-primary">Drilling Operations</h2>
+        <p className="text-sm text-arch-text-muted mt-1">
           Inline log per drill rig, per shift. Edits save on blur.
         </p>
       </header>

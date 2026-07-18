@@ -12,6 +12,11 @@ pnpm dev              # Full stack: Docker infra + Next.js (Turbopack HMR on :30
 pnpm dev --quick      # Portal only, skip Docker
 pnpm build            # Turborepo full build
 pnpm quality          # lint + type-check + test + prettier check (run before marking done)
+pnpm ai               # AI system health (guardrails, layouts, sync, dedupe, drift)
+pnpm ai init          # First clone / cold start — restore + sync + validate
+pnpm ai onboard       # Onboarding checklist for humans + agents
+pnpm ai check         # Validate AI surfaces only (CI gate)
+pnpm ai fix           # Safe repair + validate
 pnpm format           # Prettier write
 pnpm --filter portal <cmd>  # Target one package
 pnpm audit:rls        # Verify RLS after migration changes
@@ -149,14 +154,17 @@ Canonical policy remains this file. Agents and skills **mirror** it — never fo
 
 Six specialists under `.cursor/agents/`. **Hybrid layout:** entry `<name>.md` + collateral `<name>/`. Standard: `.cursor/standards/agent-layout/STANDARD.md`. Auto-routing: `.cursor/rules/04-subagent-auto-routing.mdc`.
 
-| Agent                  | Role                                        |
-| ---------------------- | ------------------------------------------- |
-| `fast-outliner`        | Pre-flight scope, gaps, handoffs            |
-| `frontend-design`      | Branded/landing visual composition          |
-| `frontend-implementer` | Portal UI implementation (`apps/portal/`)   |
-| `ai-docs-sync`         | AI surfaces + docs drift audit              |
-| `sceptic`              | Adversarial review + alignment **estimate** |
-| `idle-runner`          | Safe parallel work while blocked            |
+| Agent                    | Role                                        |
+| ------------------------ | ------------------------------------------- |
+| `fast-outliner`          | Pre-flight scope, gaps, handoffs            |
+| `frontend-design`        | Branded/landing visual composition          |
+| `frontend-implementer`   | Portal UI implementation (`apps/portal/`)   |
+| `ai-docs-sync`           | AI surfaces + docs drift audit              |
+| `sceptic`                | Adversarial review + alignment **estimate** |
+| `idle-runner`            | Safe parallel work while blocked            |
+| `ai-maintenance-checker` | Background layout/sync/dedupe every prompt  |
+
+**Unified AI command:** `pnpm ai` — see `.cursor/standards/ai-system/STANDARD.md`. Background rule: `.cursor/rules/06-ai-maintenance-background.mdc`.
 
 Gold contract: `.cursor/agents/_shared/references/gold-standard-contract.md`
 
@@ -185,6 +193,7 @@ Standard layout per skill folder: `SKILL.md` + `scripts/` + `references/` + `ass
 | Skill                                 | Owner                              |
 | ------------------------------------- | ---------------------------------- |
 | `agent-alignment-score`               | Formal Alignment Score (0–100)     |
+| `ai-system`                           | Unified `pnpm ai` command          |
 | `skill-layout` / `agent-layout`       | Skill + agent folder standards     |
 | `claude-code-layout`                  | Claude Code `.claude/` surfaces    |
 | `quality` / `verify`                  | Quality gate (full / portal alias) |

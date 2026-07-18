@@ -27,9 +27,7 @@ Run `scripts/inventory.sh`
 ## Verify
 
 ```bash
-scripts/verify-mirrors.sh
-.cursor/standards/agent-skills/scripts/validate.sh
-.cursor/standards/agent-layout/scripts/validate-agents.sh
+pnpm ai check
 ```
 
 Do not change `AGENTS.md` policy unless user explicitly requests amendment.

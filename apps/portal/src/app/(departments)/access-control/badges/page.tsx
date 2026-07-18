@@ -65,8 +65,8 @@ export default async function BadgesPage({
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-[var(--text-heading)]">Credential Management</h2>
-          <p className="text-sm text-[var(--text-muted)] mt-1">
+          <h2 className="text-2xl font-bold text-arch-text-primary">Credential Management</h2>
+          <p className="text-sm text-arch-text-muted mt-1">
             Issue, print, and revoke physical QR access credentials.
           </p>
         </div>
@@ -80,25 +80,25 @@ export default async function BadgesPage({
         {/* Left Side: Active Badges Table (Takes up 2 cols) */}
         <div className="lg:col-span-2 space-y-4">
           <GlassCard className="p-0 overflow-hidden">
-            <div className="p-4 border-b border-[var(--border-default)] bg-[var(--bg-secondary)]/50">
-              <h3 className="font-semibold text-[var(--text-heading)] flex items-center">
+            <div className="p-4 border-b border-arch-border-default bg-arch-surface-secondary/50">
+              <h3 className="font-semibold text-arch-text-primary flex items-center">
                 <UserCheck className="w-4 h-4 mr-2 text-accent-green" />
                 Active Provisioned Badges
               </h3>
             </div>
             <Table>
               <TableHeader>
-                <TableRow className="border-b border-[var(--border-default)] hover:bg-transparent">
-                  <TableHead className="text-[var(--text-muted)]">QR Code Data</TableHead>
-                  <TableHead className="text-[var(--text-muted)]">Assigned To</TableHead>
-                  <TableHead className="text-[var(--text-muted)]">Entity Type</TableHead>
-                  <TableHead className="text-right text-[var(--text-muted)]">Status</TableHead>
+                <TableRow className="border-b border-arch-border-default hover:bg-transparent">
+                  <TableHead className="text-arch-text-muted">QR Code Data</TableHead>
+                  <TableHead className="text-arch-text-muted">Assigned To</TableHead>
+                  <TableHead className="text-arch-text-muted">Entity Type</TableHead>
+                  <TableHead className="text-right text-arch-text-muted">Status</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {resolvedBadges.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={4} className="text-center py-8 text-[var(--text-muted)]">
+                    <TableCell colSpan={4} className="text-center py-8 text-arch-text-muted">
                       No badges found for this department.
                     </TableCell>
                   </TableRow>
@@ -106,15 +106,15 @@ export default async function BadgesPage({
                 {resolvedBadges.map((badge) => (
                   <TableRow
                     key={badge.id}
-                    className="border-b border-[var(--border-default)]/50 hover:bg-[var(--bg-tertiary)] transition-colors cursor-pointer group"
+                    className="border-b border-arch-border-default/50 hover:bg-arch-surface-tertiary transition-colors cursor-pointer group"
                   >
-                    <TableCell className="font-mono text-sm text-[var(--accent-blue)] group-hover:text-accent-blue transition-colors">
+                    <TableCell className="font-mono text-sm text-arch-accent-charcoal group-hover:text-accent-blue transition-colors">
                       {badge.qr_code}
                     </TableCell>
-                    <TableCell className="font-medium text-[var(--text-heading)]">
+                    <TableCell className="font-medium text-arch-text-primary">
                       {badge.entity_name}
                     </TableCell>
-                    <TableCell className="text-[var(--text-secondary)] capitalize">
+                    <TableCell className="text-arch-text-secondary capitalize">
                       {badge.entity_type}
                     </TableCell>
                     <TableCell className="text-right">
@@ -136,7 +136,7 @@ export default async function BadgesPage({
 
             {/* Pagination */}
             {totalCount > 0 && (
-              <div className="p-4 border-t border-[var(--border-default)]">
+              <div className="p-4 border-t border-arch-border-default">
                 <Pagination
                   currentPage={page}
                   totalPages={totalPages}
@@ -164,33 +164,31 @@ export default async function BadgesPage({
         <div className="lg:col-span-1">
           <GlassCard className="relative overflow-hidden group">
             {/* Background Glow */}
-            <div className="absolute top-0 right-0 -mr-8 -mt-8 w-32 h-32 rounded-full bg-[var(--accent-blue)]/10 blur-3xl" />
+            <div className="absolute top-0 right-0 -mr-8 -mt-8 w-32 h-32 rounded-full bg-arch-accent-charcoal/10 blur-3xl" />
 
             <div className="flex flex-col items-center justify-center p-6 text-center space-y-4">
-              <div className="w-12 h-12 rounded-full bg-[var(--accent-blue)]/10 flex items-center justify-center border border-[var(--accent-blue)]/20 mb-2">
-                <QrCode className="w-6 h-6 text-[var(--accent-blue)]" />
+              <div className="w-12 h-12 rounded-full bg-arch-accent-charcoal/10 flex items-center justify-center border border-arch-accent-charcoal/20 mb-2">
+                <QrCode className="w-6 h-6 text-arch-accent-charcoal" />
               </div>
 
-              <h3 className="text-lg font-semibold text-[var(--text-heading)]">
-                QR Preview Engine
-              </h3>
+              <h3 className="text-lg font-semibold text-arch-text-primary">QR Preview Engine</h3>
 
-              <p className="text-sm text-[var(--text-muted)]">
+              <p className="text-sm text-arch-text-muted">
                 Select a badge from the registry to securely display its scannable matrix code for
                 physical printing or mobile sync.
               </p>
 
               {/* Placeholder for actual QR code rendering */}
-              <div className="w-48 h-48 bg-[var(--bg-secondary)] rounded-xl p-2 flex items-center justify-center mt-4 shadow-card group-hover:shadow-[var(--accent-blue)]/10 transition-[box-shadow] duration-500">
-                <div className="w-full h-full border-2 border-dashed border-[var(--border-subtle)] rounded-lg flex items-center justify-center bg-[var(--bg-tertiary)]">
-                  <span className="text-xs text-[var(--text-muted)] font-medium">Select Badge</span>
+              <div className="w-48 h-48 bg-arch-surface-secondary rounded-xl p-2 flex items-center justify-center mt-4 shadow-card group-hover:shadow-arch-accent-charcoal/10 transition-[box-shadow] duration-500">
+                <div className="w-full h-full border-2 border-dashed border-arch-border-subtle rounded-lg flex items-center justify-center bg-arch-surface-tertiary">
+                  <span className="text-xs text-arch-text-muted font-medium">Select Badge</span>
                 </div>
               </div>
 
               <div className="w-full grid grid-cols-2 gap-3 mt-6">
                 <Button
                   variant="outline"
-                  className="w-full text-xs font-medium border border-[var(--border-default)]"
+                  className="w-full text-xs font-medium border border-arch-border-default"
                 >
                   Print Batch
                 </Button>
