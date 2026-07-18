@@ -9,30 +9,18 @@ description: >-
 
 # Verify (alias → quality / portal)
 
-This skill is a **thin alias** of `.qoder/skills/quality` in **portal** mode.
+Thin alias of `.qoder/skills/quality` in **portal** mode.
 
-## Steps
+## Workflow
 
-Follow **Quality Gate → Steps — portal** exactly:
+1. Run [`../quality/scripts/run-portal.sh`](../quality/scripts/run-portal.sh) — or this skill's wrapper:
+   ```bash
+   .qoder/skills/verify/scripts/run-portal.sh
+   ```
+2. Emit output per [`../quality/references/gold-contract.md`](../quality/references/gold-contract.md) with `Mode: portal`
 
-```bash
-pnpm --filter portal lint
-pnpm --filter portal type-check
-pnpm --filter portal test
-```
+For monorepo-wide gates, use `/quality` (full mode).
 
-## Gold Standard Contract
+## References
 
-Identical to `quality` portal mode:
-
-```
-Mode: portal
-Result: PASS | FAIL
-Evidence:
-- <command> → <exit / key line>
-Failures (if any):
-- <package/file>: <message> → <fix hint>
-Next owner: parent | sceptic | agent-alignment-score — <one line>
-```
-
-For monorepo-wide gates, use `/quality` (full mode) instead.
+- [`references/alias.md`](references/alias.md) — relationship to quality skill

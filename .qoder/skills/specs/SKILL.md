@@ -1,103 +1,39 @@
 ---
 name: specs
-description: Create and manage spec-driven workflow specifications
+description: >-
+  Create and manage spec-driven workflow under .kiro/specs/. Use for multi-file
+  features before implementation. Anti-trigger: do not skip phases for multi-file
+  work; do not replace quality or alignment-score; do not implement without
+  approved requirements/design.
 ---
 
-# Spec-Driven Workflow Management
+# Spec-Driven Workflow
 
-Create and manage specifications for the spec-driven workflow mandated by AGENTS.md.
+Mandatory for multi-file changes per `AGENTS.md`.
 
-## Create New Spec
+## Commands
 
-**Usage:**
-```
-/specs create <feature-name>
-```
+| Intent          | Script                                  |
+| --------------- | --------------------------------------- |
+| Create new spec | `scripts/create-spec.sh <feature-name>` |
+| List specs      | `scripts/list-specs.sh`                 |
+| Task status     | `scripts/spec-status.sh <feature-slug>` |
 
-**Steps:**
-1. Create feature slug from name (lowercase, hyphenated):
-   ```bash
-   feature_slug=$(echo "<feature-name>" | tr '[:upper:]' '[:lower:]' | tr ' ' '-' | tr -cd 'a-z0-9-' | sed 's/--*/-/g')
-   ```
+## Workflow
 
-2. Create spec directory:
-   ```bash
-   mkdir -p .kiro/specs/$feature_slug
-   ```
+1. **Create** — run create script; fill templates in order
+2. **Requirements** — get user approval before design
+3. **Design** — get user approval before tasks
+4. **Tasks** — execute in order; mark done only after quality passes
+5. **Quality** — use `quality` skill on completion
 
-3. Copy templates:
-   ```bash
-   cp .kiro/templates/requirements.md .kiro/specs/$feature_slug/
-   cp .kiro/templates/design.md .kiro/specs/$feature_slug/
-   cp .kiro/templates/tasks.md .kiro/specs/$feature_slug/
-   ```
+Full procedure: [`references/workflow.md`](references/workflow.md)
 
-4. Update file headers with feature name:
-   ```bash
-   sed -i "s/{feature-name}/<feature-name>/g" .kiro/specs/$feature_slug/*.md
-   sed -i "s/{feature-slug}/$feature_slug/g" .kiro/specs/$feature_slug/*.md
-   ```
+## Assets
 
-5. Provide instructions:
-   ```
-   Spec created at .kiro/specs/$feature_slug/
-   
-   Next steps:
-   1. Fill .kiro/specs/$feature_slug/requirements.md
-   2. Get user approval on requirements
-   3. Fill .kiro/specs/$feature_slug/design.md  
-   4. Get user approval on design
-   5. Fill .kiro/specs/$feature_slug/tasks.md
-   6. Execute tasks in order
-   ```
+Spec templates live in [`assets/templates/`](assets/templates/) (mirrors `.kiro/templates/`).
 
-## List Existing Specs
+## References
 
-**Usage:**
-```
-/specs list
-```
-
-**Steps:**
-```bash
-ls -la .kiro/specs/
-```
-
-**Output:**
-- List spec directories
-- Show last modified dates
-- Indicate completion status
-
-## Check Spec Status
-
-**Usage:**
-```
-/specs status <feature-slug>
-```
-
-**Steps:**
-1. Check if spec exists
-2. Check which phases are complete
-3. Report on tasks completion status
-4. Provide next steps
-
-## Quality Check
-
-**Usage:**
-```
-/specs quality <feature-slug>
-```
-
-**Steps:**
-1. Run `pnpm quality` on current state
-2. Report results
-3. If failures, suggest fixes
-4. Update tasks.md with completion status
-
-## Notes
-
-- Specs are REQUIRED for multi-file changes per AGENTS.md §1
-- Use `.kiro/templates/` for consistent formatting
-- Get user approval at each phase (requirements, design)
-- Execute tasks in order, marking complete only after `pnpm quality` passes
-- Reference existing spec: `.kiro/specs/portal-migration/`
+- [`references/workflow.md`](references/workflow.md) — phased workflow and quality check
+- [`references/commands.md`](references/commands.md) — slash-command mapping

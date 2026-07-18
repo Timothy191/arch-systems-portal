@@ -7,60 +7,34 @@ description: >-
   do not use portal mode to claim full monorepo quality; do not deploy.
 ---
 
-# Quality Gate (full | portal)
+# Quality Gate
 
-Single quality skill with two modes. Prefer **full** before claiming done on multi-package or production-facing work.
+Single quality skill with two modes. Prefer **full** before claiming done on multi-package work.
 
 ## Mode selection
 
-| Mode | When | Command |
-|---|---|---|
-| `full` (default) | Mark complete, pre-commit, multi-package, release | `pnpm quality` |
-| `portal` | Portal-only change; scoped check enough | `pnpm --filter portal lint` + `type-check` + `test` |
+| Mode             | When                               | Script                  |
+| ---------------- | ---------------------------------- | ----------------------- |
+| `full` (default) | Mark complete, pre-commit, release | `scripts/run-full.sh`   |
+| `portal`         | Portal-only change                 | `scripts/run-portal.sh` |
 
-`/verify` is an **alias** of this skill in `portal` mode — same steps, same output contract.
+`/verify` is an alias of this skill in **portal** mode.
 
-## Steps — full
+## Workflow
 
-1. Run:
-   ```bash
-   pnpm quality
-   ```
-   (`turbo run lint type-check test --concurrency=4 && pnpm format:check`)
+1. Pick mode — see [`references/modes.md`](references/modes.md)
+2. Run the matching script from repo root
+3. On format failure (full mode): `pnpm format`, then re-run
+4. Emit output per [`references/gold-contract.md`](references/gold-contract.md)
 
-2. On failure, report package, error, suggested fix.
+## Scripts
 
-3. If format fails:
-   ```bash
-   pnpm format
-   ```
-   Re-run `pnpm quality`.
-
-## Steps — portal
-
-1. ```bash
-   pnpm --filter portal lint
-   pnpm --filter portal type-check
-   pnpm --filter portal test
-   ```
-2. Report pass/fail with paths. Never claim this equals full `pnpm quality`.
-
-## Gold Standard Contract
-
-**Required output:**
-
-```
-Mode: full | portal
-Result: PASS | FAIL
-Evidence:
-- <command> → <exit / key line>
-Failures (if any):
-- <package/file>: <message> → <fix hint>
-Next owner: parent | sceptic | agent-alignment-score — <one line>
+```bash
+.qoder/skills/quality/scripts/run-full.sh
+.qoder/skills/quality/scripts/run-portal.sh
 ```
 
-**Evidence rule:** Cite real command output. No "should pass".
+## References
 
-**Fluff ban:** No narrative beyond the template.
-
-**Notes:** ESLint `--max-warnings 0`; tsc `noEmit`; Jest `--passWithNoTests`; Prettier on `**/*.{ts,tsx,md,json}`.
+- [`references/modes.md`](references/modes.md) — full vs portal commands
+- [`references/gold-contract.md`](references/gold-contract.md) — required output template

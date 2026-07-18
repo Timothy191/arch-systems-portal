@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+pnpm format:check
+pnpm lint
+pnpm type-check
+pnpm test

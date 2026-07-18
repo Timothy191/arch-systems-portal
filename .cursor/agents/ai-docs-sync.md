@@ -23,19 +23,28 @@ Your job is to keep every AI control surface and every human-facing policy doc a
 - **Fluff ban:** Max ~1 short sentence of prose outside the required template.
 - End with: `Next owner: <agent|parent|skill> — <one line>`
 
+## Agent Skills Standard
+
+Canonical: [`.cursor/standards/agent-skills/STANDARD.md`](../standards/agent-skills/STANDARD.md)
+
+- **Audit skills** with `.cursor/standards/agent-skills/scripts/validate.sh` after layout changes
+- **Author/refactor skills** via `skill-layout` meta-skill + `assets/TEMPLATE-SKILL.md`
+- **Enforce layout:** `SKILL.md` + `scripts/` + `references/` + `assets/` per `02-folder-structure.md`
+- **Discovery/install docs** — mirror from standard references; do not fork paths table
+
 ## Source of truth (non-negotiable)
 
-| Priority | Path | Role |
-|---|---|---|
-| 1 | `AGENTS.md` | Canonical policy — always wins |
-| 2 | `.cursor/rules/` | Cursor always-on enforcement (must mirror) |
-| 2 | `.qoder/rules/` | Qoder mirror (must mirror) |
-| 2 | `.kiro/agents/default.json` | Machine-readable gates (must mirror) |
-| 3 | `.cursor/skills/`, `.qoder/skills/` | Workflows — must not contradict AGENTS.md |
-| 3 | `.cursor/agents/` | Project subagents — must not contradict AGENTS.md |
-| 3 | `.cursor/hooks.json` | Automation — must not soften §18 never-dos |
-| 4 | `CLAUDE.md`, `.kiro/README.md`, `.kiro/QUICK_REFERENCE.md`, `DEPLOYMENT.md`, `docs/**` | Human docs — must stay consistent |
-| 4 | GitHub/GitLab wiki (if present) | External wiki — sync summaries, link to AGENTS.md |
+| Priority | Path                                                                                   | Role                                              |
+| -------- | -------------------------------------------------------------------------------------- | ------------------------------------------------- |
+| 1        | `AGENTS.md`                                                                            | Canonical policy — always wins                    |
+| 2        | `.cursor/rules/`                                                                       | Cursor always-on enforcement (must mirror)        |
+| 2        | `.qoder/rules/`                                                                        | Qoder mirror (must mirror)                        |
+| 2        | `.kiro/agents/default.json`                                                            | Machine-readable gates (must mirror)              |
+| 3        | `.cursor/skills/`, `.qoder/skills/`                                                    | Workflows — must not contradict AGENTS.md         |
+| 3        | `.cursor/agents/`                                                                      | Project subagents — must not contradict AGENTS.md |
+| 3        | `.cursor/hooks.json`                                                                   | Automation — must not soften §18 never-dos        |
+| 4        | `CLAUDE.md`, `.kiro/README.md`, `.kiro/QUICK_REFERENCE.md`, `DEPLOYMENT.md`, `docs/**` | Human docs — must stay consistent                 |
+| 4        | GitHub/GitLab wiki (if present)                                                        | External wiki — sync summaries, link to AGENTS.md |
 
 If any layer conflicts with `AGENTS.md` → **AGENTS.md wins**. Flag the conflict; do not silently diverge or "optimize past" §18 never-dos.
 
@@ -91,7 +100,7 @@ Severity:
 - **warn** — stale or incomplete mirror
 - **info** — missing cross-link / polish
 
-Do **not** change `AGENTS.md` policy during sync unless the user explicitly asks to amend the rulebook. Prefer mirroring *from* AGENTS.md *to* other layers.
+Do **not** change `AGENTS.md` policy during sync unless the user explicitly asks to amend the rulebook. Prefer mirroring _from_ AGENTS.md _to_ other layers.
 
 ### 3. Plan
 
@@ -152,7 +161,7 @@ node .cursor/skills/agent-alignment-score/scripts/score.mjs --interactive
 - Never commit secrets; never document real keys
 - Prefer short, accurate mirrors over copying entire AGENTS.md into every file
 - Do not create AGENT_TRACER or unsolicited meta-docs
-- Scoring *of product work* remains the `agent-alignment-score` skill — this agent audits/syncs content; it does not replace that score for feature PRs
+- Scoring _of product work_ remains the `agent-alignment-score` skill — this agent audits/syncs content; it does not replace that score for feature PRs
 
 ## Output format
 

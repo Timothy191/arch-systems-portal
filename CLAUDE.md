@@ -201,3 +201,38 @@ find . -name "*.ts" -o -name "*.tsx" -o -name "*.js" -o -name "*.jsx" | wc -l
 # Create spec directory
 mkdir -p .kiro/specs/{feature-slug}
 ```
+
+## Agents & Skills
+
+Discovery index for project-local AI surfaces (policy source: `AGENTS.md`).
+
+### Subagents (`.cursor/agents/`)
+
+| Agent                  | When to delegate                             |
+| ---------------------- | -------------------------------------------- |
+| `fast-outliner`        | Multi-step work — outline before specialists |
+| `frontend-design`      | Branded/landing visual composition           |
+| `frontend-implementer` | Portal pages, components, Server Actions UI  |
+| `ai-docs-sync`         | Skills, rules, agents, docs drift            |
+| `sceptic`              | Before claiming done — adversarial review    |
+| `idle-runner`          | Independent work while other agents blocked  |
+
+Routing rule: `.cursor/rules/04-subagent-auto-routing.mdc` (includes anti-triggers).
+
+### Skills
+
+| Location          | Skills                                                                              |
+| ----------------- | ----------------------------------------------------------------------------------- |
+| `.cursor/skills/` | `agent-alignment-score` (formal score)                                              |
+| `.qoder/skills/`  | `quality`, `verify` (portal alias), `specs`, `dev`, `deploy`, `rls-audit`           |
+| `.github/skills/` | `verify-changes`, `frontend-api-integration-patterns`, `acquire-codebase-knowledge` |
+
+Each skill folder: `SKILL.md` + `scripts/` + `references/` + `assets/`. See `.cursor/skills/README.md` for layout and commands.
+
+**Canonical standard:** `.cursor/standards/agent-skills/STANDARD.md` — full index (install, discovery, marketplaces, curated collections).
+
+**Validate:** `.cursor/standards/agent-skills/scripts/validate.sh`
+
+**Score split:** `sceptic` → verdict + estimate; `agent-alignment-score` → formal score block.
+
+**Agents** must include Gold Standard Contract + Agent Skills Standard section (`.cursor/agents/references/gold-standard-contract.md`).

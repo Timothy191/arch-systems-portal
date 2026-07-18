@@ -1,15 +1,27 @@
 ---
 name: verify-changes
-description: Runs project-wide formatting, lint check, typechecking, and tests to verify code stability.
+description: >-
+  Run project-wide format, lint, type-check, and tests. Use before PR or when
+  validating a broad change set. Anti-trigger: do not replace agent-alignment-score;
+  for portal-only scoped checks use quality skill portal mode.
 ---
 
 # Verifying Changes
 
-Follow these steps to run a full check on current changes:
+Full monorepo stability check (format → lint → type-check → test).
 
-1. **Format Check**: Run `pnpm format:check`.
-2. **Lint Check**: Run `pnpm lint`.
-3. **Type-Check**: Run `pnpm type-check`.
-4. **Unit Tests**: Run `pnpm test`.
+## Workflow
 
-If any of the above checks fail, stop and notify the user about the details of the failure.
+1. Run `scripts/verify.sh` from repo root
+2. On any failure: stop, report package/file and error
+3. Do not claim done without pass evidence
+
+## Scripts
+
+```bash
+.github/skills/verify-changes/scripts/verify.sh
+```
+
+## References
+
+- [`references/steps.md`](references/steps.md) — command sequence and failure handling

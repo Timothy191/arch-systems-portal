@@ -1,55 +1,36 @@
 ---
 name: deploy
-description: Deploy the portal to the target environment
+description: >-
+  Deploy the portal to dev or local environment. User-invoked only.
+  Anti-trigger: do not auto-invoke; do not skip pre-deploy checklist; do not
+  replace quality skill or RLS audit for migration changes.
 disable-model-invocation: true
 ---
 
 # Deploy Portal
 
-Deploy the portal application to the specified environment.
+**User-invoked only.** Wait for explicit `/deploy <environment>`.
 
 ## Usage
 
 ```
-/deploy <environment>
+/deploy dev    # Docker standalone build
+/deploy local  # Same as pnpm dev
 ```
 
-Where `<environment>` is one of:
-- `dev` — Development environment (Docker standalone mode)
-- `local` — Local development (same as `pnpm dev`)
+## Workflow
 
-## Steps
+1. Run pre-deploy checklist — [`references/checklist.md`](references/checklist.md)
+2. Deploy via script for target environment
+3. Report result with evidence (container status, URL, logs)
 
-### For `dev` environment:
+## Scripts
 
-1. Run the dev-mode deployment script:
-   ```bash
-   bash deploy-dev-mode.sh
-   ```
+| Environment | Script                    |
+| ----------- | ------------------------- |
+| `dev`       | `scripts/deploy-dev.sh`   |
+| `local`     | `scripts/deploy-local.sh` |
 
-2. This script:
-   - Builds the portal with `output: "standalone"`
-   - Creates a Docker image
-   - Runs the container with environment variables from `.env`
+## References
 
-### For `local` environment:
-
-1. Start the local dev server:
-   ```bash
-   pnpm dev
-   ```
-
-## Pre-Deploy Checklist
-
-Before deploying, ensure:
-- [ ] `pnpm quality` passes (lint + type-check + test + format)
-- [ ] No uncommitted changes (`git status` is clean)
-- [ ] Environment variables are set in `.env` (not `.env.local`)
-- [ ] Docker is running (`docker info` succeeds)
-
-## Notes
-
-- This skill is user-invoked only (`disable-model-invocation: true`).
-- The AI should not auto-invoke deployment — always wait for explicit user command.
-- For CI/CD deployments, refer to the deployment pipeline configuration.
-- Secrets are injected as environment variables at runtime, never baked into the image.
+- [`references/checklist.md`](references/checklist.md) — gates before deploy

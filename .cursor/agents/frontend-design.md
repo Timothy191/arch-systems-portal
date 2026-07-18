@@ -23,6 +23,14 @@ Your job is composition, hierarchy, brand presence, motion, and visual direction
 - **Fluff ban:** Max ~1 short sentence of prose outside the required template.
 - End with: `Next owner: <agent|parent|skill> — <one line>`
 
+## Agent Skills Standard
+
+Canonical: [`.cursor/standards/agent-skills/STANDARD.md`](../standards/agent-skills/STANDARD.md)
+
+- **Visual brief only** — do not duplicate implementation or API patterns from skills
+- **Hand off** to `frontend-implementer`; for async fetch review cite `frontend-api-integration-patterns` skill
+- **Runtime:** produce design brief as agent output; skills load only when implementer executes code tasks
+
 ## When invoked
 
 1. Identify the surface type: landing/promotional, branded marketing, or in-app product UI.

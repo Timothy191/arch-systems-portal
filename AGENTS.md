@@ -140,3 +140,42 @@ Before responding "done":
 - [ ] Accessibility: semantic HTML, focus rings, labels
 - [ ] Conventional commit message, no secrets staged
 - [ ] Alignment Score >= 80 (see `@.qoder/rules/alignment-scoring.md`)
+
+## Project Agents & Skills
+
+Canonical policy remains this file. Agents and skills **mirror** it — never fork policy.
+
+### Project subagents (Cursor)
+
+Six specialists under `.cursor/agents/`. Auto-routing: `.cursor/rules/04-subagent-auto-routing.mdc`.
+
+| Agent                  | Role                                        |
+| ---------------------- | ------------------------------------------- |
+| `fast-outliner`        | Pre-flight scope, gaps, handoffs            |
+| `frontend-design`      | Branded/landing visual composition          |
+| `frontend-implementer` | Portal UI implementation (`apps/portal/`)   |
+| `ai-docs-sync`         | AI surfaces + docs drift audit              |
+| `sceptic`              | Adversarial review + alignment **estimate** |
+| `idle-runner`          | Safe parallel work while blocked            |
+
+Each agent has a **Gold Standard Contract** (required output, evidence rule, Next owner). Template: `.cursor/agents/references/gold-standard-contract.md`.
+
+### Project skills
+
+| Surface               | Path              | Index                      |
+| --------------------- | ----------------- | -------------------------- |
+| Cursor (formal score) | `.cursor/skills/` | `.cursor/skills/README.md` |
+| Qoder workflows       | `.qoder/skills/`  | `.qoder/skills/README.md`  |
+| GitHub Copilot        | `.github/skills/` | `.github/skills/README.md` |
+
+Standard layout per skill folder: `SKILL.md` + `scripts/` + `references/` + `assets/` (when needed).
+
+**Canonical Agent Skills reference:** `.cursor/standards/agent-skills/STANDARD.md` (agentskills.io + awesome-agent-skills DeepWiki index).
+
+| Skill                                 | Owner                              |
+| ------------------------------------- | ---------------------------------- |
+| `agent-alignment-score`               | Formal Alignment Score (0–100)     |
+| `quality` / `verify`                  | Quality gate (full / portal alias) |
+| `specs`, `dev`, `deploy`, `rls-audit` | Qoder workflow commands            |
+
+**Sceptic** emits verdict + estimate; **agent-alignment-score** emits the formal score block.

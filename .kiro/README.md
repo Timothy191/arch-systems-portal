@@ -25,12 +25,14 @@ This directory contains agent configurations and templates for the spec-driven w
 Every non-trivial task (touching more than one file) must follow this three-phase cycle:
 
 ### Phase 1: Requirements (`requirements.md`)
+
 1. Restate user request
 2. List concrete, testable acceptance criteria
 3. Identify ambiguities
 4. Define scope boundaries
 
 ### Phase 2: Design (`design.md`)
+
 1. Describe architecture and data flow
 2. Map server vs client boundaries
 3. List files to create/modify
@@ -38,6 +40,7 @@ Every non-trivial task (touching more than one file) must follow this three-phas
 5. Get user sign-off before implementation
 
 ### Phase 3: Tasks (`tasks.md`)
+
 1. Break design into smallest testable units
 2. Order tasks with dependencies
 3. Mark complete only after `pnpm quality` passes
@@ -59,15 +62,29 @@ Every non-trivial task (touching more than one file) must follow this three-phas
 ## Agent Configuration
 
 The `default.json` agent configuration enforces:
+
 - Spec-driven workflow for multi-file changes
 - AGENTS.md rule compliance
 - Technology stack adherence
 - Monorepo layout constraints
 - Quality gates before/after tasks
 
+## Project agents & skills (Cursor)
+
+| Surface       | Path                                         |
+| ------------- | -------------------------------------------- |
+| Subagents     | `.cursor/agents/` (6 specialists)            |
+| Auto-routing  | `.cursor/rules/04-subagent-auto-routing.mdc` |
+| Cursor skills | `.cursor/skills/`                            |
+| Qoder skills  | `.qoder/skills/`                             |
+| GitHub skills | `.github/skills/`                            |
+
+See `AGENTS.md` § Project Agents & Skills and `CLAUDE.md` § Agents & Skills.
+
 ## Quality Gates
 
 Before marking any task complete:
+
 1. `pnpm quality` must pass (lint + type-check + test + format)
 2. No TypeScript `any` types introduced
 3. No secrets committed or exposed

@@ -23,103 +23,29 @@ Visual composition for branded/landing surfaces belongs to `frontend-design` —
 - **Fluff ban:** Max ~1 short sentence of prose outside the required template.
 - End with: `Next owner: <agent|parent|skill> — <one line>`
 
+## Agent Skills Standard
+
+Canonical: [`.cursor/standards/agent-skills/STANDARD.md`](../standards/agent-skills/STANDARD.md)
+
+- **Before async UI work** — load `.github/skills/frontend-api-integration-patterns/` (`references/` on demand)
+- **Verify** — portal scope: `.qoder/skills/verify/scripts/run-portal.sh`; full: `quality/scripts/run-full.sh`
+- **Runtime:** match task → read skill `SKILL.md` → run `scripts/` → never duplicate patterns in agent body
+
 ## When invoked
 
 1. Confirm scope stays in `apps/portal/` (never modify `apps(legacy)/`).
 2. Map server vs client boundaries before coding.
-3. Prefer Server Components; add `"use client"` only when required (hooks, browser APIs, interactivity).
+3. Prefer Server Components; add `"use client"` only when required.
 4. Implement with existing stack — no new dependencies without design-phase approval.
-5. Verify with targeted checks (`pnpm --filter portal` lint/type-check/tests as appropriate).
+5. Verify with targeted checks (`pnpm --filter portal` lint/type-check/tests).
 
-## Stack
+## Stack & conventions
 
-Canonical stack: `AGENTS.md` §3–4. Local never-dos below remain binding.
+Canonical stack and never-dos: **`AGENTS.md` §3–4, §18** (binding).
 
-## Server vs client (never violate)
+Portal naming, layout, styling, and a11y details: **[`references/frontend-implementer-conventions.md`](references/frontend-implementer-conventions.md)**
 
-- Default Server Components. No `"use client"` on layout files.
-- Never import `@repo/supabase/server` or `@repo/redis` from Client Components.
-- Never expose `SUPABASE_SERVICE_ROLE_KEY` or non-`NEXT_PUBLIC_` secrets to the client.
-- `"use client"` components are leaf nodes or thin wrappers — keep them small.
-- Never `fetch("/api/...")` from Server Components — call data functions directly.
-- Server Actions: `"use server"`, Zod validate, return `{ data } | { error }`, `revalidatePath`/`revalidateTag` after mutations. Never throw to the client.
-
-## File & naming conventions
-
-```
-apps/portal/src/
-  app/           # routes, layouts, route handlers
-  components/    # portal-specific UI
-  features/      # feature modules
-```
-
-Feature pattern:
-
-```
-features/<feature>/
-  <Feature>Page.tsx      # Server Component page composition
-  <Feature>Form.tsx      # "use client"
-  <Feature>Table.tsx     # "use client"
-  _actions/              # Server Actions
-  _data/                 # server data fetchers
-```
-
-Naming:
-
-- Pages: `<FeatureName>Page` (default export)
-- Interactive: `<FeatureName>Form|Modal|Table`
-- Data: `get|list|find<Resource>`
-- Mutations: `create|update|delete<Resource>Action`
-- Always define `interface <Component>Props` — no inline prop object types on signatures
-- Every `page.tsx` exports `metadata` (`title` + `description` minimum)
-- Add `loading.tsx` beside async pages; `error.tsx` (`"use client"`) for failing segments
-
-## Styling
-
-- Tailwind utilities only — no inline `style={{}}` except truly dynamic values
-- Use `@repo/theme` tokens; do not invent ad-hoc design tokens
-- In-app default: light-only macOS glass (`@repo/theme`, DECISIONS #003 / #010). Login is SSOT: `apps/portal/src/app/(auth)/login/page.tsx` + `LoginForm` — shell `--os-shell-*`, control paints `--login-*` (`.login-field` / `.login-cta` / `.login-oauth` / `.login-notice`); do not hard-code login rgba
-- Always keep `focus-visible:ring` on interactive elements
-- Group classes: layout → spacing → colour → typography → state
-- Use `cn()` from `@repo/utils` for conditional classes
-
-## Accessibility (required)
-
-- Keyboard navigable; visible focus rings
-- Semantic HTML (`button`, `nav`, `main`, `header`, `form`, `label`) — no `<div onClick>`
-- Meaningful `alt` on images; decorative `alt=""`
-- Prefer native semantics over ARIA
-- WCAG 2.1 AA contrast (4.5:1 text, 3:1 UI)
-- Forms: associated `<label>` via `htmlFor` or wrapping — no placeholder-only labels
-
-## Performance
-
-- `next/image` for all images; `next/font` for fonts
-- Lazy-load heavy client UI with `next/dynamic` when off critical path
-- Named lucide imports only
-- Targets: LCP < 2.5s, CLS < 0.1, INP < 200ms
-- Prefer CSS transitions for layout; Framer Motion sparingly
-
-## React patterns
-
-- Prefer modern patterns already used by the team (`useEffectEvent`, `startTransition`, `useDeferredValue` when appropriate)
-- Do not add `useMemo`/`useCallback` by default; follow React Compiler guidance in-repo
-- Fetch initial data in Server Components — no `useEffect` for initial load
-
-## Multi-file work
-
-If the change touches more than one file, follow AGENTS.md spec phases under `.kiro/specs/<feature-slug>/` (requirements → design → tasks) before large implementation.
-
-## Never-dos (hard fail)
-
-- `npm` / `yarn` — use `pnpm`
-- `"use client"` on layouts
-- Fetching own API from Server Components
-- Service-role leakage to client
-- Skipping Zod on user input
-- New icon/toast libraries
-- Editing `apps(legacy)/`
-- Hard-coded URLs, ports, or env-specific values
+Multi-file work → `.kiro/specs/<slug>/` phases before large implementation.
 
 ## Output format
 

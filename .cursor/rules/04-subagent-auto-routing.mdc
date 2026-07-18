@@ -9,31 +9,36 @@ Project subagents live in `.cursor/agents/`. When a user task matches a row belo
 
 ## Routing table
 
-| User task signals | Auto-use agent | Timing |
-|---|---|---|
-| Non-trivial multi-step work, map critical aspects/gaps/handoffs, pre-flight outline, "outline first", scout scope before specialists | `fast-outliner` | **Before** other project agents / implementation |
-| Landing/branded/marketing UI, hero, first viewport, visual composition, "looks AI", brand hierarchy | `frontend-design` | **Before** implementing UI |
-| Portal pages/components/forms, App Router, Server Actions UI, Tailwind in `apps/portal`, a11y wiring | `frontend-implementer` | **When** building or changing portal UI |
-| Skills, rules, agents, hooks, AGENTS drift, CLAUDE.md, wiki, docs sync, "update documentation" | `ai-docs-sync` | **When** auditing or changing AI/docs surfaces |
-| Review, reality-check, "is this done", verify fix, PR/diff critique, alignment score challenge, production readiness, sceptic/skeptic | `sceptic` | **After** non-trivial changes and **before** claiming done |
-| Independent side work while blocked/waiting, parallel idle tasks, fill wait time without blocking the critical path | `idle-runner` | **While** other agents are waiting or blocked |
+| User task signals | Auto-use agent | Timing | Anti-triggers (do not use for) |
+|---|---|---|---|
+| Non-trivial multi-step work, map critical aspects/gaps/handoffs, pre-flight outline, "outline first", scout scope before specialists | `fast-outliner` | **Before** other agents | Implementation, visual design, docs sync, idle fill, adversarial review |
+| Landing/branded/marketing UI, hero, first viewport, visual composition, "looks AI", brand hierarchy | `frontend-design` | **Before** implementing UI | App Router plumbing, CRUD without branded need, docs sync, outlining, sceptic review |
+| Portal pages/components/forms, App Router, Server Actions UI, Tailwind in `apps/portal`, a11y wiring | `frontend-implementer` | **When** building/changing portal UI | Branded first-viewport composition, docs sync, outlining, idle work, sceptic |
+| Skills, rules, agents, hooks, AGENTS drift, CLAUDE.md, wiki, docs sync | `ai-docs-sync` | **When** auditing/changing AI/docs surfaces | Product UI, visual design, formal alignment score, adversarial code review |
+| Review, reality-check, "is this done", verify fix, PR/diff critique, production readiness, sceptic/skeptic | `sceptic` | **After** non-trivial changes, **before** claiming done | Formal score emission, UI implementation, docs sync, outlining |
+| Independent side work while blocked/waiting, parallel idle tasks, fill wait time | `idle-runner` | **While** other agents wait/blocked | Critical path files, main feature implementation, marking done, quality/score |
 
 ## Rules
 
 1. **Match → delegate.** Prefer the specialist; parent synthesizes results.
 2. **Multiple matches → parallel.** e.g. large task = `fast-outliner` first, then specialists; branded page = `frontend-design` then `frontend-implementer`; after code = `sceptic`; while blocked = `idle-runner` on independent work.
 3. **Always run `sceptic`** before saying done on multi-file or production-facing work (unless user explicitly skips review).
-4. **Descriptions win.** Each agent's `description` frontmatter is the trigger source of truth — keep "MUST auto-delegate" / "use proactively" language intact when editing agents.
-5. **Do not invent agents.** Only route to files that exist under `.cursor/agents/`.
-6. **User override.** If the user names an agent, use that agent even if another also matches.
+4. **Formal Alignment Score** → `agent-alignment-score` skill after sceptic (or when scoring requested).
+5. **Descriptions win.** Each agent's `description` frontmatter is the trigger source of truth.
+6. **Do not invent agents.** Only route to files under `.cursor/agents/`.
+7. **User override.** If the user names an agent, use that agent even if another also matches.
 
 ## Inventory (keep in sync)
 
-- `.cursor/agents/fast-outliner.md`
-- `.cursor/agents/frontend-design.md`
-- `.cursor/agents/frontend-implementer.md`
-- `.cursor/agents/ai-docs-sync.md`
-- `.cursor/agents/sceptic.md`
-- `.cursor/agents/idle-runner.md`
+| Agent | Path |
+|---|---|
+| fast-outliner | `.cursor/agents/fast-outliner.md` |
+| frontend-design | `.cursor/agents/frontend-design.md` |
+| frontend-implementer | `.cursor/agents/frontend-implementer.md` |
+| ai-docs-sync | `.cursor/agents/ai-docs-sync.md` |
+| sceptic | `.cursor/agents/sceptic.md` |
+| idle-runner | `.cursor/agents/idle-runner.md` |
+
+Shared contract template: `.cursor/agents/references/gold-standard-contract.md`
 
 When adding a new project agent, update this table in the same change.

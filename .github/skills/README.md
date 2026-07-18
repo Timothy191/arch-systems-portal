@@ -1,11 +1,28 @@
 # GitHub Agent Skills (`.github/skills/`)
 
-This directory contains definitions for specialized skills that AI agents can utilize when performing actions in this repository.
+Skills for GitHub Copilot and VS Code agent customization ([Agent Skills standard](https://agentskills.io/home)).
 
-## Structure
+## Layout
 
-Each subfolder here represents a specific skill containing:
+Each skill folder contains:
 
-- `SKILL.md`: Markdown file with YAML frontmatter specifying `name` and `description`, followed by step-by-step instructions.
-- `scripts/`: Optional helper scripts invoked by the skill.
-- `resources/`: Optional templates or static files needed for executing the skill.
+- `SKILL.md` — YAML frontmatter (`name`, `description`) + workflow entry
+- `scripts/` — helper scripts (optional)
+- `references/` — detailed documentation (optional)
+- `assets/` — templates and static resources (optional)
+
+Scaffold new skills from [`TEMPLATE.md`](TEMPLATE.md).
+
+## Skills in this repo
+
+| Skill                                                                                       | Purpose                                      |
+| ------------------------------------------------------------------------------------------- | -------------------------------------------- |
+| [verify-changes](verify-changes/)                                                           | Format → lint → type-check → test            |
+| [frontend-api-integration-patterns](frontend-api-integration-patterns/)                     | Async fetch, cancellation, retry patterns    |
+| [awesome-copilot--acquire-codebase-knowledge](awesome-copilot--acquire-codebase-knowledge/) | Codebase onboarding docs in `docs/codebase/` |
+
+## Related
+
+- Cursor score skill: `.cursor/skills/agent-alignment-score/`
+- Qoder workflows: `.qoder/skills/README.md`
+- Canonical policy: `AGENTS.md`
