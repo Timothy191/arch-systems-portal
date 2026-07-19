@@ -11,13 +11,12 @@ describe("AiBridgeService", () => {
       try {
         const res = await fetcher(new AbortController().signal);
         return { status: "success", result: res };
-      } catch (err) {
+      } catch {
         return {
           status: "fallback",
           result: {
             status: "fallback",
-            result:
-              "The AI subsystem is currently unreachable. Operational systems remain active.",
+            result: "The AI subsystem is currently unreachable. Operational systems remain active.",
           },
         };
       }
@@ -91,7 +90,7 @@ describe("AiBridgeService", () => {
           task: "analyze_data",
           context: { department: "ops" },
         }),
-      }),
+      })
     );
     expect(result).toEqual({ status: "success", result: "Analysis complete" });
     await module.close();
@@ -119,7 +118,7 @@ describe("AiBridgeService", () => {
 
     expect(global.fetch).toHaveBeenCalledWith(
       "http://ai-gateway:3000/api/ai/invoke",
-      expect.any(Object),
+      expect.any(Object)
     );
     await module.close();
   });
@@ -146,7 +145,7 @@ describe("AiBridgeService", () => {
 
     expect(global.fetch).toHaveBeenCalledWith(
       "http://custom-gateway:8080/api/ai/invoke",
-      expect.any(Object),
+      expect.any(Object)
     );
     await module.close();
   });
@@ -226,7 +225,7 @@ describe("AiBridgeService", () => {
           task: "simple_task",
           context: {},
         }),
-      }),
+      })
     );
     await module.close();
   });

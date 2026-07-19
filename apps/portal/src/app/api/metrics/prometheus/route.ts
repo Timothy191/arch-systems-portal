@@ -51,7 +51,12 @@ export async function GET(req: NextRequest) {
     }
 
     const metrics = await getMetrics();
-    return new NextResponse(metrics, {
+    const metricsText = JSON.stringify(
+      metrics,
+      (_key, value) => (value instanceof Map ? Object.fromEntries(value) : value),
+      2
+    );
+    return new NextResponse(metricsText, {
       status: 200,
       headers: {
         "Content-Type": "text/plain",

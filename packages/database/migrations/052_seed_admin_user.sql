@@ -58,6 +58,37 @@ BEGIN
     WHERE id = admin_uid;
   END IF;
 
+  -- AGENT-TRACE: GoTrue requires auth.identities for email/password login.
+  -- Without this row, /token returns invalid_credentials even with a valid hash.
+  IF NOT EXISTS (
+    SELECT 1 FROM auth.identities
+    WHERE user_id = admin_uid AND provider = 'email'
+  ) THEN
+    INSERT INTO auth.identities (
+      id,
+      user_id,
+      identity_data,
+      provider,
+      provider_id,
+      last_sign_in_at,
+      created_at,
+      updated_at
+    ) VALUES (
+      admin_uid,
+      admin_uid,
+      jsonb_build_object(
+        'sub', admin_uid::text,
+        'email', 'timothyoniel558@gmail.com',
+        'email_verified', true
+      ),
+      'email',
+      admin_uid::text,
+      now(),
+      now(),
+      now()
+    );
+  END IF;
+
   -- 2. Ensure they exist in public.employees with full admin rights
   SELECT array_agg(id) INTO dept_ids FROM departments;
 

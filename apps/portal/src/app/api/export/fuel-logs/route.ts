@@ -157,55 +157,42 @@ async function handleExportRequest(req: NextRequest): Promise<NextResponse> {
     return applyCors(req, NextResponse.json({ error: "Database query failed" }, { status: 500 }));
   }
 
+  // Flatten fuel logs from daily_logs into rows for CSV export
+  interface FuelLogEntry {
+    id: string;
+    diesel_litres: number | null;
+    machine_id: string;
+    machines: { name: string | null; machine_type: string | null } | null;
+  }
+
   const rows: Array<Record<string, string>> = [];
-  (data ?? []).forEach(
-    (log: {
-      log_date: string;
-      shift: string;
-      department_id: string;
-      fuel_logs:
-        | Array<{
-            id: string;
-            diesel_litres: number | null;
-            machine_id: string;
-            machines: { name: string | null; machine_type: string | null } | null;
-          }>
-        | {
-            id: string;
-            diesel_litres: number | null;
-            machine_id: string;
-            machines: { name: string | null; machine_type: string | null } | null;
-          }
-        | null;
-    }) => {
-      const fLogs = Array.isArray(log.fuel_logs)
-        ? log.fuel_logs
-        : log.fuel_logs
-          ? [log.fuel_logs]
-          : [];
-      fLogs.forEach(
-        (fl: {
-          id: string;
-          diesel_litres: number | null;
-          machine_id: string;
-          machines: { name: string | null; machine_type: string | null } | null;
-        }) => {
-          const machineName = fl.machines?.name ?? "Unknown";
-          const machineType = fl.machines?.machine_type ?? "Unknown";
-          rows.push({
-            id: fl.id,
-            log_date: log.log_date,
-            shift: log.shift,
-            department_id: log.department_id,
-            machine_id: fl.machine_id,
-            machine_name: machineName,
-            machine_type: machineType,
-            diesel_litres: Number(fl.diesel_litres ?? 0).toFixed(2),
-          });
-        }
-      );
+  const logs = (data ?? []) as unknown as Array<{
+    log_date: string;
+    shift: string;
+    department_id: string;
+    fuel_logs: FuelLogEntry | FuelLogEntry[] | null;
+  }>;
+  for (const log of logs) {
+    const fLogs: FuelLogEntry[] = Array.isArray(log.fuel_logs)
+      ? (log.fuel_logs as FuelLogEntry[])
+      : log.fuel_logs
+        ? [log.fuel_logs as FuelLogEntry]
+        : [];
+    for (const fl of fLogs) {
+      const machineName = fl.machines?.name ?? "Unknown";
+      const machineType = fl.machines?.machine_type ?? "Unknown";
+      rows.push({
+        id: fl.id,
+        log_date: log.log_date,
+        shift: log.shift,
+        department_id: log.department_id,
+        machine_id: fl.machine_id,
+        machine_name: machineName,
+        machine_type: machineType,
+        diesel_litres: Number(fl.diesel_litres ?? 0).toFixed(2),
+      });
     }
-  );
+  }
 
   if (format === "csv") {
     const headers = [

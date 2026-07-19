@@ -17,6 +17,7 @@ skill-name/
 | Skill                                           | Purpose                                    | Key script                 |
 | ----------------------------------------------- | ------------------------------------------ | -------------------------- |
 | [agent-alignment-score](agent-alignment-score/) | Formal Alignment Score (0–100)             | `scripts/score.mjs`        |
+| [skill-self-improve](skill-self-improve/)       | Hermes observe→distill→patch skills        | `scripts/skill-manage.sh`  |
 | [ai-system](ai-system/)                         | Unified `pnpm ai` command                  | `scripts/ai.sh`            |
 | [skill-layout](skill-layout/)                   | Meta-skill for creating/refactoring skills | `assets/TEMPLATE-SKILL.md` |
 | [agent-layout](agent-layout/)                   | Meta-skill for hybrid agent layout         | `scripts/validate.sh`      |

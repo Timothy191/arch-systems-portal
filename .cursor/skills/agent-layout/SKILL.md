@@ -42,7 +42,8 @@ Subagents **must** be flat `.cursor/agents/<name>.md` — Cursor does not load n
 ## Authoring
 
 - Template: [`assets/TEMPLATE-AGENT.md`](assets/TEMPLATE-AGENT.md)
-- Checklist: [`references/checklist.md`](references/checklist.md)
+- Checklist: [`references/checklist.md`](references/checklist.md) — inventories must sync in the same change
+- CLI wrappers: [`references/cli-headless-wrappers.md`](references/cli-headless-wrappers.md)
 - Skills counterpart: `.cursor/skills/skill-layout/`
 
 ## Related surfaces

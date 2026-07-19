@@ -6,7 +6,7 @@
 #
 # Usage:
 #   bash scripts/dev.sh                 # Full stack (Redis + Supabase + portal)
-#   bash scripts/dev.sh --quick         # Portal only (skip Redis + Supabase)
+#   bash scripts/dev.sh --quick         # Portal + DB (skip Redis, start Supabase)
 #   bash scripts/dev.sh --no-infra      # Assume Redis + Supabase already up
 #   bash scripts/dev.sh --quality       # Also run pnpm quality after smoke
 #   bash scripts/dev.sh --no-browser    # Skip open-login.sh
@@ -180,6 +180,7 @@ banner() {
   echo
   echo -e "  ${DIM}$(date '+%a %b %d %Y  %H:%M')${NC}"
   echo -e "  ${DIM}Boot: Redis → Supabase → portal${NC}"
+  echo -e "  ${DIM}Flags: ${QUICK_MODE:+--quick }${NO_INFRA:+--no-infra }${RUN_QUALITY:+--quality }${NC}"
   echo
 }
 
@@ -191,9 +192,11 @@ show_results() {
   echo
   echo -e "  ${BOLD}Login:${NC}      ${CYAN}http://localhost:${PORT}/login${NC}"
   echo -e "  ${BOLD}Health:${NC}     ${CYAN}http://localhost:${PORT}/api/health${NC}"
-  if [ "$QUICK_MODE" = "false" ]; then
+  if [ "$QUICK_MODE" = "false" ] || [ "$NO_INFRA" = "false" ]; then
     echo -e "  ${BOLD}Supabase:${NC}   ${CYAN}http://127.0.0.1:54321${NC}"
     echo -e "  ${BOLD}Studio:${NC}     ${CYAN}http://127.0.0.1:54323${NC}"
+  fi
+  if [ "$QUICK_MODE" = "false" ]; then
     echo -e "  ${BOLD}Redis:${NC}      ${CYAN}localhost:6379${NC}"
   fi
   echo
@@ -284,7 +287,8 @@ node -v >/dev/null 2>&1 && check "Node.js" "pass" "$(node -v)" || { check "Node.
 pnpm -v >/dev/null 2>&1 && check "pnpm"    "pass" "v$(pnpm -v)"  || { check "pnpm"    "fail" "not found — run: corepack enable"; env_ok=false; }
 
 if [ "$QUICK_MODE" = "true" ]; then
-  check "Docker" "skip" "quick mode"
+  docker info >/dev/null 2>&1 && check "Docker" "pass" \
+    || check "Docker" "warn" "not running — Supabase may not start"
 else
   docker info >/dev/null 2>&1 && check "Docker" "pass" || { check "Docker" "warn" "not running — infrastructure will be skipped"; NO_INFRA=true; }
 fi
@@ -353,8 +357,8 @@ fi
 # ── Phase 3: Supabase ─────────────────────────────────────────────────────────
 phase 3 "Supabase"
 
-if [ "$QUICK_MODE" = "true" ] || [ "$NO_INFRA" = "true" ]; then
-  check "Supabase start" "skip" "$([ "$QUICK_MODE" = 'true' ] && echo 'quick mode' || echo '--no-infra')"
+if [ "$NO_INFRA" = "true" ]; then
+  check "Supabase start" "skip" "--no-infra — assume already running"
   if wait_for_auth_health 5; then
     check "Supabase auth" "pass" "http://127.0.0.1:54321"
   else
@@ -393,25 +397,48 @@ else
   cd "$REPO_ROOT"
   echo -e "  ${INFO} Starting Next.js on :${PORT} (Turbopack)..."
 
+  MAX_RESTARTS=2
+  RESTART_COUNT=0
   compiled=false
-  for _ in $(seq 1 120); do
-    if curl -fs "http://localhost:${PORT}/login" -o /dev/null -w "%{http_code}" 2>/dev/null | grep -qE "^(200|307|308)$"; then
-      compiled=true; break
+
+  while [ $RESTART_COUNT -le $MAX_RESTARTS ] && [ "$compiled" = "false" ]; do
+    if [ "$RESTART_COUNT" -gt 0 ]; then
+      check "Watchdog" "warn" "restart $RESTART_COUNT of $MAX_RESTARTS"
+      # Portal died — clear caches and retry
+      rm -rf "$REPO_ROOT/apps/portal/.next" "$REPO_ROOT/.turbo/cache" 2>/dev/null
+      sleep 2
+      stop_arch_portal_container
+      cd "$REPO_ROOT/apps/portal"
+      PORT="$PORT" pnpm dev > "$REPO_ROOT/portal.log" 2>&1 &
+      echo $! > "$REPO_ROOT/.portal.pid"
+      cd "$REPO_ROOT"
+      echo -e "  ${INFO} Restarting Next.js on :${PORT} (attempt $((RESTART_COUNT + 1)))..."
     fi
-    if [ -f "$REPO_ROOT/.portal.pid" ] && ! kill -0 "$(cat "$REPO_ROOT/.portal.pid")" 2>/dev/null; then
-      break
-    fi
-    if grep -qiE "⨯.*(/login|app/\(auth\)/login).*Failed to compile|Error: Cannot find module" "$REPO_ROOT/portal.log" 2>/dev/null; then
-      break
-    fi
-    sleep 2
+
+    for _ in $(seq 1 120); do
+      if curl -fs "http://localhost:${PORT}/login" -o /dev/null -w "%{http_code}" 2>/dev/null | grep -qE "^(200|307|308)$"; then
+        compiled=true; break
+      fi
+      if [ -f "$REPO_ROOT/.portal.pid" ] && ! kill -0 "$(cat "$REPO_ROOT/.portal.pid")" 2>/dev/null; then
+        break
+      fi
+      if grep -qiE "⨯.*(/login|app/\(auth\)/login).*Failed to compile|Error: Cannot find module" "$REPO_ROOT/portal.log" 2>/dev/null; then
+        break
+      fi
+      sleep 2
+    done
+
+    RESTART_COUNT=$((RESTART_COUNT + 1))
   done
 
   if [ "$compiled" = "true" ]; then
     date +%s > "$REPO_ROOT/.portal.start"
     check "Dev server" "pass" "http://localhost:${PORT}"
+    if [ "$RESTART_COUNT" -gt 1 ]; then
+      check "Watchdog" "pass" "restarted $((RESTART_COUNT - 1)) time(s), portal stable"
+    fi
   else
-    check "Dev server" "fail" "did not come up within 4 minutes"
+    check "Dev server" "fail" "did not come up after $MAX_RESTARTS restarts"
     echo -e "\n  ${RED}Last 25 lines of portal.log:${NC}"
     tail -25 "$REPO_ROOT/portal.log" 2>/dev/null | sed 's/^/    /'
     exit 1
@@ -423,8 +450,8 @@ phase 5 "Stack Smoke"
 
 smoke_ok=true
 
-# Redis PING (critical when not quick)
-if [ "$QUICK_MODE" = "false" ]; then
+# Redis PING (skip in quick mode; warn-only for --no-infra)
+if [ "$QUICK_MODE" = "false" ] && [ "$NO_INFRA" = "false" ]; then
   if docker exec arch-redis redis-cli ping 2>/dev/null | grep -q PONG; then
     check "Redis PING" "pass"
   elif wait_for_port 6379 1; then
@@ -433,16 +460,22 @@ if [ "$QUICK_MODE" = "false" ]; then
     check "Redis PING" "fail" "required for stack boot"
     smoke_ok=false
   fi
+elif [ "$NO_INFRA" = "true" ]; then
+  if wait_for_port 6379 1; then
+    check "Redis" "pass" "already listening on :6379"
+  else
+    check "Redis" "warn" "not on :6379 — may affect cache-dependent features"
+  fi
 fi
 
-# Supabase auth health (critical when not quick)
-if [ "$QUICK_MODE" = "false" ]; then
-  if curl -fs "http://127.0.0.1:54321/auth/v1/health" >/dev/null 2>&1; then
-    check "Supabase auth health" "pass"
-  else
-    check "Supabase auth health" "fail" "required for login"
-    smoke_ok=false
-  fi
+# Supabase auth health (critical — --quick starts Supabase)
+if curl -fs "http://127.0.0.1:54321/auth/v1/health" >/dev/null 2>&1; then
+  check "Supabase auth health" "pass"
+elif [ "$NO_INFRA" = "true" ]; then
+  check "Supabase auth health" "warn" "not healthy — may affect login"
+else
+  check "Supabase auth health" "fail" "required for login"
+  smoke_ok=false
 fi
 
 # /api/health — full stack requires DB healthy; --quick/--no-infra warn only
@@ -489,6 +522,24 @@ if [ "$login_ok" = "true" ]; then
 else
   check "Login page HTML" "fail" "code=${login_code:-?} no document markers"
   smoke_ok=false
+fi
+
+# Routing: /hub should redirect to /login when unauthenticated
+hub_code=$(curl -sL -o /tmp/arch-hub-smoke.html -w "%{http_code}" --connect-timeout 3 \
+  "http://localhost:${PORT}/hub" 2>/dev/null || echo 000)
+if echo "$hub_code" | grep -qE '^(307|308|302)$'; then
+  check 'Routing: /hub → /login' "pass" "redirect (3xx)"
+else
+  check 'Routing: /hub → /login' "warn" "code=${hub_code} (expected 3xx redirect)"
+fi
+
+# Routing: department page should redirect to /login when unauthenticated
+dept_code=$(curl -sL -o /tmp/arch-dept-smoke.html -w "%{http_code}" --connect-timeout 3 \
+  "http://localhost:${PORT}/engineering" 2>/dev/null || echo 000)
+if echo "$dept_code" | grep -qE '^(307|308|302)$'; then
+  check 'Routing: /engineering → /login' "pass" "redirect (3xx)"
+else
+  check 'Routing: /engineering → /login' "warn" "code=${dept_code} (expected 3xx redirect)"
 fi
 
 curl -fs "http://localhost:${PORT}/favicon.ico" >/dev/null 2>&1 \

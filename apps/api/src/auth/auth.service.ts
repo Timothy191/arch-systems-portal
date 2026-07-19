@@ -1,4 +1,4 @@
-import { Injectable, Inject, UnauthorizedException } from "@nestjs/common";
+import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { db } from "@repo/database";
 import * as bcrypt from "bcryptjs";
 import * as jwt from "jsonwebtoken";
@@ -56,7 +56,7 @@ export class AuthService {
       user: {
         id: user.id,
         email: user.email,
-        ...(user.raw_user_meta_data as { [key: string]: any } || {}),
+        ...((user.raw_user_meta_data as { [key: string]: any }) || {}),
       },
       session: {
         accessToken,
@@ -88,19 +88,10 @@ export class AuthService {
 
       const user = userResult[0]!;
 
-      // Optionally fetch employee again for fresh data
-      const employeeResult = await db
-        .selectFrom("employees")
-        .select(["id", "auth_id", "department_id", "full_name", "role", "accessible_departments"])
-        .where("auth_id", "=", user.id)
-        .execute();
-
-      const employee = employeeResult.length > 0 ? employeeResult[0] : null;
-
       return {
         id: user.id,
         email: user.email,
-        ...(user.raw_user_meta_data as { [key: string]: any } || {}),
+        ...((user.raw_user_meta_data as { [key: string]: any }) || {}),
       };
     } catch (error) {
       if (error instanceof jwt.JsonWebTokenError) {

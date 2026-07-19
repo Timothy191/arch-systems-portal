@@ -1,0 +1,134 @@
+{
+  "version": "1.1.0",
+  "last_updated": "2026-07-20",
+  "priority": ["openrouter", "opencode", "gemini", "aihubmix", "venice"],
+  "cooldown_seconds": 300,
+  "key_rotation": {
+    "enabled": true,
+    "pool_env_var": "OPENROUTER_KEY_POOL",
+    "pool_separator": ",",
+    "max_retries_per_key": 3,
+    "fallback_on_429": true,
+    "fallback_on_401": true,
+    "fallback_on_403": true
+  },
+  "providers": {
+    "openrouter": {
+      "name": "OpenRouter",
+      "base_url": "https://openrouter.ai/api/v1",
+      "free_model": "cohere/north-mini-code:free",
+      "auth_type": "header",
+      "key_pool_support": true,
+      "pool_size": 50,
+      "status": "configured_keys_all_auth_failed",
+      "notes": "50 OpenAI-compatible keys loaded; all returned 401 on probe. Replace with valid OpenRouter keys (sk-or-v1-...) or use with a compatible proxy endpoint."
+    },
+    "opencode": {
+      "name": "OpenCode",
+      "base_url": "https://opencode.ai/zen/go/v1",
+      "free_model": "deepseek-v4-flash",
+      "auth_type": "header",
+      "key_pool_support": false,
+      "status": "server_error_500",
+      "notes": "Has API key in .env, endpoint returning 500."
+    },
+    "gemini": {
+      "name": "Google Gemini",
+      "base_url": "https://generativelanguage.googleapis.com/v1",
+      "free_model": "gemini-2.0-flash-exp",
+      "auth_type": "query_param",
+      "key_pool_support": false,
+      "status": "http_400",
+      "notes": "Current key invalid per crush logs. Replace with valid Gemini API key."
+    },
+    "aihubmix": {
+      "name": "AIHubMix",
+      "base_url": "https://api.aihubmix.com/v1",
+      "free_model": "coding-glm-4.6-free",
+      "auth_type": "header",
+      "key_pool_support": false,
+      "status": "no_key",
+      "notes": "No API key configured. Sign up at aihubmix.com."
+    },
+    "venice": {
+      "name": "Venice.ai",
+      "base_url": "https://api.venice.ai/api/v1",
+      "free_model": "kimi-k3",
+      "auth_type": "header",
+      "key_pool_support": false,
+      "status": "no_key",
+      "notes": "No API key configured. Sign up at venice.ai."
+    }
+  },
+  "free_models_list": [
+    {
+      "provider": "openrouter",
+      "model": "cohere/north-mini-code:free",
+      "status": "needs_valid_key",
+      "rate_limit": "~20 req/min per key (50 keys = effectively 1000 req/min with rotation)",
+      "use_case": "code generation, lightweight inference"
+    },
+    {
+      "provider": "openrouter",
+      "model": "google/gemini-2.0-flash-exp:free",
+      "status": "needs_valid_key",
+      "rate_limit": "~10 req/min per key",
+      "use_case": "fast generation, general purpose"
+    },
+    {
+      "provider": "openrouter",
+      "model": "mistralai/mistral-7b-instruct:free",
+      "status": "needs_valid_key",
+      "rate_limit": "~10 req/min per key",
+      "use_case": "instruction following"
+    },
+    {
+      "provider": "openrouter",
+      "model": "meta-llama/llama-3.2-3b-instruct:free",
+      "status": "needs_valid_key",
+      "rate_limit": "~10 req/min per key",
+      "use_case": "small & fast inference"
+    },
+    {
+      "provider": "opencode",
+      "model": "deepseek-v4-flash",
+      "status": "endpoint_down",
+      "rate_limit": "unknown",
+      "use_case": "coding assistant"
+    },
+    {
+      "provider": "gemini",
+      "model": "gemini-2.0-flash-exp",
+      "status": "key_invalid",
+      "rate_limit": "60 req/min (free tier)",
+      "use_case": "multimodal, general purpose"
+    }
+  ],
+  "agents": {
+    "fullstack-nextjs-pro": {
+      "roles": ["nextjs", "react", "server-actions", "supabase"],
+      "provider": "any"
+    },
+    "backend-nestjs-pro": { "roles": ["nestjs", "fastify", "zod", "api"], "provider": "any" },
+    "frontend-ui-pro": { "roles": ["react", "tailwind", "wcag", "testing"], "provider": "any" },
+    "devops-ci-pro": { "roles": ["turborepo", "pnpm", "docker", "ci"], "provider": "any" },
+    "architect-pro": { "roles": ["adr", "boundaries", "migration"], "provider": "any" },
+    "security-pro": { "roles": ["supabase-auth", "rls", "rate-limit"], "provider": "any" },
+    "fast-outliner": { "roles": ["scoping", "planning", "handoff"], "provider": "inherit" },
+    "frontend-design": { "roles": ["visual", "brand", "ux"], "provider": "inherit" },
+    "frontend-implementer": { "roles": ["ui", "components", "tailwind"], "provider": "inherit" },
+    "ai-docs-sync": { "roles": ["docs", "drift", "mirror"], "provider": "inherit" },
+    "sceptic": {
+      "roles": ["review", "adversarial", "quality"],
+      "provider": "inherit",
+      "readonly": true
+    },
+    "idle-runner": { "roles": ["background", "parallel"], "provider": "inherit" },
+    "ai-maintenance-checker": { "roles": ["layout", "sync", "janitor"], "provider": "inherit" },
+    "vercel-brand-sync": { "roles": ["brand", "vercel"], "provider": "inherit" },
+    "openspec": { "roles": ["specs", "proposals"], "provider": "cli" },
+    "aider": { "roles": ["surgical", "pair-edit"], "provider": "aider" },
+    "goose": { "roles": ["mcp", "recipes", "automation"], "provider": "goose" },
+    "omp": { "roles": ["refactor", "heavy-coding"], "provider": "omp" }
+  }
+}

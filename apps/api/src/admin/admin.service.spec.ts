@@ -1,11 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { AdminService } from "./admin.service";
 import { SUPABASE_CLIENT } from "../supabase/supabase.constants";
-import {
-  NotFoundException,
-  ForbiddenException,
-  BadRequestException,
-} from "@nestjs/common";
+import { NotFoundException, ForbiddenException, BadRequestException } from "@nestjs/common";
 
 describe("AdminService", () => {
   let service: AdminService;
@@ -30,18 +26,11 @@ describe("AdminService", () => {
 
   beforeEach(async () => {
     mockSupabase = {
-      from: jest
-        .fn()
-        .mockImplementation((table: string) =>
-          makeThenable({ data: [], error: null, count: 0 }),
-        ),
+      from: jest.fn().mockImplementation(() => makeThenable({ data: [], error: null, count: 0 })),
     };
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        AdminService,
-        { provide: SUPABASE_CLIENT, useValue: mockSupabase },
-      ],
+      providers: [AdminService, { provide: SUPABASE_CLIENT, useValue: mockSupabase }],
     }).compile();
 
     service = module.get<AdminService>(AdminService);
@@ -53,15 +42,11 @@ describe("AdminService", () => {
     it("should return normalized table name for known tables", () => {
       expect(service.validateTable("MACHINES")).toBe("machines");
       expect(service.validateTable("Daily_Logs")).toBe("daily_logs");
-      expect(service.validateTable("safety_incidents")).toBe(
-        "safety_incidents",
-      );
+      expect(service.validateTable("safety_incidents")).toBe("safety_incidents");
     });
 
     it("should throw NotFoundException for unknown tables", () => {
-      expect(() => service.validateTable("secret_data")).toThrow(
-        NotFoundException,
-      );
+      expect(() => service.validateTable("secret_data")).toThrow(NotFoundException);
       expect(() => service.validateTable("users")).toThrow(NotFoundException);
     });
   });
@@ -74,7 +59,7 @@ describe("AdminService", () => {
         makeThenable({
           data: { id: "emp-1", role: "admin" },
           error: null,
-        }),
+        })
       );
 
       const result = await service.assertAdmin("auth-user-1");
@@ -86,12 +71,10 @@ describe("AdminService", () => {
         makeThenable({
           data: { id: "emp-2", role: "operator" },
           error: null,
-        }),
+        })
       );
 
-      await expect(service.assertAdmin("auth-user-2")).rejects.toThrow(
-        ForbiddenException,
-      );
+      await expect(service.assertAdmin("auth-user-2")).rejects.toThrow(ForbiddenException);
     });
 
     it("should throw ForbiddenException when employee not found", async () => {
@@ -99,12 +82,10 @@ describe("AdminService", () => {
         makeThenable({
           data: null,
           error: { message: "Not found" },
-        }),
+        })
       );
 
-      await expect(service.assertAdmin("unknown")).rejects.toThrow(
-        ForbiddenException,
-      );
+      await expect(service.assertAdmin("unknown")).rejects.toThrow(ForbiddenException);
     });
   });
 
@@ -114,7 +95,7 @@ describe("AdminService", () => {
     it("should return paginated data from a valid table", async () => {
       const mockData = [{ id: "1" }, { id: "2" }];
       mockSupabase.from.mockImplementation(() =>
-        makeThenable({ data: mockData, error: null, count: 2 }),
+        makeThenable({ data: mockData, error: null, count: 2 })
       );
 
       const result = await service.getData("machines", 10, 0, "name", "asc");
@@ -125,12 +106,12 @@ describe("AdminService", () => {
 
     it("should throw on database error", async () => {
       mockSupabase.from.mockImplementation(() =>
-        makeThenable({ data: null, error: { message: "Connection failed" } }),
+        makeThenable({ data: null, error: { message: "Connection failed" } })
       );
 
-      await expect(
-        service.getData("machines", 10, 0, "name", "asc"),
-      ).rejects.toThrow("Database query failed");
+      await expect(service.getData("machines", 10, 0, "name", "asc")).rejects.toThrow(
+        "Database query failed"
+      );
     });
   });
 
@@ -147,17 +128,11 @@ describe("AdminService", () => {
       mockSupabase.from = mockFrom;
 
       // Before state
-      mockFrom.mockImplementationOnce(() =>
-        makeThenable({ data: beforeData, error: null }),
-      );
+      mockFrom.mockImplementationOnce(() => makeThenable({ data: beforeData, error: null }));
       // Update
-      mockFrom.mockImplementationOnce(() =>
-        makeThenable({ data: null, error: null }),
-      );
+      mockFrom.mockImplementationOnce(() => makeThenable({ data: null, error: null }));
       // Audit insert
-      mockFrom.mockImplementationOnce(() =>
-        makeThenable({ data: null, error: null }),
-      );
+      mockFrom.mockImplementationOnce(() => makeThenable({ data: null, error: null }));
 
       const result = await service.updateData("machines", validBody, "emp-1");
 
@@ -169,25 +144,23 @@ describe("AdminService", () => {
     it("should throw BadRequestException for invalid body", async () => {
       const invalidBody = { data: { name: "Test" } }; // missing id
 
-      await expect(
-        service.updateData("machines", invalidBody as any, "emp-1"),
-      ).rejects.toThrow(BadRequestException);
+      await expect(service.updateData("machines", invalidBody as any, "emp-1")).rejects.toThrow(
+        BadRequestException
+      );
     });
 
     it("should throw when update operation fails", async () => {
       const mockFrom = jest.fn();
       mockSupabase.from = mockFrom;
 
+      mockFrom.mockImplementationOnce(() => makeThenable({ data: { id: "r-1" }, error: null }));
       mockFrom.mockImplementationOnce(() =>
-        makeThenable({ data: { id: "r-1" }, error: null }),
-      );
-      mockFrom.mockImplementationOnce(() =>
-        makeThenable({ data: null, error: { message: "Update failed" } }),
+        makeThenable({ data: null, error: { message: "Update failed" } })
       );
 
-      await expect(
-        service.updateData("machines", validBody, "emp-1"),
-      ).rejects.toThrow("Update failed");
+      await expect(service.updateData("machines", validBody, "emp-1")).rejects.toThrow(
+        "Update failed"
+      );
     });
   });
 
@@ -198,15 +171,9 @@ describe("AdminService", () => {
       const mockFrom = jest.fn();
       mockSupabase.from = mockFrom;
 
-      mockFrom.mockImplementationOnce(() =>
-        makeThenable({ data: { id: "r-1" }, error: null }),
-      );
-      mockFrom.mockImplementationOnce(() =>
-        makeThenable({ data: null, error: null }),
-      );
-      mockFrom.mockImplementationOnce(() =>
-        makeThenable({ data: null, error: null }),
-      );
+      mockFrom.mockImplementationOnce(() => makeThenable({ data: { id: "r-1" }, error: null }));
+      mockFrom.mockImplementationOnce(() => makeThenable({ data: null, error: null }));
+      mockFrom.mockImplementationOnce(() => makeThenable({ data: null, error: null }));
 
       const result = await service.deleteData("machines", "record-1", "emp-1");
       expect(result).toEqual({ success: true });
@@ -215,7 +182,7 @@ describe("AdminService", () => {
 
     it("should throw BadRequestException when id is missing", async () => {
       await expect(service.deleteData("machines", "", "emp-1")).rejects.toThrow(
-        BadRequestException,
+        BadRequestException
       );
     });
 
@@ -223,19 +190,17 @@ describe("AdminService", () => {
       const mockFrom = jest.fn();
       mockSupabase.from = mockFrom;
 
-      mockFrom.mockImplementationOnce(() =>
-        makeThenable({ data: { id: "r-1" }, error: null }),
-      );
+      mockFrom.mockImplementationOnce(() => makeThenable({ data: { id: "r-1" }, error: null }));
       mockFrom.mockImplementationOnce(() =>
         makeThenable({
           data: null,
           error: { message: "Delete failed" },
-        }),
+        })
       );
 
-      await expect(
-        service.deleteData("machines", "record-1", "emp-1"),
-      ).rejects.toThrow("Delete failed");
+      await expect(service.deleteData("machines", "record-1", "emp-1")).rejects.toThrow(
+        "Delete failed"
+      );
     });
   });
 });

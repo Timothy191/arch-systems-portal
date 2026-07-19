@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { createBrowserSupabaseClient } from "@repo/supabase/client";
+import { useState } from "react";
+import { useAdminData, useSupabaseClient } from "@/hooks/useAdminData";
 import { GlassCard } from "@repo/ui/GlassCard";
 import { Search, UserPlus, Edit2, Trash2 } from "lucide-react";
 import { Button } from "@repo/ui/components/ui/button";
@@ -23,31 +23,30 @@ interface Employee {
 }
 
 export function UsersTab() {
-  const [employees, setEmployees] = useState<Employee[]>([]);
-  const [departments, setDepartments] = useState<{ id: string; display_name: string }[]>([]);
-  const [loading, setLoading] = useState(true);
+  const {
+    data: employees,
+    loading: empsLoading,
+    reload: reloadEmployees,
+  } = useAdminData<Employee>((supabase) =>
+    supabase
+      .from("employees")
+      .select("*, departments(display_name)")
+      .order("created_at", { ascending: false })
+  );
+
+  const {
+    data: departments,
+    loading: deptsLoading,
+    reload: reloadDepartments,
+  } = useAdminData<{ id: string; display_name: string }>((supabase) =>
+    supabase.from("departments").select("id, display_name")
+  );
+
+  const loading = empsLoading || deptsLoading;
+  const supabase = useSupabaseClient();
   const [searchTerm, setSearchTerm] = useState("");
   const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
   const [showEditDialog, setShowEditDialog] = useState(false);
-  const supabase = createBrowserSupabaseClient();
-
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  const loadData = async () => {
-    const [empData, deptData] = await Promise.all([
-      supabase
-        .from("employees")
-        .select("*, departments(display_name)")
-        .order("created_at", { ascending: false }),
-      supabase.from("departments").select("id, display_name"),
-    ]);
-
-    if (empData.data) setEmployees(empData.data);
-    if (deptData.data) setDepartments(deptData.data);
-    setLoading(false);
-  };
 
   const handleEdit = (employee: Employee) => {
     setEditingEmployee(employee);
@@ -79,7 +78,8 @@ export function UsersTab() {
 
     setShowEditDialog(false);
     setEditingEmployee(null);
-    loadData();
+    reloadEmployees();
+    reloadDepartments();
   };
 
   const filteredEmployees = employees.filter((emp) =>

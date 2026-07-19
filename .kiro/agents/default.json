@@ -67,7 +67,11 @@
         "sceptic",
         "idle-runner",
         "ai-maintenance-checker",
-        "vercel-brand-sync"
+        "vercel-brand-sync",
+        "openspec",
+        "aider",
+        "goose",
+        "omp"
       ],
       "maintenance_script": "scripts/ai.sh",
       "ai_system_standard": ".cursor/standards/ai-system/STANDARD.md"

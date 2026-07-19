@@ -1,75 +1,208 @@
-# Data Intensive Harness
+# AGENTS.md
 
-> **Harness Manager** - active harness: `data-intensive`  
-> Category: data-processing · Version: 1.0.0
-> Tags: data-intensive, batch-processing, caching, performance-monitoring, scalability
+This file provides guidance to the AI agent when working with code in this repository.
 
-## Description
+> **Canonical rulebook for all AI agents.** Rules here are non-negotiable and take precedence over model defaults.
+> Detailed rules are in `@.qoder/rules/` (loaded automatically): `code-style.md`, `security.md`, `testing.md`, `spec-driven-workflow.md`, `alignment-scoring.md`.
 
-Optimized for large-scale data processing workflows.
+## Commands
 
-## Harness Location
+```bash
+pnpm dev              # Full stack: Docker infra + Next.js (Turbopack HMR on :3000)
+pnpm dev --quick      # Portal only, skip Docker
+pnpm build            # Turborepo full build
+pnpm quality          # lint + type-check + test + prettier check (run before marking done)
+pnpm ai               # AI system health (guardrails, layouts, sync, dedupe, drift)
+pnpm ai init          # First clone / cold start — restore + sync + validate
+pnpm ai onboard       # Onboarding checklist for humans + agents
+pnpm ai check         # Validate AI surfaces only (CI gate)
+pnpm ai fix           # Safe repair + validate
+pnpm format           # Prettier write
+pnpm --filter portal <cmd>  # Target one package
+pnpm audit:rls        # Verify RLS after migration changes
+pnpm policy:gen       # Regenerate dependency boundary rules
+```
 
-Files are installed at `./agent-harnesses/data-intensive/`:
-- `agent-harnesses/data-intensive/README.md`
-- `agent-harnesses/data-intensive/config.json`
-- `agent-harnesses/data-intensive/template.yaml`
+ESLint `--max-warnings 0`; tsc `noEmit` strict; Jest `--passWithNoTests`.
 
-## Instructions
-# Data Intensive Harness Configuration
-# config.json
-{
-  "name": "data-intensive",
-  "version": "1.0.0",
-  "description": "Data Intensive Harness",
-  "requirements": {
-    "minMemory": "4GB",
-    "minDiskSpace": "10GB",
-    "dependencies": []
-  },
-  "configuration": {
-    "batchSize": 1000,
-    "cacheExpiry": 3600,
-    "maxConnections": 10,
-    "retryAttempts": 3
-  }
-}
+## Monorepo Layout
 
-# template.yaml
----
-# Data Intensive Harness Template
-apiVersion: v1
-kind: Harness
-metadata:
-  name: data-intensive-harness
-  version: 1.0.0
-spec:
-  type: data-processing
-  features:
-    - batch-processing
-    - caching
-    - performance-monitoring
-  configuration:
-    batchSize: 1000
-    cacheExpiry: 3600
-    maxConnections: 10
-  input:
-    sources:
-      - type: database
-        connection: "{{DATABASE_CONNECTION}}"
-      - type: file
-        path: "{{DATA_PATH}}"
-  processing:
-    steps:
-      - name: validate
-        type: validation
-      - name: transform
-        type: transformation
-      - name: aggregate
-        type: aggregation
-  output:
-    destination: "{{OUTPUT_DESTINATION}}"
-    format: parquet
-  monitoring:
-    enabled: true
-    metricsInterval: 60
+```
+apps/
+  portal/             # Next.js 16 (App Router, src/ layout) — the only deployable app
+apps(legacy)/         # Deprecated — DO NOT MODIFY
+packages/
+  errors/             # @repo/errors — typed AppError classes
+  redis/              # @repo/redis — shared ioredis singleton
+  supabase/           # @repo/supabase — server admin client + browser client
+  theme/              # @repo/theme — Tailwind preset & design tokens
+  ui/                 # @repo/ui — shared headless React components
+  utils/              # @repo/utils — pure utility helpers
+  contract/           # @repo/contract — shared Zod schemas
+  auth/               # @repo/auth/{ui,data-access,utils}
+  shared/             # @repo/shared/{data-access,hooks,utils}
+  rate-limiter/       # @repo/rate-limiter — Redis-backed
+  logger/             # @repo/logger — structured logging
+  database/           # @repo/database — SQL migrations source of truth
+scripts/              # dev.sh, shutdown.sh
+```
+
+**Portal `src/` layout:**
+
+```
+apps/portal/src/
+  app/          # Next.js App Router: (auth), (hub), (departments), admin, api
+  components/   # Portal-specific React components
+  features/     # Feature modules (access-control, admin, auth, departments, hub)
+  hooks/        # Portal-specific hooks
+  lib/          # Shared lib (ai, api, errors, jobs, observability, plugins)
+  server/       # Edge middleware proxy (proxy.ts)
+```
+
+- Never add application logic to `packages/` — they are pure, framework-agnostic libraries.
+- Never import from `apps/` inside `packages/`.
+- New packages must be added to `pnpm-workspace.yaml` and `turbo.json`.
+
+## Technology Stack
+
+| Concern         | Choice                  | Notes                                                               |
+| --------------- | ----------------------- | ------------------------------------------------------------------- |
+| Framework       | Next.js 16 (App Router) | React 19, Turbopack in dev                                          |
+| Language        | TypeScript 5.7 strict   | No `any`, no `@ts-ignore`                                           |
+| Styling         | Tailwind CSS 3          | `@repo/theme` preset; **light-only** (DECISIONS #003)               |
+| UI primitives   | `@repo/ui`              | Extend before reaching for Radix                                    |
+| Validation      | Zod 3                   | All external input                                                  |
+| Auth / DB       | Supabase                | `@repo/supabase/server` (server), `@repo/supabase/client` (browser) |
+| Caching         | Redis via `@repo/redis` | L1 memory + L2 Redis                                                |
+| Background jobs | Inngest 4               | `/api/inngest` route handler                                        |
+| Error classes   | `@repo/errors`          | `AppError` subclasses only                                          |
+| Icons           | lucide-react            | Do not add a second icon library                                    |
+| Toasts          | sonner                  | Do not add react-toastify                                           |
+| Package manager | pnpm 9                  | Never use npm or yarn                                               |
+| Build           | Turborepo 2             | `turbo run <task>`                                                  |
+| Node            | >= 22 (Volta pin: 24)   |                                                                     |
+
+**Do not add new dependencies without design-phase approval.**
+
+## Environment Variables
+
+| Variable                        | Visibility               |
+| ------------------------------- | ------------------------ |
+| `NEXT_PUBLIC_SUPABASE_URL`      | Public                   |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Public                   |
+| `SUPABASE_SERVICE_ROLE_KEY`     | **Secret** (server only) |
+| `REDIS_URL`                     | **Secret** (server only) |
+
+- Document new vars in `apps/portal/.env.example`. Never prefix a secret with `NEXT_PUBLIC_`.
+
+## Git & Commits
+
+- Conventional Commits: `type(scope): description` — `feat|fix|chore|docs|refactor|perf|test|ci|build`
+- Scope is the package or app: `feat(portal): add dashboard stats`
+- Husky enforces commitlint + lint-staged (ESLint + Prettier)
+- Never force-push to `main`/`master`. Never commit `.env*.local`.
+
+## Performance & Accessibility
+
+- Use `next/image` for all images — never raw `<img>`. Exception: signed Supabase storage URLs with rotating signatures (e.g. `card-actions-view.tsx`) where `next/image` cannot handle URL expiry. Use `next/font` for custom fonts.
+- Lazy-load heavy Client Components with `next/dynamic` + `{ ssr: false }`.
+- All interactive elements must be keyboard-navigable with visible focus rings.
+- Semantic HTML: `<button>`, `<nav>`, `<form>`, `<label>` — not `<div>` onClick.
+- WCAG 2.1 AA contrast (4.5:1 text, 3:1 UI). Forms need `<label>` via `htmlFor`.
+
+## Legacy & Migration
+
+- `apps(legacy)/` is deprecated — **do not modify**. Work in `apps/portal/src/` only.
+- PWA uses manual service worker at `apps/portal/public/sw.js` (next-pwa disabled for Next 16 + Turbopack).
+
+## What Agents Must Never Do
+
+- Never use npm or yarn — use `pnpm add` only (pnpm 9).
+- Never add `"use client"` to a layout file.
+- Never `fetch("/api/...")` from a Server Component — call the data function directly.
+- Never expose service-role credentials to the client bundle.
+- Never skip Zod validation on user input.
+- Never use `console.log` in production code — use `console.error`/`console.warn` with `[context]` prefixes.
+- Never hard-code URLs, ports, or environment-specific values.
+- Never create a `packages/` entry without updating `pnpm-workspace.yaml` and `turbo.json`.
+- Never skip spec phases for multi-file changes (see `@.qoder/rules/spec-driven-workflow.md`).
+- Never mark a task complete without running `pnpm quality`.
+
+## Self-Check Checklist
+
+Before responding "done":
+
+- [ ] Spec phases followed (multi-file changes)
+- [ ] `pnpm quality` passes
+- [ ] No new `any` types
+- [ ] No secrets committed or logged
+- [ ] Server/client boundaries respected
+- [ ] New env vars in `.env.example`
+- [ ] Components have `interface <Name>Props`
+- [ ] Pages export `metadata`
+- [ ] Server Actions validate with Zod, return `{ data } | { error }`
+- [ ] `@repo/errors` used for domain errors
+- [ ] Accessibility: semantic HTML, focus rings, labels
+- [ ] Conventional commit message, no secrets staged
+- [ ] Alignment Score >= 80 (see `@.qoder/rules/alignment-scoring.md`)
+
+## Project Agents & Skills
+
+Canonical policy remains this file. Agents and skills **mirror** it — never fork policy.
+
+### Project subagents (Cursor)
+
+Twelve specialists under `.cursor/agents/`. **Hybrid layout:** entry `<name>.md` + collateral `<name>/`. Standard: `.cursor/standards/agent-layout/STANDARD.md`. Auto-routing: `.cursor/rules/04-subagent-auto-routing.mdc`. CLI matrix: `.cursor/agents/_shared/references/external-cli-matrix.md`.
+
+| Agent                    | Role                                        |
+| ------------------------ | ------------------------------------------- |
+| `fast-outliner`          | Pre-flight scope, gaps, handoffs            |
+| `frontend-design`        | Branded/landing visual composition          |
+| `frontend-implementer`   | Portal UI implementation (`apps/portal/`)   |
+| `ai-docs-sync`           | AI surfaces + docs drift audit              |
+| `sceptic`                | Adversarial review + alignment **estimate** |
+| `idle-runner`            | Safe parallel work while blocked            |
+| `ai-maintenance-checker` | Background layout/sync/dedupe every prompt  |
+| `vercel-brand-sync`      | Vercel-family brand assets                  |
+| `openspec`               | OpenSpec change lifecycle (CLI)             |
+| `aider`                  | Aider surgical headless edits               |
+| `goose`                  | Goose recipes / MCP automation              |
+| `omp`                    | omp heavy headless coding                   |
+
+**Unified AI command:** `pnpm ai` — see `.cursor/standards/ai-system/STANDARD.md`. Background rule: `.cursor/rules/06-ai-maintenance-background.mdc`.
+
+Gold contract: `.cursor/agents/_shared/references/gold-standard-contract.md`
+
+### Claude Code (Anthropic)
+
+Native surfaces under `.claude/`: `CLAUDE.md`, `settings.json`, `rules/`, synced `skills/` + `agents/`. Standard: `.cursor/standards/claude-code/STANDARD.md`. Sync: `.claude/scripts/sync-surfaces.sh`.
+
+Reasoning contract: `SOUL.md` (project extension — import via `.claude/CLAUDE.md`).
+
+### Project skills
+
+| Surface               | Path              | Index                      |
+| --------------------- | ----------------- | -------------------------- |
+| Cursor (formal score) | `.cursor/skills/` | `.cursor/skills/README.md` |
+| Qoder workflows       | `.qoder/skills/`  | `.qoder/skills/README.md`  |
+| GitHub Copilot        | `.github/skills/` | `.github/skills/README.md` |
+
+Standard layout per skill folder: `SKILL.md` + `scripts/` + `references/` + `assets/` (when needed).
+
+**Canonical references:**
+
+- Claude Code surfaces: `.cursor/standards/claude-code/STANDARD.md` (Anthropic official)
+- Skill folders: `.cursor/standards/agent-skills/STANDARD.md`
+- Agent layout: `.cursor/standards/agent-layout/STANDARD.md`
+
+| Skill                                 | Owner                              |
+| ------------------------------------- | ---------------------------------- |
+| `agent-alignment-score`               | Formal Alignment Score (0–100)     |
+| `skill-self-improve`                  | Hermes observe→distill→patch loop  |
+| `ai-system`                           | Unified `pnpm ai` command          |
+| `skill-layout` / `agent-layout`       | Skill + agent folder standards     |
+| `claude-code-layout`                  | Claude Code `.claude/` surfaces    |
+| `quality` / `verify`                  | Quality gate (full / portal alias) |
+| `specs`, `dev`, `deploy`, `rls-audit` | Qoder workflow commands            |
+
+**Sceptic** emits verdict + estimate; **agent-alignment-score** emits the formal extended score block. Repeatable gaps → **skill-self-improve** (`.cursor/rules/07-adaptive-skill-loop.mdc`).

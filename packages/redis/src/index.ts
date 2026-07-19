@@ -62,10 +62,11 @@ export function getRedisClient(): Redis {
 
 export const CacheCategory = {
   ACCESS_CONTROL: "access_control",
+  AUTH: "auth",
   DRILLING: "drilling",
-  TRAINING: "training",
   HUB: "hub",
   METRICS: "metrics",
+  TRAINING: "training",
 };
 
 export function cacheGet(key: string): Promise<string | null> {
@@ -73,7 +74,12 @@ export function cacheGet(key: string): Promise<string | null> {
 }
 
 export function cacheSet(key: string, value: string, ttl?: number): Promise<"OK"> {
-  return getRedis().set(key, value, "EX", ttl || 3600);
+  // Use nullish coalescing so explicit ttl=0 means "no expiry"
+  const expiresIn = ttl ?? 3600;
+  if (expiresIn <= 0) {
+    return getRedis().set(key, value);
+  }
+  return getRedis().set(key, value, "EX", expiresIn);
 }
 
 export function cacheEvictL1ByPrefix(prefix: string): Promise<number> {
@@ -84,18 +90,21 @@ export function cacheEvictL1ByPrefix(prefix: string): Promise<number> {
   });
 }
 
-export { cacheInvalidateTags, cacheInvalidatePrefixes } from "./invalidation.js";
-export { getCacheStats } from "./stats.js";
+export { getCacheStats } from "./stats";
 
-export function cacheWrap<T>(key: string, fn: () => Promise<T>): Promise<T> {
-  return cacheGet(key).then((cached) => {
-    if (cached) return JSON.parse(cached) as T;
-    return fn().then((result) => {
-      cacheSet(key, JSON.stringify(result));
-      return result;
-    });
-  });
-}
-
-export const cacheGetWithStats = cacheGet;
-export const cacheSetWithTags = cacheSet;
+// Re-export the modern L1/L2 caching implementation from cache.ts
+// This overwrites the legacy cacheGet/cacheSet/cacheWrap with the version
+// that includes in-memory cache, request coalescing, and stats tracking.
+export {
+  cacheGet,
+  cacheGetWithStats,
+  cacheSet,
+  cacheSetWithTags,
+  cacheWrap,
+  cacheDelete,
+  cacheDeletePattern,
+  cacheInvalidateTags,
+  cacheInvalidatePrefixes,
+  cacheEvictL1ByPrefix,
+  clearMemoryCache,
+} from "./cache";

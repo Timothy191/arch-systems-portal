@@ -3,9 +3,7 @@ import { createServerSupabaseClient } from "@repo/supabase/server";
 import { revalidatePath } from "next/cache";
 import { logError } from "@/lib/errors/error-logger";
 import { recordJobExecution } from "@/lib/observability/metrics";
-import type { InngestFunction } from "inngest";
-
-export const syncPlaybackFn: InngestFunction.Any = inngest.createFunction(
+export const syncPlaybackFn = inngest.createFunction(
   { id: "sync-playback", triggers: [{ event: "sync/playback" }] },
   async ({ event }) => {
     const { idempotencyKey, actionType, payload, departmentId } = event.data;
@@ -117,5 +115,5 @@ export const syncPlaybackFn: InngestFunction.Any = inngest.createFunction(
     } finally {
       recordJobExecution("sync-playback", performance.now() - start, success);
     }
-  },
+  }
 );

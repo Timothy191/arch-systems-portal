@@ -85,7 +85,7 @@ export default function RootError({ error, reset }: RootErrorProps) {
         {appError && (
           <div className="text-xs text-arch-text-muted font-mono">
             Error code: {appError.code}
-            {appError.statusCode && ` (${appError.statusCode})`}
+            {appError.statusCode != null && ` (${appError.statusCode})`}
           </div>
         )}
 

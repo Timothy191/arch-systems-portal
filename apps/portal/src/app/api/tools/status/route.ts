@@ -103,13 +103,9 @@ export async function GET(_request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const statuses = await cacheWrap(
-    "tools:status",
-    async () => {
-      return await Promise.all(EXTERNAL_TOOLS.map(checkToolHealth));
-    },
-    60 // Cache for 60 seconds
-  );
+  const statuses = await cacheWrap("tools:status", async () => {
+    return await Promise.all(EXTERNAL_TOOLS.map(checkToolHealth));
+  });
 
   return NextResponse.json({ tools: statuses });
 }

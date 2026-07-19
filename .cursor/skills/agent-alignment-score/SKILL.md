@@ -46,6 +46,9 @@ node .cursor/skills/agent-alignment-score/scripts/score.mjs --interactive
 ## References
 
 - [`references/rubric.md`](references/rubric.md) — dimension weights and pass criteria
-- [`references/gold-contract.md`](references/gold-contract.md) — required output format
+- [`references/gold-contract.md`](references/gold-contract.md) — required output format (extended block)
+- [`references/extended-metrics.md`](references/extended-metrics.md) — code quality, pro bar, tokens
+- [`references/gap-ledger.md`](references/gap-ledger.md) — why scores miss 100 and how to close
 - [`references/never-dos.md`](references/never-dos.md) — §18 hard-fail list
 - [Agent Skills Standard](../../standards/agent-skills/STANDARD.md) — project canonical
+- Repeatable gaps → [`skill-self-improve`](../skill-self-improve/SKILL.md)

@@ -18,10 +18,14 @@ Collateral: `.cursor/agents/<name>/{references,scripts,assets}/`.
 | [idle-runner.md](idle-runner.md)                       | Parallel safe work while blocked   | [idle-runner/](idle-runner/)                       |
 | [ai-maintenance-checker.md](ai-maintenance-checker.md) | Background AI layout janitor       | [ai-maintenance-checker/](ai-maintenance-checker/) |
 | [vercel-brand-sync.md](vercel-brand-sync.md)           | Vercel-family brand assets         | [vercel-brand-sync/](vercel-brand-sync/)           |
+| [openspec.md](openspec.md)                             | OpenSpec change lifecycle (CLI)    | [openspec/](openspec/)                             |
+| [aider.md](aider.md)                                   | Aider surgical headless edits      | [aider/](aider/)                                   |
+| [goose.md](goose.md)                                   | Goose recipes / MCP automation     | [goose/](goose/)                                   |
+| [omp.md](omp.md)                                       | omp heavy headless coding          | [omp/](omp/)                                       |
 
 ## Shared
 
-- [_shared/references/](_shared/references/) — gold contract, skills runtime
+- [_shared/references/](_shared/references/) — gold contract, skills runtime, [external-cli-matrix.md](_shared/references/external-cli-matrix.md)
 
 ## Validate
 

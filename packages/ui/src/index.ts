@@ -37,7 +37,13 @@ export { Tabs, TabsList, TabsTrigger, TabsContent } from "./components/ui/tabs";
 export { ActionConfirmDialog } from "./components/ui/action-confirm-dialog";
 export { Skeleton } from "./components/ui/skeleton";
 export { GlassSkeleton } from "./components/ui/glass-skeleton";
-export { Pagination } from "./components/ui/pagination";
+export {
+  Pagination,
+  CursorPagination,
+  encodeCursor,
+  decodeCursor,
+} from "./components/ui/pagination";
+export type { PaginationProps, CursorPaginationProps } from "./components/ui/pagination";
 export { Separator } from "./components/ui/separator";
 export { ScrollArea } from "./components/ui/scroll-area";
 export { DropdownMenu } from "./components/ui/dropdown-menu";

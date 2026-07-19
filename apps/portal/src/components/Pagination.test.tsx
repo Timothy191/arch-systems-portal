@@ -1,90 +1,117 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
-import { Pagination } from "@repo/ui/Pagination";
+import { CursorPagination } from "@repo/ui/components/ui/pagination";
 import "@testing-library/jest-dom";
 
-describe("Pagination Component", () => {
-  it("renders correctly with total count", () => {
-    const handlePageChange = jest.fn();
-    render(
-      <Pagination
-        currentPage={2}
-        totalPages={5}
-        onPageChange={handlePageChange}
-        pageSize={10}
-        totalCount={45}
-      />
-    );
+describe("CursorPagination Component", () => {
+  const defaultProps = {
+    nextCursor: "eyJzIjoiMjAyNC0wMS0wMSIsImliOiJhYmMifQ==",
+    previousCursors: [],
+    hasNextPage: true,
+    pageSize: 50,
+    loadedCount: 50,
+    totalCount: 200,
+    onNext: jest.fn(),
+    onPrevious: jest.fn(),
+  };
 
-    expect(
-      screen.getByText((content, element) => {
-        return element?.textContent === "Showing 11 to 20 of 45 entries";
-      })
-    ).toBeInTheDocument();
-    expect(screen.getByText("2")).toHaveClass("bg-arch-accent-charcoal");
+  beforeEach(() => {
+    jest.clearAllMocks();
   });
 
-  it("triggers onPageChange when page button is clicked", () => {
-    const handlePageChange = jest.fn();
-    render(
-      <Pagination
-        currentPage={2}
-        totalPages={5}
-        onPageChange={handlePageChange}
-        pageSize={10}
-        totalCount={45}
-      />
-    );
+  it("renders correctly with total count on first page", () => {
+    render(<CursorPagination {...defaultProps} />);
 
-    fireEvent.click(screen.getByText("3"));
-    expect(handlePageChange).toHaveBeenCalledWith(3);
+    expect(screen.getByText("50 of 200 entries")).toBeInTheDocument();
+    expect(screen.getByText(/Page 1/)).toBeInTheDocument();
+    expect(screen.getByText(/of ~4/)).toBeInTheDocument();
   });
 
-  it("disables prev button on first page", () => {
-    render(
-      <Pagination
-        currentPage={1}
-        totalPages={5}
-        onPageChange={jest.fn()}
-        pageSize={10}
-        totalCount={45}
-      />
-    );
+  it("disables Previous button on first page", () => {
+    render(<CursorPagination {...defaultProps} previousCursors={[]} />);
 
-    const prevBtn = screen.getByRole("button", { name: /Previous page/i });
+    const prevBtn = screen.getByRole("button", { name: /Previous/i });
     expect(prevBtn).toBeDisabled();
   });
 
-  it("disables next button on last page", () => {
+  it("enables Previous button when there are previous cursors", () => {
     render(
-      <Pagination
-        currentPage={5}
-        totalPages={5}
-        onPageChange={jest.fn()}
-        pageSize={10}
-        totalCount={45}
+      <CursorPagination
+        {...defaultProps}
+        previousCursors={["eyJzIjoiMjAyMy0xMi0zMSIsImliOiJ4eXoifQ=="]}
       />
     );
 
-    const nextBtn = screen.getByRole("button", { name: /Next page/i });
+    const prevBtn = screen.getByRole("button", { name: /Previous/i });
+    expect(prevBtn).not.toBeDisabled();
+  });
+
+  it("disables Next button when no next page", () => {
+    render(<CursorPagination {...defaultProps} nextCursor={null} hasNextPage={false} />);
+
+    const nextBtn = screen.getByRole("button", { name: /Next/i });
     expect(nextBtn).toBeDisabled();
   });
 
-  it("triggers onPageSizeChange when selection changes", () => {
-    const handlePageSizeChange = jest.fn();
+  it("enables Next button when next page exists", () => {
+    render(<CursorPagination {...defaultProps} />);
+
+    const nextBtn = screen.getByRole("button", { name: /Next/i });
+    expect(nextBtn).not.toBeDisabled();
+  });
+
+  it("calls onNext with cursor when Next is clicked", () => {
+    const onNext = jest.fn();
+    render(<CursorPagination {...defaultProps} onNext={onNext} />);
+
+    fireEvent.click(screen.getByRole("button", { name: /Next/i }));
+    expect(onNext).toHaveBeenCalledWith(defaultProps.nextCursor);
+  });
+
+  it("calls onPrevious with last cursor when Previous is clicked", () => {
+    const onPrevious = jest.fn();
+    const cursors = ["abc", "def"];
     render(
-      <Pagination
-        currentPage={1}
-        totalPages={5}
-        onPageChange={jest.fn()}
-        pageSize={10}
-        onPageSizeChange={handlePageSizeChange}
-        totalCount={45}
+      <CursorPagination {...defaultProps} previousCursors={cursors} onPrevious={onPrevious} />
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: /Previous/i }));
+    expect(onPrevious).toHaveBeenCalledWith("def");
+  });
+
+  it("calls onPrevious with 'start' when clicking Previous on page 2", () => {
+    const onPrevious = jest.fn();
+    render(
+      <CursorPagination
+        {...defaultProps}
+        previousCursors={["first-cursor"]}
+        onPrevious={onPrevious}
       />
     );
 
-    const select = screen.getByLabelText(/Show/i);
-    fireEvent.change(select, { target: { value: "20" } });
-    expect(handlePageSizeChange).toHaveBeenCalledWith(20);
+    fireEvent.click(screen.getByRole("button", { name: /Previous/i }));
+    expect(onPrevious).toHaveBeenCalledWith("first-cursor");
+  });
+
+  it("calls onPageSizeChange when size selector changes", () => {
+    const onPageSizeChange = jest.fn();
+    render(<CursorPagination {...defaultProps} onPageSizeChange={onPageSizeChange} />);
+
+    const select = screen.getByRole("combobox");
+    fireEvent.change(select, { target: { value: "25" } });
+    expect(onPageSizeChange).toHaveBeenCalledWith(25);
+  });
+
+  it("shows loaded count without total when totalCount is undefined", () => {
+    render(<CursorPagination {...defaultProps} totalCount={undefined} loadedCount={30} />);
+
+    expect(screen.getByText("30 entries loaded")).toBeInTheDocument();
+  });
+
+  it("shows page number based on cursor stack depth", () => {
+    render(<CursorPagination {...defaultProps} previousCursors={["c1", "c2", "c3"]} />);
+
+    // Page = previousCursors.length + 1 = 4
+    expect(screen.getByText(/Page 4/)).toBeInTheDocument();
   });
 });

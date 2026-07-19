@@ -16,6 +16,7 @@ alwaysApply: true
 | `.cursor/rules/04-subagent-auto-routing.mdc` | Mandatory Task/subagent delegation |
 | `.cursor/rules/05-portal-dev-keepalive.mdc` | Portal `:3000` up after task batches; restart / fix-retry |
 | `.cursor/rules/06-ai-maintenance-background.mdc` | Background `ai-maintenance-checker` + `pnpm ai` |
+| `.cursor/rules/07-adaptive-skill-loop.mdc` | Hermes-style distill/patch + progressive disclosure |
 | `.cursor/agents/` | Project specialists (auto-routed) |
 | `.qoder/rules/` | Qoder mirror |
 | `.kiro/agents/default.json` | Machine-readable gates |
@@ -24,7 +25,7 @@ alwaysApply: true
 ## Drift Ban
 
 - Do not soften, reinterpret, or "optimize past" AGENTS.md §18 never-dos.
-- Do not invent alternate stacks (npm/yarn, new UI kits, new state libs) without design-phase approval.
+- Do not invent alternate stacks (Never use npm or yarn — pnpm 9 only; no new UI kits / state libs) without design-phase approval.
 - If a local rule conflicts with AGENTS.md → **AGENTS.md wins**. Flag the conflict; do not silently diverge.
 - Multi-file work → `.kiro/specs/<feature-slug>/` phases before implementation.
 

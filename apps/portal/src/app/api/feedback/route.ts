@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
-import { serverLogger as logger } from "@repo/logger";
+import { serverLogger } from "@repo/logger";
+
+const logger = serverLogger();
 
 // In a real-world scenario, this would import a Zendesk/Jira SDK
 // import { zendesk } from '@integrations/zendesk';

@@ -117,7 +117,7 @@ export async function cacheGet<T>(key: string): Promise<T | null> {
  * Returns { value, source } where source is "l1", "l2", or null.
  */
 export async function cacheGetWithStats<T>(
-  key: string,
+  key: string
 ): Promise<{ value: T | null; source: "l1" | "l2" | null }> {
   const start = performance.now();
 
@@ -153,11 +153,7 @@ export async function cacheGetWithStats<T>(
  * Store a value in cache with a TTL (seconds).
  * Writes to both L1 (Memory) and L2 (Redis) - Write-Through.
  */
-export async function cacheSet<T>(
-  key: string,
-  value: T,
-  ttlSeconds: number,
-): Promise<void> {
+export async function cacheSet<T>(key: string, value: T, ttlSeconds: number): Promise<void> {
   // 1. Write to L1 Cache (Local Memory) - cap L1 TTL at 30s to keep memory footprint lean
   const l1Ttl = Math.min(ttlSeconds, 30);
   memorySet(key, value, l1Ttl);
@@ -180,7 +176,7 @@ export async function cacheSetWithTags<T>(
   key: string,
   value: T,
   ttlSeconds: number,
-  tags?: string[],
+  tags?: string[]
 ): Promise<void> {
   await cacheSet(key, value, ttlSeconds);
   if (tags && tags.length > 0) {
@@ -198,7 +194,7 @@ const activeFetches = new Map<string, Promise<any>>();
 export async function cacheWrap<T>(
   key: string,
   fn: () => Promise<T>,
-  ttlSeconds: number,
+  ttlSeconds?: number
 ): Promise<T> {
   const cached = await cacheGet<T>(key);
   if (cached !== null) return cached;
@@ -207,7 +203,7 @@ export async function cacheWrap<T>(
   if (!activeFetch) {
     activeFetch = fn()
       .then(async (result) => {
-        await cacheSet(key, result, ttlSeconds);
+        await cacheSet(key, result, ttlSeconds ?? 3600);
         return result;
       })
       .finally(() => {

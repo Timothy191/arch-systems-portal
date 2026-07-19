@@ -5,7 +5,7 @@ alwaysApply: true
 
 # Stack & Layout Hard Gates
 
-- Package manager: **pnpm only** (never npm/yarn).
+- Package manager: **pnpm 9** only. Never use npm or yarn.
 - App code: `apps/portal/` only. **Never** modify `apps(legacy)/`.
 - Packages: no app logic; never import from `apps/`.
 - Errors: `@repo/errors` AppError subclasses for domain errors.

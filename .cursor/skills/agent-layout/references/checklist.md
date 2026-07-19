@@ -7,5 +7,12 @@
 - [ ] Link `_shared/references/gold-standard-contract.md`
 - [ ] Entry ≤65 lines; depth in `references/`
 - [ ] Output template in `assets/`
-- [ ] Update `.cursor/agents/README.md` and `04-subagent-auto-routing.mdc`
-- [ ] Run `validate-agents.sh`
+- [ ] **Inventories (same change)** — keep all in sync:
+  - [ ] `.cursor/agents/README.md`
+  - [ ] `.cursor/rules/04-subagent-auto-routing.mdc` (routing table + inventory)
+  - [ ] `AGENTS.md` Project Agents table
+  - [ ] `CLAUDE.md` Subagents table
+  - [ ] `.cursor/standards/agent-layout/scripts/validate-agents.sh` `AGENTS=(...)` array
+  - [ ] If external CLI: `_shared/references/external-cli-matrix.md` + `scripts/run-headless.sh`
+- [ ] Run `validate-agents.sh` then `pnpm ai check`
+- [ ] CLI wrappers: see [`cli-headless-wrappers.md`](cli-headless-wrappers.md)

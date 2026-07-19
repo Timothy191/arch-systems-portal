@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
-import { serverLogger as logger } from "@repo/logger";
+import { serverLogger } from "@repo/logger";
+
+const logger = serverLogger();
 
 export async function POST(req: Request) {
   try {

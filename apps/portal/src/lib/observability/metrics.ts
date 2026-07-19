@@ -29,8 +29,13 @@ export function recordJobExecution(jobId: string, durationMs: number, success: b
   jobMetrics.set(jobId, entry);
 }
 
-export function recordDbQuery(key: string, durationMs: number, success: boolean) {
-  const [table = "unknown", operation = "unknown"] = key.split(":");
+export function recordDbQuery(
+  table: string,
+  operation = "SELECT",
+  durationMs: number,
+  success: boolean
+) {
+  const key = `${table}:${operation}`;
   const entry = dbMetrics.get(key) ?? { count: 0, errors: 0, totalDurationMs: 0 };
   entry.count++;
   if (!success) entry.errors++;
@@ -43,6 +48,11 @@ export async function getObservabilityMetrics(): Promise<ObservabilityMetrics> {
     jobMetrics: new Map(jobMetrics),
     dbMetrics: new Map(dbMetrics),
   };
+}
+
+export function clearObservabilityMetrics(): void {
+  jobMetrics.clear();
+  dbMetrics.clear();
 }
 
 /** @deprecated Use getObservabilityMetrics */

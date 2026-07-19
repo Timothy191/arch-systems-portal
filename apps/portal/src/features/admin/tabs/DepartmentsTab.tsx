@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { createBrowserSupabaseClient } from "@repo/supabase/client";
+import { useState } from "react";
+import { useSupabaseClient, useAdminData } from "@/hooks/useAdminData";
 import { GlassCard } from "@repo/ui/GlassCard";
 import { Edit2, Trash2, Plus } from "lucide-react";
 import { Button } from "@repo/ui/components/ui/button";
@@ -34,21 +34,16 @@ const ICONS = [
 ];
 
 export function DepartmentsTab() {
-  const [departments, setDepartments] = useState<Department[]>([]);
-  const [loading, setLoading] = useState(true);
+  const {
+    data: departments,
+    loading,
+    reload,
+  } = useAdminData<Department>((supabase) =>
+    supabase.from("departments").select("*").order("display_name")
+  );
   const [editingDept, setEditingDept] = useState<Department | null>(null);
   const [showEditDialog, setShowEditDialog] = useState(false);
-  const supabase = createBrowserSupabaseClient();
-
-  useEffect(() => {
-    loadDepartments();
-  }, []);
-
-  const loadDepartments = async () => {
-    const { data } = await supabase.from("departments").select("*").order("display_name");
-    if (data) setDepartments(data);
-    setLoading(false);
-  };
+  const supabase = useSupabaseClient();
 
   const handleEdit = (dept: Department) => {
     setEditingDept(dept);
@@ -85,14 +80,14 @@ export function DepartmentsTab() {
     }
     setShowEditDialog(false);
     setEditingDept(null);
-    loadDepartments();
+    reload();
   };
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this department?")) return;
     const { error } = await supabase.from("departments").delete().eq("id", id);
     if (error) logError(new Error(error.message), { context: "departments_tab_delete" });
-    loadDepartments();
+    reload();
   };
 
   return (
@@ -176,7 +171,7 @@ export function DepartmentsTab() {
                     <td className="px-6 py-4 text-arch-text-muted text-sm">{dept.icon}</td>
                     <td className="px-6 py-4">
                       <Badge
-                        variant="outline"
+                        variant="default"
                         className={`bg-${dept.color}-500/10 text-${dept.color}-400 border-${dept.color}-500/20`}
                       >
                         {dept.color}

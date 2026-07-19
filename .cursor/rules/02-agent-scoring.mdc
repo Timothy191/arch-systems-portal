@@ -29,10 +29,22 @@ Alignment: <score>/100 [<PASS|FAIL>]
 - Quality: <n>/15 — ...
 - Verify: <n>/15 — ...
 Hard fails: <none | list>
+Code quality: <n>/10 — <lint/types/tests/smell; not part of /100>
+Pro bar: <pct>% — <band vs shipping senior>
+Tokens saved: ~<n> (~<pct>%) — <progressive disclosure basis>
+Recommended actions:
+1. <highest-ROI>
+2. <second>
+3. <third>
+Adaptive next: <observe|distill|patch|reuse> — <target>
 ```
+
+Extended metrics: `.cursor/skills/agent-alignment-score/references/extended-metrics.md`  
+Gap ledger: `.cursor/skills/agent-alignment-score/references/gap-ledger.md`
 
 ## Enforcement
 
 - Score **FAIL** → do not mark done; fix gaps or state blockers.
 - Prefer running: `node .cursor/skills/agent-alignment-score/scripts/score.mjs --interactive`
 - Skill: `.cursor/skills/agent-alignment-score/SKILL.md`
+- Repeatable gaps → `skill-self-improve` (see `.cursor/rules/07-adaptive-skill-loop.mdc`)

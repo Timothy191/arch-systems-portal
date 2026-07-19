@@ -1,6 +1,6 @@
 import { getDepartmentContext } from "@/lib/dept-context";
 import { GlassCard } from "@repo/ui/GlassCard";
-import { Pagination } from "@repo/ui/components/ui/pagination";
+import { CursorPaginationControls } from "@/components/CursorPaginationControls";
 import { EmptyState } from "@repo/ui/EmptyState";
 import {
   Table,
@@ -11,7 +11,7 @@ import {
   TableRow,
 } from "@repo/ui/components/ui/table";
 import { Clock, Inbox } from "lucide-react";
-import { getVisitorsForDepartment } from "../actions";
+import { getVisitorsForDepartmentCursor } from "../actions";
 import { VisitorForm } from "./visitor-form";
 
 export const dynamic = "force-dynamic";
@@ -19,19 +19,22 @@ export const dynamic = "force-dynamic";
 export default async function VisitorsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ page?: string; pageSize?: string }>;
+  searchParams: Promise<{ cursor?: string; cursors?: string; limit?: string }>;
 }) {
   const params = await searchParams;
-  const page = parseInt(params.page || "1", 10);
-  const pageSize = parseInt(params.pageSize || "50", 10);
+  const limit = parseInt(params.limit || "50", 10);
+  const previousCursors = params.cursors ? params.cursors.split(",").filter(Boolean) : [];
+  const cursor = params.cursor || undefined;
 
   const { deptId } = await getDepartmentContext({
     department: "access-control",
   });
 
-  const { visitors, totalCount } = await getVisitorsForDepartment(deptId, page, pageSize);
-
-  const totalPages = Math.ceil(totalCount / pageSize);
+  const { visitors, nextCursor, hasMore, totalCount } = await getVisitorsForDepartmentCursor(
+    deptId,
+    cursor,
+    limit
+  );
 
   return (
     <div className="space-y-6">
@@ -125,28 +128,17 @@ export default async function VisitorsPage({
               )}
             </div>
 
-            {/* Pagination */}
+            {/* Cursor-based Pagination */}
             {totalCount > 0 && (
-              <div className="p-4 border-t border-arch-border-default">
-                <Pagination
-                  currentPage={page}
-                  totalPages={totalPages}
-                  totalCount={totalCount}
-                  pageSize={pageSize}
-                  onPageChange={(newPage) => {
-                    const url = new URL(window.location.href);
-                    url.searchParams.set("page", newPage.toString());
-                    url.searchParams.set("pageSize", pageSize.toString());
-                    window.location.href = url.toString();
-                  }}
-                  onPageSizeChange={(newSize) => {
-                    const url = new URL(window.location.href);
-                    url.searchParams.set("page", "1");
-                    url.searchParams.set("pageSize", newSize.toString());
-                    window.location.href = url.toString();
-                  }}
-                />
-              </div>
+              <CursorPaginationControls
+                nextCursor={nextCursor}
+                previousCursors={previousCursors}
+                hasNextPage={hasMore}
+                pageSize={limit}
+                loadedCount={visitors.length}
+                totalCount={totalCount}
+                currentCursor={cursor}
+              />
             )}
           </GlassCard>
         </div>

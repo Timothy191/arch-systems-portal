@@ -82,7 +82,7 @@ src/
 | Observability       | OpenTelemetry + Sentry                                 |
 | Error classes       | `@repo/errors` — AppError subclasses only              |
 | Icons               | lucide-react only                                      |
-| Package manager     | pnpm 9 (never npm/yarn)                                |
+| Package manager     | pnpm 9 (Never use npm or yarn)                         |
 | Build orchestration | Turborepo 2                                            |
 | Node                | >= 22 (Volta pin: 24)                                  |
 
@@ -133,7 +133,7 @@ Every non-trivial task follows a three-phase spec cycle. Spec files go in `.kiro
 
 ## Key Rules
 
-- Use `pnpm add` — never `npm install` or `yarn add`
+- Never use npm or yarn — use `pnpm add` only (pnpm 9)
 - New packages must be added to `pnpm-workspace.yaml` and `turbo.json`
 - Application logic goes in `apps/portal/`, not in `packages/`
 - Packages never import from `apps/`
@@ -221,6 +221,11 @@ Hybrid layout: entry `<name>.md` + folder `<name>/`. Native mirror: `.claude/age
 | `ai-maintenance-checker` | Background AI layout/sync every prompt       |
 | `sceptic`                | Before claiming done — adversarial review    |
 | `idle-runner`            | Independent work while other agents blocked  |
+| `vercel-brand-sync`      | Vercel-family brand assets                   |
+| `openspec`               | OpenSpec change lifecycle (CLI)              |
+| `aider`                  | Aider surgical headless edits                |
+| `goose`                  | Goose recipes / MCP automation               |
+| `omp`                    | omp heavy headless coding                    |
 
 Routing: `.cursor/rules/04-subagent-auto-routing.mdc` · Maintenance: `.cursor/rules/06-ai-maintenance-background.mdc` · Hooks: `.cursor/hooks/README.md`
 
@@ -228,11 +233,11 @@ Routing: `.cursor/rules/04-subagent-auto-routing.mdc` · Maintenance: `.cursor/r
 
 ### Skills
 
-| Location          | Skills                                                                                     |
-| ----------------- | ------------------------------------------------------------------------------------------ |
-| `.cursor/skills/` | `agent-alignment-score`, `ai-system`, `skill-layout`, `agent-layout`, `claude-code-layout` |
-| `.qoder/skills/`  | `quality`, `verify` (portal alias), `specs`, `dev`, `deploy`, `rls-audit`                  |
-| `.github/skills/` | `verify-changes`, `frontend-api-integration-patterns`, `acquire-codebase-knowledge`        |
+| Location          | Skills                                                                                                           |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `.cursor/skills/` | `agent-alignment-score`, `skill-self-improve`, `ai-system`, `skill-layout`, `agent-layout`, `claude-code-layout` |
+| `.qoder/skills/`  | `quality`, `verify` (portal alias), `specs`, `dev`, `deploy`, `rls-audit`                                        |
+| `.github/skills/` | `verify-changes`, `frontend-api-integration-patterns`, `acquire-codebase-knowledge`                              |
 
 Each skill folder: `SKILL.md` + `scripts/` + `references/` + `assets/`. See `.cursor/skills/README.md` for layout and commands.
 

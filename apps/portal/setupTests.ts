@@ -5,6 +5,11 @@ global.TextEncoder = global.TextEncoder || TextEncoder;
 global.TextDecoder =
   global.TextDecoder || (TextDecoder as unknown as typeof globalThis.TextDecoder);
 
+// StructuredClone polyfill for jsdom (required by fake-indexeddb v6+)
+if (typeof globalThis.structuredClone === "undefined") {
+  globalThis.structuredClone = <T>(obj: T): T => JSON.parse(JSON.stringify(obj));
+}
+
 // Override environment variables to prevent local development .env from polluting tests
 process.env.DISABLE_RATE_LIMIT = "false";
 process.env.NEXT_PUBLIC_FUXA_URL = "http://localhost:1881";

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Arch Systems — unified AI system command.
-# Merges: inventory, guardrails, layout validate, sync, dedupe, drift audit.
+# Merges: inventory, guardrails, layout validate, sync, dedupe, drift audit, provider health.
 #
 # Usage:
 #   pnpm ai              # status (default)
@@ -258,7 +258,7 @@ Single entry: **`pnpm ai`** — replaces scattered validate/sync/inventory scrip
 ## Pipeline
 
 ```
-INVENTORY → GUARDRAILS → LAYOUT → SYNC → DEDUPE → DRIFT → REPORT
+INVENTORY → GUARDRAILS → LAYOUT → SYNC → DEDUPE → DRIFT → PROVIDERS → REPORT
 ```
 
 ## Gold enforcement
@@ -277,6 +277,7 @@ INVENTORY → GUARDRAILS → LAYOUT → SYNC → DEDUPE → DRIFT → REPORT
 - `.cursor/agents/ai-docs-sync/scripts/inventory.sh`
 - `.cursor/agents/ai-docs-sync/scripts/verify-mirrors.sh`
 - `.cursor/agents/ai-maintenance-checker/scripts/run-maintenance.sh`
+- `.cursor/skills/provider-router/scripts/provider-router.sh`
 EOF
     log "  restored ai-system STANDARD.md"
   fi
@@ -348,6 +349,29 @@ run_drift() {
   done
 }
 
+# --- Phase 8: Provider health check ---
+run_providers() {
+  section "Provider router health"
+  local router=".cursor/skills/provider-router/scripts/provider-router.sh"
+  if [[ -x "$router" ]]; then
+    # Quiet check that doesn't modify state
+    local out; out="$("$router" --status 2>/dev/null || true)"
+    local available; available="$(echo "$out" | grep -c '✅' || true)"
+    local total; total="$(echo "$out" | grep -cE '(✅|⏳|🔴|⚠️|❓)' || true)"
+    if [[ "$available" -gt 0 ]]; then
+      ok "provider router: ${available}/${total} providers available"
+    else
+      warn "provider router: 0/${total} providers available — run: pnpm provider:route --check"
+    fi
+    # Show brief status
+    echo "$out" | while IFS= read -r line; do
+      [[ "$QUIET" -eq 1 ]] || echo "  $line"
+    done
+  else
+    warn "provider-router not installed — run: pnpm ai fix"
+  fi
+}
+
 # --- Onboard checklist ---
 run_onboard() {
   section "Onboarding checklist"
@@ -359,8 +383,12 @@ run_onboard() {
   3. Read .cursor/rules/01-real-world-logic.mdc (OBSERVE→VERIFY loop)
   4. Read .cursor/agents/_shared/references/gold-standard-contract.md
   5. Know routing: .cursor/rules/04-subagent-auto-routing.mdc
-  6. Before done on multi-file work: sceptic → agent-alignment-score → pnpm quality
-  7. Status anytime: pnpm ai status
+  6. Configure AI providers: pnpm provider:route --check
+  7. Before done on multi-file work: sceptic → agent-alignment-score → pnpm quality
+  8. Status anytime: pnpm ai status
+  9. Provider status:   pnpm provider:route
+  10. Provider check:    pnpm provider:route --check
+  11. Reset cooldowns:   pnpm provider:route --reset
 EOF
 }
 
@@ -388,6 +416,7 @@ case "$MODE" in
     run_layout
     run_dedupe
     run_drift
+    run_providers
     print_summary
     ;;
   fix)
@@ -398,6 +427,7 @@ case "$MODE" in
     run_layout
     run_dedupe
     run_drift
+    run_providers
     print_summary
     ;;
   check)
@@ -405,6 +435,7 @@ case "$MODE" in
     run_layout
     run_dedupe
     run_drift
+    run_providers
     print_summary
     ;;
   onboard)
@@ -420,6 +451,7 @@ case "$MODE" in
     run_layout
     run_dedupe
     run_drift
+    run_providers
     print_summary
     ;;
   *)

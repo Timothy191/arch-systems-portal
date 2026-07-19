@@ -1,12 +1,4 @@
-import {
-  Controller,
-  All,
-  Req,
-  Res,
-  UseGuards,
-  Logger,
-  Inject,
-} from "@nestjs/common";
+import { Controller, All, Req, Res, UseGuards, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import type { FastifyRequest, FastifyReply } from "fastify";
 import { OpsInternalGuard } from "./guards/ops-internal.guard";
@@ -18,7 +10,8 @@ export class GatewayProxyController {
   private readonly opsGatewayUrl: string;
 
   constructor(private readonly configService: ConfigService) {
-    this.opsGatewayUrl = this.configService.get<string>("OPS_GATEWAY_URL") ?? "http://ops-gateway:3100";
+    this.opsGatewayUrl =
+      this.configService.get<string>("OPS_GATEWAY_URL") ?? "http://ops-gateway:3100";
   }
 
   @All("*")
@@ -36,7 +29,17 @@ export class GatewayProxyController {
         if (
           value &&
           typeof value === "string" &&
-          !["host", "connection", "keep-alive", "proxy-authenticate", "proxy-authorization", "te", "trailers", "transfer-encoding", "upgrade"].includes(key)
+          ![
+            "host",
+            "connection",
+            "keep-alive",
+            "proxy-authenticate",
+            "proxy-authorization",
+            "te",
+            "trailers",
+            "transfer-encoding",
+            "upgrade",
+          ].includes(key)
         ) {
           outgoingHeaders[key] = value;
         }

@@ -1,2 +1,0 @@
-- [2026-07-07] Knip cleanup: added `vitest` to `devDependencies` so the existing vitest-based test files (`src/stores/*.test.ts`, `src/strategies/*.test.ts`) are recognized by `pnpm knip`. Note: package still mixes jest tooling with vitest tests; future work may unify the test runner.
-- [2026-06-05T14:51:54Z] Restored package to ensure system stability.

@@ -1,7 +1,7 @@
 import { getDepartmentContext } from "@/lib/dept-context";
 import { GlassCard } from "@repo/ui/GlassCard";
 import { Button } from "@repo/ui/components/ui/button";
-import { Pagination } from "@repo/ui/components/ui/pagination";
+import { CursorPaginationControls } from "@/components/CursorPaginationControls";
 import {
   Table,
   TableBody,
@@ -11,7 +11,7 @@ import {
   TableRow,
 } from "@repo/ui/components/ui/table";
 import { QrCode, Plus, UserCheck, ShieldOff } from "lucide-react";
-import { getBadgesForDepartment } from "../actions";
+import { getBadgesForDepartmentCursor } from "../actions";
 
 interface BadgeWithRelations {
   id: string;
@@ -31,19 +31,22 @@ export const dynamic = "force-dynamic";
 export default async function BadgesPage({
   searchParams,
 }: {
-  searchParams: Promise<{ page?: string; pageSize?: string }>;
+  searchParams: Promise<{ cursor?: string; cursors?: string; limit?: string }>;
 }) {
   const params = await searchParams;
-  const page = parseInt(params.page || "1", 10);
-  const pageSize = parseInt(params.pageSize || "50", 10);
+  const limit = parseInt(params.limit || "50", 10);
+  const previousCursors = params.cursors ? params.cursors.split(",").filter(Boolean) : [];
+  const cursor = params.cursor || undefined;
 
   const { deptId } = await getDepartmentContext({
     department: "access-control",
   });
 
-  const { badges, totalCount } = await getBadgesForDepartment(deptId, page, pageSize);
-
-  const totalPages = Math.ceil(totalCount / pageSize);
+  const { badges, nextCursor, hasMore, totalCount } = await getBadgesForDepartmentCursor(
+    deptId,
+    cursor,
+    limit
+  );
 
   // Resolve entity names from nested relation data
   const resolvedBadges = (badges as unknown as BadgeWithRelations[]).map((b) => {
@@ -134,28 +137,17 @@ export default async function BadgesPage({
               </TableBody>
             </Table>
 
-            {/* Pagination */}
+            {/* Cursor-based Pagination */}
             {totalCount > 0 && (
-              <div className="p-4 border-t border-arch-border-default">
-                <Pagination
-                  currentPage={page}
-                  totalPages={totalPages}
-                  totalCount={totalCount}
-                  pageSize={pageSize}
-                  onPageChange={(newPage) => {
-                    const url = new URL(window.location.href);
-                    url.searchParams.set("page", newPage.toString());
-                    url.searchParams.set("pageSize", pageSize.toString());
-                    window.location.href = url.toString();
-                  }}
-                  onPageSizeChange={(newSize) => {
-                    const url = new URL(window.location.href);
-                    url.searchParams.set("page", "1");
-                    url.searchParams.set("pageSize", newSize.toString());
-                    window.location.href = url.toString();
-                  }}
-                />
-              </div>
+              <CursorPaginationControls
+                nextCursor={nextCursor}
+                previousCursors={previousCursors}
+                hasNextPage={hasMore}
+                pageSize={limit}
+                loadedCount={badges.length}
+                totalCount={totalCount}
+                currentCursor={cursor}
+              />
             )}
           </GlassCard>
         </div>

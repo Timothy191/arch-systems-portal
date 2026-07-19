@@ -21,6 +21,10 @@ build
 .env.production.local
 .env.tools
 
+# TLS certs / private keys (never commit)
+certs/
+*.pem
+
 # Logs
 *.log
 npm-debug.log*
@@ -73,3 +77,4 @@ CLAUDE.local.md
 apps/portal/_app_legacy_shadow/
 apps/portal/_features_legacy_shadow/
 apps/portal/src.backup/
+.aider*

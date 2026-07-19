@@ -126,60 +126,64 @@ async function setRedisLastValue(key: string, value: number): Promise<void> {
 // use telemetryPushSchema — Supabase webhook payloads have a different shape
 // ({ table, record }). Only the direct single-tag update path is wrapped with
 // withValidation. handlePost parses the body once and routes accordingly.
-const handleDirectTag = withValidation(telemetryPushSchema, async (_req, data) => {
-  const { name, value } = data;
-  const fuxaUrl = process.env.NEXT_PUBLIC_FUXA_URL || "http://localhost:1881";
-  const endpoint = `${fuxaUrl}/api/tag`;
-  const numValue = Number(value);
+const handleDirectTag = withValidation(
+  telemetryPushSchema,
+  async (_req: Request, data: { name?: string; value?: number }) => {
+    const name: string = String(data.name ?? "");
+    const value: number = Number(data.value ?? 0);
+    const fuxaUrl = process.env.NEXT_PUBLIC_FUXA_URL || "http://localhost:1881";
+    const endpoint = `${fuxaUrl}/api/tag`;
+    const numValue = Number(value);
 
-  // L1 Check
-  if (localLastValues.has(name) && localLastValues.get(name) === numValue) {
-    return NextResponse.json({ success: true, synced: true, cached: true });
-  }
+    // L1 Check
+    if (localLastValues.has(name) && localLastValues.get(name) === numValue) {
+      return NextResponse.json({ success: true, synced: true, cached: true });
+    }
 
-  // L2 Check (Redis)
-  const lastVal = await getRedisLastValue(name);
-  if (lastVal !== null && lastVal === numValue) {
-    localLastValues.set(name, numValue);
-    return NextResponse.json({ success: true, synced: true, cached: true });
-  }
+    // L2 Check (Redis)
+    const lastVal = await getRedisLastValue(name);
+    if (lastVal !== null && lastVal === numValue) {
+      localLastValues.set(name, numValue);
+      return NextResponse.json({ success: true, synced: true, cached: true });
+    }
 
-  try {
-    const fuxaRes = await fetch(endpoint, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        ...(process.env.FUXA_API_KEY
-          ? { Authorization: `Bearer ${process.env.FUXA_API_KEY}` }
-          : {}),
-      },
-      body: JSON.stringify({ name, value: numValue }),
-    });
+    try {
+      const fuxaRes = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(process.env.FUXA_API_KEY
+            ? { Authorization: `Bearer ${process.env.FUXA_API_KEY}` }
+            : {}),
+        },
+        body: JSON.stringify({ name, value: numValue }),
+      });
 
-    if (!fuxaRes.ok) {
+      if (!fuxaRes.ok) {
+        return NextResponse.json(
+          {
+            warning: `FUXA SCADA server returned status ${fuxaRes.status}`,
+            synced: false,
+          },
+          { status: 200 }
+        );
+      }
+
+      localLastValues.set(name, numValue);
+      await setRedisLastValue(name, numValue);
+
+      return NextResponse.json({ success: true, synced: true });
+    } catch {
       return NextResponse.json(
         {
-          warning: `FUXA SCADA server returned status ${fuxaRes.status}`,
+          warning: "FUXA SCADA server is unreachable",
           synced: false,
         },
         { status: 200 }
       );
     }
-
-    localLastValues.set(name, numValue);
-    await setRedisLastValue(name, numValue);
-
-    return NextResponse.json({ success: true, synced: true });
-  } catch {
-    return NextResponse.json(
-      {
-        warning: "FUXA SCADA server is unreachable",
-        synced: false,
-      },
-      { status: 200 }
-    );
   }
-});
+);
 
 export async function POST(req: Request) {
   return withBodyLimit(

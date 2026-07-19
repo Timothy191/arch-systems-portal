@@ -1,41 +1,22 @@
 "use client";
 
-import { Tabs, TabsList, TabsTrigger } from "@repo/ui/components/ui/tabs";
-import { Users, Building2, Webhook, FileText, Settings, Truck, MapPin } from "lucide-react";
-
-const TABS = [
-  { value: "users", label: "Users", icon: Users },
-  { value: "departments", label: "Departments", icon: Building2 },
-];
+import type { ReactNode } from "react";
 
 interface AdminTabsProps {
-  defaultValue?: string;
-  value?: string;
-  onValueChange: (_value: string) => void;
-  children: React.ReactNode;
+  value: string;
+  onValueChange: (value: string) => void;
+  children: ReactNode;
 }
 
-export function AdminTabs({ defaultValue, value, onValueChange, children }: AdminTabsProps) {
+/**
+ * AdminTabs — navigation tabs for admin panel.
+ * Used by AdminTabsClient to wrap admin tab content with URL-based tab switching.
+ */
+export function AdminTabs({ value, onValueChange, children }: AdminTabsProps) {
   return (
-    <Tabs
-      defaultValue={defaultValue}
-      value={value}
-      onValueChange={onValueChange}
-      className="w-full"
-    >
-      <TabsList className="w-full justify-start bg-arch-surface-secondary border border-arch-border-default">
-        {TABS.map((tab) => (
-          <TabsTrigger
-            key={tab.value}
-            value={tab.value}
-            className="data-[state=active]:bg-arch-surface-primary data-[state=active]:text-arch-text-primary"
-          >
-            <tab.icon className="w-4 h-4 mr-2" />
-            {tab.label}
-          </TabsTrigger>
-        ))}
-      </TabsList>
+    <div className="admin-tabs" data-active-tab={value}>
+      {/* Tab navigation and content are rendered via children */}
       {children}
-    </Tabs>
+    </div>
   );
 }

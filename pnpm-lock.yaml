@@ -118,7 +118,7 @@ importers:
         version: 5.10.0
       inngest:
         specifier: ^4.4.0
-        version: 4.12.1(@opentelemetry/core@2.9.0(@opentelemetry/api@1.9.1))(express@5.2.1)(fastify@5.10.0)(hono@4.12.30)(next@16.2.10(@opentelemetry/api@1.9.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)(typescript@5.9.3)(zod@4.4.3)
+        version: 4.12.1(@opentelemetry/core@2.9.0(@opentelemetry/api@1.9.1))(express@5.2.1)(fastify@5.10.0)(hono@4.12.30)(next@16.2.10(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)(typescript@5.9.3)(zod@4.4.3)
       ioredis:
         specifier: ^5.11.1
         version: 5.11.1
@@ -211,15 +211,6 @@ importers:
       '@react-pdf/renderer':
         specifier: ^4.5.1
         version: 4.5.1(react@19.2.7)
-      '@repo/auth/data-access':
-        specifier: workspace:*
-        version: link:../../packages/auth/data-access
-      '@repo/auth/ui':
-        specifier: workspace:*
-        version: link:../../packages/auth/ui
-      '@repo/auth/utils':
-        specifier: workspace:*
-        version: link:../../packages/auth/utils
       '@repo/contract':
         specifier: workspace:*
         version: link:../../packages/contract
@@ -229,9 +220,6 @@ importers:
       '@repo/errors':
         specifier: workspace:*
         version: link:../../packages/errors
-      '@repo/hub/ui':
-        specifier: workspace:*
-        version: link:../../packages/hub/ui
       '@repo/logger':
         specifier: workspace:*
         version: link:../../packages/logger
@@ -241,15 +229,6 @@ importers:
       '@repo/redis':
         specifier: workspace:*
         version: link:../../packages/redis
-      '@repo/shared/data-access':
-        specifier: workspace:*
-        version: link:../../packages/shared/data-access
-      '@repo/shared/hooks':
-        specifier: workspace:*
-        version: link:../../packages/shared/hooks
-      '@repo/shared/utils':
-        specifier: workspace:*
-        version: link:../../packages/shared/utils
       '@repo/supabase':
         specifier: workspace:*
         version: link:../../packages/supabase
@@ -359,6 +338,9 @@ importers:
       eslint:
         specifier: ^8.57.0
         version: 8.57.1
+      fake-indexeddb:
+        specifier: ^6.2.5
+        version: 6.2.5
       jest:
         specifier: ^30.0.0
         version: 30.4.2(@types/node@22.20.1)
@@ -377,65 +359,6 @@ importers:
       typescript:
         specifier: ^5.7.0
         version: 5.9.3
-
-  packages/auth:
-    dependencies:
-      '@supabase/supabase-js':
-        specifier: ^2.105.4
-        version: 2.110.5
-      lucide-react:
-        specifier: ^0.469.0
-        version: 0.469.0(react@19.2.7)
-      next:
-        specifier: ^16.0.0
-        version: 16.2.10(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      react:
-        specifier: ^19.0.0
-        version: 19.2.7
-      sonner:
-        specifier: ^2.0.1
-        version: 2.0.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-    devDependencies:
-      '@repo/typescript-config':
-        specifier: workspace:*
-        version: link:../typescript-config
-      '@types/node':
-        specifier: ^22
-        version: 22.20.1
-      '@types/react':
-        specifier: ^19
-        version: 19.2.17
-      '@types/react-dom':
-        specifier: ^19
-        version: 19.2.3(@types/react@19.2.17)
-      typescript:
-        specifier: ^5.7.0
-        version: 5.9.3
-
-  packages/auth/data-access: {}
-
-  packages/auth/ui:
-    dependencies:
-      '@repo/ui':
-        specifier: workspace:*
-        version: link:../../ui
-      '@repo/utils':
-        specifier: workspace:*
-        version: link:../../utils
-      lucide-react:
-        specifier: ^0.469.0
-        version: 0.469.0(react@19.2.7)
-      next:
-        specifier: ^16.2.6
-        version: 16.2.10(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      react:
-        specifier: ^19.0.0
-        version: 19.2.7
-      sonner:
-        specifier: ^2.0.1
-        version: 2.0.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-
-  packages/auth/utils: {}
 
   packages/contract:
     dependencies:
@@ -456,14 +379,9 @@ importers:
         specifier: ^8.11.10
         version: 8.20.0
 
-  packages/departments/ui:
-    dependencies:
-      '@repo/ui':
-        specifier: workspace:*
-        version: link:../../ui
-      react:
-        specifier: ^19.0.0
-        version: 19.2.7
+  packages/departments: {}
+
+  packages/departments/ui: {}
 
   packages/errors:
     devDependencies:
@@ -492,22 +410,16 @@ importers:
         specifier: ^5.0.0
         version: 5.2.0(eslint@8.57.1)
 
-  packages/hub/ui:
-    dependencies:
-      '@repo/ui':
-        specifier: workspace:*
-        version: link:../../ui
-      react:
-        specifier: ^19.0.0
-        version: 19.2.7
-
   packages/logger: {}
 
   packages/rate-limiter:
-    dependencies:
-      '@repo/redis':
+    devDependencies:
+      '@repo/typescript-config':
         specifier: workspace:*
-        version: link:../redis
+        version: link:../typescript-config
+      typescript:
+        specifier: ^5.7.0
+        version: 5.9.3
 
   packages/redis:
     dependencies:
@@ -524,28 +436,6 @@ importers:
       typescript:
         specifier: ^5.7.0
         version: 5.9.3
-
-  packages/rust-bindings:
-    devDependencies:
-      '@repo/typescript-config':
-        specifier: workspace:*
-        version: link:../typescript-config
-      '@types/node':
-        specifier: ^22
-        version: 22.20.1
-      typescript:
-        specifier: ^5.7.0
-        version: 5.9.3
-
-  packages/shared/data-access: {}
-
-  packages/shared/hooks:
-    dependencies:
-      react:
-        specifier: ^19.0.0
-        version: 19.2.7
-
-  packages/shared/utils: {}
 
   packages/supabase:
     dependencies:
@@ -643,7 +533,7 @@ importers:
         version: 4.4.0
       inngest:
         specifier: ^4.4.0
-        version: 4.12.1(@opentelemetry/core@2.9.0(@opentelemetry/api@1.9.1))(express@5.2.1)(fastify@5.10.0)(hono@4.12.30)(next@16.2.10(@opentelemetry/api@1.9.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)(typescript@5.9.3)(zod@4.4.3)
+        version: 4.12.1(@opentelemetry/core@2.9.0(@opentelemetry/api@1.9.1))(express@5.2.1)(fastify@5.10.0)(hono@4.12.30)(next@16.2.10(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)(typescript@5.9.3)(zod@4.4.3)
     devDependencies:
       '@repo/typescript-config':
         specifier: workspace:*
@@ -5726,6 +5616,10 @@ packages:
 
   extend@3.0.2:
     resolution: {integrity: sha512-fjquC59cD7CyW6urNXK0FBufkZcoiGG80wTuPujX590cB5Ttln20E2UB4S/WARVqhXffZl2LNgS+gQdPIIim/g==}
+
+  fake-indexeddb@6.2.5:
+    resolution: {integrity: sha512-CGnyrvbhPlWYMngksqrSSUT1BAVP49dZocrHuK0SvtR0D5TMs5wP0o3j7jexDJW01KSadjBp1M/71o/KR3nD1w==}
+    engines: {node: '>=18'}
 
   fast-csv@4.3.6:
     resolution: {integrity: sha512-2RNSpuwwsJGP0frGsOmTb9oUF+VkFSM4SyLTDgwf2ciHWTarN0lQTC+F2f/t5J9QjW+c65VFIAAu85GsvMIusw==}
@@ -15394,6 +15288,8 @@ snapshots:
 
   extend@3.0.2: {}
 
+  fake-indexeddb@6.2.5: {}
+
   fast-csv@4.3.6:
     dependencies:
       '@fast-csv/format': 4.3.5
@@ -16032,7 +15928,7 @@ snapshots:
       - encoding
       - supports-color
 
-  inngest@4.12.1(@opentelemetry/core@2.9.0(@opentelemetry/api@1.9.1))(express@5.2.1)(fastify@5.10.0)(hono@4.12.30)(next@16.2.10(@opentelemetry/api@1.9.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)(typescript@5.9.3)(zod@4.4.3):
+  inngest@4.12.1(@opentelemetry/core@2.9.0(@opentelemetry/api@1.9.1))(express@5.2.1)(fastify@5.10.0)(hono@4.12.30)(next@16.2.10(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)(typescript@5.9.3)(zod@4.4.3):
     dependencies:
       '@bufbuild/protobuf': 2.12.1
       '@inngest/ai': 0.1.7

@@ -1,15 +1,40 @@
 {
+  "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
+  "globalDependencies": [".env*", "tsconfig.json"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"],
+      "cache": true
     },
-    "dev": { "cache": false, "persistent": true },
-    "lint": { "dependsOn": ["^lint"] },
-    "type-check": { "dependsOn": [] },
-    "test": { "dependsOn": ["^build"], "inputs": ["$TURBO_DEFAULT$"], "outputs": ["coverage/**"] },
-    "clean": { "cache": false }
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "lint": {
+      "dependsOn": ["^lint"],
+      "outputs": [],
+      "cache": true
+    },
+    "type-check": {
+      "dependsOn": [],
+      "outputs": [],
+      "cache": true
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$"],
+      "outputs": ["coverage/**"],
+      "cache": true
+    },
+    "clean": {
+      "cache": false
+    },
+    "quality": {
+      "dependsOn": ["lint", "type-check", "test"],
+      "cache": false
+    }
   }
 }

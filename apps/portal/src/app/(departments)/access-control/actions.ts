@@ -2,6 +2,7 @@
 
 import { cacheInvalidateTags, CacheCategory } from "@repo/redis";
 import { createServerSupabaseClient } from "@repo/supabase/server";
+import { encodeCursor, decodeCursor } from "@repo/ui/components/ui/pagination-cursor";
 import { revalidatePath } from "next/cache";
 import { AuthError, DatabaseError, ForbiddenError } from "@/lib/errors/error-classes";
 import { withCache } from "@/lib/cache-utils";
@@ -97,8 +98,7 @@ export async function getAccessControlMetrics(deptId: string): Promise<AccessCon
       }
 
       const metrics = (data as Record<string, unknown>)?.metrics as
-        | Record<string, number>
-        | undefined;
+        Record<string, number> | undefined;
 
       const activeQrCodes = metrics?.active_qr_codes ?? 0;
       const totalEntities = metrics?.total_entities ?? 0;
@@ -118,7 +118,7 @@ export async function getAccessControlMetrics(deptId: string): Promise<AccessCon
       category: CacheCategory.METRICS,
       keyParts: ["access-control", deptId, "metrics"],
       tags: [`dept:${deptId}`, "table:badges", "table:access_logs", "table:personnel"],
-    },
+    }
   );
 }
 
@@ -142,7 +142,7 @@ interface AccessLogWithBadge {
 
 export async function getRecentAccessActivity(
   deptId: string,
-  limit = 8,
+  limit = 8
 ): Promise<AccessActivityEntry[]> {
   const { supabase } = await assertAccessControlRole();
 
@@ -156,7 +156,7 @@ export async function getRecentAccessActivity(
       access_granted,
       denial_reason,
       badge:badges!inner(qr_code, entity_type, personnel:personnel_id(first_name, surname), visitor:visitor_id(name))
-    `,
+    `
     )
     .eq("department_id", deptId)
     .order("scanned_at", { ascending: false })
@@ -263,7 +263,7 @@ export async function getEntityBadgeStatus(deptId: string): Promise<EntityBadgeS
       category: CacheCategory.METRICS,
       keyParts: ["access-control", deptId, "badge-status"],
       tags: [`dept:${deptId}`, "table:badges", "table:personnel", "table:fleet", "table:equipment"],
-    },
+    }
   );
 }
 
@@ -273,7 +273,7 @@ export async function getEntityBadgeStatus(deptId: string): Promise<EntityBadgeS
 
 export async function getHourlyAccessStats(
   deptId: string,
-  date?: string,
+  date?: string
 ): Promise<HourlyAccessPoint[]> {
   const { supabase } = await assertAccessControlRole();
 
@@ -314,7 +314,7 @@ export async function getHourlyAccessStats(
 /* ------------------------------------------------------------------ */
 
 export async function getBadgeStatusDistribution(
-  deptId: string,
+  deptId: string
 ): Promise<BadgeStatusDistribution[]> {
   return withCache(
     async () => {
@@ -332,8 +332,7 @@ export async function getBadgeStatusDistribution(
       }
 
       const dist = (data as Record<string, unknown>)?.badge_status_distribution as
-        | Record<string, number>
-        | undefined;
+        Record<string, number> | undefined;
 
       return [
         { name: "Active", value: dist?.active ?? 0, fill: "var(--success)" },
@@ -354,7 +353,7 @@ export async function getBadgeStatusDistribution(
       category: CacheCategory.METRICS,
       keyParts: ["access-control", deptId, "distribution"],
       tags: [`dept:${deptId}`, "table:badges"],
-    },
+    }
   );
 }
 
@@ -404,7 +403,7 @@ export async function getBadgesForDepartment(deptId: string, page = 1, pageSize 
       fleet:fleet_id(fleet_code, vehicle_type),
       equipment:equipment_id(equip_code, equipment_type)
     `,
-      { count: "exact" },
+      { count: "exact" }
     )
     .eq("department_id", deptId)
     .order("issued_at", { ascending: false })
@@ -418,6 +417,81 @@ export async function getBadgesForDepartment(deptId: string, page = 1, pageSize 
   }
 
   return { badges: badges ?? [], totalCount: count ?? 0 };
+}
+
+/**
+ * Cursor-based badge fetch for forward/backward navigation.
+ * Fetches limit+1 rows to detect if a next page exists.
+ */
+export async function getBadgesForDepartmentCursor(
+  deptId: string,
+  cursor?: string,
+  limit = 50,
+  direction: "forward" | "backward" = "forward"
+) {
+  const { supabase } = await assertAccessControlRole();
+
+  let query = supabase
+    .from("badges")
+    .select(
+      `
+      id,
+      qr_code,
+      entity_type,
+      is_active,
+      issued_at,
+      expires_at,
+      personnel:personnel_id(first_name, surname),
+      visitor:visitor_id(first_name, surname),
+      fleet:fleet_id(fleet_code, vehicle_type),
+      equipment:equipment_id(equip_code, equipment_type)
+    `,
+      { count: "exact" }
+    )
+    .eq("department_id", deptId)
+    .order("issued_at", { ascending: direction === "backward" })
+    .order("id", { ascending: direction === "backward" })
+    .limit(limit + 1);
+
+  if (cursor) {
+    const decoded = decodeCursor(cursor);
+    if (decoded) {
+      const { s: sortVal, i: idVal } = decoded;
+      if (direction === "forward") {
+        query = query.or(`issued_at.lt.${sortVal},and(issued_at.eq.${sortVal},id.lt.${idVal})`);
+      } else {
+        query = query.or(`issued_at.gt.${sortVal},and(issued_at.eq.${sortVal},id.gt.${idVal})`);
+      }
+    }
+  }
+
+  const { data, error, count } = await query;
+
+  if (error) {
+    throw new DatabaseError("Failed to load badges (cursor)", {
+      operation: "select",
+      context: { error: error.message },
+    });
+  }
+
+  const rows = data ?? [];
+  const hasMore = rows.length > limit;
+  const items = hasMore ? rows.slice(0, limit) : rows;
+
+  // For backward pagination, reverse back to original order
+  if (direction === "backward") {
+    items.reverse();
+  }
+
+  const lastRow = items[items.length - 1];
+  const nextCursor = hasMore && lastRow ? encodeCursor(lastRow.issued_at ?? "", lastRow.id) : null;
+
+  return {
+    badges: items,
+    nextCursor,
+    hasMore,
+    totalCount: count ?? 0,
+  };
 }
 
 export async function getVisitorsForDepartment(deptId: string, page = 1, pageSize = 50) {
@@ -445,7 +519,7 @@ export async function getVisitorsForDepartment(deptId: string, page = 1, pageSiz
       check_out_time,
       status
     `,
-      { count: "exact" },
+      { count: "exact" }
     )
     .eq("department_id", deptId)
     .order("check_in_time", { ascending: false })
@@ -459,6 +533,84 @@ export async function getVisitorsForDepartment(deptId: string, page = 1, pageSiz
   }
 
   return { visitors: visitors ?? [], totalCount: count ?? 0 };
+}
+
+/**
+ * Cursor-based visitor fetch for forward/backward navigation.
+ */
+export async function getVisitorsForDepartmentCursor(
+  deptId: string,
+  cursor?: string,
+  limit = 50,
+  direction: "forward" | "backward" = "forward"
+) {
+  const { supabase } = await assertAccessControlRole();
+
+  let query = supabase
+    .from("visitors")
+    .select(
+      `
+      id,
+      first_name,
+      surname,
+      id_number,
+      company,
+      visiting,
+      reason_for_entry,
+      check_in_time,
+      check_out_time,
+      status
+    `,
+      { count: "exact" }
+    )
+    .eq("department_id", deptId)
+    .order("check_in_time", { ascending: direction === "backward" })
+    .order("id", { ascending: direction === "backward" })
+    .limit(limit + 1);
+
+  if (cursor) {
+    const decoded = decodeCursor(cursor);
+    if (decoded) {
+      const { s: sortVal, i: idVal } = decoded;
+      if (direction === "forward") {
+        query = query.or(
+          `check_in_time.lt.${sortVal},and(check_in_time.eq.${sortVal},id.lt.${idVal})`
+        );
+      } else {
+        query = query.or(
+          `check_in_time.gt.${sortVal},and(check_in_time.eq.${sortVal},id.gt.${idVal})`
+        );
+      }
+    }
+  }
+
+  const { data, error, count } = await query;
+
+  if (error) {
+    throw new DatabaseError("Failed to load visitors (cursor)", {
+      operation: "select",
+      context: { error: error.message },
+    });
+  }
+
+  const rows = data ?? [];
+  const hasMore = rows.length > limit;
+  const items = hasMore ? rows.slice(0, limit) : rows;
+
+  if (direction === "backward") {
+    items.reverse();
+  }
+
+  const lastRow = items[items.length - 1];
+  const nextCursor =
+    hasMore && lastRow ? encodeCursor(lastRow.check_in_time ?? "", lastRow.id) : null;
+
+  return {
+    visitors: items,
+    nextCursor,
+    hasMore,
+    totalCount: count ?? 0,
+  };
 }
 
 export async function registerVisitor(formData: FormData) {
@@ -534,7 +686,7 @@ export async function getAccessLogsForDepartment(deptId: string, page = 1, pageS
       direction,
       badge:badges!inner(qr_code, entity_type, personnel:personnel_id(first_name, surname), visitor:visitor_id(first_name, surname))
     `,
-      { count: "exact" },
+      { count: "exact" }
     )
     .eq("department_id", deptId)
     .order("scanned_at", { ascending: false })
@@ -548,4 +700,75 @@ export async function getAccessLogsForDepartment(deptId: string, page = 1, pageS
   }
 
   return { logs: logs ?? [], totalCount: count ?? 0 };
+}
+
+/**
+ * Cursor-based access log fetch for forward/backward navigation.
+ */
+export async function getAccessLogsForDepartmentCursor(
+  deptId: string,
+  cursor?: string,
+  limit = 50,
+  direction: "forward" | "backward" = "forward"
+) {
+  const { supabase } = await assertAccessControlRole();
+
+  let query = supabase
+    .from("access_logs")
+    .select(
+      `
+      id,
+      scanned_at,
+      gate_location,
+      access_granted,
+      denial_reason,
+      access_type,
+      direction,
+      badge:badges!inner(qr_code, entity_type, personnel:personnel_id(first_name, surname), visitor:visitor_id(first_name, surname))
+    `,
+      { count: "exact" }
+    )
+    .eq("department_id", deptId)
+    .order("scanned_at", { ascending: direction === "backward" })
+    .order("id", { ascending: direction === "backward" })
+    .limit(limit + 1);
+
+  if (cursor) {
+    const decoded = decodeCursor(cursor);
+    if (decoded) {
+      const { s: sortVal, i: idVal } = decoded;
+      if (direction === "forward") {
+        query = query.or(`scanned_at.lt.${sortVal},and(scanned_at.eq.${sortVal},id.lt.${idVal})`);
+      } else {
+        query = query.or(`scanned_at.gt.${sortVal},and(scanned_at.eq.${sortVal},id.gt.${idVal})`);
+      }
+    }
+  }
+
+  const { data, error, count } = await query;
+
+  if (error) {
+    throw new DatabaseError("Failed to load access logs (cursor)", {
+      operation: "select",
+      context: { error: error.message },
+    });
+  }
+
+  const rows = data ?? [];
+  const hasMore = rows.length > limit;
+  const items = hasMore ? rows.slice(0, limit) : rows;
+
+  if (direction === "backward") {
+    items.reverse();
+  }
+
+  const lastRow = items[items.length - 1];
+  const nextCursor = hasMore && lastRow ? encodeCursor(lastRow.scanned_at ?? "", lastRow.id) : null;
+
+  return {
+    logs: items,
+    nextCursor,
+    hasMore,
+    totalCount: count ?? 0,
+  };
 }

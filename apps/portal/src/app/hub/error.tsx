@@ -34,7 +34,11 @@ export default function HubError({ error, reset }: HubErrorProps) {
     <div className="space-y-6">
       <h2 className="text-2xl font-medium text-arch-text-primary">{title}</h2>
       <p className="text-arch-text-muted text-sm">{message}</p>
-      {appError && <div className="text-xs text-arch-text-muted font-mono">{appError.code}</div>}
+      {(appError as { code?: string } | null) && (
+        <div className="text-xs text-arch-text-muted font-mono">
+          {(appError as { code?: string }).code}
+        </div>
+      )}
       <SecondaryButton size="sm" onClick={reset}>
         Try again
       </SecondaryButton>

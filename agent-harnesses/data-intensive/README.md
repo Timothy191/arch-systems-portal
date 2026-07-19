@@ -1,4 +1,6 @@
-# Data Intensive Harness
+# Data Intensive Harness (optional sidecar)
+
+**Not agent policy.** Canonical rulebook is repo-root `AGENTS.md`. This folder is optional collateral for batch/data-processing experiments and must never overwrite `AGENTS.md`, `.cursorrules`, or always-apply Cursor rules.
 
 Optimized for large-scale data processing workflows.
 
@@ -18,12 +20,12 @@ Optimized for large-scale data processing workflows.
 
 ## Configuration
 
-| Parameter | Default | Description |
-|-----------|---------|-------------|
-| batchSize | 1000 | Number of records per batch |
-| cacheExpiry | 3600 | Cache TTL in seconds |
-| maxConnections | 10 | Maximum concurrent connections |
-| retryAttempts | 3 | Number of retry attempts |
+| Parameter      | Default | Description                    |
+| -------------- | ------- | ------------------------------ |
+| batchSize      | 1000    | Number of records per batch    |
+| cacheExpiry    | 3600    | Cache TTL in seconds           |
+| maxConnections | 10      | Maximum concurrent connections |
+| retryAttempts  | 3       | Number of retry attempts       |
 
 ## Requirements
 
