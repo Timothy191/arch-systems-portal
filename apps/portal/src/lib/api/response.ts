@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
-import type { ZodSchema } from "@repo/contract";
+import type { z } from "zod";
 
-export async function validateBody<T>(
+export async function validateBody<T extends z.ZodTypeAny>(
   request: Request,
-  schema: ZodSchema<T>,
-): Promise<{ data: T } | NextResponse> {
+  schema: T,
+): Promise<{ data: z.infer<T> } | NextResponse> {
   try {
     const body = await request.json();
     const result = schema.safeParse(body);

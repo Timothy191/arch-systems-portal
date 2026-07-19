@@ -49,7 +49,7 @@ export function DepartmentLayout({ department, tabs, children }: DepartmentLayou
 
         <div className="px-3 pt-3 pb-1 flex items-center justify-between">
           <Link
-            href="/"
+            href="/hub"
             className="flex items-center gap-1.5 text-[12px] text-[var(--text-muted)] hover:text-[var(--accent-blue)] transition-colors group px-2 py-1 rounded"
           >
             <span className="group-hover:-translate-x-0.5 transition-transform text-sm">‹</span>

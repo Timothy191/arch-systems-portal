@@ -12,13 +12,20 @@
     "./read-replica": "./src/read-replica.ts",
     "./service-role": "./src/service-role.ts"
   },
+  "scripts": {
+    "supabase:start": "supabase start --workdir ..",
+    "supabase:stop": "supabase stop --workdir ..",
+    "supabase:status": "supabase status --workdir .."
+  },
   "dependencies": {
     "@supabase/ssr": "^0.6.1",
-    "@supabase/supabase-js": "^2.49.0"
+    "@supabase/supabase-js": "^2.49.0",
+    "next": "^16.0.0"
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
     "@types/node": "^22",
+    "supabase": "^2.26.0",
     "typescript": "^5.7.0"
   }
 }

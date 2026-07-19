@@ -1,4 +1,4 @@
-import { getRedisClient } from "./client.js";
+import { getRedisClient } from "@repo/redis/client";
 
 const TAG_PREFIX = "arch:__tags__";
 
@@ -24,7 +24,7 @@ export async function indexCacheKeyByTags(
   try {
     const pipeline = redis.multi();
     for (const tag of tags) {
-      pipeline.sAdd(`${TAG_PREFIX}:${tag}`, key);
+      pipeline.sadd(`${TAG_PREFIX}:${tag}`, key);
     }
     await pipeline.exec();
   } catch {
@@ -48,8 +48,9 @@ export async function cacheInvalidateTags(tags: string[]): Promise<number> {
       const tagKey = `${TAG_PREFIX}:${tag}`;
       const keysToDelete: string[] = [];
 
-      for await (const member of redis.sScanIterator(tagKey, { COUNT: 100 })) {
-        keysToDelete.push(member);
+      const stream = redis.sscanStream(tagKey, { count: 100 });
+      for await (const member of stream) {
+        keysToDelete.push(member as string);
         if (keysToDelete.length >= 100) {
           await redis.unlink(keysToDelete);
           deleted += keysToDelete.length;
@@ -88,11 +89,13 @@ export async function cacheInvalidatePrefixes(
     for (const prefix of prefixes) {
       const keysToDelete: string[] = [];
 
-      for await (const key of redis.scanIterator({
-        MATCH: `${prefix}*`,
-        COUNT: 100,
-      })) {
-        keysToDelete.push(key);
+      const stream = redis.scanStream({
+        match: `${prefix}*`,
+        count: 100,
+      });
+
+      for await (const key of stream) {
+        keysToDelete.push(key as string);
         if (keysToDelete.length >= 100) {
           await redis.unlink(keysToDelete);
           deleted += keysToDelete.length;

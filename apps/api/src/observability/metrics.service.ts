@@ -1,6 +1,6 @@
 import { Injectable, Inject, Logger } from "@nestjs/common";
 import { REDIS_CLIENT } from "../redis/redis.constants";
-import type { RedisClientType } from "redis";
+import type { Redis } from "ioredis";
 
 interface MetricEntry {
   count: number;
@@ -14,7 +14,7 @@ export class MetricsService {
   private readonly jobMetrics = new Map<string, MetricEntry>();
   private readonly dbMetrics = new Map<string, MetricEntry>();
 
-  constructor(@Inject(REDIS_CLIENT) private readonly redis: RedisClientType) {}
+  constructor(@Inject(REDIS_CLIENT) private readonly redis: Redis) {}
 
   recordJobExecution(
     jobId: string,
@@ -32,14 +32,14 @@ export class MetricsService {
     this.jobMetrics.set(jobId, entry);
 
     // Redis sync (fire-and-forget)
-    if (this.redis?.isOpen) {
+    if (this.redis?.status === "ready") {
       const key = `metrics:job:${jobId}`;
-      this.redis.hIncrBy(key, "count", 1).catch(() => {});
+      this.redis.hincrby(key, "count", 1).catch(() => {});
       if (!success) {
-        this.redis.hIncrBy(key, "errors", 1).catch(() => {});
+        this.redis.hincrby(key, "errors", 1).catch(() => {});
       }
       this.redis
-        .hIncrByFloat(key, "totalDurationMs", durationMs)
+        .hincrbyfloat(key, "totalDurationMs", durationMs)
         .catch(() => {});
     }
   }
@@ -62,14 +62,14 @@ export class MetricsService {
     this.dbMetrics.set(key, entry);
 
     // Redis sync (fire-and-forget)
-    if (this.redis?.isOpen) {
+    if (this.redis?.status === "ready") {
       const redisKey = `metrics:db:${tableName}:${operation}`;
-      this.redis.hIncrBy(redisKey, "count", 1).catch(() => {});
+      this.redis.hincrby(redisKey, "count", 1).catch(() => {});
       if (!success) {
-        this.redis.hIncrBy(redisKey, "errors", 1).catch(() => {});
+        this.redis.hincrby(redisKey, "errors", 1).catch(() => {});
       }
       this.redis
-        .hIncrByFloat(redisKey, "totalDurationMs", durationMs)
+        .hincrbyfloat(redisKey, "totalDurationMs", durationMs)
         .catch(() => {});
     }
   }
@@ -82,18 +82,19 @@ export class MetricsService {
     const mergedDb = new Map<string, MetricEntry>(this.dbMetrics);
 
     try {
-      if (this.redis?.isOpen) {
+      if (this.redis?.status === "ready") {
         // Fetch job keys from Redis
         const jobKeys: string[] = [];
-        for await (const key of this.redis.scanIterator({
-          MATCH: "metrics:job:*",
-          COUNT: 100,
-        })) {
-          jobKeys.push(key);
+        const jobStream = this.redis.scanStream({
+          match: "metrics:job:*",
+          count: 100,
+        });
+        for await (const key of jobStream) {
+          jobKeys.push(key as string);
         }
         for (const key of jobKeys) {
           const jobId = key.substring("metrics:job:".length);
-          const data = await this.redis.hGetAll(key);
+          const data = await this.redis.hgetall(key);
           if (data && data.count) {
             mergedJobs.set(jobId, {
               count: parseInt(data.count || "0", 10),
@@ -105,15 +106,16 @@ export class MetricsService {
 
         // Fetch db keys from Redis
         const dbKeys: string[] = [];
-        for await (const key of this.redis.scanIterator({
-          MATCH: "metrics:db:*",
-          COUNT: 100,
-        })) {
-          dbKeys.push(key);
+        const dbStream = this.redis.scanStream({
+          match: "metrics:db:*",
+          count: 100,
+        });
+        for await (const key of dbStream) {
+          dbKeys.push(key as string);
         }
         for (const key of dbKeys) {
           const keyWithoutPrefix = key.substring("metrics:db:".length);
-          const data = await this.redis.hGetAll(key);
+          const data = await this.redis.hgetall(key);
           if (data && data.count) {
             mergedDb.set(keyWithoutPrefix, {
               count: parseInt(data.count || "0", 10),

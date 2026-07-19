@@ -91,24 +91,27 @@ export class ControlRoomService {
         .execute(),
       db
         .selectFrom("machine_operations")
-        .select(["machine_id", "hours_worked"])
-        .where("department_id", "=", deptId)
-        .where("shift_date", "=", date)
-        .where("shift_type", "=", shift)
+        .innerJoin("machines", "machines.id", "machine_operations.machine_id")
+        .select(["machine_operations.machine_id", "machine_operations.hours_operated"])
+        .where("machines.department_id", "=", deptId)
+        .where("machine_operations.shift_date", "=", date)
+        .where("machine_operations.shift_type", "=", shift)
         .execute(),
       db
         .selectFrom("excavator_activity")
-        .select(["machine_id"])
-        .where("department_id", "=", deptId)
-        .where("activity_date", "=", date)
-        .where("shift_type", "=", shift)
+        .innerJoin("machines", "machines.id", "excavator_activity.excavator_id")
+        .select(["excavator_activity.excavator_id as machine_id"])
+        .where("machines.department_id", "=", deptId)
+        .where("excavator_activity.activity_date", "=", date)
+        .where("excavator_activity.shift_type", "=", shift)
         .execute(),
       db
         .selectFrom("dozer_rolls")
-        .select(["machine_id", "hours_operated"])
-        .where("department_id", "=", deptId)
-        .where("roll_date", "=", date)
-        .where("shift_type", "=", shift)
+        .innerJoin("machines", "machines.id", "dozer_rolls.dozer_id")
+        .select(["dozer_rolls.dozer_id", "dozer_rolls.rolls_count"])
+        .where("machines.department_id", "=", deptId)
+        .where("dozer_rolls.roll_date", "=", date)
+        .where("dozer_rolls.shift_type", "=", shift)
         .execute(),
       db
         .selectFrom("hourly_loads")
@@ -119,15 +122,15 @@ export class ControlRoomService {
         .execute(),
     ]);
 
-    const rawMachines = machines.data ?? [];
-    const rawMachineOps = machineOps.data ?? [];
-    const rawExcavatorActs = excavatorActs.data ?? [];
-    const rawDozerRolls = dozerRolls.data ?? [];
-    const rawHourlyLoads = hourlyLoads.data ?? [];
+    const rawMachines = machines;
+    const rawMachineOps = machineOps;
+    const rawExcavatorActs = excavatorActs;
+    const rawDozerRolls = dozerRolls;
+    const rawHourlyLoads = hourlyLoads;
 
     const machineOpIds = new Set(rawMachineOps.map((r) => r.machine_id));
     const excavatorIds = new Set(rawExcavatorActs.map((r) => r.machine_id));
-    const dozerIds = new Set(rawDozerRolls.map((r) => r.machine_id));
+    const dozerIds = new Set(rawDozerRolls.map((r) => r.dozer_id));
     const loadIds = new Set(
       rawHourlyLoads
         .filter((r) => (r.total_loads ?? 0) > 0)
@@ -136,20 +139,20 @@ export class ControlRoomService {
 
     const machineOpHoursMap = new Map<string, number>();
     for (const r of rawMachineOps) {
-      if (r.machine_id && r.hours_worked !== null) {
+      if (r.machine_id && r.hours_operated !== null) {
         machineOpHoursMap.set(
           r.machine_id,
-          (machineOpHoursMap.get(r.machine_id) || 0) + Number(r.hours_worked),
+          (machineOpHoursMap.get(r.machine_id) || 0) + Number(r.hours_operated),
         );
       }
     }
 
     const dozerHoursMap = new Map<string, number>();
     for (const r of rawDozerRolls) {
-      if (r.machine_id && r.hours_operated !== null) {
+      if (r.dozer_id && r.rolls_count !== null) {
         dozerHoursMap.set(
-          r.machine_id,
-          (dozerHoursMap.get(r.machine_id) || 0) + Number(r.hours_operated),
+          r.dozer_id,
+          (dozerHoursMap.get(r.dozer_id) || 0) + Number(r.rolls_count),
         );
       }
     }

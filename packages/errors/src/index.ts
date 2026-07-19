@@ -95,6 +95,13 @@ export class RateLimitError extends AppError {
   }
 }
 
+export class WebFetchError extends AppError {
+  constructor(message: string, meta?: Record<string, unknown>) {
+    super({ code: "SERVICE_UNAVAILABLE", message, status: 502, meta });
+    this.name = "WebFetchError";
+  }
+}
+
 /** Narrow an unknown value to AppError. */
 export function isAppError(err: unknown): err is AppError {
   return err instanceof AppError;

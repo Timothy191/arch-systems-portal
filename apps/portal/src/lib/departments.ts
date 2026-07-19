@@ -307,6 +307,13 @@ export const TRAINING_TABS = [
   { name: "reports", label: "Reports", icon: "FileText" },
 ] as const;
 
+/** Admin is not a department shell; tabs match hub actions + /admin root. */
+export const ADMIN_TABS = [
+  { name: "dashboard", label: "Dashboard", icon: "BarChart2" },
+  { name: "personnel", label: "Personnel", icon: "Users" },
+  { name: "shifts", label: "Shifts", icon: "Clock" },
+] as const;
+
 /**
  * Get tabs for a specific department
  * Control Room gets specialized tabs, others get standard tabs
@@ -332,6 +339,9 @@ export function getDepartmentTabs(departmentName: string) {
   }
   if (departmentName === "training") {
     return TRAINING_TABS;
+  }
+  if (departmentName === "admin") {
+    return ADMIN_TABS;
   }
   return DEPARTMENT_TABS;
 }

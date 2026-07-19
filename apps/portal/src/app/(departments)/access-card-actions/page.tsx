@@ -66,11 +66,12 @@ export default async function AccessCardActionsDashboardPage() {
     const days = daysRemaining(card.expires_at ?? "");
     const status = getExpiryStatus(days);
     return {
+      id: card.id,
       ...card,
       entityName: name,
       daysRemaining: days,
       expiryStatus: status,
-    };
+    } as ExpiringCard & { entityName: string; daysRemaining: number; expiryStatus: ReturnType<typeof getExpiryStatus> };
   });
 
   const onlinePrintersPct =

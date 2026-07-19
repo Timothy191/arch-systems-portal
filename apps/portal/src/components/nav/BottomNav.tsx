@@ -31,9 +31,9 @@ export function BottomNav({ accessibleDepartments }: BottomNavProps) {
   const pathname = usePathname();
 
   const visibleItems =
-    accessibleDepartments && accessibleDepartments.length > 0
-      ? NAV_ITEMS.filter((item) => !item.dept || accessibleDepartments.includes(item.dept))
-      : NAV_ITEMS;
+    accessibleDepartments === undefined
+      ? NAV_ITEMS
+      : NAV_ITEMS.filter((item) => !item.dept || accessibleDepartments.includes(item.dept));
 
   return (
     <nav

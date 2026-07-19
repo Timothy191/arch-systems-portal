@@ -2,7 +2,7 @@ module.exports = {
   testEnvironment: "jsdom",
   forceExit: true,
   setupFilesAfterEnv: ["<rootDir>/setupTests.ts"],
-  testPathIgnorePatterns: ["<rootDir>/_app_legacy_shadow/"],
+  testPathIgnorePatterns: [],
   transform: {
     "^.+\\.(t|j)sx?$": [
       "@swc/jest",
@@ -71,8 +71,7 @@ module.exports = {
     "!**/*.test.{ts,tsx}",
     "!**/*.d.ts",
     "!**/node_modules/**",
-    "!**/_app_legacy_shadow/**",
-    "!**/_features_legacy_shadow/**",
+    "!**/src.backup/**",
     "!**/src.backup/**",
   ],
   coverageReporters: ["text", "lcov", "html"],

@@ -94,8 +94,8 @@ export async function generateMonthlyReport(
       throw new Error("Department ID is required to determine storage permissions");
     }
 
-    const doc = React.createElement(ReportTemplate, { data: reportData });
-    const buffer = await pdf(doc as React.ReactElement).toBuffer();
+    const doc = React.createElement(ReportTemplate, { data: reportData }) as unknown as Parameters<typeof pdf>[0];
+    const buffer = await pdf(doc).toBuffer();
 
     const filename = `${deptId}/${user.id}/report-${Date.now()}.pdf`;
 

@@ -3,10 +3,10 @@
 import React from "react";
 
 export class ErrorBoundary extends React.Component<
-  { children: React.ReactNode; fallback?: React.ReactNode },
+  { children: React.ReactNode; fallback?: React.ReactNode; context?: string },
   { hasError: boolean }
 > {
-  constructor(props: { children: React.ReactNode; fallback?: React.ReactNode }) {
+  constructor(props: { children: React.ReactNode; fallback?: React.ReactNode; context?: string }) {
     super(props);
     this.state = { hasError: false };
   }

@@ -1,14 +1,16 @@
 ---
 name: dev
 description: >-
-  Start the development server with Docker infrastructure and health checks.
-  Use when portal is down or full stack dev is needed. Anti-trigger: do not use
-  for deploy; do not replace portal keepalive curl check for quick UI verify.
+  Start the development server with Redis → Supabase → portal, stack smoke,
+  monitoring terminals, and login browser. Use when portal is down or full
+  stack is needed. Anti-trigger: do not use for deploy; do not replace portal
+  keepalive curl check for quick UI verify.
 ---
 
 # Start Dev Server
 
-Docker infra (Redis + Postgres) + Next.js portal with HMR on `:3000`.
+Boot order: **Redis → Supabase → host Next.js** on `:3000`, then stack smoke,
+monitoring terminals, and browser to `/login`.
 
 ## Workflow
 
@@ -18,12 +20,13 @@ Docker infra (Redis + Postgres) + Next.js portal with HMR on `:3000`.
 
 ## Scripts
 
-| Script                    | Purpose                             |
-| ------------------------- | ----------------------------------- |
-| `scripts/check-health.sh` | Probe `:3000` health endpoint       |
-| `scripts/start.sh`        | Run `scripts/dev.sh` from repo root |
-| `scripts/shutdown.sh`     | Stop portal or portal + Docker      |
+| Script                    | Purpose                                      |
+| ------------------------- | -------------------------------------------- |
+| `scripts/check-health.sh` | Probe `:3000` health endpoint                |
+| `scripts/start.sh`        | Run `scripts/dev.sh` from repo root          |
+| `scripts/shutdown.sh`     | Stop portal; `--infra` also Redis + Supabase |
 
 ## References
 
-- [`references/modes.md`](references/modes.md) — `--quick`, `--no-infra`, shutdown flags
+- [`references/modes.md`](references/modes.md) — flags and shutdown
+- Spec: `.kiro/specs/dev-boot-sequence/`

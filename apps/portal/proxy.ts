@@ -31,6 +31,7 @@ export function isValidRedirect(path: string): boolean {
     /^\/drilling(?:\/.*)?$/,
     /^\/production(?:\/.*)?$/,
     /^\/access-control(?:\/.*)?$/,
+    /^\/access-card-actions(?:\/.*)?$/,
     /^\/engineering(?:\/.*)?$/,
     /^\/control-room(?:\/.*)?$/,
     /^\/safety(?:\/.*)?$/,
@@ -44,10 +45,12 @@ export function isValidRedirect(path: string): boolean {
   return allowedPatterns.some((pattern) => pattern.test(path));
 }
 
+// AGENT-TRACE: Keep in sync with src/lib/dept-access.ts DEPARTMENT_ROUTE_SLUGS
 const DEPARTMENT_ROUTES = [
   "drilling",
   "production",
   "access-control",
+  "access-card-actions",
   "engineering",
   "control-room",
   "safety",
@@ -55,6 +58,7 @@ const DEPARTMENT_ROUTES = [
   "satellite-monitoring",
 ];
 
+// AGENT-TRACE: Keep in sync with src/lib/dept-access.ts RESTRICTED_DEPT_ROLES (+ tools)
 const RESTRICTED_ROUTES: Record<string, string[]> = {
   "access-control": ["access_control", "admin"],
   "control-room": ["control_room_operator", "admin"],
@@ -75,7 +79,7 @@ export function isTokenExpiredError(error: unknown): boolean {
 }
 
 function redirectWithError(request: NextRequest, error: string, clientResponse?: NextResponse) {
-  const url = new URL("/", request.url);
+  const url = new URL("/hub", request.url);
   url.searchParams.set("error", error);
   const res = NextResponse.redirect(url);
   if (clientResponse && clientResponse.cookies) {
@@ -261,6 +265,11 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // OAuth PKCE callback must run before a session exists
+  if (pathname.startsWith("/auth/callback")) {
+    return NextResponse.next();
+  }
+
   if (isPublicPath(pathname)) {
     return NextResponse.next();
   }
@@ -278,7 +287,7 @@ export async function proxy(request: NextRequest) {
     }
 
     if (user) {
-      return NextResponse.redirect(new URL("/", request.url));
+      return NextResponse.redirect(new URL("/hub", request.url));
     }
 
     return client.response;

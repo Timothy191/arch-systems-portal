@@ -83,10 +83,14 @@ if (typeof window !== "undefined") {
   });
 
   // Mock IntersectionObserver
-  class MockIntersectionObserver {
+  class MockIntersectionObserver implements IntersectionObserver {
+    readonly root: Element | Document | null = null;
+    readonly rootMargin: string = "0px";
+    readonly thresholds: ReadonlyArray<number> = [0];
     observe = jest.fn();
     disconnect = jest.fn();
     unobserve = jest.fn();
+    takeRecords = jest.fn<IntersectionObserverEntry[], []>(() => []);
   }
 
   Object.defineProperty(window, "IntersectionObserver", {
@@ -95,5 +99,5 @@ if (typeof window !== "undefined") {
     value: MockIntersectionObserver,
   });
 
-  global.IntersectionObserver = MockIntersectionObserver as unknown as IntersectionObserver;
+  global.IntersectionObserver = MockIntersectionObserver as unknown as typeof IntersectionObserver;
 }

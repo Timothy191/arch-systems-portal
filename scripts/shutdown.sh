@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 # ──────────────────────────────────────────────────────────────────────────────
 # Arch-Systems — Shutdown Script
-# Stops the portal dev process and optionally tears down Docker Compose.
+# Stops the portal dev process and optionally tears down Redis + Supabase.
 # ──────────────────────────────────────────────────────────────────────────────
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
-YELLOW='\033[0;33m'; GREEN='\033[0;32m'; NC='\033[0m'; BOLD='\033[1m'
+YELLOW='\033[0;33m'; GREEN='\033[0;32m'; NC='\033[0m'; BOLD='\033[1m'; DIM='\033[0;2m'
 
 echo -e "\n  ${BOLD}${YELLOW}Arch Systems — Shutdown${NC}\n"
 
@@ -24,11 +24,22 @@ else
   echo -e "  – No portal PID file found"
 fi
 
-# Optionally stop Docker Compose
+# Optionally stop Supabase + Docker Compose infra (Redis)
 if [ "${1:-}" = "--infra" ]; then
+  export PATH="${HOME}/.npm-global/bin:${PATH}"
+
+  if (cd "$REPO_ROOT" && pnpm supabase:stop >/dev/null 2>&1); then
+    echo -e "  ${GREEN}✓${NC} Supabase stack stopped"
+  else
+    echo -e "  – Supabase stop skipped (${DIM}not running or CLI unavailable${NC})"
+  fi
+
   if docker compose version >/dev/null 2>&1; then
-    docker compose -f "$REPO_ROOT/docker-compose.yml" down
-    echo -e "  ${GREEN}✓${NC} Docker Compose stack stopped"
+    docker compose -f "$REPO_ROOT/docker-compose.yml" --profile infra down
+    echo -e "  ${GREEN}✓${NC} Docker Compose infra (Redis) stopped"
+  elif command -v docker-compose >/dev/null 2>&1; then
+    docker-compose -f "$REPO_ROOT/docker-compose.yml" --profile infra down
+    echo -e "  ${GREEN}✓${NC} Docker Compose infra (Redis) stopped"
   fi
 fi
 

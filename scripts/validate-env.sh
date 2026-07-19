@@ -3,7 +3,7 @@
 # Arch-Systems — Environment Variable Validation
 #
 # Validates that all required environment variables are set before deployment.
-# Usage: bash scripts/validate-env.sh [--production]
+# Usage: bash scripts/validate-env.sh [--production|--local]
 #
 # ══════════════════════════════════════════════════════════════════════════════
 
@@ -65,15 +65,19 @@ validate_env_var() {
 
 validate_supabase_url() {
   local url="${NEXT_PUBLIC_SUPABASE_URL:-}"
+  local allow_local="${1:-false}"
   if [[ -z "$url" ]]; then
     return 0  # Already validated as required
   fi
   
   if [[ "$url" =~ ^https?://[a-zA-Z0-9.-]+\.(supabase\.co|supabase\.in)$ ]]; then
     log_ok "Supabase URL format valid"
+  elif [[ "$allow_local" == "true" ]] && [[ "$url" =~ ^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?(/.*)?$ ]]; then
+    log_ok "Supabase local URL accepted" "$url"
   else
     log_warn "Supabase URL format may be invalid: $url"
     echo "    Expected: https://[project-id].supabase.co"
+    echo "    Or local: http://localhost:54321 (use --local)"
   fi
 }
 
@@ -84,11 +88,15 @@ main() {
   
   local mode="${1:-development}"
   local is_production=false
+  local is_local=false
   local has_errors=0
   
   if [[ "$mode" == "--production" ]] || [[ "$mode" == "production" ]]; then
     is_production=true
     log_info "Running production environment validation"
+  elif [[ "$mode" == "--local" ]] || [[ "$mode" == "local" ]]; then
+    is_local=true
+    log_info "Running local development environment validation"
   else
     log_info "Running development environment validation"
   fi
@@ -108,7 +116,7 @@ main() {
   validate_env_var "SUPABASE_SERVICE_ROLE_KEY" "required" "Supabase service role key (server-only)"
   
   if [[ -n "${NEXT_PUBLIC_SUPABASE_URL:-}" ]]; then
-    validate_supabase_url
+    validate_supabase_url "$is_local"
   fi
   
   # ── Database & Cache ───────────────────────────────────────────────────────

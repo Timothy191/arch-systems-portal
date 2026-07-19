@@ -25,7 +25,7 @@ export class AuthService {
       throw new UnauthorizedException("Invalid credentials");
     }
 
-    const user = userResult[0];
+    const user = userResult[0]!;
     const encryptedPassword = user.encrypted_password as string;
 
     // Compare password
@@ -86,7 +86,7 @@ export class AuthService {
         throw new UnauthorizedException("User not found");
       }
 
-      const user = userResult[0];
+      const user = userResult[0]!;
 
       // Optionally fetch employee again for fresh data
       const employeeResult = await db
@@ -111,13 +111,13 @@ export class AuthService {
   }
 
   async getEmployeeByAuthId(userId: string) {
-    const { data } = await db
+    const employee = await db
       .selectFrom("employees")
       .select(["id", "auth_id", "department_id", "full_name", "role", "accessible_departments"])
       .where("auth_id", "=", userId)
-      .execute();
+      .executeTakeFirst();
 
-    return data ?? null;
+    return employee ?? null;
   }
 
   async hashPin(pin: string) {

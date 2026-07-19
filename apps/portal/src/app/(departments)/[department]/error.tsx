@@ -49,8 +49,8 @@ export default function DepartmentError({ error, reset }: DepartmentErrorProps) 
       <p className="text-arch-text-muted text-sm">{message}</p>
       {appError && (
         <div className="text-xs text-arch-text-muted font-mono">
-          {appError.code}
-          {appError.statusCode && ` (${appError.statusCode})`}
+          {(appError as { code?: string }).code}
+          {(appError as { statusCode?: number }).statusCode && ` (${(appError as { statusCode?: number }).statusCode})`}
         </div>
       )}
       <div className="flex items-center gap-3">

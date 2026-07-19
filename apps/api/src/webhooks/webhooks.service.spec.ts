@@ -201,7 +201,7 @@ describe("WebhooksService", () => {
           department_id: "550e8400-e29b-41d4-a716-446655440000",
         },
       );
-      expect(result.webhook.id).toBe("wh-new");
+      expect(result.webhook!.id).toBe("wh-new");
     });
 
     it("throws ForbiddenException for non-admin creating in unauthorized department", async () => {
@@ -318,7 +318,7 @@ describe("WebhooksService", () => {
         { department_id: "dept-1", role: "user", accessible_departments: [] },
         { description: "Updated by user" },
       );
-      expect(result.webhook.description).toBe("Updated by user");
+      expect(result.webhook!.description).toBe("Updated by user");
     });
 
     it("partially updates only the provided fields", async () => {
@@ -331,8 +331,8 @@ describe("WebhooksService", () => {
       const result = await service.updateWebhook("wh-1", adminEmployee, {
         active: false,
       });
-      expect(result.webhook.active).toBe(false);
-      expect(result.webhook.url).toBe(existingWebhook.url); // unchanged
+      expect(result.webhook!.active).toBe(false);
+      expect(result.webhook!.url).toBe(existingWebhook.url); // unchanged
     });
   });
 

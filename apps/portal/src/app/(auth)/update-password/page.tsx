@@ -219,8 +219,6 @@ export default function UpdatePasswordPage() {
                   type="submit"
                   disabled={loading}
                   className="w-full liquid-glass-button"
-                  hoverScale={1}
-                  tapScale={0.97}
                 >
                   {loading ? "Updating..." : "Update Password"}
                 </AnimatedButton>

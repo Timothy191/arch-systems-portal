@@ -1,7 +1,7 @@
 // packages/database/src/index.ts
 import { Kysely, PostgresDialect } from 'kysely';
 import { Pool } from 'pg';
-import type { Database } from './types';
+import type { Database } from './types.js';
 
 export const db = new Kysely<Database>({
   dialect: new PostgresDialect({
@@ -15,4 +15,4 @@ export const db = new Kysely<Database>({
   }),
 });
 
-export type { Database, Json } from './types';
+export type { Database, Json } from './types.js';

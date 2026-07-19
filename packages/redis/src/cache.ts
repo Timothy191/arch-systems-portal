@@ -1,9 +1,9 @@
-import { recordCacheHit, recordCacheMiss, recordRedisError } from "./stats.js";
+import { recordCacheHit, recordCacheMiss, recordRedisError } from "@repo/redis/stats";
 import {
   cacheInvalidateTags,
   cacheInvalidatePrefixes,
   indexCacheKeyByTags,
-} from "./invalidation.js";
+} from "@repo/redis/invalidation";
 
 // ------------------------------------------------------------------
 // L1 In-Memory Cache with TTL + LRU eviction
@@ -61,7 +61,7 @@ function memoryDeleteByPrefix(prefix: string): void {
 
 async function getRedisClientSafe() {
   try {
-    const { getRedisClient } = await import("./client.js");
+    const { getRedisClient } = await import("@repo/redis/client");
     return await getRedisClient();
   } catch {
     return null;
@@ -166,7 +166,7 @@ export async function cacheSet<T>(
   try {
     const redis = await getRedisClientSafe();
     if (redis) {
-      await redis.setEx(key, ttlSeconds, JSON.stringify(value));
+      await redis.setex(key, ttlSeconds, JSON.stringify(value));
     }
   } catch {
     recordRedisError();

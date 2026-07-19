@@ -107,7 +107,7 @@ export async function fetchWeather(
         const d = new Date();
         d.setDate(d.getDate() + i);
         return {
-          date: d.toISOString().split("T")[0],
+          date: d.toISOString().split("T")[0] ?? "",
           icon: "☀️",
           maxTemp: 22,
           minTemp: 12,

@@ -31,7 +31,7 @@ export async function submitPrintJob(spec: CardPrintSpec) {
     const fileName = `card_print_${spec.employeeId}_${Date.now()}.pdf`;
     const filePath = path.join(tmpDir, fileName);
 
-    await renderToFile(React.createElement(CardDocument, { spec }) as React.ReactElement, filePath);
+    await renderToFile(React.createElement(CardDocument, { spec }) as unknown as Parameters<typeof renderToFile>[0], filePath);
 
     // 2. Send the file to the network printer using system print spooler (CUPS via lp)
     const printerName = process.env.MAGICARD_PRINTER_NAME || "Magicard_300NEO";

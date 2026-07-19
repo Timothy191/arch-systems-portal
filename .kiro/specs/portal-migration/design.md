@@ -4,6 +4,13 @@
 
 The migration involves copying the entire legacy portal application into the new portal structure, then adapting it to work with the existing monorepo setup.
 
+> **⚠️ Routing conflict (flagged 2026-07-19):** This spec's source is
+> `apps(legacy)/portal/`, but `AGENTS.md` / `QUICK_REFERENCE.md` state
+> `apps(legacy)/` is **deprecated — never route work here / DO NOT MODIFY**.
+> Resolve this before routing any execution: confirm the legacy tree is still
+> the intended source, or update this spec to reference the current location.
+> Do not start Task 3-style copy work until the conflict is signed off.
+
 ## File Structure Changes
 
 ### Source: `apps(legacy)/portal/`

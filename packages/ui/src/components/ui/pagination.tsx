@@ -3,10 +3,20 @@ import React from "react";
 interface PaginationProps {
   currentPage: number;
   totalPages: number;
+  totalCount?: number;
+  pageSize?: number;
   onPageChange: (page: number) => void;
+  onPageSizeChange?: (size: number) => void;
 }
 
-export function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) {
+export function Pagination({
+  currentPage,
+  totalPages,
+  totalCount,
+  pageSize,
+  onPageChange,
+  onPageSizeChange,
+}: PaginationProps) {
   return (
     <div className="flex items-center justify-center space-x-2 py-4">
       <button

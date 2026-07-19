@@ -65,6 +65,7 @@ export const CacheCategory = {
   DRILLING: "drilling",
   TRAINING: "training",
   HUB: "hub",
+  METRICS: "metrics",
 };
 
 export function cacheGet(key: string): Promise<string | null> {
@@ -83,10 +84,8 @@ export function cacheEvictL1ByPrefix(prefix: string): Promise<number> {
   });
 }
 
-export function cacheInvalidateTags(tags: string[]): Promise<void> {
-  // Stub implementation
-  return Promise.resolve();
-}
+export { cacheInvalidateTags, cacheInvalidatePrefixes } from "./invalidation.js";
+export { getCacheStats } from "./stats.js";
 
 export function cacheWrap<T>(key: string, fn: () => Promise<T>): Promise<T> {
   return cacheGet(key).then((cached) => {
@@ -96,14 +95,6 @@ export function cacheWrap<T>(key: string, fn: () => Promise<T>): Promise<T> {
       return result;
     });
   });
-}
-
-export function getCacheStats() {
-  return {
-    hits: 0,
-    misses: 0,
-    keys: 0,
-  };
 }
 
 export const cacheGetWithStats = cacheGet;

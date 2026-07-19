@@ -56,7 +56,7 @@ export class AccessControlService {
     }
 
     // 1. Find the Badge and check if it's active
-    const { data: badge } = await db
+    const badge = await db
       .selectFrom("badges")
       .select(["id", "is_active", "entity_type", "personnel_id", "visitor_id"])
       .where("qr_code", "=", code)
@@ -67,11 +67,11 @@ export class AccessControlService {
       throw new NotFoundException("Unrecognized Badge");
     }
 
-    const badgeRecord = badge[0];
+    const badgeRecord = badge[0]!;
 
     if (!badgeRecord.is_active) {
       await this.logAccess(
-        badgeRecord.id,
+        badgeRecord.id ?? null,
         badgeRecord.entity_type,
         "DENIED - Badge Revoked",
         source,
@@ -85,38 +85,38 @@ export class AccessControlService {
     let denialReason: string | null = null;
 
     if (badgeRecord.entity_type === "personnel" && badgeRecord.personnel_id) {
-      const { data: person } = await db
+      const person = await db
         .selectFrom("personnel")
         .select(["first_name", "surname", "status"])
         .where("id", "=", badgeRecord.personnel_id)
         .execute();
 
       if (person && person.length > 0) {
-        entityName = `${person[0].first_name} ${person[0].surname}`;
-        if (person[0].status !== "Active") {
+        entityName = `${person[0]!.first_name} ${person[0]!.surname}`;
+        if (person[0]!.status !== "Active") {
           isAuthorized = false;
-          denialReason = `DENIED - Personnel Status: ${person[0].status}`;
+          denialReason = `DENIED - Personnel Status: ${person[0]!.status}`;
         }
       }
     } else if (badgeRecord.entity_type === "visitor" && badgeRecord.visitor_id) {
-      const { data: visitor } = await db
+      const visitor = await db
         .selectFrom("visitors")
         .select(["name", "status"])
         .where("id", "=", badgeRecord.visitor_id)
         .execute();
 
       if (visitor && visitor.length > 0) {
-        entityName = visitor[0].name;
-        if (visitor[0].status !== "Checked In") {
+        entityName = visitor[0]!.name;
+        if (visitor[0]!.status !== "Checked In") {
           isAuthorized = false;
-          denialReason = `DENIED - Visitor Status: ${visitor[0].status}`;
+          denialReason = `DENIED - Visitor Status: ${visitor[0]!.status}`;
         }
       }
     }
 
     // 3. Log the Access event
     await this.logAccess(
-      badgeRecord.id,
+      badgeRecord.id ?? null,
       badgeRecord.entity_type,
       isAuthorized ? null : denialReason,
       source,
@@ -137,20 +137,20 @@ export class AccessControlService {
     gateLocation: string,
     accessGranted = false,
   ) {
-    const { error } = await db
-      .insertInto("access_logs")
-      .values({
-        badge_id: badgeId,
-        access_type: entityType,
-        direction: "IN",
-        gate_location: gateLocation,
-        access_granted: accessGranted,
-        denial_reason: denialReason,
-      })
-      .execute();
-
-    if (error) {
-      this.logger.error("access_log_write_failed", error.message);
+    try {
+      await db
+        .insertInto("access_logs")
+        .values({
+          badge_id: badgeId,
+          access_type: entityType,
+          direction: "IN",
+          gate_location: gateLocation,
+          access_granted: accessGranted,
+          denial_reason: denialReason,
+        })
+        .execute();
+    } catch (error) {
+      this.logger.error("access_log_write_failed", error instanceof Error ? error.message : String(error));
     }
   }
 }

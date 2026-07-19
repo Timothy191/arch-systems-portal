@@ -5,8 +5,6 @@
 function liveTsFiles(filenames) {
   return filenames.filter(
     (f) =>
-      !f.includes("/_app_legacy_shadow/") &&
-      !f.includes("/_features_legacy_shadow/") &&
       !f.includes("/src.backup/") &&
       !f.includes("/packages/rust-bindings/"),
   );

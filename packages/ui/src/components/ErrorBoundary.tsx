@@ -6,6 +6,7 @@ interface ErrorBoundaryProps {
   children: ReactNode;
   fallback?: (error: Error, reset: () => void) => ReactNode;
   onError?: (error: Error, errorInfo: { componentStack: string }) => void;
+  context?: string;
 }
 
 interface ErrorBoundaryState {

@@ -2,7 +2,13 @@
   "permissions": {
     "allow": [
       "Bash(pnpm -v)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(git push *)",
+      "Bash(gh auth *)",
+      "Bash(git remote *)",
+      "Bash(git branch *)",
+      "Bash(gh api *)",
+      "Bash(gh repo *)"
     ]
   },
   "enabledPlugins": {

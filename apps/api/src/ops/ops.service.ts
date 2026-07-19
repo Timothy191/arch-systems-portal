@@ -1,7 +1,7 @@
 import { Injectable, Logger, Inject } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { REDIS_CLIENT } from "../redis/redis.constants";
-import type { RedisClientType } from "redis";
+import type { Redis } from "ioredis";
 import { AgentTriggerService } from "../ai/agent-trigger.service";
 import { AiGatewayService } from "../ai/ai-gateway.service";
 import { AiInvocationTelemetry } from "../ai/ai-invocation.telemetry";
@@ -29,7 +29,7 @@ export class OpsService {
 
   constructor(
     private readonly configService: ConfigService,
-    @Inject(REDIS_CLIENT) private readonly redisClient: RedisClientType,
+    @Inject(REDIS_CLIENT) private readonly redisClient: Redis,
     private readonly agentTriggerService: AgentTriggerService,
     private readonly aiGateway: AiGatewayService,
     private readonly aiTelemetry: AiInvocationTelemetry,
@@ -42,19 +42,21 @@ export class OpsService {
     let cleared = 0;
 
     try {
-      let cursor = 0;
+      let cursor = "0";
       do {
-        const result = await this.redisClient.scan(cursor, {
-          MATCH: dto.pattern,
-          COUNT: 200,
-        });
-        cursor = result.cursor;
-        const keys = result.keys;
+        const [nextCursor, keys] = await this.redisClient.scan(
+          cursor,
+          "MATCH",
+          dto.pattern,
+          "COUNT",
+          200,
+        );
+        cursor = nextCursor;
         if (keys.length > 0) {
           await this.redisClient.del(keys);
           cleared += keys.length;
         }
-      } while (cursor !== 0);
+      } while (cursor !== "0");
     } catch (error) {
       const message = error instanceof Error ? error.message : "Unknown error";
       this.logger.error(`Cache clear failed: ${message}`);
@@ -69,11 +71,11 @@ export class OpsService {
   async getQueueCounts(queueName: string) {
     try {
       const [waiting, active, completed, failed, delayed] = await Promise.all([
-        this.redisClient.lLen(`bull:${queueName}:wait`).catch(() => 0),
-        this.redisClient.lLen(`bull:${queueName}:active`).catch(() => 0),
-        this.redisClient.lLen(`bull:${queueName}:completed`).catch(() => 0),
-        this.redisClient.lLen(`bull:${queueName}:failed`).catch(() => 0),
-        this.redisClient.lLen(`bull:${queueName}:delayed`).catch(() => 0),
+        this.redisClient.llen(`bull:${queueName}:wait`).catch(() => 0),
+        this.redisClient.llen(`bull:${queueName}:active`).catch(() => 0),
+        this.redisClient.llen(`bull:${queueName}:completed`).catch(() => 0),
+        this.redisClient.llen(`bull:${queueName}:failed`).catch(() => 0),
+        this.redisClient.llen(`bull:${queueName}:delayed`).catch(() => 0),
       ]);
 
       return { queue: queueName, waiting, active, completed, failed, delayed };

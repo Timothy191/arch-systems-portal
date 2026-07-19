@@ -21,7 +21,7 @@ export class WebhooksService {
       .selectFrom("employees")
       .select(["department_id", "role", "accessible_departments", "id"])
       .where("auth_id", "=", userId)
-      .single();
+      .executeTakeFirst();
 
     if (!employee) {
       throw new NotFoundException("Employee not found");
@@ -36,20 +36,20 @@ export class WebhooksService {
   }) {
     let query = db
       .selectFrom("webhook_endpoints")
-      .select(["*"])
-      .where("deleted_at", "=", null);
+      .selectAll()
+      .where("deleted_at", "is", null);
 
     if (employee.role !== "admin") {
       const depts = employee.accessible_departments || [];
       if (depts.length > 0) {
         query = query.where((qb) =>
           qb.or([
-            qb.eq("department_id", employee.department_id),
-            qb.in("department_id", depts),
+            qb("department_id", "=", employee.department_id),
+            qb("department_id", "in", depts),
           ]),
         );
       } else {
-        query = query.eq("department_id", employee.department_id);
+        query = query.where("department_id", "=", employee.department_id);
       }
     }
 
@@ -85,7 +85,7 @@ export class WebhooksService {
 
     const webhook = await db
       .insertInto("webhook_endpoints")
-      .set(newWebhook)
+      .values(newWebhook)
       .returningAll()
       .executeTakeFirst();
 
@@ -102,7 +102,7 @@ export class WebhooksService {
 
     const existingWebhook = await db
       .selectFrom("webhook_endpoints")
-      .select(["*"])
+      .selectAll()
       .where("id", "=", id)
       .executeTakeFirst();
 
@@ -149,7 +149,7 @@ export class WebhooksService {
   async deleteWebhook(id: string, employee: any) {
     const existingWebhook = await db
       .selectFrom("webhook_endpoints")
-      .select(["*"])
+      .selectAll()
       .where("id", "=", id)
       .executeTakeFirst();
 
@@ -180,7 +180,7 @@ export class WebhooksService {
   async getLogs(id: string, employee: any) {
     const existingWebhook = await db
       .selectFrom("webhook_endpoints")
-      .select(["*"])
+      .selectAll()
       .where("id", "=", id)
       .executeTakeFirst();
 
@@ -201,7 +201,7 @@ export class WebhooksService {
 
     const logs = await db
       .selectFrom("webhook_delivery_logs")
-      .select(["*"])
+      .selectAll()
       .where("webhook_endpoint_id", "=", id)
       .orderBy("created_at", "desc")
       .limit(50)

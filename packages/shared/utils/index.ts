@@ -12,6 +12,6 @@ export function getEnvErrors() {
   return [];
 }
 
-export function withCache<T>(fn: () => T): T {
+export function withCache<T>(fn: () => T, _options?: unknown): T {
   return fn();
 }

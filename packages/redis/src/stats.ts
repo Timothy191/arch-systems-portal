@@ -1,4 +1,4 @@
-import { getRedisClient, getClientIfOpen } from "./client.js";
+import { getRedisClient, getClientIfOpen } from "@repo/redis/client";
 
 interface CacheStatsSnapshot {
   hits: number;
@@ -66,14 +66,14 @@ export function recordCacheHit(source: "l1" | "l2", latencyMs: number): void {
   // 2. Redis sync (fire-and-forget, only if already connected)
   const redis = getClientIfOpen();
   if (redis) {
-    redis.hIncrBy("stats:cache", "hits", 1).catch(() => {});
+    redis.hincrby("stats:cache", "hits", 1).catch(() => {});
     redis
-      .hIncrBy("stats:cache", source === "l1" ? "l1Hits" : "l2Hits", 1)
+      .hincrby("stats:cache", source === "l1" ? "l1Hits" : "l2Hits", 1)
       .catch(() => {});
     redis
-      .lPush("stats:latencies", latencyMs.toString())
+      .lpush("stats:latencies", latencyMs.toString())
       .then(() => {
-        redis.lTrim("stats:latencies", 0, 999).catch(() => {});
+        redis.ltrim("stats:latencies", 0, 999).catch(() => {});
       })
       .catch(() => {});
   }
@@ -87,11 +87,11 @@ export function recordCacheMiss(latencyMs: number): void {
   // 2. Redis sync (fire-and-forget, only if already connected)
   const redis = getClientIfOpen();
   if (redis) {
-    redis.hIncrBy("stats:cache", "misses", 1).catch(() => {});
+    redis.hincrby("stats:cache", "misses", 1).catch(() => {});
     redis
-      .lPush("stats:latencies", latencyMs.toString())
+      .lpush("stats:latencies", latencyMs.toString())
       .then(() => {
-        redis.lTrim("stats:latencies", 0, 999).catch(() => {});
+        redis.ltrim("stats:latencies", 0, 999).catch(() => {});
       })
       .catch(() => {});
   }
@@ -104,24 +104,24 @@ export function recordRedisError(): void {
   // 2. Redis sync (fire-and-forget, only if already connected)
   const redis = getClientIfOpen();
   if (redis) {
-    redis.hIncrBy("stats:cache", "redisErrors", 1).catch(() => {});
+    redis.hincrby("stats:cache", "redisErrors", 1).catch(() => {});
   }
 }
 
 export async function getCacheStats(): Promise<CacheStatsSnapshot> {
   try {
     const redis = await getRedisClient();
-    if (redis?.isOpen) {
-      const data = await redis.hGetAll("stats:cache");
-      const latencyStrs = await redis.lRange("stats:latencies", 0, 999);
+    if (redis?.status === "ready") {
+      const data = await redis.hgetall("stats:cache");
+      const latencyStrs = await redis.lrange("stats:latencies", 0, 999);
       const sorted = latencyStrs
         .map(Number)
-        .filter((v) => !isNaN(v))
-        .sort((a, b) => a - b);
+        .filter((v: number) => !isNaN(v))
+        .sort((a: number, b: number) => a - b);
 
       const avg =
         sorted.length > 0
-          ? sorted.reduce((sum, v) => sum + v, 0) / sorted.length
+          ? sorted.reduce((sum: number, v: number) => sum + v, 0) / sorted.length
           : 0;
 
       return {
@@ -150,7 +150,7 @@ export function resetCacheStats(): void {
 
   getRedisClient()
     .then((redis) => {
-      if (redis?.isOpen) {
+      if (redis?.status === "ready") {
         redis.del("stats:cache").catch(() => {});
         redis.del("stats:latencies").catch(() => {});
       }

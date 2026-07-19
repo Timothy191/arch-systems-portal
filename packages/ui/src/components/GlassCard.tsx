@@ -32,6 +32,9 @@ export interface GlassCardProps extends HTMLMotionProps<"div"> {
   paused?: boolean;
   blur?: boolean;
   backgroundOpacity?: number;
+
+  /** Forwarded ref — used internally by the card */
+  ref?: React.Ref<HTMLDivElement>;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -410,12 +413,12 @@ export function GlassCard({
 
   return (
     <motion.div
-      ref={(node) => {
-        localRef.current = node;
+      ref={(node: HTMLElement | null) => {
+        localRef.current = node as HTMLDivElement | null;
         if (typeof ref === "function") {
-          ref(node);
+          ref(node as HTMLDivElement | null);
         } else if (ref) {
-          (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
+          (ref as React.MutableRefObject<HTMLDivElement | null>).current = node as HTMLDivElement | null;
         }
       }}
       whileHover={hover && !prefersReduced && !isLiquid ? { scale: 1.01 } : undefined}

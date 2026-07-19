@@ -63,15 +63,21 @@ export class AdminService {
     orderBy: string,
     orderDir: "asc" | "desc",
   ) {
-    const { data, count } = await db
-      .selectFrom(table)
-      .select("*")
-      .orderBy(orderBy, orderDir === "asc" ? "asc" : "desc")
+    const data = await db
+      .selectFrom(table as any)
+      .selectAll()
+      .orderBy(orderBy as any, orderDir)
       .limit(limit)
       .offset(offset)
       .execute();
 
-    return { data: data ?? [], count: count ?? 0, limit, offset };
+    const countResult = await db
+      .selectFrom(table as any)
+      .select(db.fn.count("id").as("cnt"))
+      .executeTakeFirst();
+    const count = countResult ? Number((countResult as any).cnt) : 0;
+
+    return { data, count, limit, offset };
   }
 
   async updateData(
@@ -90,22 +96,17 @@ export class AdminService {
     }
 
     // Get before state for audit
-    const { data: before } = await db
-      .selectFrom(table)
-      .select("*")
-      .where("id", "=", id)
-      .execute();
+    const before = await db
+      .selectFrom(table as any)
+      .selectAll()
+      .where("id" as any, "=", id)
+      .executeTakeFirst();
 
-    const { error } = await db
-      .updateTable(table)
+    await db
+      .updateTable(table as any)
       .set(data)
-      .where("id", "=", id)
+      .where("id" as any, "=", id)
       .execute();
-
-    if (error) {
-      this.logger.error("Update failed", error.message);
-      throw new Error("Update failed");
-    }
 
     await db
       .insertInto("audit_logs")
@@ -113,9 +114,9 @@ export class AdminService {
         action: "update",
         table_name: table,
         record_id: id,
-        old_data: before ?? null,
-        new_data: data,
-        performed_by: employeeId,
+        old_values: before ? (before as any) : null,
+        new_values: data,
+        user_id: employeeId,
       })
       .execute();
 
@@ -128,21 +129,16 @@ export class AdminService {
     }
 
     // Get before state for audit
-    const { data: before } = await db
-      .selectFrom(table)
-      .select("*")
-      .where("id", "=", id)
-      .execute();
+    const before = await db
+      .selectFrom(table as any)
+      .selectAll()
+      .where("id" as any, "=", id)
+      .executeTakeFirst();
 
-    const { error } = await db
-      .deleteFrom(table)
-      .where("id", "=", id)
+    await db
+      .deleteFrom(table as any)
+      .where("id" as any, "=", id)
       .execute();
-
-    if (error) {
-      this.logger.error("Delete failed", error.message);
-      throw new Error("Delete failed");
-    }
 
     await db
       .insertInto("audit_logs")
@@ -150,8 +146,9 @@ export class AdminService {
         action: "delete",
         table_name: table,
         record_id: id,
-        old_data: before ?? null,
-        performed_by: employeeId,
+        old_values: before ? (before as any) : null,
+        new_values: null,
+        user_id: employeeId,
       })
       .execute();
 
@@ -159,16 +156,15 @@ export class AdminService {
   }
 
   async assertAdmin(userId: string) {
-    const { data: employee } = await db
+    const employee = await db
       .selectFrom("employees")
       .select(["id", "role"])
       .where("auth_id", "=", userId)
-      .execute();
+      .executeTakeFirst();
 
     if (!employee || employee.role !== "admin") {
       throw new ForbiddenException("Forbidden");
     }
-
     return employee;
   }
 }

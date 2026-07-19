@@ -5,16 +5,16 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { createBrowserSupabaseClient } from "@repo/supabase/client";
 
 function safeNextPath(raw: string | null): string {
-  if (!raw) return "/";
+  if (!raw) return "/hub";
   try {
     const url = new URL(raw, window.location.origin);
-    if (url.origin !== window.location.origin) return "/";
+    if (url.origin !== window.location.origin) return "/hub";
     if (/\.(css|js|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot)$/i.test(url.pathname)) {
-      return "/";
+      return "/hub";
     }
     return `${url.pathname}${url.search}`;
   } catch {
-    return "/";
+    return "/hub";
   }
 }
 

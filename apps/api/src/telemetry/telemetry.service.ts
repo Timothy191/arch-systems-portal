@@ -2,7 +2,7 @@ import { Injectable, Inject, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { REDIS_CLIENT } from "../redis/redis.constants";
 import { telemetryPushSchema } from "../common/schemas";
-import type { RedisClientType } from "redis";
+import type { Redis } from "ioredis";
 import { execFile } from "child_process";
 import { promisify } from "util";
 import path from "path";
@@ -22,7 +22,7 @@ export class TelemetryService {
   private readonly fuxaApiKey: string | undefined;
 
   constructor(
-    @Inject(REDIS_CLIENT) private readonly redis: RedisClientType,
+    @Inject(REDIS_CLIENT) private readonly redis: Redis,
     private readonly configService: ConfigService,
   ) {
     this.fuxaUrl =
@@ -41,9 +41,7 @@ export class TelemetryService {
 
   private async setRedisLastValue(key: string, value: number): Promise<void> {
     try {
-      await this.redis.set(`telemetry:last:${key}`, String(value), {
-        EX: 86400,
-      });
+      await this.redis.set(`telemetry:last:${key}`, String(value), "EX", 86400);
     } catch {
       // ignore
     }

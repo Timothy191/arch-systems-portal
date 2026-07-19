@@ -164,6 +164,8 @@ describe("isValidRedirect", () => {
     expect(isValidRedirect("/drilling")).toBe(true);
     expect(isValidRedirect("/drilling/machine-operations")).toBe(true);
     expect(isValidRedirect("/safety")).toBe(true);
+    expect(isValidRedirect("/access-card-actions")).toBe(true);
+    expect(isValidRedirect("/hub")).toBe(true);
   });
 
   it("rejects prefix bypasses", () => {
@@ -200,13 +202,20 @@ describe("proxy", () => {
     expect(res.status).not.toBe(307);
   });
 
-  it("redirects authenticated user away from /login to /", async () => {
+  it("redirects authenticated user away from /login to /hub", async () => {
     buildMiddlewareMock({ user: { id: "auth-1" } });
     const req = makeRequest("/login");
     req.cookies.set("sb-access-token", "mock-token");
     const res = await proxy(req);
     expect(res.status).toBe(307);
-    expect(res.headers.get("location")).toContain("/");
+    expect(res.headers.get("location")).toContain("/hub");
+  });
+
+  it("allows /auth/callback through without a session", async () => {
+    buildMiddlewareMock({ user: null });
+    const req = makeRequest("/auth/callback?code=abc");
+    const res = await proxy(req);
+    expect(res.status).not.toBe(307);
   });
 
   it("passes /login through for unauthenticated users", async () => {
@@ -235,6 +244,7 @@ describe("proxy", () => {
     const req = makeRequest("/admin");
     const res = await proxy(req);
     expect(res.status).toBe(307);
+    expect(res.headers.get("location")).toContain("/hub");
     expect(res.headers.get("location")).toContain("unauthorized_department");
   });
 
@@ -263,6 +273,7 @@ describe("proxy", () => {
     const req = makeRequest("/control-room");
     const res = await proxy(req);
     expect(res.status).toBe(307);
+    expect(res.headers.get("location")).toContain("/hub");
     expect(res.headers.get("location")).toContain("unauthorized_department");
   });
 
@@ -294,6 +305,7 @@ describe("proxy", () => {
     const req = makeRequest("/drilling");
     const res = await proxy(req);
     expect(res.status).toBe(307);
+    expect(res.headers.get("location")).toContain("/hub");
     expect(res.headers.get("location")).toContain("unknown_department");
   });
 
@@ -310,6 +322,7 @@ describe("proxy", () => {
     const req = makeRequest("/drilling");
     const res = await proxy(req);
     expect(res.status).toBe(307);
+    expect(res.headers.get("location")).toContain("/hub");
     expect(res.headers.get("location")).toContain("unauthorized_department");
   });
 
@@ -364,6 +377,7 @@ describe("proxy", () => {
     const req = makeRequest("/drilling/tools");
     const res = await proxy(req);
     expect(res.status).toBe(307);
+    expect(res.headers.get("location")).toContain("/hub");
     expect(res.headers.get("location")).toContain("unauthorized_department");
   });
 

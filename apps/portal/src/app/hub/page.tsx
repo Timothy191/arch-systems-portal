@@ -16,7 +16,10 @@ import {
 import type { AlertEvent } from "@/features/hub";
 import type { TrendDataPoint } from "@/features/hub";
 import { getTools } from "@/lib/tools";
-import { DEPARTMENTS } from "@/lib/departments";
+import {
+  departmentsForHub,
+  resolveAccessibleDepartmentNames,
+} from "@/lib/accessible-departments";
 import { GlassCard } from "@repo/ui/GlassCard";
 import {
   Shield,
@@ -243,38 +246,15 @@ async function getRecentAlertEvents(
   );
 }
 
-async function getEmployeeDepartments(
-  userId: string,
-  cookieList: Array<{ name: string; value: string }>
-) {
+async function getEmployeeDepartments(userId: string) {
   return cachedRSC(
-    ["user", userId, "accessible-dept-names"],
+    ["user", userId, "accessible-dept-names-v2"],
     async () => {
-      return withCache(
-        async () => {
-          const db = await createReadReplicaClient(cookieList);
-          const { data: empData } = await db
-            .from("employees")
-            .select("accessible_departments")
-            .eq("auth_id", userId)
-            .single();
-
-          const accessibleDeptIds = (empData?.accessible_departments ?? []) as string[];
-          if (accessibleDeptIds.length === 0) return [];
-
-          const { data: deptData } = await db
-            .from("departments")
-            .select("name")
-            .in("id", accessibleDeptIds);
-
-          return (deptData ?? []).map((d) => d.name);
-        },
-        {
-          category: CacheCategory.AUTH,
-          keyParts: ["user", userId, "accessible-dept-names"],
-          tags: [`auth:${userId}`, "table:employees", "table:departments"],
-        }
-      );
+      return withCache(async () => resolveAccessibleDepartmentNames(userId), {
+        category: CacheCategory.AUTH,
+        keyParts: ["user", userId, "accessible-dept-names-v2"],
+        tags: [`auth:${userId}`, "table:employees", "table:departments"],
+      });
     },
     {
       revalidate: 3600,
@@ -283,13 +263,19 @@ async function getEmployeeDepartments(
   );
 }
 
-export default async function HubPage() {
+export default async function HubPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ error?: string }>;
+}) {
   const supabase = await createServerSupabaseClient();
   const user = await getUserSafely(supabase);
 
   if (!user || !user.id) {
     redirect("/login");
   }
+
+  const accessError = searchParams ? (await searchParams).error : undefined;
 
   const userId = user.id as string;
   const today = new Date().toISOString().split("T")[0] as string;
@@ -303,23 +289,33 @@ export default async function HubPage() {
   // paints. `AlertTicker` data is already fast and stays inline.
   const [
     { incidentCount, breakdownCount, offlineMachineCount },
-    accessibleDeptIds,
+    access,
     tools,
     alertEvents,
   ] = await Promise.all([
     getDashboardCounts(today, cookieList),
-    getEmployeeDepartments(userId, cookieList),
+    getEmployeeDepartments(userId),
     getTools(),
     getRecentAlertEvents(today, cookieList),
   ]);
 
-  const departments =
-    accessibleDeptIds && accessibleDeptIds.length > 0
-      ? DEPARTMENTS.filter((d) => accessibleDeptIds.includes(d.name))
-      : DEPARTMENTS;
+  const accessibleNames = access.names;
+  const departments = departmentsForHub(accessibleNames, access.role);
 
   return (
     <div className="space-y-6 sm:space-y-12">
+      {accessError ? (
+        <div
+          role="alert"
+          className="rounded-lg border border-arch-border-primary bg-arch-surface-tertiary/50 px-4 py-3 text-sm text-arch-text-secondary"
+        >
+          {accessError === "unauthorized_department"
+            ? "You do not have access to that department."
+            : accessError === "unknown_department"
+              ? "That department is not available."
+              : "Unable to open that department."}
+        </div>
+      ) : null}
       {/* Light-theme glass hero section */}
       {/* Light-theme glass hero section */}
       <section
@@ -387,21 +383,23 @@ export default async function HubPage() {
               defaultTitle="Central Operations Portal"
               defaultDescription="Centralized monitoring and control system for Arch Systems industrial complexes. Access Modbus diagnostics, machine breakdowns, shifts, and live telemetry."
               primaryHref={
-                accessibleDeptIds.includes("control-room")
+                departments.some((d) => d.name === "control-room")
                   ? "/control-room"
-                  : accessibleDeptIds.length > 0
-                    ? `/${accessibleDeptIds[0]}`
-                    : "/"
+                  : departments.length > 0
+                    ? `/${departments[0]!.name}`
+                    : "/hub"
               }
               primaryLabel={
-                accessibleDeptIds.includes("control-room") ? "Launch Monitor" : "Go to Department"
+                departments.some((d) => d.name === "control-room")
+                  ? "Launch Monitor"
+                  : "Go to Department"
               }
               secondaryHref={
-                accessibleDeptIds.includes("training")
+                departments.some((d) => d.name === "training")
                   ? "/training"
-                  : accessibleDeptIds.length > 0
-                    ? `/${accessibleDeptIds[0]}`
-                    : "/"
+                  : departments.length > 0
+                    ? `/${departments[0]!.name}`
+                    : "/hub"
               }
               secondaryLabel="System Guidelines"
               departments={departments}

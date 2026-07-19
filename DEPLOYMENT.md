@@ -37,22 +37,12 @@ This guide covers deployment of the Arch Systems portal application for both loc
 
 ### Quick Start
 ```bash
-# Clone repository (if not already cloned)
-git clone <repository-url>
-cd arch-systems
-
-# Run one-command deployment
-bash deploy-dev-mode.sh
-```
-
-### Manual Deployment
-```bash
 # 1. Set up environment variables
 cp .env.example .env
 cp apps/portal/.env.example apps/portal/.env.local
 
 # 2. Start infrastructure (Redis + PostgreSQL)
-docker compose up -d
+docker compose --profile infra up -d
 
 # 3. Install dependencies and start frontend
 pnpm install
@@ -535,7 +525,7 @@ bash scripts/validate-env.sh
 ### File Locations
 - `docker-compose.yml` - Development configuration
 - `docker-compose.production.yml` - Production configuration
-- `deploy-dev-mode.sh` - Development deployment script
+- `scripts/dev.sh` - Development deployment script
 - `deploy-production.sh` - Production deployment script
 - `scripts/validate-env.sh` - Environment validation
 - `apps/portal/Dockerfile` - Frontend Docker build

@@ -67,7 +67,7 @@ export function LoginForm({ className }: LoginFormProps) {
           }
 
           const redirectParam = searchParams.get("redirect");
-          let redirectPath = "/";
+          let redirectPath = "/hub";
 
           if (redirectParam) {
             try {

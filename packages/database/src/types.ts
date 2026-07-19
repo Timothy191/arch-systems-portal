@@ -19,6 +19,8 @@ export interface AuthUsers {
   is_super_admin: boolean;
   banned_until: Date | null;
   phone: string | null;
+  raw_user_meta_data: Json | null;
+  raw_app_meta_data: Json | null;
 }
 
 // Departments
@@ -76,14 +78,14 @@ export interface MachineHours {
 
 // Webhook endpoints
 export interface WebhookEndpoints {
-  id: string;
+  id?: string;
   url: string;
   description: string | null;
   event_types: string[];
   department_id: string | null;
   active: boolean | null;
   deleted_at: string | null;
-  created_at: Date;
+  created_at?: Date;
   updated_at: Date | null;
 }
 
@@ -100,25 +102,27 @@ export interface WebhookDeliveryLogs {
 
 // Audit logs
 export interface AuditLogs {
-  id: string;
+  id?: string;
   action: string;
   table_name: string;
   record_id: string;
   old_values: Json | null;
   new_values: Json | null;
   user_id: string | null;
-  created_at: Date;
+  created_at?: Date;
 }
 
 // Access logs
 export interface AccessLogs {
-  id: string;
-  is_active: boolean;
-  entity_type: string;
-  personnel_id: string | null;
-  visitor_id: string | null;
-  created_at: Date;
-  badge_id?: string;
+  id?: string;
+  badge_id: string | null;
+  access_type: string;
+  direction: 'IN' | 'OUT';
+  gate_location: string;
+  access_granted?: boolean;
+  denial_reason: string | null;
+  scanned_at?: Date;
+  department_id?: string | null;
 }
 
 // Control room shifts
@@ -144,12 +148,14 @@ export interface ControlRoomActivities {
 
 // Minimal interfaces for tables used in services
 export interface Badges {
-  id: string;
-  code: string;
-  type: string;
-  status: string;
-  person_id?: string;
-  created_at: Date;
+  id?: string;
+  qr_code: string;
+  entity_type: 'personnel' | 'visitor';
+  personnel_id: string | null;
+  visitor_id: string | null;
+  is_active?: boolean;
+  issued_at?: Date;
+  revoked_at?: Date | null;
 }
 
 export interface Personnel {
@@ -349,11 +355,27 @@ export interface GeneratedReports {
 
 export interface HourlyLoads {
   id: string;
+  department_id: string;
   machine_id: string;
-  load_time: Date;
-  material_type: string;
-  weight: number;
+  load_date: string;
+  shift_type: 'day' | 'night';
+  hour_01: number;
+  hour_02: number;
+  hour_03: number;
+  hour_04: number;
+  hour_05: number;
+  hour_06: number;
+  hour_07: number;
+  hour_08: number;
+  hour_09: number;
+  hour_10: number;
+  hour_11: number;
+  hour_12: number;
+  total_loads: number;
   created_at: Date;
+  updated_at: Date;
+  created_by?: string | null;
+  updated_by?: string | null;
 }
 
 export interface MachineConfigurations {
@@ -577,5 +599,5 @@ export interface Database {
   visitors: Visitors;
   webhook_delivery_logs: WebhookDeliveryLogs;
   webhook_endpoints: WebhookEndpoints;
-  auth: AuthUsers;
+  "auth.users": AuthUsers;
 }

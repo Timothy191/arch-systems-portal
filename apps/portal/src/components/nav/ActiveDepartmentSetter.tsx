@@ -1,5 +1,5 @@
 "use client";
 
-export function ActiveDepartmentSetter() {
+export function ActiveDepartmentSetter(_props?: { department?: string }) {
   return null;
 }

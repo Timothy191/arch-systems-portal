@@ -125,7 +125,7 @@ describe("LoginForm", () => {
     });
 
     await waitFor(() => {
-      expect(mockPush).toHaveBeenCalledWith("/");
+      expect(mockPush).toHaveBeenCalledWith("/hub");
     });
     expect(mockRefresh).toHaveBeenCalled();
   });
@@ -318,7 +318,7 @@ describe("LoginForm", () => {
     fireEvent.submit(screen.getByTestId("login-form"));
 
     await waitFor(() => {
-      expect(mockPush).toHaveBeenCalledWith("/");
+      expect(mockPush).toHaveBeenCalledWith("/hub");
     });
     expect(window.localStorage.getItem("arch-login-remember-email")).toBe("user@arch.systems");
   });
@@ -382,12 +382,12 @@ describe("LoginForm", () => {
     };
 
     // Test external domain redirect
-    await testRedirect("https://malicious.com/dashboard", "/");
+    await testRedirect("https://malicious.com/dashboard", "/hub");
     // Test relative double-slash protocol bypass
-    await testRedirect("//malicious.com/dashboard", "/");
+    await testRedirect("//malicious.com/dashboard", "/hub");
     // Test static files (css, js, images)
-    await testRedirect("/styles.css", "/");
-    await testRedirect("/image.png", "/");
+    await testRedirect("/styles.css", "/hub");
+    await testRedirect("/image.png", "/hub");
     // Test valid pages
     await testRedirect("/drilling/operations", "/drilling/operations");
   });

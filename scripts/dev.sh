@@ -1,18 +1,25 @@
 #!/usr/bin/env bash
 # ──────────────────────────────────────────────────────────────────────────────
 # Arch-Systems — Dev Script
-# Starts Docker infrastructure (Redis + Postgres) + Next.js portal with HMR,
-# runs a 4-phase health check, then opens the browser to the login page.
+# Boot order: Redis → Supabase → host Next.js portal, then stack smoke,
+# monitoring terminals, and browser open to /login.
 #
 # Usage:
-#   bash scripts/dev.sh              # Full stack
-#   bash scripts/dev.sh --quick      # Portal only (skip Docker)
-#   bash scripts/dev.sh --no-infra   # Skip docker-compose, assume infra is up
+#   bash scripts/dev.sh                 # Full stack (Redis + Supabase + portal)
+#   bash scripts/dev.sh --quick         # Portal only (skip Redis + Supabase)
+#   bash scripts/dev.sh --no-infra      # Assume Redis + Supabase already up
+#   bash scripts/dev.sh --quality       # Also run pnpm quality after smoke
+#   bash scripts/dev.sh --no-browser    # Skip open-login.sh
+#   bash scripts/dev.sh --no-monitors   # Skip monitoring terminals
 # ──────────────────────────────────────────────────────────────────────────────
 set -euo pipefail
 
+export PATH="${HOME}/.npm-global/bin:${PATH}"
+
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PORT="${PORT:-3000}"
+SUPABASE_WORKDIR="$REPO_ROOT/packages/supabase"
+PORTAL_ENV="$REPO_ROOT/apps/portal/.env.local"
 
 # ── Colours ───────────────────────────────────────────────────────────────────
 DIM='\033[0;2m'
@@ -55,20 +62,22 @@ spinner() {
   printf "\r  ${GREEN}◉${NC} %-40s\n" "$msg"
 }
 
-wait_for_url() {
-  local url="$1" max="${2:-60}" delay="${3:-2}"
-  for _ in $(seq 1 "$max"); do
-    curl -fs "$url" -o /dev/null -w "%{http_code}" 2>/dev/null | grep -qE "^(200|301|302|307|308)$" && return 0
-    sleep "$delay"
-  done
-  return 1
-}
-
 wait_for_port() {
   local port="$1" max="${2:-30}"
   for _ in $(seq 1 "$max"); do
     ss -tlnH 2>/dev/null | grep -qE ":${port} " && return 0
     sleep 1
+  done
+  return 1
+}
+
+wait_for_auth_health() {
+  local max="${1:-60}"
+  for _ in $(seq 1 "$max"); do
+    code=$(curl -s -o /dev/null -w "%{http_code}" --connect-timeout 1 \
+      "http://127.0.0.1:54321/auth/v1/health" 2>/dev/null || echo 000)
+    [[ "$code" == "200" ]] && return 0
+    sleep 2
   done
   return 1
 }
@@ -80,12 +89,79 @@ detect_compose() {
   fi
 }
 
+source_portal_env() {
+  if [ -f "$PORTAL_ENV" ]; then
+    set -a
+    # shellcheck disable=SC1090
+    source "$PORTAL_ENV"
+    set +a
+  fi
+}
+
+# Sync anon/service keys from `supabase status` only when placeholders/missing.
+maybe_sync_supabase_keys() {
+  local status_out anon service
+  status_out=$(cd "$REPO_ROOT/packages" && pnpm exec supabase status -o env 2>/dev/null || true)
+  [ -z "$status_out" ] && return 0
+
+  anon=$(echo "$status_out" | sed -n 's/^ANON_KEY=//p' | tr -d '"' | head -1)
+  service=$(echo "$status_out" | sed -n 's/^SERVICE_ROLE_KEY=//p' | tr -d '"' | head -1)
+  [ -z "$anon" ] || [ -z "$service" ] && return 0
+  [ ! -f "$PORTAL_ENV" ] && return 0
+
+  local current_anon current_service
+  current_anon=$(grep -E '^NEXT_PUBLIC_SUPABASE_ANON_KEY=' "$PORTAL_ENV" | head -1 | cut -d= -f2- || true)
+  current_service=$(grep -E '^SUPABASE_SERVICE_ROLE_KEY=' "$PORTAL_ENV" | head -1 | cut -d= -f2- || true)
+
+  local needs_sync=false
+  if [ -z "$current_anon" ] || [[ "$current_anon" == *"your-local"* ]] || [[ "$current_anon" == *"changeme"* ]]; then
+    needs_sync=true
+  fi
+  if [ -z "$current_service" ] || [[ "$current_service" == *"your-local"* ]] || [[ "$current_service" == *"changeme"* ]]; then
+    needs_sync=true
+  fi
+  [ "$needs_sync" = "false" ] && return 0
+
+  local tmp
+  tmp=$(mktemp)
+  awk -v anon="$anon" -v service="$service" '
+    BEGIN { a=0; s=0; sa=0; ss=0 }
+    /^NEXT_PUBLIC_SUPABASE_ANON_KEY=/ { print "NEXT_PUBLIC_SUPABASE_ANON_KEY=" anon; a=1; next }
+    /^SUPABASE_SERVICE_ROLE_KEY=/ { print "SUPABASE_SERVICE_ROLE_KEY=" service; s=1; next }
+    /^SUPABASE_ANON_KEY=/ { print "SUPABASE_ANON_KEY=" anon; sa=1; next }
+    /^SUPABASE_SERVICE_KEY=/ { print "SUPABASE_SERVICE_KEY=" service; ss=1; next }
+    { print }
+    END {
+      if (!a) print "NEXT_PUBLIC_SUPABASE_ANON_KEY=" anon
+      if (!s) print "SUPABASE_SERVICE_ROLE_KEY=" service
+      if (!sa) print "SUPABASE_ANON_KEY=" anon
+      if (!ss) print "SUPABASE_SERVICE_KEY=" service
+    }
+  ' "$PORTAL_ENV" > "$tmp"
+  mv "$tmp" "$PORTAL_ENV"
+  check "Supabase keys" "pass" "synced placeholders from supabase status"
+}
+
+stop_arch_portal_container() {
+  if docker ps --format '{{.Names}}' 2>/dev/null | grep -qx 'arch-portal'; then
+    docker stop arch-portal >/dev/null 2>&1 || true
+    check "arch-portal container" "pass" "stopped (host Next owns :${PORT})"
+  fi
+}
+
 open_browser() {
-  # Shared helper: prefers Chromium/Brave/Firefox, logs success/failure
   bash "$REPO_ROOT/scripts/open-login.sh" "$PORT" || true
 }
 
+open_monitors() {
+  bash "$REPO_ROOT/scripts/open-monitoring-terminals.sh" || true
+}
+
 cleanup() {
+  # Only stop a portal this script started (avoid killing an external/already-running PID)
+  if [ "${STARTED_PORTAL:-false}" != "true" ]; then
+    return 0
+  fi
   echo
   echo -e "  ${YELLOW}Shutting down portal...${NC}"
   if [ -f "$REPO_ROOT/.portal.pid" ]; then
@@ -103,6 +179,7 @@ banner() {
   echo -e "  ${BOLD}${CYAN}  ╚═══════════════════════════════════════╝${NC}"
   echo
   echo -e "  ${DIM}$(date '+%a %b %d %Y  %H:%M')${NC}"
+  echo -e "  ${DIM}Boot: Redis → Supabase → portal${NC}"
   echo
 }
 
@@ -113,25 +190,32 @@ show_results() {
   echo -e "  ${GREEN}${BOLD}└─────────────────────────────────────────────┘${NC}"
   echo
   echo -e "  ${BOLD}Login:${NC}      ${CYAN}http://localhost:${PORT}/login${NC}"
-  echo -e "  ${BOLD}Dashboard:${NC}  ${CYAN}http://localhost:${PORT}/dashboard${NC}"
   echo -e "  ${BOLD}Health:${NC}     ${CYAN}http://localhost:${PORT}/api/health${NC}"
   if [ "$QUICK_MODE" = "false" ]; then
-    echo -e "  ${BOLD}Postgres:${NC}   ${CYAN}localhost:5432  (db: arch_dev, user: postgres)${NC}"
+    echo -e "  ${BOLD}Supabase:${NC}   ${CYAN}http://127.0.0.1:54321${NC}"
+    echo -e "  ${BOLD}Studio:${NC}     ${CYAN}http://127.0.0.1:54323${NC}"
     echo -e "  ${BOLD}Redis:${NC}      ${CYAN}localhost:6379${NC}"
   fi
   echo
-  echo -e "  ${DIM}Stop with Ctrl+C${NC}"
+  echo -e "  ${DIM}Stop portal: Ctrl+C · Full infra: pnpm shutdown -- --infra${NC}"
   echo
 }
 
 # ── Arg parsing ───────────────────────────────────────────────────────────────
 QUICK_MODE=false
 NO_INFRA=false
+RUN_QUALITY=false
+OPEN_BROWSER=true
+OPEN_MONITORS=true
+STARTED_PORTAL=false
 while [ $# -gt 0 ]; do
   case "$1" in
-    --quick|-q)    QUICK_MODE=true; shift ;;
-    --no-infra)    NO_INFRA=true;   shift ;;
-    *)             shift ;;
+    --quick|-q)     QUICK_MODE=true; shift ;;
+    --no-infra)     NO_INFRA=true;   shift ;;
+    --quality)      RUN_QUALITY=true; shift ;;
+    --no-browser)   OPEN_BROWSER=false; shift ;;
+    --no-monitors)  OPEN_MONITORS=false; shift ;;
+    *)              shift ;;
   esac
 done
 
@@ -143,7 +227,6 @@ banner
 # ── Phase 0: Pre-flight ───────────────────────────────────────────────────────
 phase 0 "Pre-flight"
 
-# Clean stale PID / start marker if portal is no longer alive
 if [ -f "$REPO_ROOT/.portal.pid" ]; then
   if ! kill -0 "$(cat "$REPO_ROOT/.portal.pid")" 2>/dev/null; then
     rm -f "$REPO_ROOT/.portal.pid" "$REPO_ROOT/.portal.start"
@@ -153,31 +236,38 @@ if [ -f "$REPO_ROOT/.portal.pid" ]; then
   fi
 fi
 
-# Clear port if occupied by a non-Docker process
+# Free :3000 — host Next or arch-portal container (Compose portal must not own it)
+stop_arch_portal_container
 if ss -tlnH 2>/dev/null | grep -qE ":${PORT} "; then
-  if docker ps --format '{{.Ports}}' 2>/dev/null | grep -qE ":${PORT}->"; then
-    check "Port ${PORT}" "pass" "in use by Docker (expected)"
-  else
+  if docker ps --format '{{.Names}} {{.Ports}}' 2>/dev/null | grep -qE "arch-portal.*:${PORT}->"; then
+    stop_arch_portal_container
+  fi
+  if ss -tlnH 2>/dev/null | grep -qE ":${PORT} "; then
     pid=$(lsof -ti :"$PORT" 2>/dev/null | head -n1 || true)
     if [ -n "$pid" ]; then
-      kill "$pid" 2>/dev/null || true
-      sleep 1
-      check "Port ${PORT}" "pass" "freed (killed PID $pid)"
+      # Do not kill if it is our tracked portal PID still alive
+      if [ -f "$REPO_ROOT/.portal.pid" ] && [ "$(cat "$REPO_ROOT/.portal.pid")" = "$pid" ]; then
+        check "Port ${PORT}" "pass" "owned by current portal PID"
+      else
+        kill "$pid" 2>/dev/null || true
+        sleep 1
+        check "Port ${PORT}" "pass" "freed (killed PID $pid)"
+      fi
     else
       check "Port ${PORT}" "warn" "occupied, PID unknown — continuing"
     fi
+  else
+    check "Port ${PORT}" "pass" "free"
   fi
 else
   check "Port ${PORT}" "pass" "free"
 fi
 
-# Rotate portal log
 if [ -f "$REPO_ROOT/portal.log" ]; then
   : > "$REPO_ROOT/portal.log"
   check "Portal log" "pass" "rotated"
 fi
 
-# AI surfaces (non-blocking — warn only)
 if [ -x "$REPO_ROOT/scripts/ai.sh" ]; then
   if bash "$REPO_ROOT/scripts/ai.sh" status --quiet 2>/dev/null; then
     check "AI system" "pass" "pnpm ai status"
@@ -199,10 +289,9 @@ else
   docker info >/dev/null 2>&1 && check "Docker" "pass" || { check "Docker" "warn" "not running — infrastructure will be skipped"; NO_INFRA=true; }
 fi
 
-# Ensure apps/portal env file exists
-if [ ! -f "$REPO_ROOT/apps/portal/.env.local" ] && [ ! -f "$REPO_ROOT/apps/portal/.env" ]; then
+if [ ! -f "$PORTAL_ENV" ] && [ ! -f "$REPO_ROOT/apps/portal/.env" ]; then
   if [ -f "$REPO_ROOT/apps/portal/.env.example" ]; then
-    cp "$REPO_ROOT/apps/portal/.env.example" "$REPO_ROOT/apps/portal/.env.local"
+    cp "$REPO_ROOT/apps/portal/.env.example" "$PORTAL_ENV"
     check "Portal .env.local" "pass" "created from .env.example"
     check "Secrets" "warn" "fill in SUPABASE keys in apps/portal/.env.local"
   else
@@ -213,10 +302,19 @@ else
   check "Portal .env.local" "pass" "exists"
 fi
 
-# Install dependencies if node_modules absent
+source_portal_env
+
+if [ -f "$PORTAL_ENV" ]; then
+  if bash "$REPO_ROOT/scripts/validate-env.sh" --local >/tmp/arch-validate-env.out 2>&1; then
+    check "Env validate" "pass" "--local"
+  else
+    check "Env validate" "warn" "see /tmp/arch-validate-env.out"
+  fi
+fi
+
 if [ ! -d "$REPO_ROOT/node_modules" ]; then
   echo -e "  ${INFO} Installing dependencies (first run)..."
-  pnpm install --frozen-lockfile 2>&1 | tail -3 | sed 's/^/    /'
+  (cd "$REPO_ROOT" && pnpm install --frozen-lockfile 2>&1 | tail -5 | sed 's/^/    /')
   check "Dependencies" "pass" "installed"
 else
   check "Dependencies" "pass" "node_modules present"
@@ -224,55 +322,82 @@ fi
 
 [ "$env_ok" = "false" ] && { echo -e "\n  ${RED}Environment checks failed. Fix the above and re-run.${NC}\n"; exit 1; }
 
-# ── Phase 2: Infrastructure ───────────────────────────────────────────────────
-phase 2 "Infrastructure"
+# ── Phase 2: Redis ────────────────────────────────────────────────────────────
+phase 2 "Redis"
 
 if [ "$QUICK_MODE" = "true" ] || [ "$NO_INFRA" = "true" ]; then
-  check "Docker Compose" "skip" "$([ "$QUICK_MODE" = 'true' ] && echo 'quick mode' || echo '--no-infra')"
-  check "Redis"          "skip"
-  check "Postgres"       "skip"
-else
-  # Bring up compose stack in background
-  echo -e "  ${INFO} Starting Docker Compose stack..."
-  $COMPOSE_CMD -f "$REPO_ROOT/docker-compose.yml" up -d >/dev/null 2>&1 &
-  compose_pid=$!
-  spinner "$compose_pid" "Booting containers"
-
-  # Redis health
-  if wait_for_port 6379 20; then
-    check "Redis" "pass" "localhost:6379"
+  check "Redis compose" "skip" "$([ "$QUICK_MODE" = 'true' ] && echo 'quick mode' || echo '--no-infra')"
+  if wait_for_port 6379 3; then
+    check "Redis" "pass" "already listening on :6379"
   else
-    check "Redis" "warn" "not responding on 6379 — check docker ps"
+    check "Redis" "warn" "not on :6379 — portal cache may degrade"
   fi
+else
+  echo -e "  ${INFO} Starting Redis (compose profile infra)..."
+  $COMPOSE_CMD -f "$REPO_ROOT/docker-compose.yml" --profile infra up -d redis >/dev/null 2>&1 &
+  spinner $! "Booting Redis"
 
-  # Postgres health
-  if wait_for_port 5432 20; then
-    check "Postgres" "pass" "localhost:5432  (arch_dev)"
+  if wait_for_port 6379 30; then
+    if docker exec arch-redis redis-cli ping 2>/dev/null | grep -q PONG; then
+      check "Redis" "pass" "localhost:6379 PONG"
+    else
+      check "Redis" "fail" "port up but PING failed"
+      exit 1
+    fi
   else
-    check "Postgres" "warn" "not responding on 5432 — check docker ps"
+    check "Redis" "fail" "not responding on 6379"
+    exit 1
   fi
 fi
 
-# ── Phase 3: Portal ───────────────────────────────────────────────────────────
-phase 3 "Portal"
+# ── Phase 3: Supabase ─────────────────────────────────────────────────────────
+phase 3 "Supabase"
 
-# Skip restart if portal is already serving
+if [ "$QUICK_MODE" = "true" ] || [ "$NO_INFRA" = "true" ]; then
+  check "Supabase start" "skip" "$([ "$QUICK_MODE" = 'true' ] && echo 'quick mode' || echo '--no-infra')"
+  if wait_for_auth_health 5; then
+    check "Supabase auth" "pass" "http://127.0.0.1:54321"
+  else
+    check "Supabase auth" "warn" "not healthy on :54321 — login may fail"
+  fi
+else
+  if wait_for_auth_health 2; then
+    check "Supabase" "pass" "already healthy on :54321"
+  else
+    echo -e "  ${INFO} Starting Supabase (packages/supabase)..."
+    (cd "$REPO_ROOT" && pnpm supabase:start) >/tmp/arch-supabase-start.log 2>&1 &
+    spinner $! "Booting Supabase"
+    if ! wait_for_auth_health 90; then
+      check "Supabase auth" "fail" "auth health not 200 — see /tmp/arch-supabase-start.log"
+      tail -30 /tmp/arch-supabase-start.log 2>/dev/null | sed 's/^/    /'
+      exit 1
+    fi
+    check "Supabase auth" "pass" "http://127.0.0.1:54321"
+  fi
+  maybe_sync_supabase_keys
+  source_portal_env
+fi
+
+# ── Phase 4: Portal (host Next.js) ────────────────────────────────────────────
+phase 4 "Portal"
+
 if [ -f "$REPO_ROOT/.portal.pid" ] && kill -0 "$(cat "$REPO_ROOT/.portal.pid")" 2>/dev/null; then
   check "Dev server" "pass" "already running on :${PORT}"
+  STARTED_PORTAL=false
 else
+  stop_arch_portal_container
   cd "$REPO_ROOT/apps/portal"
   PORT="$PORT" pnpm dev > "$REPO_ROOT/portal.log" 2>&1 &
   echo $! > "$REPO_ROOT/.portal.pid"
+  STARTED_PORTAL=true
   cd "$REPO_ROOT"
   echo -e "  ${INFO} Starting Next.js on :${PORT} (Turbopack)..."
 
   compiled=false
   for _ in $(seq 1 120); do
-    # Check for successful compile
     if curl -fs "http://localhost:${PORT}/login" -o /dev/null -w "%{http_code}" 2>/dev/null | grep -qE "^(200|307|308)$"; then
       compiled=true; break
     fi
-    # Bail early only if the portal process died or login route itself failed to compile
     if [ -f "$REPO_ROOT/.portal.pid" ] && ! kill -0 "$(cat "$REPO_ROOT/.portal.pid")" 2>/dev/null; then
       break
     fi
@@ -293,31 +418,117 @@ else
   fi
 fi
 
-# ── Phase 4: Smoke Tests ──────────────────────────────────────────────────────
-phase 4 "Smoke Tests"
+# ── Phase 5: Stack smoke ──────────────────────────────────────────────────────
+phase 5 "Stack Smoke"
 
-# Health API
-if curl -fs "http://localhost:${PORT}/api/health" >/dev/null 2>&1; then
-  check "/api/health" "pass"
-else
-  check "/api/health" "warn" "endpoint not responding"
+smoke_ok=true
+
+# Redis PING (critical when not quick)
+if [ "$QUICK_MODE" = "false" ]; then
+  if docker exec arch-redis redis-cli ping 2>/dev/null | grep -q PONG; then
+    check "Redis PING" "pass"
+  elif wait_for_port 6379 1; then
+    check "Redis PING" "warn" "port up but docker exec failed"
+  else
+    check "Redis PING" "fail" "required for stack boot"
+    smoke_ok=false
+  fi
 fi
 
-# Login page HTML
-if curl -fs "http://localhost:${PORT}/login" 2>/dev/null | grep -qi "<html\|<!doctype"; then
+# Supabase auth health (critical when not quick)
+if [ "$QUICK_MODE" = "false" ]; then
+  if curl -fs "http://127.0.0.1:54321/auth/v1/health" >/dev/null 2>&1; then
+    check "Supabase auth health" "pass"
+  else
+    check "Supabase auth health" "fail" "required for login"
+    smoke_ok=false
+  fi
+fi
+
+# /api/health — full stack requires DB healthy; --quick/--no-infra warn only
+health_json=$(curl -fs "http://localhost:${PORT}/api/health" 2>/dev/null || echo "")
+if [ -n "$health_json" ]; then
+  db_status=$(echo "$health_json" | python3 -c 'import sys,json; print(json.load(sys.stdin).get("checks",{}).get("database",{}).get("status",""))' 2>/dev/null || echo "")
+  redis_status=$(echo "$health_json" | python3 -c 'import sys,json; print(json.load(sys.stdin).get("checks",{}).get("redis",{}).get("status",""))' 2>/dev/null || echo "")
+  if [ "$db_status" = "healthy" ]; then
+    check "/api/health database" "pass"
+  elif [ "$QUICK_MODE" = "true" ] || [ "$NO_INFRA" = "true" ]; then
+    check "/api/health database" "warn" "${db_status:-unreachable} (ok for --quick/--no-infra)"
+  else
+    check "/api/health database" "fail" "${db_status:-unreachable}"
+    smoke_ok=false
+  fi
+  if [ "$redis_status" = "healthy" ]; then
+    check "/api/health redis" "pass"
+  else
+    check "/api/health redis" "warn" "${redis_status:-unreachable}"
+  fi
+else
+  if [ "$QUICK_MODE" = "true" ]; then
+    check "/api/health" "warn" "endpoint not responding"
+  else
+    check "/api/health" "fail" "endpoint not responding"
+    smoke_ok=false
+  fi
+fi
+
+# Login HTML — accept 200/3xx with document markers (retry once for HMR race)
+login_ok=false
+for _try in 1 2 3; do
+  login_code=$(curl -sL -o /tmp/arch-login-smoke.html -w "%{http_code}" --connect-timeout 3 \
+    "http://localhost:${PORT}/login" 2>/dev/null || echo 000)
+  if echo "$login_code" | grep -qE '^(200|307|308)$' \
+    && grep -qiE '<!doctype|<html|Sign In \| Arch OS|data-testid="login-card"' /tmp/arch-login-smoke.html 2>/dev/null; then
+    login_ok=true
+    break
+  fi
+  sleep 1
+done
+if [ "$login_ok" = "true" ]; then
   check "Login page HTML" "pass"
 else
-  check "Login page HTML" "warn" "may be rendering an error overlay"
+  check "Login page HTML" "fail" "code=${login_code:-?} no document markers"
+  smoke_ok=false
 fi
 
-# Static assets
 curl -fs "http://localhost:${PORT}/favicon.ico" >/dev/null 2>&1 \
   && check "Static assets" "pass" \
   || check "Static assets" "skip" "no favicon yet"
 
+if [ "$smoke_ok" = "false" ]; then
+  echo -e "\n  ${RED}${BOLD}Stack smoke failed — fix infra before login.${NC}\n"
+  exit 1
+fi
+
+if [ "$RUN_QUALITY" = "true" ]; then
+  echo -e "  ${INFO} Running pnpm quality..."
+  if (cd "$REPO_ROOT" && pnpm quality); then
+    check "pnpm quality" "pass"
+  else
+    check "pnpm quality" "fail"
+    exit 1
+  fi
+fi
+
 # ── Done ──────────────────────────────────────────────────────────────────────
 show_results
-open_browser
 
-# Keep script alive so cleanup trap fires on Ctrl+C
-wait
+if [ "$OPEN_MONITORS" = "true" ]; then
+  open_monitors
+fi
+if [ "$OPEN_BROWSER" = "true" ]; then
+  open_browser
+fi
+
+# Keep alive while a portal we started is running. If we reused an existing
+# portal PID, exit without killing it (bare `wait` would return immediately).
+if [ "$STARTED_PORTAL" = "true" ] && [ -f "$REPO_ROOT/.portal.pid" ]; then
+  portal_pid="$(cat "$REPO_ROOT/.portal.pid")"
+  while kill -0 "$portal_pid" 2>/dev/null; do
+    sleep 2
+  done
+else
+  trap - EXIT
+  echo -e "  ${DIM}Portal was already running — leaving it up. Use: pnpm shutdown${NC}"
+  exit 0
+fi

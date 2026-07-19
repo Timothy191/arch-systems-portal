@@ -1,9 +1,7 @@
-import { Injectable, Inject, Logger } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { REDIS_CLIENT } from "../redis/redis.constants";
 import { cacheWrap } from "@repo/redis/cache";
 import { WebFetchError } from "@repo/errors";
-import type { RedisClientType } from "redis";
 
 interface ExternalTool {
   name: string;
@@ -27,7 +25,6 @@ export class ToolsService {
 
   constructor(
     private readonly configService: ConfigService,
-    @Inject(REDIS_CLIENT) private readonly redis: RedisClientType,
   ) {
     this.externalTools = [
       {

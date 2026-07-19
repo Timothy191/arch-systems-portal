@@ -29,10 +29,18 @@ export async function GET() {
     status = "unhealthy";
   }
 
-  // 2. Check Redis Cache connectivity
+  // 2. Check Redis Cache connectivity (ioredis — status === "ready")
   try {
-    const redis = await getRedisClient();
-    const redisConnected = redis.isOpen ?? false;
+    const redis = getRedisClient();
+    let redisConnected = redis.status === "ready";
+    if (!redisConnected) {
+      try {
+        const pong = await redis.ping();
+        redisConnected = pong === "PONG";
+      } catch {
+        redisConnected = false;
+      }
+    }
     checks.redis = {
       status: redisConnected ? "healthy" : "degraded",
       connected: redisConnected,

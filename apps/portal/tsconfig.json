@@ -34,8 +34,11 @@
   "exclude": [
     "node_modules",
     ".next",
-    "_app_legacy_shadow",
-    "_features_legacy_shadow",
-    "src.backup"
+    "src.backup",
+    "components",
+    "hooks",
+    "lib",
+    "plugins",
+    "assets"
   ]
 }
