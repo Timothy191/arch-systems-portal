@@ -9,7 +9,7 @@
 ├── README.md
 ├── _shared/                    # cross-agent references
 │   └── references/
-├── <agent-name>.md               # ENTRY — YAML frontmatter + lean body (≤60 lines)
+├── <agent-name>.md               # ENTRY — YAML frontmatter + lean body (≤65 lines)
 └── <agent-name>/                 # COLLATERAL (same basename as entry)
     ├── references/               # detailed docs — load on demand
     ├── scripts/                  # helper scripts (optional)

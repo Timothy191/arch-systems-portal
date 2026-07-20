@@ -15,7 +15,33 @@ echo "=== Agent layout validate ==="
 [[ -f .cursor/agents/README.md ]] && ok "agents README" || fail "missing agents README"
 [[ -f .cursor/agents/_shared/references/gold-standard-contract.md ]] && ok "_shared gold contract" || fail "missing _shared contract"
 
-AGENTS=(fast-outliner frontend-design frontend-implementer ai-docs-sync sceptic idle-runner ai-maintenance-checker vercel-brand-sync openspec aider goose omp)
+AGENTS=(
+  fast-outliner
+  frontend-design
+  frontend-implementer
+  nextjs-fullstack
+  ai-docs-sync
+  sceptic
+  idle-runner
+  ai-maintenance-checker
+  vercel-brand-sync
+  openspec
+  aider
+  goose
+  omp
+  security
+  test-engineer
+  db-optimizer
+  backend-architect
+  agency-lead
+  gap-analyst
+  spec-auditor
+  routing-optimizer
+  patch-builder
+  root-cause-healer
+  import-auditor
+  ai-system-optimizer
+)
 
 for a in "${AGENTS[@]}"; do
   entry=".cursor/agents/${a}.md"

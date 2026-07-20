@@ -29,39 +29,41 @@ ESLint `--max-warnings 0`; tsc `noEmit` strict; Jest `--passWithNoTests`.
 
 ```
 apps/
-  portal/             # Next.js 16 (App Router, src/ layout) — the only deployable app
-apps(legacy)/         # Deprecated — DO NOT MODIFY
+  portal/                 # Next.js 16 (App Router) — primary deployable UI
+  ops-gateway/            # Control-plane / MCP ops bridge (not product UI)
 packages/
-  errors/             # @repo/errors — typed AppError classes
-  redis/              # @repo/redis — shared ioredis singleton
-  supabase/           # @repo/supabase — server admin client + browser client
-  theme/              # @repo/theme — Tailwind preset & design tokens
-  ui/                 # @repo/ui — shared headless React components
-  utils/              # @repo/utils — pure utility helpers
-  contract/           # @repo/contract — shared Zod schemas
-  auth/               # @repo/auth/{ui,data-access,utils}
-  shared/             # @repo/shared/{data-access,hooks,utils}
-  rate-limiter/       # @repo/rate-limiter — Redis-backed
-  logger/             # @repo/logger — structured logging
-  database/           # @repo/database — SQL migrations source of truth
-scripts/              # dev.sh, shutdown.sh
+  contract/               # @repo/contract — shared Zod schemas
+  database/               # @repo/database — SQL migrations source of truth
+  departments/            # @repo/departments (+ ui/)
+  errors/                 # @repo/errors — typed AppError classes
+  eslint-config/          # @repo/eslint-config
+  logger/                 # @repo/logger — structured logging
+  rate-limiter/           # @repo/rate-limiter — Redis-backed
+  redis/                  # @repo/redis — shared ioredis singleton
+  supabase/               # @repo/supabase — server + browser clients
+  theme/                  # @repo/theme — Tailwind preset & design tokens
+  typescript-config/      # @repo/typescript-config
+  ui/                     # @repo/ui — shared headless React components
+  utils/                  # @repo/utils — pure utility helpers
+scripts/                  # dev.sh, shutdown.sh, ai.sh
 ```
 
 **Portal `src/` layout:**
 
 ```
 apps/portal/src/
-  app/          # Next.js App Router: (auth), (hub), (departments), admin, api
+  app/          # App Router: (auth), hub, (departments), admin, api, docs
   components/   # Portal-specific React components
-  features/     # Feature modules (access-control, admin, auth, departments, hub)
+  config/       # Portal config
+  features/     # Feature modules (access-control, admin, analytics, auth, departments, hub)
   hooks/        # Portal-specific hooks
-  lib/          # Shared lib (ai, api, errors, jobs, observability, plugins)
-  server/       # Edge middleware proxy (proxy.ts)
+  lib/          # Shared lib (ai, api, errors, jobs, observability, reports, …)
 ```
 
 - Never add application logic to `packages/` — they are pure, framework-agnostic libraries.
 - Never import from `apps/` inside `packages/`.
 - New packages must be added to `pnpm-workspace.yaml` and `turbo.json`.
+- Product UI lives in `apps/portal/` only — do not treat `ops-gateway` as the app shell.
 
 ## Technology Stack
 
@@ -112,7 +114,7 @@ apps/portal/src/
 
 ## Legacy & Migration
 
-- `apps(legacy)/` is deprecated — **do not modify**. Work in `apps/portal/src/` only.
+- Product UI: `apps/portal/src/` only. Do not revive deleted Nest `apps/api` or legacy app trees as the primary surface.
 - PWA uses manual service worker at `apps/portal/public/sw.js` (next-pwa disabled for Next 16 + Turbopack).
 
 ## What Agents Must Never Do
@@ -152,13 +154,14 @@ Canonical policy remains this file. Agents and skills **mirror** it — never fo
 
 ### Project subagents (Cursor)
 
-Twelve specialists under `.cursor/agents/`. **Hybrid layout:** entry `<name>.md` + collateral `<name>/`. Standard: `.cursor/standards/agent-layout/STANDARD.md`. Auto-routing: `.cursor/rules/04-subagent-auto-routing.mdc`. CLI matrix: `.cursor/agents/_shared/references/external-cli-matrix.md`.
+Fleet specialists under `.cursor/agents/` (see table). **Hybrid layout:** entry `<name>.md` + collateral `<name>/`. Standard: `.cursor/standards/agent-layout/STANDARD.md`. Auto-routing: `.cursor/rules/04-subagent-auto-routing.mdc`. CLI matrix: `.cursor/agents/_shared/references/external-cli-matrix.md`.
 
 | Agent                    | Role                                        |
 | ------------------------ | ------------------------------------------- |
 | `fast-outliner`          | Pre-flight scope, gaps, handoffs            |
 | `frontend-design`        | Branded/landing visual composition          |
 | `frontend-implementer`   | Portal UI implementation (`apps/portal/`)   |
+| `nextjs-fullstack`       | Next.js full-stack vertical slices (portal) |
 | `ai-docs-sync`           | AI surfaces + docs drift audit              |
 | `sceptic`                | Adversarial review + alignment **estimate** |
 | `idle-runner`            | Safe parallel work while blocked            |
@@ -168,8 +171,22 @@ Twelve specialists under `.cursor/agents/`. **Hybrid layout:** entry `<name>.md`
 | `aider`                  | Aider surgical headless edits               |
 | `goose`                  | Goose recipes / MCP automation              |
 | `omp`                    | omp heavy headless coding                   |
+| `security`               | AppSec, vuln review, threat modeling        |
+| `test-engineer`          | Test automation, flake diagnosis, E2E       |
+| `db-optimizer`           | PostgreSQL/Supabase performance tuning      |
+| `backend-architect`      | API design, service architecture            |
+| `agency-lead`            | Coordinating background self-healing loops  |
+| `gap-analyst`            | System gap and compilation log analyzer     |
+| `spec-auditor`           | OpenSpec & global constraint compliance     |
+| `routing-optimizer`      | AI provider latency and cooldown optimizer  |
+| `patch-builder`          | Executing automated repairs and patches     |
+| `root-cause-healer`      | Verify hypothesis → fix → AI hardening      |
+| `import-auditor`         | Import/path connectivity audit              |
+| `ai-system-optimizer`    | AI surface bloat prune, layout compliance   |
 
 **Unified AI command:** `pnpm ai` — see `.cursor/standards/ai-system/STANDARD.md`. Background rule: `.cursor/rules/06-ai-maintenance-background.mdc`.
+
+**Cursor slash commands:** `.cursor/commands/` (e.g. `/swarm` — Claude Flow swarm lifecycle).
 
 Gold contract: `.cursor/agents/_shared/references/gold-standard-contract.md`
 
@@ -195,14 +212,24 @@ Standard layout per skill folder: `SKILL.md` + `scripts/` + `references/` + `ass
 - Skill folders: `.cursor/standards/agent-skills/STANDARD.md`
 - Agent layout: `.cursor/standards/agent-layout/STANDARD.md`
 
-| Skill                                 | Owner                              |
-| ------------------------------------- | ---------------------------------- |
-| `agent-alignment-score`               | Formal Alignment Score (0–100)     |
-| `skill-self-improve`                  | Hermes observe→distill→patch loop  |
-| `ai-system`                           | Unified `pnpm ai` command          |
-| `skill-layout` / `agent-layout`       | Skill + agent folder standards     |
-| `claude-code-layout`                  | Claude Code `.claude/` surfaces    |
-| `quality` / `verify`                  | Quality gate (full / portal alias) |
-| `specs`, `dev`, `deploy`, `rls-audit` | Qoder workflow commands            |
+| Skill                                 | Owner                                  |
+| ------------------------------------- | -------------------------------------- |
+| `agent-alignment-score`               | Formal Alignment Score / gold enforcer |
+| `skill-self-improve`                  | Hermes observe→distill→patch loop      |
+| `ai-system`                           | Unified `pnpm ai` command              |
+| `skill-layout` / `agent-layout`       | Skill + agent folder standards         |
+| `claude-code-layout`                  | Claude Code `.claude/` surfaces        |
+| `provider-router`                     | Multi-provider model routing           |
+| `redis-caching`                       | L1/L2 cache patterns                   |
+| `quality` / `verify`                  | Quality gate (full / portal alias)     |
+| `specs`, `dev`, `deploy`, `rls-audit` | Qoder workflow commands                |
 
 **Sceptic** emits verdict + estimate; **agent-alignment-score** emits the formal extended score block. Repeatable gaps → **skill-self-improve** (`.cursor/rules/07-adaptive-skill-loop.mdc`).
+
+### Agent Communication & Delegation Protocol
+
+When agents and subagents communicate and delegate tasks, they must adhere to the context sharing and asset handling contract defined in `.cursor/rules/08-agent-communication-delegation.mdc`:
+
+1. **Prompts & References:** Explicitly pass system prompts, active references, and relevant files in the payload.
+2. **Prior Calls:** Document prior agent calls, responses, and state modifications.
+3. **Images:** If images are required, download them into a temp directory (e.g. `/tmp/attachments/`) and attach them as absolute file paths. Never send raw base64 or inline image URLs in plain text communication blocks.

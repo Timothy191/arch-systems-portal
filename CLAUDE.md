@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**Arch Systems (Plantcor)** — Industrial mining-operations portal. pnpm + Turborepo monorepo with a Next.js 16 portal, NestJS API, and shared `@repo/*` packages. Supabase for auth/DB, Redis for caching/rate-limiting, Inngest for background jobs, Sentry for error monitoring, OpenTelemetry for observability.
+**Arch Systems (Plantcor)** — Industrial mining-operations portal. pnpm + Turborepo monorepo with a Next.js 16 portal, ops-gateway, and shared `@repo/*` packages. Supabase for auth/DB, Redis for caching/rate-limiting, Inngest for background jobs, Sentry for error monitoring, OpenTelemetry for observability.
 
 > **Canonical agent policy:** `AGENTS.md` (including §20 Alignment Score). Cursor rules in `.cursor/rules/` always apply. Do not drift.
 
@@ -29,41 +29,35 @@ pnpm --filter portal <cmd>  # Run a command for just the portal app
 
 ```
 apps/
-  portal/             # Next.js 16 (App Router, src/ layout) — the only deployable app
-  api/                # NestJS backend (REST API)
-  ops-gateway/        # Operations gateway service
+  portal/                 # Next.js 16 (App Router) — primary deployable UI
+  ops-gateway/            # Control-plane / MCP ops bridge (not product UI)
 packages/
-  auth/               # @repo/auth/{ui,data-access,utils}
-  contract/           # @repo/contract — shared Zod schemas / API contracts
-  database/           # @repo/database — SQL migrations source of truth
-  departments/        # @repo/departments/ui
-  errors/             # @repo/errors — typed AppError classes
-  eslint-config/      # @repo/eslint-config
-  eval/               # @repo/eval — Python LLM eval suite
-  hub/                # @repo/hub/ui
-  logger/             # @repo/logger — structured logging
-  rate-limiter/       # @repo/rate-limiter — Redis-backed
-  redis/              # @repo/redis — shared ioredis singleton
-  rust-bindings/      # @repo/rust-bindings
-  shared/             # @repo/shared/{data-access,hooks,utils}
-  supabase/           # @repo/supabase — server admin client + browser client
-  theme/              # @repo/theme — Tailwind preset & design tokens
-  typescript-config/  # @repo/typescript-config
-  ui/                 # @repo/ui — shared headless React components
-  utils/              # @repo/utils — pure utility helpers
-scripts/              # dev.sh, shutdown.sh, validate-env.sh
+  contract/               # @repo/contract — shared Zod schemas
+  database/               # @repo/database — SQL migrations source of truth
+  departments/            # @repo/departments (+ ui/)
+  errors/                 # @repo/errors — typed AppError classes
+  eslint-config/          # @repo/eslint-config
+  logger/                 # @repo/logger — structured logging
+  rate-limiter/           # @repo/rate-limiter — Redis-backed
+  redis/                  # @repo/redis — shared ioredis singleton
+  supabase/               # @repo/supabase — server + browser clients
+  theme/                  # @repo/theme — Tailwind preset & design tokens
+  typescript-config/      # @repo/typescript-config
+  ui/                     # @repo/ui — shared headless React components
+  utils/                  # @repo/utils — pure utility helpers
+scripts/                  # dev.sh, shutdown.sh, ai.sh
 ```
 
 ### Portal src/ Layout
 
 ```
-src/
-  app/                # Next.js App Router: (auth), (hub), (departments), admin, api, docs
-  components/         # Portal-specific: ai, nav, ui, system, weather, feedback, clock
-  features/           # Feature modules: access-control, admin, analytics, auth, departments, hub
-  hooks/              # Portal-specific hooks
-  lib/                # ai, api, errors, jobs, observability, plugins, reports
-  server/             # Edge middleware proxy (proxy.ts)
+apps/portal/src/
+  app/          # App Router: (auth), hub, (departments), admin, api, docs
+  components/   # Portal-specific React components
+  config/       # Portal config
+  features/     # Feature modules (access-control, admin, analytics, auth, departments, hub)
+  hooks/        # Portal-specific hooks
+  lib/          # Shared lib (ai, api, errors, jobs, observability, reports, …)
 ```
 
 ### Key Technology Choices
@@ -208,36 +202,51 @@ Discovery index for project-local AI surfaces (policy source: `AGENTS.md`).
 
 ### Subagents (`.cursor/agents/`)
 
-### Claude Code (Anthropic)
-
-Hybrid layout: entry `<name>.md` + folder `<name>/`. Native mirror: `.claude/agents/`. Standard: [`.cursor/standards/claude-code/STANDARD.md`](.cursor/standards/claude-code/STANDARD.md).
+Hybrid layout: entry `<name>.md` + folder `<name>/`. Auto-routing: [`.cursor/rules/04-subagent-auto-routing.mdc`](.cursor/rules/04-subagent-auto-routing.mdc). Standard: [`.cursor/standards/agent-layout/STANDARD.md`](.cursor/standards/agent-layout/STANDARD.md).
 
 | Agent                    | When to delegate                             |
 | ------------------------ | -------------------------------------------- |
 | `fast-outliner`          | Multi-step work — outline before specialists |
 | `frontend-design`        | Branded/landing visual composition           |
 | `frontend-implementer`   | Portal pages, components, Server Actions UI  |
+| `nextjs-fullstack`       | Next.js full-stack vertical slices (portal)  |
 | `ai-docs-sync`           | Skills, rules, agents, docs drift            |
-| `ai-maintenance-checker` | Background AI layout/sync every prompt       |
 | `sceptic`                | Before claiming done — adversarial review    |
 | `idle-runner`            | Independent work while other agents blocked  |
+| `ai-maintenance-checker` | Background AI layout/sync every prompt       |
 | `vercel-brand-sync`      | Vercel-family brand assets                   |
 | `openspec`               | OpenSpec change lifecycle (CLI)              |
 | `aider`                  | Aider surgical headless edits                |
 | `goose`                  | Goose recipes / MCP automation               |
 | `omp`                    | omp heavy headless coding                    |
+| `security`               | AppSec, vuln review, threat modeling         |
+| `test-engineer`          | Test automation, flake diagnosis, E2E        |
+| `db-optimizer`           | PostgreSQL/Supabase performance tuning       |
+| `backend-architect`      | API design, service architecture             |
+| `agency-lead`            | Background self-healing loops                |
+| `gap-analyst`            | Compile/gap log analysis                     |
+| `spec-auditor`           | OpenSpec & AGENTS compliance                 |
+| `routing-optimizer`      | Provider latency and cooldowns               |
+| `patch-builder`          | Structural auto-patches                      |
+| `root-cause-healer`      | Verify hypothesis → fix → harden             |
+| `import-auditor`         | Import/path connectivity audit               |
+| `ai-system-optimizer`    | AI surface bloat prune, layout compliance    |
 
-Routing: `.cursor/rules/04-subagent-auto-routing.mdc` · Maintenance: `.cursor/rules/06-ai-maintenance-background.mdc` · Hooks: `.cursor/hooks/README.md`
+### Claude Code (Anthropic)
+
+Native surfaces under `.claude/`: `CLAUDE.md`, `settings.json`, `rules/`, synced `skills/` + `agents/`. Standard: [`.cursor/standards/claude-code/STANDARD.md`](.cursor/standards/claude-code/STANDARD.md).
+
+Routing: `.cursor/rules/04-subagent-auto-routing.mdc` · Maintenance: `.cursor/rules/06-ai-maintenance-background.mdc` · Hooks: `.cursor/hooks/README.md` · Commands: [`.cursor/commands/`](.cursor/commands/) (e.g. `/swarm`)
 
 **AI system:** `pnpm ai` · `.cursor/standards/ai-system/STANDARD.md`
 
 ### Skills
 
-| Location          | Skills                                                                                                           |
-| ----------------- | ---------------------------------------------------------------------------------------------------------------- |
-| `.cursor/skills/` | `agent-alignment-score`, `skill-self-improve`, `ai-system`, `skill-layout`, `agent-layout`, `claude-code-layout` |
-| `.qoder/skills/`  | `quality`, `verify` (portal alias), `specs`, `dev`, `deploy`, `rls-audit`                                        |
-| `.github/skills/` | `verify-changes`, `frontend-api-integration-patterns`, `acquire-codebase-knowledge`                              |
+| Location          | Skills                                                                                                                                               |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `.cursor/skills/` | `agent-alignment-score`, `skill-self-improve`, `ai-system`, `skill-layout`, `agent-layout`, `claude-code-layout`, `provider-router`, `redis-caching` |
+| `.qoder/skills/`  | `quality`, `verify` (portal alias), `specs`, `dev`, `deploy`, `rls-audit`                                                                            |
+| `.github/skills/` | `verify-changes`, `frontend-api-integration-patterns`                                                                                                |
 
 Each skill folder: `SKILL.md` + `scripts/` + `references/` + `assets/`. See `.cursor/skills/README.md` for layout and commands.
 

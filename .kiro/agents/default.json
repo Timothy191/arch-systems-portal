@@ -63,6 +63,7 @@
         "fast-outliner",
         "frontend-design",
         "frontend-implementer",
+        "nextjs-fullstack",
         "ai-docs-sync",
         "sceptic",
         "idle-runner",
@@ -71,7 +72,19 @@
         "openspec",
         "aider",
         "goose",
-        "omp"
+        "omp",
+        "security",
+        "test-engineer",
+        "db-optimizer",
+        "backend-architect",
+        "agency-lead",
+        "gap-analyst",
+        "spec-auditor",
+        "routing-optimizer",
+        "patch-builder",
+        "root-cause-healer",
+        "import-auditor",
+        "ai-system-optimizer"
       ],
       "maintenance_script": "scripts/ai.sh",
       "ai_system_standard": ".cursor/standards/ai-system/STANDARD.md"
@@ -88,8 +101,8 @@
       "pnpm test",
       "pnpm quality",
       "pnpm ai",
-      "pnpm ai:check",
-      "pnpm ai:fix"
+      "pnpm ai check",
+      "pnpm ai fix"
     ],
     "restricted": [".env*.local", "**/*secret*", "**/*private*"]
   },
@@ -106,22 +119,23 @@
   },
   "monorepo_layout": {
     "apps": {
-      "portal": "Next.js 16 app (App Router, src/ layout) — the only deployable app"
+      "portal": "Next.js 16 (App Router) — primary deployable UI",
+      "ops_gateway": "Control-plane / MCP ops bridge (not product UI)"
     },
     "packages": {
+      "contract": "@repo/contract — shared Zod schemas",
+      "database": "@repo/database — SQL migrations source of truth",
+      "departments": "@repo/departments (+ ui/)",
       "errors": "@repo/errors — typed AppError classes",
-      "redis": "@repo/redis — shared ioredis singleton",
-      "supabase": "@repo/supabase — server-only admin client + browser client",
-      "theme": "@repo/theme — Tailwind preset & design tokens",
-      "ui": "@repo/ui — shared headless React components",
-      "utils": "@repo/utils — pure utility helpers",
+      "eslint_config": "@repo/eslint-config",
       "logger": "@repo/logger — structured logging",
-      "rate_limiter": "@repo/rate-limiter — Redis-backed rate limiting",
-      "contract": "@repo/contract — shared Zod schemas / API contracts",
-      "auth": "@repo/auth/ui, @repo/auth/data-access, @repo/auth/utils",
-      "shared": "@repo/shared/data-access, @repo/shared/hooks, @repo/shared/utils",
-      "departments": "@repo/departments/ui",
-      "hub": "@repo/hub/ui"
+      "rate_limiter": "@repo/rate-limiter — Redis-backed",
+      "redis": "@repo/redis — shared ioredis singleton",
+      "supabase": "@repo/supabase — server + browser clients",
+      "theme": "@repo/theme — Tailwind preset & design tokens",
+      "typescript_config": "@repo/typescript-config",
+      "ui": "@repo/ui — shared headless React components",
+      "utils": "@repo/utils — pure utility helpers"
     },
     "rules": [
       "Never add application logic to packages/",
