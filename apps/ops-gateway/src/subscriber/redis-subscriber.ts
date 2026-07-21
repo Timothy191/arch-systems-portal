@@ -35,12 +35,9 @@ export async function startRedisSubscriber(): Promise<void> {
 
   // Create consumer group (idempotent — errors if exists, which we ignore)
   try {
-    await subscriber.xGroupCreate(
-      config.triggerStreamKey,
-      config.triggerConsumerGroup,
-      "0",
-      { MKSTREAM: true },
-    );
+    await subscriber.xGroupCreate(config.triggerStreamKey, config.triggerConsumerGroup, "0", {
+      MKSTREAM: true,
+    });
     logger.info(`Created consumer group: ${config.triggerConsumerGroup}`);
   } catch {
     logger.debug("Consumer group already exists");
@@ -48,9 +45,7 @@ export async function startRedisSubscriber(): Promise<void> {
 
   // Start the polling loop
   pollStream().catch((e) =>
-    logger.error(
-      `Stream polling crashed: ${e instanceof Error ? e.message : String(e)}`,
-    ),
+    logger.error(`Stream polling crashed: ${e instanceof Error ? e.message : String(e)}`)
   );
 }
 
@@ -61,7 +56,7 @@ async function pollStream(): Promise<void> {
   }
 
   logger.info(
-    `Listening on stream '${config.triggerStreamKey}' as consumer '${config.triggerConsumerName}'`,
+    `Listening on stream '${config.triggerStreamKey}' as consumer '${config.triggerConsumerName}'`
   );
 
   // eslint-disable-next-line no-constant-condition
@@ -80,7 +75,7 @@ async function pollStream(): Promise<void> {
         {
           COUNT: 10,
           BLOCK: 5000,
-        },
+        }
       );
 
       if (results === null) continue;
@@ -99,10 +94,7 @@ async function pollStream(): Promise<void> {
   }
 }
 
-async function processMessage(
-  id: string,
-  fields: Record<string, string>,
-): Promise<void> {
+async function processMessage(id: string, fields: Record<string, string>): Promise<void> {
   try {
     const payloadRaw = fields["payload"];
     if (!payloadRaw) {
@@ -140,11 +132,7 @@ async function processMessage(
 async function ack(messageId: string): Promise<void> {
   if (!subscriber) return;
   try {
-    await subscriber.xAck(
-      config.triggerStreamKey,
-      config.triggerConsumerGroup,
-      messageId,
-    );
+    await subscriber.xAck(config.triggerStreamKey, config.triggerConsumerGroup, messageId);
   } catch {
     // Non-fatal
   }

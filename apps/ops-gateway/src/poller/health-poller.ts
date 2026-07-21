@@ -40,22 +40,16 @@ export async function pollHealth(): Promise<void> {
 }
 
 export function startHealthPoller(): void {
-  logger.info(
-    `Starting health poller (interval: ${config.healthPollIntervalMs}ms)`,
-  );
+  logger.info(`Starting health poller (interval: ${config.healthPollIntervalMs}ms)`);
 
   // Immediate first poll
   pollHealth().catch((e) =>
-    logger.error(
-      `Initial health poll failed: ${e instanceof Error ? e.message : String(e)}`,
-    ),
+    logger.error(`Initial health poll failed: ${e instanceof Error ? e.message : String(e)}`)
   );
 
   setInterval(() => {
     pollHealth().catch((e) =>
-      logger.error(
-        `Health poll cycle failed: ${e instanceof Error ? e.message : String(e)}`,
-      ),
+      logger.error(`Health poll cycle failed: ${e instanceof Error ? e.message : String(e)}`)
     );
   }, config.healthPollIntervalMs);
 }

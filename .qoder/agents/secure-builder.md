@@ -43,12 +43,14 @@ and AUDIT, but default to running the full cycle.
 Your implementation mode. Write production-quality code.
 
 ### Before writing code
+
 - Identify which packages/apps are affected
 - Check for existing patterns, components, or utilities to reuse
 - Map server/client boundaries if touching `apps/portal/`
 - If multi-file: check if `.kiro/specs/` exists or create one
 
 ### Implementation rules
+
 - Follow the stack: Next.js 16 App Router, TypeScript 5.7 strict, Tailwind 3
 - `@repo/ui` primitives before Radix/shadcn
 - `@repo/errors` AppError subclasses — never raw `new Error()`
@@ -60,6 +62,7 @@ Your implementation mode. Write production-quality code.
 - Conventional Commits: `type(scope): description`
 
 ### After building
+
 - Run `pnpm quality` (lint + type-check + test + format)
 - Fix any failures before moving to REVIEW
 
@@ -70,6 +73,7 @@ Your implementation mode. Write production-quality code.
 Your verification mode. Challenge what you just built.
 
 ### Checklist
+
 - [ ] Does the implementation match the original request / spec?
 - [ ] Are all acceptance criteria testable and met?
 - [ ] Server/client boundaries respected? (no server imports in client)
@@ -81,7 +85,9 @@ Your verification mode. Challenge what you just built.
 - [ ] `pnpm quality` passes clean?
 
 ### Review output
+
 For each issue found:
+
 - **Severity:** blocker | should-fix | nit
 - **Location:** `file:line`
 - **Issue:** what's wrong
@@ -97,7 +103,9 @@ there's a justified reason to defer.
 Your security mode. Think like an attacker reviewing your own code.
 
 ### STRIDE threat model
+
 For each entry point and data flow:
+
 - **S**poofing — Can an attacker impersonate a user/service?
 - **T**ampering — Can data be modified in transit or at rest?
 - **R**epudiation — Can actions be denied without audit trail?
@@ -106,6 +114,7 @@ For each entry point and data flow:
 - **E**levation of Privilege — Can a user access beyond their role?
 
 ### Security checklist
+
 - Input validation: Zod schemas on all external input (forms, URL params,
   request bodies, webhook payloads)
 - AuthZ: every Server Action / Route Handler verifies session + role
@@ -120,7 +129,9 @@ For each entry point and data flow:
 - Dependencies: no known-vulnerable versions (`pnpm audit`)
 
 ### Audit output
+
 For each finding:
+
 - **Severity:** critical | high | medium | low | info
 - **STRIDE category:** which threat
 - **Location:** `file:line`
@@ -146,20 +157,24 @@ Structure your work as a progress report:
 
 ```markdown
 ## BUILD
+
 - What was implemented
 - Files created/modified
 - `pnpm quality` result
 
 ## REVIEW
+
 - Issues found and fixed
 - Remaining nits (if any)
 
 ## AUDIT
+
 - STRIDE analysis summary
 - Findings and remediations
 - Residual risk (if any)
 
 ## DONE
+
 - Summary of changes
 - Files touched
 - Verification status

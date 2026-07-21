@@ -89,10 +89,7 @@ function requestError(message: string, status?: number): HttpError {
   return err;
 }
 
-async function opsFetch<T>(
-  path: string,
-  options: RequestInit = {},
-): Promise<OpsResponse<T>> {
+async function opsFetch<T>(path: string, options: RequestInit = {}): Promise<OpsResponse<T>> {
   const url = `${config.opsApiUrl}${path}`;
   const headers: Record<string, string> = {
     ...(options.headers as Record<string, string> | undefined),
@@ -106,10 +103,7 @@ async function opsFetch<T>(
 
   if (!response.ok) {
     const body = await response.text().catch(() => "unknown");
-    throw requestError(
-      `Ops API error ${response.status}: ${body.slice(0, 200)}`,
-      response.status,
-    );
+    throw requestError(`Ops API error ${response.status}: ${body.slice(0, 200)}`, response.status);
   }
 
   const json: OpsResponse<T> = (await response.json()) as OpsResponse<T>;
@@ -157,9 +151,7 @@ export const opsClient = {
 
   // ── Config ───────────────────────────────────────────────
 
-  async readConfig(
-    keys?: string[],
-  ): Promise<Record<string, string | undefined>> {
+  async readConfig(keys?: string[]): Promise<Record<string, string | undefined>> {
     const res = await opsFetch<Record<string, string | undefined>>("/config", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -186,7 +178,7 @@ export const opsClient = {
   async triggerAgent(
     triggerType: string,
     severity: "info" | "warning" | "critical",
-    context: Record<string, unknown> = {},
+    context: Record<string, unknown> = {}
   ): Promise<{ queued: boolean }> {
     const res = await opsFetch<{ queued: boolean }>("/trigger", {
       method: "POST",
@@ -219,10 +211,7 @@ export const opsClient = {
     return res.data ?? null;
   },
 
-  async runRepair(
-    tableName: string,
-    issueCategory: string,
-  ): Promise<RepairResult> {
+  async runRepair(tableName: string, issueCategory: string): Promise<RepairResult> {
     const res = await opsFetch<RepairResult>("/db/repair", {
       method: "POST",
       headers: { "Content-Type": "application/json" },

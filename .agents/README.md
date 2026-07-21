@@ -4,16 +4,17 @@ This directory contains AI-agent operational documentation, physically separate 
 
 ## Files
 
-| File | Purpose |
-|------|---------|
-| `README.md` | This index file |
-| `../SOUL.md` | Real-world thought process contract for all agents |
+| File           | Purpose                                                                     |
+| -------------- | --------------------------------------------------------------------------- |
+| `README.md`    | This index file                                                             |
+| `../SOUL.md`   | Real-world thought process contract for all agents                          |
 | `../AGENTS.md` | Root agent registry with roles, orchestration rules, and skill requirements |
-| `skills/` | Individual skill definitions for agent capabilities |
+| `skills/`      | Individual skill definitions for agent capabilities                         |
 
 ## Agent Registry
 
 Six agent roles are defined in `../AGENTS.md`:
+
 - `fullstack-nextjs-pro` — Next.js 16, RSC, Server Actions, NestJS API, Supabase
 - `backend-nestjs-pro` — NestJS 11/Fastify, Zod, global filters
 - `frontend-ui-pro` — React 19, `@repo/ui`, Tailwind, WCAG, testing

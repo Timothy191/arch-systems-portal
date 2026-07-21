@@ -1,79 +1,14 @@
 {
   "permissions": {
     "allow": [
+      "Exec(pnpm ai)",
       "Exec(mkdir)",
-      "Exec(cp)",
-      "Exec(mv)",
-      "Exec(rm)",
-      "Exec(pnpm install)",
-      "Exec(corepack enable)",
+      "Exec(chmod)",
+      "Exec(sed)",
+      "Exec(ls)",
       "Exec(find)",
-      "Exec(npm)",
-      "Exec(npx pnpm)"
+      "Exec(stat)",
+      "Exec(jq)"
     ]
-  },
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Write|Edit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node -e \"let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{const j=JSON.parse(d);const f=j.tool_input?.file_path||'';if(f&&/\\.env(\\\\.local|\\\\.development\\\\.local|\\\\.test\\\\.local|\\\\.production\\\\.local)?$/.test(f)&&!/\\\\.env\\\\.example$/.test(f)){console.error('BLOCKED: Cannot write to .env files with secrets: '+f);process.exit(1)}}catch(e){}})\" 2>&1 || exit 1",
-            "timeout": 10
-          },
-          {
-            "type": "command", 
-            "command": "node -e \"let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{const j=JSON.parse(d);const f=j.tool_input?.file_path||'';if(f&&!/\\\\.kiro\\\\/specs\\\\//.test(f)&&/\\\\.(ts|tsx|js|jsx)$/.test(f)){const fs=require('fs');const path=require('path');const root='/home/timothy/Projects';const specCheck=()=>{const files=fs.readdirSync(root).filter(f=>/\\\\.(ts|tsx|js|jsx)$/.test(f));const changedFiles=files.filter(file=>{try{const content=fs.readFileSync(path.join(root,file),'utf8');return content.includes('TODO')||content.includes('FIXME')||content.includes('HACK')||content.length>1000;}catch(e){return false;}});if(changedFiles.length>1){const specs=fs.readdirSync(path.join(root,'.kiro/specs')).filter(d=>fs.statSync(path.join(root,'.kiro/specs',d)).isDirectory());if(specs.length===0){console.error('BLOCKED: Multi-file change requires spec-driven workflow. Create .kiro/specs/{feature-slug}/ first.');process.exit(1);}}}};try{specCheck();}catch(e){}}catch(e){}})\" 2>&1 || exit 1",
-            "timeout": 15
-          }
-        ]
-      },
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node -e \"let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{const j=JSON.parse(d);const cmd=j.tool_input?.command||'';const blocked=[/rm\\\\s+-rf\\\\s+\\\\//,/git\\\\s+push\\\\s+.*--force.*main/,/git\\\\s+push\\\\s+.*--force.*master/,/npm\\\\s+install/,/npm\\\\s+i\\\\s/,/yarn\\\\s+add/,/yarn\\\\s+install/];if(blocked.some(r=>r.test(cmd))){console.error('BLOCKED: Dangerous command detected: '+cmd);process.exit(1)}}catch(e){}})\" 2>&1 || exit 1",
-            "timeout": 10
-          }
-        ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "Write|Edit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node -e \"let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{const j=JSON.parse(d);const f=j.tool_input?.file_path||j.tool_response?.filePath||'';if(f&&/\\.(ts|tsx|js|jsx|json|md)$/.test(f)){const{execSync}=require('child_process');try{execSync('npx --no-install prettier --write \\\"'+f+'\\\"',{stdio:'pipe',cwd:'/home/timothy/Projects'})}catch(e){}}catch(e){}})\" 2>/dev/null || true",
-            "timeout": 30
-          }
-        ]
-      }
-    ]
-  },
-  "workflow": {
-    "spec_driven": {
-      "enabled": true,
-      "spec_location": ".kiro/specs/{feature-slug}",
-      "required_phases": ["requirements", "design", "tasks"],
-      "validation_command": "pnpm quality",
-      "agent_config": ".kiro/agents/default.json",
-      "reference_docs": ["AGENTS.md", ".kiro/README.md", ".kiro/QUICK_REFERENCE.md"],
-      "real_world_principles": {
-        "enabled": true,
-        "practical_thinking": true,
-        "engineering_heuristics": true,
-        "production_mindset": true
-      }
-    },
-    "monorepo_rules": {
-      "apps_dir": "apps/portal/src/",
-      "legacy_dir": "apps(legacy)/",
-      "packages_dir": "packages/",
-      "never_modify_legacy": true,
-      "never_add_app_logic_to_packages": true
-    }
   }
 }

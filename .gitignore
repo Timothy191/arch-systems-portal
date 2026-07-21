@@ -68,10 +68,18 @@ skills-lock.json
 AGENTS.local.md
 CLAUDE.local.md
 
-# Third-party agent runtime (Claude Code, claude-flow, swarm)
+# Third-party agent runtime (Claude Code, claude-flow, swarm, etc.)
 .claude-flow/
 .claude/
 .swarm/
+.crush/
+.openclaude/
+.poolside/
+.devin/
+.junie/
+.hermes/
+.certbot-webroot/
+.harness-worktrees/
 
 # Local-only legacy archives (do not shadow live src/app or @/features)
 apps/portal/_app_legacy_shadow/

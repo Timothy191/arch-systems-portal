@@ -11,12 +11,7 @@ export interface eveConfig {
   timeoutMs: number;
 }
 
-export type DispatchStatus =
-  | "pending"
-  | "running"
-  | "completed"
-  | "failed"
-  | "timed_out";
+export type DispatchStatus = "pending" | "running" | "completed" | "failed" | "timed_out";
 
 export type DispatchTrigger = "incident" | "trigger" | "mcp" | "manual";
 

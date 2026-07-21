@@ -27,7 +27,7 @@ export function getConfiguredeves(): eveConfig[] {
 
 export function getDispatches(): eveDispatch[] {
   return [...pendingDispatches.values()].sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
   );
 }
 
@@ -37,10 +37,7 @@ export function getDispatch(id: string): eveDispatch | undefined {
 
 export function resolveLatestDispatches(limit = 5): eveDispatch[] {
   return [...pendingDispatches.values()]
-    .sort(
-      (a, b) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-    )
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     .slice(0, limit);
 }
 
@@ -62,9 +59,7 @@ export async function dispatchTask(task: DispatchTask): Promise<eveDispatch> {
   };
 
   pendingDispatches.set(dispatch.id, dispatch);
-  logger.info(
-    `Dispatch ${dispatch.id} assigned to ${eve.id} (triggeredBy: ${task.triggeredBy})`,
-  );
+  logger.info(`Dispatch ${dispatch.id} assigned to ${eve.id} (triggeredBy: ${task.triggeredBy})`);
 
   // Fire-and-forget spawn
   spawneveProcess(eve, dispatch).catch((err) => {
@@ -87,18 +82,13 @@ function pickeve(preferred?: eveId): eveConfig | null {
 
 // ── Process spawning ───────────────────────────────────────
 
-async function spawneveProcess(
-  eve: eveConfig,
-  dispatch: eveDispatch,
-): Promise<void> {
+async function spawneveProcess(eve: eveConfig, dispatch: eveDispatch): Promise<void> {
   updateStatus(dispatch, "running");
 
   const cwd = config.projectRoot ?? process.cwd();
   const args = buildeveArgs(eve, dispatch.prompt, cwd);
 
-  logger.info(
-    `Spawning ${eve.id} for dispatch ${dispatch.id}: ${eve.cliPath} ${args.join(" ")}`,
-  );
+  logger.info(`Spawning ${eve.id} for dispatch ${dispatch.id}: ${eve.cliPath} ${args.join(" ")}`);
 
   const child = spawn(eve.cliPath, args, {
     cwd,
@@ -128,10 +118,7 @@ async function spawneveProcess(
     completeDispatch(dispatch, output);
   } catch (err) {
     const stderr = Buffer.concat(stderrChunks).toString("utf-8");
-    failDispatch(
-      dispatch,
-      `${err instanceof Error ? err.message : String(err)}\n${stderr}`.trim(),
-    );
+    failDispatch(dispatch, `${err instanceof Error ? err.message : String(err)}\n${stderr}`.trim());
   }
 }
 
@@ -146,31 +133,19 @@ function buildeveArgs(eve: eveConfig, prompt: string, cwd: string): string[] {
   }
 }
 
-function buildOpencodeArgs(
-  prompt: string,
-  cwd: string,
-  autoApprove: boolean,
-): string[] {
+function buildOpencodeArgs(prompt: string, cwd: string, autoApprove: boolean): string[] {
   const args = ["run", prompt, "--dir", cwd];
   if (autoApprove) args.push("--auto");
   return args;
 }
 
-function buildKiloArgs(
-  prompt: string,
-  cwd: string,
-  autoApprove: boolean,
-): string[] {
+function buildKiloArgs(prompt: string, cwd: string, autoApprove: boolean): string[] {
   const args = ["run", prompt, "--dir", cwd];
   if (autoApprove) args.push("--auto");
   return args;
 }
 
-function buildAgyArgs(
-  prompt: string,
-  cwd: string,
-  autoApprove: boolean,
-): string[] {
+function buildAgyArgs(prompt: string, cwd: string, autoApprove: boolean): string[] {
   const args = ["--print", prompt, "--add-dir", cwd];
   if (autoApprove) args.push("--dangerously-skip-permissions");
   return args;
@@ -205,9 +180,7 @@ function resolveeveConfigs(): eveConfig[] {
       ...defaultConfig,
       enabled: defaultEnabled(prefix),
       autoApprove: defaultAutoApprove(prefix),
-      timeoutMs: Number(
-        process.env[`${prefix}_TIMEOUT_MS`] ?? defaultConfig.timeoutMs,
-      ),
+      timeoutMs: Number(process.env[`${prefix}_TIMEOUT_MS`] ?? defaultConfig.timeoutMs),
     };
   });
 }

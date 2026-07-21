@@ -5,8 +5,11 @@ description: GitHub Agent Configurations
 
 # GitHub Agent Configurations (`.github/agents/`)
 
-This directory houses configuration templates and prompts for specialized AI subagents tasked with repository operations, issue triaging, or code reviews.
+Thin GitHub-side prompts. Canonical fleet lives in `.cursor/agents/` + `AGENTS.md`.
 
 ## Layout
 
-- **`agent-template.md`**: Standard structure for defining agent system prompts, capabilities, and expected behaviors.
+| File                                     | Role                                           |
+| ---------------------------------------- | ---------------------------------------------- |
+| [`agent-template.md`](agent-template.md) | Scaffold for new GitHub agent prompts          |
+| [`commit-cop.md`](commit-cop.md)         | Conventional commits + RLS + secrets checklist |

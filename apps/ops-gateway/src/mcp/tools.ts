@@ -17,19 +17,11 @@ const clearCacheSchema = {
 };
 
 const rateLimitSchema = {
-  limit: z
-    .number()
-    .int()
-    .positive()
-    .max(1000)
-    .describe("Requests per 60-second window"),
+  limit: z.number().int().positive().max(1000).describe("Requests per 60-second window"),
 };
 
 const triggerAgentSchema = {
-  triggerType: z
-    .string()
-    .min(1)
-    .describe("Type of event, e.g. 'INCIDENT_DETECTED'"),
+  triggerType: z.string().min(1).describe("Type of event, e.g. 'INCIDENT_DETECTED'"),
   severity: z.enum(["info", "warning", "critical"]).describe("Severity level"),
 };
 
@@ -132,9 +124,7 @@ export function defineTools(): ToolDefinition[] {
       handler: async (args: Record<string, unknown>) => {
         const parsed = rateLimitSchema.limit.safeParse(args["limit"]);
         if (!parsed.success) {
-          throw new Error(
-            `Invalid limit: ${parsed.error.issues.map((i) => i.message).join("; ")}`,
-          );
+          throw new Error(`Invalid limit: ${parsed.error.issues.map((i) => i.message).join("; ")}`);
         }
         return opsClient.updateRateLimit(parsed.data);
       },
@@ -157,9 +147,7 @@ export function defineTools(): ToolDefinition[] {
       },
       handler: async (args: Record<string, unknown>) => {
         const keys = args["keys"];
-        const keyList: string[] | undefined = Array.isArray(keys)
-          ? keys.map(String)
-          : undefined;
+        const keyList: string[] | undefined = Array.isArray(keys) ? keys.map(String) : undefined;
         return opsClient.readConfig(keyList);
       },
     },
@@ -186,10 +174,7 @@ export function defineTools(): ToolDefinition[] {
       },
       handler: async (args: Record<string, unknown>) => {
         const triggerType = String(args["triggerType"] ?? "");
-        const severity = String(args["severity"] ?? "") as
-          | "info"
-          | "warning"
-          | "critical";
+        const severity = String(args["severity"] ?? "") as "info" | "warning" | "critical";
         return opsClient.triggerAgent(triggerType, severity, args);
       },
     },
@@ -211,8 +196,7 @@ export function defineTools(): ToolDefinition[] {
       handler: async (args: Record<string, unknown>) => {
         // Metrics are fetched directly from the NestJS metrics endpoint
         const metricsUrl =
-          process.env.METRICS_URL ??
-          "http://host.docker.internal:3001/api/metrics";
+          process.env.METRICS_URL ?? "http://host.docker.internal:3001/api/metrics";
         const response = await fetch(metricsUrl);
         if (!response.ok) {
           throw new Error(`Metrics endpoint returned ${response.status}`);
@@ -240,29 +224,23 @@ export function defineTools(): ToolDefinition[] {
         required: [],
       },
       handler: async () => {
-        const healthUrl =
-          process.env.HEALTH_URL ??
-          "http://host.docker.internal:3001/api/health";
+        const healthUrl = process.env.HEALTH_URL ?? "http://host.docker.internal:3001/api/health";
         const [healthRes, liveRes] = await Promise.all([
           fetch(healthUrl).catch((): { ok: false; statusText: string } => ({
             ok: false,
             statusText: "fetch failed",
           })),
-          fetch(`${healthUrl}/live`).catch(
-            (): { ok: false; statusText: string } => ({
-              ok: false,
-              statusText: "fetch failed",
-            }),
-          ),
+          fetch(`${healthUrl}/live`).catch((): { ok: false; statusText: string } => ({
+            ok: false,
+            statusText: "fetch failed",
+          })),
         ]);
         let healthBody: Record<string, unknown> | null = null;
-        if (
-          healthRes.ok &&
-          typeof (healthRes as Response).json === "function"
-        ) {
-          healthBody = (await (healthRes as Response)
-            .json()
-            .catch((): null => null)) as Record<string, unknown> | null;
+        if (healthRes.ok && typeof (healthRes as Response).json === "function") {
+          healthBody = (await (healthRes as Response).json().catch((): null => null)) as Record<
+            string,
+            unknown
+          > | null;
         }
         return {
           liveness: liveRes.ok ? "ok" : "unreachable",
@@ -347,8 +325,7 @@ export function defineTools(): ToolDefinition[] {
             tableName,
             issueCategory,
             action: `Apply auto-repair for ${issueCategory.replace(/_/g, " ")}`,
-            consequence:
-              "This operation may DELETE or UPDATE rows to fix data integrity issues.",
+            consequence: "This operation may DELETE or UPDATE rows to fix data integrity issues.",
           };
         }
         return opsClient.runRepair(tableName, issueCategory);
@@ -377,9 +354,7 @@ export function defineTools(): ToolDefinition[] {
         // Defense-in-depth: verify SELECT-only at MCP handler level
         const upper = sql.toUpperCase();
         if (!upper.startsWith("SELECT")) {
-          throw new Error(
-            "Only SELECT queries are allowed. Query must start with SELECT.",
-          );
+          throw new Error("Only SELECT queries are allowed. Query must start with SELECT.");
         }
         if (sql.length > 2000) {
           throw new Error("SQL must be at most 2000 characters");
@@ -403,8 +378,7 @@ export function defineTools(): ToolDefinition[] {
         properties: {
           task: {
             type: "string",
-            description:
-              "Short label for the task, e.g. 'Investigate high error rate'",
+            description: "Short label for the task, e.g. 'Investigate high error rate'",
           },
           prompt: {
             type: "string",
@@ -426,8 +400,7 @@ export function defineTools(): ToolDefinition[] {
         if (!prompt) throw new Error("prompt is required");
         const preferredeve = args["eve"];
         const eveId =
-          typeof preferredeve === "string" &&
-          ["opencode", "kilo", "agy"].includes(preferredeve)
+          typeof preferredeve === "string" && ["opencode", "kilo", "agy"].includes(preferredeve)
             ? (preferredeve as "opencode" | "kilo" | "agy")
             : undefined;
 
@@ -465,17 +438,14 @@ export function defineTools(): ToolDefinition[] {
       handler: async () => {
         const eves = getConfiguredeves();
         const allDispatches = getDispatches();
-        const runningDispatches = allDispatches.filter(
-          (d: eveDispatch) => d.status === "running",
-        );
+        const runningDispatches = allDispatches.filter((d: eveDispatch) => d.status === "running");
         return {
           eves: eves.map((e) => ({
             id: e.id,
             enabled: e.enabled,
             autoApprove: e.autoApprove,
             timeoutMs: e.timeoutMs,
-            activeCount: runningDispatches.filter((d: eveDispatch) => d.eve === e.id)
-              .length,
+            activeCount: runningDispatches.filter((d: eveDispatch) => d.eve === e.id).length,
           })),
         };
       },
@@ -547,9 +517,7 @@ function formatSummary(summary: SystemSummary): Record<string, unknown> {
   return {
     healthy: summary.healthy,
     cacheHitRate:
-      summary.cacheHitRate !== null
-        ? `${(summary.cacheHitRate * 100).toFixed(1)}%`
-        : "unknown",
+      summary.cacheHitRate !== null ? `${(summary.cacheHitRate * 100).toFixed(1)}%` : "unknown",
     queue: summary.queue ?? "unavailable",
     uptime: `${Math.floor(summary.uptime / 60)}m ${Math.floor(summary.uptime % 60)}s`,
     memory: summary.memory

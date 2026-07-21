@@ -1,9 +1,6 @@
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import {
-  ListToolsRequestSchema,
-  CallToolRequestSchema,
-} from "@modelcontextprotocol/sdk/types.js";
+import { ListToolsRequestSchema, CallToolRequestSchema } from "@modelcontextprotocol/sdk/types.js";
 import { Logger } from "../logger.js";
 import { defineTools, type ToolHandler } from "./tools.js";
 
@@ -19,7 +16,7 @@ export async function startMcpServer(): Promise<void> {
       capabilities: {
         tools: {},
       },
-    },
+    }
   );
 
   const tools = defineTools();

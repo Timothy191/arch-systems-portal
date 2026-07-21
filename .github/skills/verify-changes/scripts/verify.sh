@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
+# Alias → .qoder/skills/quality full monorepo gate
 set -euo pipefail
-cd "$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
-pnpm format:check
-pnpm lint
-pnpm type-check
-pnpm test
+ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+exec "$ROOT/.qoder/skills/quality/scripts/run-full.sh"

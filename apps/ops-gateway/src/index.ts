@@ -2,14 +2,8 @@ import { startMcpServer } from "./mcp/server.js";
 import { startHealthPoller } from "./poller/health-poller.js";
 import { startMetricsPoller } from "./poller/metrics-poller.js";
 import { runAuditCheck } from "./poller/audit-poller.js";
-import {
-  startRedisSubscriber,
-  seteventHandler,
-} from "./subscriber/redis-subscriber.js";
-import {
-  handleTriggerevent,
-  periodicIncidentCheck,
-} from "./incident/engine.js";
+import { startRedisSubscriber, seteventHandler } from "./subscriber/redis-subscriber.js";
+import { handleTriggerevent, periodicIncidentCheck } from "./incident/engine.js";
 import { Logger } from "./logger.js";
 import { getConfiguredeves } from "./dispatcher/eve-dispatcher.js";
 import { config } from "./config.js";
@@ -27,12 +21,10 @@ async function main(): Promise<void> {
   runAuditCheck().then((result) => {
     if (result) {
       logger.info(
-        `Initial audit complete: ${result.totalIssues} issue(s) across ${result.tablesScanned}/${result.totalTables} tables`,
+        `Initial audit complete: ${result.totalIssues} issue(s) across ${result.tablesScanned}/${result.totalTables} tables`
       );
     } else {
-      logger.warn(
-        "Initial audit returned no result (backend may be unavailable)",
-      );
+      logger.warn("Initial audit returned no result (backend may be unavailable)");
     }
   });
 
@@ -40,13 +32,13 @@ async function main(): Promise<void> {
   seteventHandler(handleTriggerevent);
   await startRedisSubscriber().catch((error) => {
     logger.error(
-      `Redis subscriber failed: ${error instanceof Error ? error.message : String(error)}`,
+      `Redis subscriber failed: ${error instanceof Error ? error.message : String(error)}`
     );
     logger.warn("Continuing without Redis subscription — manual triggers only");
   });
 
   const availableeves = getConfiguredeves().map(
-    (e: any) => `${e.id}${e.autoApprove ? " (auto)" : ""}`,
+    (e: any) => `${e.id}${e.autoApprove ? " (auto)" : ""}`
   );
   if (availableeves.length > 0) {
     logger.info(`TUI agents available: ${availableeves.join(", ")}`);
@@ -56,16 +48,12 @@ async function main(): Promise<void> {
 
   // 4. Start MCP server (stdio — TUI agents connect via pipe)
   await startMcpServer().catch((error) => {
-    logger.error(
-      `MCP server failed: ${error instanceof Error ? error.message : String(error)}`,
-    );
+    logger.error(`MCP server failed: ${error instanceof Error ? error.message : String(error)}`);
     process.exitCode = 1;
   });
 }
 
 main().catch((error) => {
-  logger.error(
-    `Fatal: ${error instanceof Error ? error.message : String(error)}`,
-  );
+  logger.error(`Fatal: ${error instanceof Error ? error.message : String(error)}`);
   process.exit(1);
 });

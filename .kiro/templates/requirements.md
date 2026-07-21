@@ -7,16 +7,19 @@
 ## Requirements
 
 ### 1. {Requirement 1}
+
 - {Acceptance criterion 1.1}
 - {Acceptance criterion 1.2}
 - {Acceptance criterion 1.3}
 
 ### 2. {Requirement 2}
+
 - {Acceptance criterion 2.1}
 - {Acceptance criterion 2.2}
 - {Acceptance criterion 2.3}
 
 ### 3. {Requirement 3}
+
 - {Acceptance criterion 3.1}
 - {Acceptance criterion 3.2}
 - {Acceptance criterion 3.3}
@@ -30,11 +33,13 @@
 ## Scope Boundaries
 
 ### In Scope
+
 - {Item 1}
 - {Item 2}
 - {Item 3}
 
 ### Out of Scope
+
 - {Item 1}
 - {Item 2}
 - {Item 3}

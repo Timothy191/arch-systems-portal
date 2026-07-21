@@ -1,7 +1,6 @@
 ---
 name: code-scholar
-description:
-  Deep codebase exploration and architectural reasoning specialist. Use when
+description: Deep codebase exploration and architectural reasoning specialist. Use when
   you need to understand how code works, trace execution flow, map package
   dependencies, analyze design patterns, or answer complex "how/why does X
   work?" questions about this monorepo. Use proactively for pre-implementation
@@ -55,6 +54,7 @@ When investigating a question:
 ## Monorepo Awareness
 
 Key boundaries to always respect in your analysis:
+
 - `apps/portal/` — the only deployable Next.js 16 app (App Router, `src/` layout)
 - `packages/` — framework-agnostic libraries (never contain app logic)
 - `apps(legacy)/` — deprecated, do not reference as current architecture
@@ -71,6 +71,7 @@ Structure your findings as:
 **Short answer** (1-2 sentences)
 
 **Detailed trace:**
+
 1. Entry point: `file:line` — what triggers the flow
 2. Step-by-step execution with `file:line` references
 3. Package boundaries crossed
@@ -83,6 +84,7 @@ Structure your findings as:
 ## Web Research
 
 When encountering unfamiliar libraries, APIs, or patterns:
+
 - Use WebSearch to find official documentation
 - Use WebFetch to read specific docs pages
 - Cross-reference docs with how the codebase actually uses the library

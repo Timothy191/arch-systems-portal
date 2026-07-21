@@ -3,6 +3,7 @@
 ## Current Setup
 
 The repository uses:
+
 - **Husky 9.1.7** (git hooks manager)
 - **lint-staged** (pre-commit formatting/linting)
 - **commitlint** (commit message validation)
@@ -10,58 +11,60 @@ The repository uses:
 ## Recommended Hook Enhancements
 
 ### Pre-Commit Hook (check-specs.js)
+
 ```javascript
 #!/usr/bin/env node
 
-const { execSync } = require('child_process');
-const fs = require('fs');
-const path = require('path');
+const { execSync } = require("child_process");
+const fs = require("fs");
+const path = require("path");
 
 const root = process.cwd();
 
 // Get staged files
-const stagedFiles = execSync('git diff --cached --name-only --diff-filter=ACM', { encoding: 'utf8' })
-  .split('\n')
+const stagedFiles = execSync("git diff --cached --name-only --diff-filter=ACM", {
+  encoding: "utf8",
+})
+  .split("\n")
   .filter(Boolean)
-  .filter(file => /\.(ts|tsx|js|jsx)$/.test(file));
+  .filter((file) => /\.(ts|tsx|js|jsx)$/.test(file));
 
 // If multi-file change, check for specs
 if (stagedFiles.length > 1) {
-  const specsDir = path.join(root, '.kiro', 'specs');
-  const specDirs = fs.existsSync(specsDir) 
-    ? fs.readdirSync(specsDir).filter(dir => 
-        fs.statSync(path.join(specsDir, dir)).isDirectory()
-      )
+  const specsDir = path.join(root, ".kiro", "specs");
+  const specDirs = fs.existsSync(specsDir)
+    ? fs.readdirSync(specsDir).filter((dir) => fs.statSync(path.join(specsDir, dir)).isDirectory())
     : [];
 
   if (specDirs.length === 0) {
-    console.error('\n❌ ERROR: Multi-file change requires spec-driven workflow.');
-    console.error('   Create spec directory first: .kiro/specs/{feature-slug}/');
-    console.error('   Follow AGENTS.md §1: Requirements → Design → Tasks');
-    console.error('   See .kiro/templates/ for template files');
+    console.error("\n❌ ERROR: Multi-file change requires spec-driven workflow.");
+    console.error("   Create spec directory first: .kiro/specs/{feature-slug}/");
+    console.error("   Follow AGENTS.md §1: Requirements → Design → Tasks");
+    console.error("   See .kiro/templates/ for template files");
     process.exit(1);
   }
 }
 
-console.log('✅ Spec check passed (or single-file change)');
+console.log("✅ Spec check passed (or single-file change)");
 ```
 
 ### Commit Message Hook (validate-spec-reference.js)
+
 ```javascript
 #!/usr/bin/env node
 
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
 const commitMsgFile = process.argv[2];
-const commitMsg = fs.readFileSync(commitMsgFile, 'utf8');
+const commitMsg = fs.readFileSync(commitMsgFile, "utf8");
 
 // Check if commit message references a spec
 const specReference = commitMsg.match(/spec:([a-z0-9-]+)/i);
 if (specReference) {
   const specSlug = specReference[1];
-  const specDir = path.join(process.cwd(), '.kiro', 'specs', specSlug);
-  
+  const specDir = path.join(process.cwd(), ".kiro", "specs", specSlug);
+
   if (!fs.existsSync(specDir)) {
     console.error(`\n❌ ERROR: Commit references non-existent spec: ${specSlug}`);
     console.error(`   Create .kiro/specs/${specSlug}/ first`);
@@ -69,12 +72,13 @@ if (specReference) {
   }
 }
 
-console.log('✅ Spec reference check passed');
+console.log("✅ Spec reference check passed");
 ```
 
 ## Commit Message Format
 
 Recommended format for spec-driven work:
+
 ```
 type(scope): description
 
@@ -87,6 +91,7 @@ task:1.2.3
 ```
 
 Example:
+
 ```
 feat(portal): add user profile editing
 
@@ -101,11 +106,13 @@ task:2.1.4
 ## Quality Gates
 
 ### Before Commit
+
 1. `pnpm quality` passes (lint + type-check + test + format)
 2. Multi-file changes have specs in `.kiro/specs/`
 3. Commit message follows conventional format
 
 ### After Commit
+
 1. Spec directory updated with implementation notes
 2. Tasks.md marked complete for implemented tasks
 3. Documentation updated if needed
@@ -113,11 +120,13 @@ task:2.1.4
 ## Setup Instructions
 
 1. Create hooks directory (if needed):
+
    ```bash
    mkdir -p .husky
    ```
 
 2. Add pre-commit hook:
+
    ```bash
    echo '#!/usr/bin/env node\n' > .husky/pre-commit
    echo 'require("./.kiro/scripts/check-specs.js")' >> .husky/pre-commit
@@ -126,7 +135,7 @@ task:2.1.4
 
 3. Add commit-msg hook:
    ```bash
-   echo '#!/usr/bin/env node\n' > .husky/commit-msg  
+   echo '#!/usr/bin/env node\n' > .husky/commit-msg
    echo 'require("./.kiro/scripts/validate-spec-reference.js") "$1"' >> .husky/commit-msg
    chmod +x .husky/commit-msg
    ```

@@ -13,6 +13,7 @@
 ## Real-World Engineering Principles
 
 ### Practical Problem-Solving
+
 - **Start simple** - Minimum viable solution first
 - **Progressive enhancement** - Work → Right → Fast
 - **Production-ready** - Consider monitoring, debugging, maintenance
@@ -20,6 +21,7 @@
 - **Learn from incidents** - Real problems > theoretical edge cases
 
 ### Engineering Heuristics
+
 - **YAGNI** - Don't build features before needed
 - **KISS** - Complexity kills reliability
 - **DRY** - But know when duplication is better
@@ -42,7 +44,7 @@ pnpm format           # Prettier write
 mkdir .kiro/specs/{feature-slug}  # Create spec directory
 # Copy templates from .kiro/templates/
 # Fill requirements.md → get approval
-# Fill design.md → get approval  
+# Fill design.md → get approval
 # Fill tasks.md → execute in order
 ```
 

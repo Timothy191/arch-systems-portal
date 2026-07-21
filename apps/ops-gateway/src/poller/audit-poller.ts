@@ -57,13 +57,9 @@ export async function runAuditCheck(): Promise<PolledAudit | null> {
     latestAudit = polled;
 
     if (report.errorCount > 0) {
-      logger.warn(
-        `Audit found ${report.errorCount} error(s): ${report.summary}`,
-      );
+      logger.warn(`Audit found ${report.errorCount} error(s): ${report.summary}`);
     } else if (report.warningCount > 0) {
-      logger.info(
-        `Audit found ${report.warningCount} warning(s): ${report.summary}`,
-      );
+      logger.info(`Audit found ${report.warningCount} warning(s): ${report.summary}`);
     } else {
       logger.info(`Audit clean: ${report.summary}`);
     }

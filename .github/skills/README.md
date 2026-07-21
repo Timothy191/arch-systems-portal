@@ -15,14 +15,15 @@ Scaffold new skills from [`TEMPLATE.md`](TEMPLATE.md).
 
 ## Skills in this repo
 
-| Skill                                                                                       | Purpose                                      |
-| ------------------------------------------------------------------------------------------- | -------------------------------------------- |
-| [verify-changes](verify-changes/)                                                           | Format → lint → type-check → test            |
-| [frontend-api-integration-patterns](frontend-api-integration-patterns/)                     | Async fetch, cancellation, retry patterns    |
-| [awesome-copilot--acquire-codebase-knowledge](awesome-copilot--acquire-codebase-knowledge/) | Codebase onboarding docs in `docs/codebase/` |
+| Skill                                                                   | Purpose                                   |
+| ----------------------------------------------------------------------- | ----------------------------------------- |
+| [verify-changes](verify-changes/)                                       | Alias → Qoder `quality` (full gate)       |
+| [frontend-api-integration-patterns](frontend-api-integration-patterns/) | Async fetch, cancellation, retry patterns |
 
 ## Related
 
 - Cursor score skill: `.cursor/skills/agent-alignment-score/`
 - Qoder workflows: `.qoder/skills/README.md`
+- Cursor commands: `.cursor/commands/` (e.g. `/swarm`)
 - Canonical policy: `AGENTS.md`
+- Quality family: `.cursor/agents/_shared/references/agent-families.md`

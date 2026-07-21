@@ -1,7 +1,6 @@
 export const config = {
   // NestJS Ops API connection
-  opsApiUrl:
-    process.env.OPS_API_URL ?? "http://host.docker.internal:3001/api/ops",
+  opsApiUrl: process.env.OPS_API_URL ?? "http://host.docker.internal:3001/api/ops",
   opsSecret: process.env.OPS_SECRET ?? "",
 
   // Redis connection (shared with NestJS backend)
@@ -12,14 +11,8 @@ export const config = {
   mcpHost: process.env.MCP_HOST ?? "0.0.0.0",
 
   // Polling intervals (ms)
-  healthPollIntervalMs: parseInt(
-    process.env.HEALTH_POLL_INTERVAL_MS ?? "15000",
-    10,
-  ),
-  metricsPollIntervalMs: parseInt(
-    process.env.METRICS_POLL_INTERVAL_MS ?? "30000",
-    10,
-  ),
+  healthPollIntervalMs: parseInt(process.env.HEALTH_POLL_INTERVAL_MS ?? "15000", 10),
+  metricsPollIntervalMs: parseInt(process.env.METRICS_POLL_INTERVAL_MS ?? "30000", 10),
 
   // Redis stream to subscribe to
   triggerStreamKey: process.env.TRIGGER_STREAM_KEY ?? "ai:triggers:stream",

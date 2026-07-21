@@ -13,6 +13,7 @@ graph TD
 ## Task List
 
 ### Phase 1: Setup & Foundation
+
 - [ ] **Task 1.1:** Create directory structure
   - Files: `{path/to/dir}/`
   - Validation: Directory exists, empty state
@@ -29,6 +30,7 @@ graph TD
   - Prerequisites: Task 1.2
 
 ### Phase 2: Core Implementation
+
 - [ ] **Task 2.1:** Implement data models/contracts
   - Files: `{path/to/schema}.ts`
   - Validation: `pnpm type-check` passes, Zod schemas validate
@@ -50,6 +52,7 @@ graph TD
   - Prerequisites: Task 2.3
 
 ### Phase 3: Client Implementation
+
 - [ ] **Task 3.1:** Create Client Components
   - Files: `{path/to/client-component}.tsx`
   - Validation: Has "use client", no server-only imports
@@ -66,6 +69,7 @@ graph TD
   - Prerequisites: Task 3.2
 
 ### Phase 4: Integration & Testing
+
 - [ ] **Task 4.1:** Integrate with existing routes
   - Files: `{path/to/route}/page.tsx`, `layout.tsx`
   - Validation: Routes render without errors
@@ -87,6 +91,7 @@ graph TD
   - Prerequisites: Task 4.3
 
 ### Phase 5: Polish & Documentation
+
 - [ ] **Task 5.1:** Add JSDoc comments
   - Files: All implemented files
   - Validation: Documentation exists for public APIs
@@ -105,16 +110,19 @@ graph TD
 ## Quality Gates
 
 ### Before Each Task
+
 - [ ] Run `pnpm type-check` (no errors)
 - [ ] Verify no server-only code in client components
 - [ ] Check for any `any` types
 
 ### After Each Task
+
 - [ ] Run `pnpm lint` (no warnings)
 - [ ] Run task-specific tests
 - [ ] Verify accessibility (semantic HTML, labels, focus)
 
 ### Before Marking Complete
+
 - [ ] All acceptance criteria from requirements met
 - [ ] `pnpm quality` passes completely
 - [ ] No secrets committed or exposed
@@ -127,6 +135,7 @@ graph TD
 ## Rollback Plan
 
 If any task fails:
+
 1. Revert to last successful task commit
 2. Document failure reason
 3. Update design if fundamental issue
@@ -136,6 +145,7 @@ If any task fails:
 ## Completion Criteria
 
 The feature is complete when:
+
 1. All tasks marked complete
 2. All quality gates passed
 3. Feature works in development (`pnpm dev`)

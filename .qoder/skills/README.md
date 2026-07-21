@@ -16,8 +16,8 @@ skill-name/
 
 | Skill                   | Purpose                     | Script                                 |
 | ----------------------- | --------------------------- | -------------------------------------- |
-| [quality](quality/)     | Full or portal quality gate | `scripts/run-full.sh`, `run-portal.sh` |
-| [verify](verify/)       | Portal alias → quality      | `scripts/run-portal.sh`                |
+| [quality](quality/)     | Full or portal quality gate (canonical) | `scripts/run-full.sh`, `run-portal.sh` |
+| [verify](verify/)       | Portal alias → quality                  | `scripts/run-portal.sh`                |
 | [specs](specs/)         | Spec-driven workflow        | `scripts/create-spec.sh`               |
 | [dev](dev/)             | Dev server start/health     | `scripts/start.sh`                     |
 | [deploy](deploy/)       | Deploy dev/local            | `scripts/deploy-dev.sh`                |
@@ -31,4 +31,6 @@ skill-name/
 .qoder/skills/rls-audit/scripts/audit.sh
 ```
 
-Formal Alignment Score: `.cursor/skills/agent-alignment-score/`
+Formal Alignment Score: `.cursor/skills/agent-alignment-score/`  
+Cursor commands: `.cursor/commands/` (e.g. `/swarm`)  
+Quality family (`quality` / `verify` / GitHub `verify-changes`): `.cursor/agents/_shared/references/agent-families.md`

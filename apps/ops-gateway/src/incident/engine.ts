@@ -124,10 +124,7 @@ export async function periodicIncidentCheck(): Promise<void> {
         },
       });
     } else {
-      resolveIncidentsByType(
-        "HIGH_ERROR_RATE",
-        "Error rate returned to normal",
-      );
+      resolveIncidentsByType("HIGH_ERROR_RATE", "Error rate returned to normal");
     }
   }
 
@@ -148,10 +145,7 @@ export async function periodicIncidentCheck(): Promise<void> {
           },
         });
       } else {
-        resolveIncidentsByType(
-          "DATA_INTEGRITY_ISSUE",
-          "Data integrity audit passed",
-        );
+        resolveIncidentsByType("DATA_INTEGRITY_ISSUE", "Data integrity audit passed");
       }
     } catch {
       // Non-fatal — audit will retry next cycle
@@ -181,15 +175,13 @@ async function attemptAutoMitigation(incident: Incident): Promise<void> {
           for (const category of repairPriority) {
             const tables = audit.tablesByIssue[category];
             if (!tables || tables.length === 0) continue;
-            logger.info(
-              `Auto-mitigation: repairing ${category} across ${tables.length} table(s)`,
-            );
+            logger.info(`Auto-mitigation: repairing ${category} across ${tables.length} table(s)`);
             for (const tableName of tables) {
               try {
                 const result = await opsClient.runRepair(tableName, category);
                 if (result.affectedRows > 0) {
                   logger.info(
-                    `Auto-repair ${category} on ${tableName}: fixed ${result.affectedRows} row(s)`,
+                    `Auto-repair ${category} on ${tableName}: fixed ${result.affectedRows} row(s)`
                   );
                 }
               } catch {
@@ -287,9 +279,7 @@ async function dispatchToAgent(incident: Incident): Promise<void> {
       triggeredBy: "incident",
       triggerRef: incident.id,
     });
-    logger.info(
-      `Dispatched to ${dispatch.eve} for incident ${incident.type} (${dispatch.id})`,
-    );
+    logger.info(`Dispatched to ${dispatch.eve} for incident ${incident.type} (${dispatch.id})`);
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     logger.warn(`Agent dispatch failed for ${incident.type}: ${message}`);
@@ -301,7 +291,7 @@ async function dispatchToAgent(incident: Incident): Promise<void> {
 const knownIncidents = new Map<string, string>(); // type -> id
 
 async function createOrUpdateIncident(
-  partial: Omit<Incident, "id" | "detectedAt" | "resolvedAt" | "autoMitigated">,
+  partial: Omit<Incident, "id" | "detectedAt" | "resolvedAt" | "autoMitigated">
 ): Promise<void> {
   const existingId = knownIncidents.get(partial.type);
   if (existingId && activeIncidents.has(existingId)) {
@@ -323,10 +313,7 @@ async function createOrUpdateIncident(
   logger.warn(`Incident created: ${incident.severity}/${incident.type}`);
 
   // Dispatch to TUI agent for critical and warning incidents
-  if (
-    config.enableAgentDispatch !== false &&
-    !dispatchedIncidents.has(incident.type)
-  ) {
+  if (config.enableAgentDispatch !== false && !dispatchedIncidents.has(incident.type)) {
     dispatchedIncidents.add(incident.type);
     dispatchToAgent(incident).catch(() => {
       /* dispatch is fire-and-forget */
