@@ -22,7 +22,14 @@ packages/theme/src/css/animations.css  ← keyframes + .os-shell-enter-* (motion
 > the 8pt grid (capsule bars, 24px panels).
 
 ```css
---os-shell-surface: linear-gradient(180deg, rgba(255,255,255,0.55), rgba(255,255,255,0.22) 45%, rgba(255,255,255,0.3)), rgba(246,246,250,0.5);
+--os-shell-surface:
+  linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.55),
+    rgba(255, 255, 255, 0.22) 45%,
+    rgba(255, 255, 255, 0.3)
+  ),
+  rgba(246, 246, 250, 0.5);
 --os-shell-border: 1px solid rgba(255, 255, 255, 0.5);
 --os-shell-shadow:
   0 16px 40px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08),

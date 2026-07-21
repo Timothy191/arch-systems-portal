@@ -14,6 +14,7 @@ The migration involves copying the entire legacy portal application into the new
 ## File Structure Changes
 
 ### Source: `apps(legacy)/portal/`
+
 ### Destination: `apps/portal/`
 
 ### Key Directories to Migrate
@@ -77,6 +78,7 @@ None - this is a migration of existing functionality.
 ## Environment Variables Required
 
 All existing environment variables from legacy portal:
+
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 - `SUPABASE_SERVICE_ROLE_KEY`
@@ -85,6 +87,7 @@ All existing environment variables from legacy portal:
 ## New Packages Needed
 
 Based on legacy portal package.json, the following may need to be added:
+
 - Review legacy portal dependencies vs new portal dependencies
 - Add any missing packages with design approval
 - Prefer workspace packages over external packages
@@ -108,6 +111,7 @@ Based on legacy portal package.json, the following may need to be added:
 ## Rollback Plan
 
 Keep legacy portal intact until migration is verified. If migration fails, we can revert by:
+
 1. Deleting `apps/portal/src` directory
 2. Restoring original `src/app/layout.tsx` and `src/app/page.tsx`
 3. Restoring original `package.json` from git

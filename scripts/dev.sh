@@ -271,13 +271,8 @@ if [ -f "$REPO_ROOT/portal.log" ]; then
   check "Portal log" "pass" "rotated"
 fi
 
-if [ -x "$REPO_ROOT/scripts/ai.sh" ]; then
-  if bash "$REPO_ROOT/scripts/ai.sh" status --quiet 2>/dev/null; then
-    check "AI system" "pass" "pnpm ai status"
-  else
-    check "AI system" "warn" "run: pnpm ai fix"
-  fi
-fi
+# Product layer is standalone — do not probe scripts/ai.sh or .cursor/ here.
+# Agentic health: pnpm ai (optional; never required for portal boot).
 
 # ── Phase 1: Environment ──────────────────────────────────────────────────────
 phase 1 "Environment"
