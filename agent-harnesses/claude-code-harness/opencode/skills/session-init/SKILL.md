@@ -82,6 +82,7 @@ harness_mem_resume_pack(project, session_id?, limit=5, include_private=false)
 ```
 
 運用ルール:
+
 - `project` は必ず現在プロジェクト名を指定
 - `session_id` は `$CLAUDE_SESSION_ID` → `.claude/state/session.json` の `.session_id` の順で取得する
 - `harness_mem_sessions_list(project, limit=1)` の先頭利用は read-only（resume確認）に限定し、`record_checkpoint` / `finalize_session` での書き込みには使わない
@@ -131,9 +132,11 @@ Plans.md から以下を抽出：
 ### 📋 今日のタスク
 
 **優先タスク**:
+
 - {{pm:依頼中（互換: cursor:依頼中） または cc:WIP のタスク}}
 
 **その他のタスク**:
+
 - {{cc:TODO のタスク一覧}}
 
 ---
@@ -153,12 +156,12 @@ Plans.md から以下を抽出：
 
 セッション開始時は、以下の情報を簡潔に提示：
 
-| 項目 | 内容 |
-|------|------|
-| 現在のブランチ | `staging` など |
-| 優先タスク | 最も重要な 1-2 件 |
-| 注意事項 | 禁止事項の要約 |
-| 次のアクション | 具体的な提案 |
+| 項目           | 内容              |
+| -------------- | ----------------- |
+| 現在のブランチ | `staging` など    |
+| 優先タスク     | 最も重要な 1-2 件 |
+| 注意事項       | 禁止事項の要約    |
+| 次のアクション | 具体的な提案      |
 
 ---
 

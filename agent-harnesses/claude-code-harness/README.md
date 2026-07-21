@@ -44,12 +44,12 @@ After install, the default changes from "ask the agent to code" to:
 New users should start from the tool they already use. Existing users should
 run the migration report before cleanup or reinstall.
 
-| Path | Start |
-|---|---|
-| New user | [Tool-first onboarding](docs/onboarding/index.md) |
-| Existing user | [Migration check](docs/onboarding/migration.md) |
-| Claude Code fast path | [Install in 30 seconds](#install-in-30-seconds) |
-| Trigger proof | [Skill trigger gate](docs/onboarding/skill-trigger-acceptance.md) |
+| Path                  | Start                                                             |
+| --------------------- | ----------------------------------------------------------------- |
+| New user              | [Tool-first onboarding](docs/onboarding/index.md)                 |
+| Existing user         | [Migration check](docs/onboarding/migration.md)                   |
+| Claude Code fast path | [Install in 30 seconds](#install-in-30-seconds)                   |
+| Trigger proof         | [Skill trigger gate](docs/onboarding/skill-trigger-acceptance.md) |
 
 ## Install in 30 Seconds
 
@@ -99,38 +99,38 @@ The 5 verb skills keep that surface small: plan, work, review, sync, release.
 
 ## Commands
 
-| Command | What happens inside |
-|---------|---------------------|
-| `/harness-setup` | Installs project guidance, command surfaces, hooks, and checks so the workflow starts from one known baseline. |
-| `/harness-plan` | Turns intent into `spec.md` and `Plans.md`, including scope, acceptance criteria, dependencies, unknowns, stop conditions, and non-trivial planning validation. |
-| `/harness-work` | Executes one approved task or range, adds tests when required, runs verification, and keeps work inside the plan. |
-| `/harness-work all` | Runs the approved plan through implementation and review paths; use after the plan is clear and the repo baseline is known. |
-| `/harness-review` | Reviews the result separately from implementation and treats major findings as blockers. |
-| `/harness-release` | Checks release readiness, CHANGELOG/tag boundaries, and evidence packaging after implementation and review are complete. |
-| `bin/harness doctor --migration-report` | Inventories old plugin caches, Codex skills, OpenCode files, symlinks, and memory state without deleting data. |
+| Command                                 | What happens inside                                                                                                                                             |
+| --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/harness-setup`                        | Installs project guidance, command surfaces, hooks, and checks so the workflow starts from one known baseline.                                                  |
+| `/harness-plan`                         | Turns intent into `spec.md` and `Plans.md`, including scope, acceptance criteria, dependencies, unknowns, stop conditions, and non-trivial planning validation. |
+| `/harness-work`                         | Executes one approved task or range, adds tests when required, runs verification, and keeps work inside the plan.                                               |
+| `/harness-work all`                     | Runs the approved plan through implementation and review paths; use after the plan is clear and the repo baseline is known.                                     |
+| `/harness-review`                       | Reviews the result separately from implementation and treats major findings as blockers.                                                                        |
+| `/harness-release`                      | Checks release readiness, CHANGELOG/tag boundaries, and evidence packaging after implementation and review are complete.                                        |
+| `bin/harness doctor --migration-report` | Inventories old plugin caches, Codex skills, OpenCode files, symlinks, and memory state without deleting data.                                                  |
 
 ## Basic Workflow
 
-| Stage | Output | Gate |
-|-------|--------|------|
-| Investigate | Evidence and unknowns | Do not promote unobserved data into claims. |
-| Plan | `spec.md` + `Plans.md` | User approves or corrects the generated contract. |
-| Work | Code and tests | TDD required when the task says so. |
-| Review | Independent verdict | Major findings block completion. |
-| PR | Evidence pack | PR ready is not release ready. |
-| Release | Tag/release artifacts | Release preflight must pass on the release path. |
+| Stage       | Output                 | Gate                                              |
+| ----------- | ---------------------- | ------------------------------------------------- |
+| Investigate | Evidence and unknowns  | Do not promote unobserved data into claims.       |
+| Plan        | `spec.md` + `Plans.md` | User approves or corrects the generated contract. |
+| Work        | Code and tests         | TDD required when the task says so.               |
+| Review      | Independent verdict    | Major findings block completion.                  |
+| PR          | Evidence pack          | PR ready is not release ready.                    |
+| Release     | Tag/release artifacts  | Release preflight must pass on the release path.  |
 
 ## Install By Tool
 
-| Tool | Tier | Route |
-|---|---|---|
-| Claude Code | `supported` | Claude plugin marketplace, then `/harness-setup`. |
-| Codex CLI | `internal-compatible` | `scripts/setup-codex.sh --user`; direct plugin smoke is tracked separately. |
-| Codex app | `candidate` | Candidate smoke only; do not reuse Codex CLI proof. |
-| OpenCode | `internal-compatible` | `scripts/setup-opencode.sh`; runtime parity is not claimed. |
-| Cursor | `internal-compatible` | `scripts/setup-cursor.sh` real-directory local install; top support tier still gated on workflow smoke. |
-| GitHub Copilot CLI | `candidate` | Manual profile research only. |
-| Antigravity CLI | `future/unsupported` | No end-user install route in this phase. |
+| Tool               | Tier                  | Route                                                                                                   |
+| ------------------ | --------------------- | ------------------------------------------------------------------------------------------------------- |
+| Claude Code        | `supported`           | Claude plugin marketplace, then `/harness-setup`.                                                       |
+| Codex CLI          | `internal-compatible` | `scripts/setup-codex.sh --user`; direct plugin smoke is tracked separately.                             |
+| Codex app          | `candidate`           | Candidate smoke only; do not reuse Codex CLI proof.                                                     |
+| OpenCode           | `internal-compatible` | `scripts/setup-opencode.sh`; runtime parity is not claimed.                                             |
+| Cursor             | `internal-compatible` | `scripts/setup-cursor.sh` real-directory local install; top support tier still gated on workflow smoke. |
+| GitHub Copilot CLI | `candidate`           | Manual profile research only.                                                                           |
+| Antigravity CLI    | `future/unsupported`  | No end-user install route in this phase.                                                                |
 
 ## Existing User Migration
 
@@ -160,28 +160,28 @@ Harness has its own bootstrap, trigger, runtime, and release evidence.
 
 Use these after the basic trigger path is visible.
 
-| Capability | What it adds | Boundary |
-|------------|--------------|----------|
-| Breezing | Planner/Critic/Worker style team execution for larger task lists. | Still gated by plan quality and review. |
+| Capability             | What it adds                                                             | Boundary                                            |
+| ---------------------- | ------------------------------------------------------------------------ | --------------------------------------------------- |
+| Breezing               | Planner/Critic/Worker style team execution for larger task lists.        | Still gated by plan quality and review.             |
 | Codex companion review | Schema-backed Codex second opinion through `scripts/codex-companion.sh`. | Raw `codex exec` is not the Harness companion path. |
-| OpenCode bootstrap | Mirrors Harness guidance into OpenCode-compatible surfaces. | Real runtime parity is not claimed. |
-| harness-mem | Project-scoped memory and recall across sessions. | Optional companion; purge remains explicit. |
+| OpenCode bootstrap     | Mirrors Harness guidance into OpenCode-compatible surfaces.              | Real runtime parity is not claimed.                 |
+| harness-mem            | Project-scoped memory and recall across sessions.                        | Optional companion; purge remains explicit.         |
 
 ## Documentation
 
-| Resource | Description |
-|----------|-------------|
-| [Tool-first onboarding](docs/onboarding/index.md) | Where to start by host tool. |
-| [Install routes](docs/onboarding/install.md) | Per-tool setup and support-tier boundaries. |
-| [Migration check](docs/onboarding/migration.md) | Existing-user impact, compatibility, and rollback path. |
-| [Skill trigger gate](docs/onboarding/skill-trigger-acceptance.md) | How install success is verified. |
-| [Capability matrix](docs/tool-capability-matrix.md) | Supported, internal-compatible, candidate, and unsupported host claims. |
-| [Claude Code Compatibility](docs/CLAUDE_CODE_COMPATIBILITY.md) | Current Claude Code requirements and compatibility notes. |
-| [Cursor Integration](docs/CURSOR_INTEGRATION.md) | Cursor handoff boundary and internal-compatible adapter notes. |
-| [Distribution Scope](docs/distribution-scope.md) | Included vs compatibility vs development-only paths. |
-| [Hardening parity](docs/hardening-parity.md) | Runtime safety differences between Claude hooks and Codex gates. |
-| [Work All Evidence Pack](docs/evidence/work-all.md) | Success/failure verification contract for full-plan execution. |
-| [Changelog](CHANGELOG.md) | User-facing version history. |
+| Resource                                                          | Description                                                             |
+| ----------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| [Tool-first onboarding](docs/onboarding/index.md)                 | Where to start by host tool.                                            |
+| [Install routes](docs/onboarding/install.md)                      | Per-tool setup and support-tier boundaries.                             |
+| [Migration check](docs/onboarding/migration.md)                   | Existing-user impact, compatibility, and rollback path.                 |
+| [Skill trigger gate](docs/onboarding/skill-trigger-acceptance.md) | How install success is verified.                                        |
+| [Capability matrix](docs/tool-capability-matrix.md)               | Supported, internal-compatible, candidate, and unsupported host claims. |
+| [Claude Code Compatibility](docs/CLAUDE_CODE_COMPATIBILITY.md)    | Current Claude Code requirements and compatibility notes.               |
+| [Cursor Integration](docs/CURSOR_INTEGRATION.md)                  | Cursor handoff boundary and internal-compatible adapter notes.          |
+| [Distribution Scope](docs/distribution-scope.md)                  | Included vs compatibility vs development-only paths.                    |
+| [Hardening parity](docs/hardening-parity.md)                      | Runtime safety differences between Claude hooks and Codex gates.        |
+| [Work All Evidence Pack](docs/evidence/work-all.md)               | Success/failure verification contract for full-plan execution.          |
+| [Changelog](CHANGELOG.md)                                         | User-facing version history.                                            |
 
 ## Contributing
 
@@ -195,4 +195,3 @@ Issues and PRs welcome. See [CONTRIBUTING.md](CONTRIBUTING.md).
 ## License
 
 MIT License. See [LICENSE.md](LICENSE.md).
-

@@ -86,6 +86,7 @@ claude-code-harness/
 ## Version Management
 
 Version is defined in two places that must stay in sync:
+
 - `VERSION` - Source of truth
 - `.claude-plugin/plugin.json` - Used by plugin system
 
@@ -126,40 +127,46 @@ Use a version bump only when you are intentionally cutting a release.
 ## [X.Y.Z] - YYYY-MM-DD
 
 ### Added
+
 - 新機能について
 
 ### Changed
+
 - 既存機能の変更について
 
 ### Deprecated
+
 - 間もなく削除される機能について
 
 ### Removed
+
 - 削除された機能について
 
 ### Fixed
+
 - バグ修正について
 
 ### Security
+
 - 脆弱性に関する場合
 
 #### Before/After（大きな変更時のみ）
 
-| Before | After |
-|--------|-------|
+| Before       | After        |
+| ------------ | ------------ |
 | 変更前の状態 | 変更後の状態 |
 ```
 
 **セクション使い分け**:
 
-| セクション | 使うとき |
-|------------|----------|
-| Added | 完全に新しい機能を追加したとき |
-| Changed | 既存機能の動作や体験を変更したとき |
-| Deprecated | 将来削除予定の機能を告知するとき |
-| Removed | 機能やコマンドを削除したとき |
-| Fixed | バグや不具合を修正したとき |
-| Security | セキュリティ関連の修正をしたとき |
+| セクション | 使うとき                           |
+| ---------- | ---------------------------------- |
+| Added      | 完全に新しい機能を追加したとき     |
+| Changed    | 既存機能の動作や体験を変更したとき |
+| Deprecated | 将来削除予定の機能を告知するとき   |
+| Removed    | 機能やコマンドを削除したとき       |
+| Fixed      | バグや不具合を修正したとき         |
+| Security   | セキュリティ関連の修正をしたとき   |
 
 **Before/After テーブル**: 大きな体験変化（コマンド廃止・統合、ワークフロー変更、破壊的変更）があるときのみ追加。軽微な修正では省略可。
 
@@ -193,7 +200,7 @@ Before submitting:
    claude --plugin-dir /path/to/claude-code-harness
    ```
 
-3. Verify commands work as expected (`/help`), and the core loop runs:
+4. Verify commands work as expected (`/help`), and the core loop runs:
 
    - `/harness-init`
    - `/plan-with-agent`

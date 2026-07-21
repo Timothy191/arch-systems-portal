@@ -25,34 +25,34 @@ description: "Long-running task loop using /loop (Claude Code dynamic mode) and 
 
 ## Quick Reference
 
-| 入力 | 動作 |
-|------|------|
-| `/harness-loop all` | 全未完了タスクをループ実行（default: max 8 サイクル） |
-| `/harness-loop all --max-cycles 3` | 3 サイクルで停止 |
-| `/harness-loop 41.1-41.3 --pacing ci` | タスク範囲を CI pacing で実行 |
-| `/harness-loop all --plan roadmap` | named Plans の `roadmap` を対象にループ実行 |
-| `/harness-loop all --pacing night` | 深夜バッチ（3600s 間隔） |
-| `/harness-loop status` | 進行中ランナーの状態確認 |
-| `/harness-loop stop` | 進行中ランナーの停止要求 |
+| 入力                                  | 動作                                                  |
+| ------------------------------------- | ----------------------------------------------------- |
+| `/harness-loop all`                   | 全未完了タスクをループ実行（default: max 8 サイクル） |
+| `/harness-loop all --max-cycles 3`    | 3 サイクルで停止                                      |
+| `/harness-loop 41.1-41.3 --pacing ci` | タスク範囲を CI pacing で実行                         |
+| `/harness-loop all --plan roadmap`    | named Plans の `roadmap` を対象にループ実行           |
+| `/harness-loop all --pacing night`    | 深夜バッチ（3600s 間隔）                              |
+| `/harness-loop status`                | 進行中ランナーの状態確認                              |
+| `/harness-loop stop`                  | 進行中ランナーの停止要求                              |
 
 ## オプション
 
-| オプション | 説明 | デフォルト |
-|----------|------|----------|
-| `all` | 全未完了タスクを対象 | - |
-| `N-M` | タスク番号範囲指定 | - |
-| `--plan NAME` | `plans/manifest.json` の named plan を使う | active/default |
-| `--max-cycles N` | 最大サイクル数 | `8` |
-| `--pacing <mode>` | wake-up 間隔モード | `worker`（270s） |
+| オプション        | 説明                                       | デフォルト       |
+| ----------------- | ------------------------------------------ | ---------------- |
+| `all`             | 全未完了タスクを対象                       | -                |
+| `N-M`             | タスク番号範囲指定                         | -                |
+| `--plan NAME`     | `plans/manifest.json` の named plan を使う | active/default   |
+| `--max-cycles N`  | 最大サイクル数                             | `8`              |
+| `--pacing <mode>` | wake-up 間隔モード                         | `worker`（270s） |
 
 ### pacing 値マッピング
 
-| pacing | delaySeconds | 用途 |
-|--------|-------------|------|
-| `worker` | 270 | Worker 完了直後（5 min 以内で cache warm） |
-| `ci` | 270 | CI 短時間ジョブ待ち |
-| `plateau` | 1200 | 20 min（plateau 検知後の再試行間隔） |
-| `night` | 3600 | 深夜の長時間放置 |
+| pacing    | delaySeconds | 用途                                       |
+| --------- | ------------ | ------------------------------------------ |
+| `worker`  | 270          | Worker 完了直後（5 min 以内で cache warm） |
+| `ci`      | 270          | CI 短時間ジョブ待ち                        |
+| `plateau` | 1200         | 20 min（plateau 検知後の再試行間隔）       |
+| `night`   | 3600         | 深夜の長時間放置                           |
 
 > **制約**: `ScheduleWakeup` の `delaySeconds` はランタイムで **[60, 3600]** に clamp される。
 > `worker` / `ci` の 270s および `night` の 3600s はこの範囲内。
@@ -173,11 +173,11 @@ wake-up
 
 ## サイクル停止条件
 
-| 条件 | 停止種別 | 対応 |
-|------|---------|------|
-| `cycles >= max_cycles` | 正常停止（上限到達） | ユーザーに報告 |
+| 条件                       | 停止種別                     | 対応                 |
+| -------------------------- | ---------------------------- | -------------------- |
+| `cycles >= max_cycles`     | 正常停止（上限到達）         | ユーザーに報告       |
 | `PIVOT_REQUIRED`（exit 2） | 異常停止（エスカレーション） | ユーザーに判断を仰ぐ |
-| 未完了タスクなし | 正常停止（全完了） | 完了報告を出力 |
+| 未完了タスクなし           | 正常停止（全完了）           | 完了報告を出力       |
 
 `--max-cycles 3` 指定時は 3 サイクル完了後に停止する。
 default（`--max-cycles 8`）時は 8 サイクルで停止する。
@@ -234,12 +234,12 @@ default は「1 cycle につき最終報告 1 回」。
 
 相談条件は固定で、自然言語の「自信が低い」判定は使わない。
 
-| 条件 | 相談するか |
-|------|-----------|
-| `needs-spike` / `security-sensitive` / `state-migration` | する |
-| `<!-- advisor:required -->` | する |
-| 同じ原因の 2 回目失敗 | する |
-| plateau で停止する直前 | する |
+| 条件                                                     | 相談するか |
+| -------------------------------------------------------- | ---------- |
+| `needs-spike` / `security-sensitive` / `state-migration` | する       |
+| `<!-- advisor:required -->`                              | する       |
+| 同じ原因の 2 回目失敗                                    | する       |
+| plateau で停止する直前                                   | する       |
 
 同じ trigger は 1 回しか相談しない。
 その判定には `trigger_hash = task_id + reason_code + normalized_error_signature` を使う。

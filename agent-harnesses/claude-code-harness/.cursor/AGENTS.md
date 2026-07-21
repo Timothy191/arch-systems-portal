@@ -11,13 +11,13 @@ workflow smoke pass together with release preflight. `not_observed != absent`.
 
 ## First Commands
 
-| Intent | Skill / workflow | Notes |
-|---|---|---|
-| Plan a change | `harness-plan` | Read root `spec.md` + `Plans.md` before adding tasks |
-| Implement next task | `harness-work` | Default solo; use breezing for multi-task team runs |
-| Review diff / PR | `harness-review` | Independent review; do not self-approve implementation |
-| Sync drift | `harness-sync` | Plans vs git vs implementation |
-| Setup / init | `harness-setup` | First-time or repair bootstrap |
+| Intent              | Skill / workflow | Notes                                                  |
+| ------------------- | ---------------- | ------------------------------------------------------ |
+| Plan a change       | `harness-plan`   | Read root `spec.md` + `Plans.md` before adding tasks   |
+| Implement next task | `harness-work`   | Default solo; use breezing for multi-task team runs    |
+| Review diff / PR    | `harness-review` | Independent review; do not self-approve implementation |
+| Sync drift          | `harness-sync`   | Plans vs git vs implementation                         |
+| Setup / init        | `harness-setup`  | First-time or repair bootstrap                         |
 
 Golden prompt fixtures (static contract, not auto-routing proof):
 

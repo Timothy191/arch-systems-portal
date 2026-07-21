@@ -99,4 +99,3 @@ Normal implementation work should not edit `VERSION` or
 
 Version changes belong to release work and should use the release scripts and
 release validation flow documented in `skills/harness-release/`.
-

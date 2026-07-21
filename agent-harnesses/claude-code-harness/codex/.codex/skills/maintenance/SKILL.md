@@ -20,13 +20,13 @@ effort: low
 
 ## Quick Reference
 
-| サブコマンド | 対象 | 典型トリガー |
-|------------|------|-------------|
-| `maintenance plans` | Plans.md 完了タスクのアーカイブ移動 | 「Plans.md 整理」「古いタスクを移動」 |
-| `maintenance session-log` | session-log.md の月別分割 | 「session-log 分割」「ログが長い」 |
-| `maintenance logs` | `.claude/logs/` の古いファイル削除 | 「ログ掃除」「30日以上前のログ消して」 |
-| `maintenance state` | `agent-trace.jsonl` / `harness-usage.json` のトリム | 「trace 肥大」「state 圧縮」 |
-| `maintenance all` | 上記4つを順に実行 | 「全部整理」「総掃除」 |
+| サブコマンド              | 対象                                                | 典型トリガー                           |
+| ------------------------- | --------------------------------------------------- | -------------------------------------- |
+| `maintenance plans`       | Plans.md 完了タスクのアーカイブ移動                 | 「Plans.md 整理」「古いタスクを移動」  |
+| `maintenance session-log` | session-log.md の月別分割                           | 「session-log 分割」「ログが長い」     |
+| `maintenance logs`        | `.claude/logs/` の古いファイル削除                  | 「ログ掃除」「30日以上前のログ消して」 |
+| `maintenance state`       | `agent-trace.jsonl` / `harness-usage.json` のトリム | 「trace 肥大」「state 圧縮」           |
+| `maintenance all`         | 上記4つを順に実行                                   | 「全部整理」「総掃除」                 |
 
 `--dry-run` を付けると何をするかだけ列挙して実行しない。自由記述の指示（例:
 「古いアーカイブも消して」「この session-log だけ残して」）は Step 1 で

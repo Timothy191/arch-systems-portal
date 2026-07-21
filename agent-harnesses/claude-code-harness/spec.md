@@ -146,14 +146,14 @@ command shape, Antigravity CLI command shape, or marketplace packaging details.
 
 Adapters own the host-specific mechanics:
 
-| Adapter | Owns | Must Not Claim |
-|---------|------|----------------|
-| Claude Code | Claude plugin manifest, hooks, settings, output styles, runtime guardrails | That non-Claude hosts have identical hook enforcement |
-| Codex CLI / Codex app | Codex skills, `AGENTS.md` guidance, companion wrapper, local plugin marketplace path, post-exec quality gates | That Codex can always stop unsafe actions before execution |
-| OpenCode | native skill packaging, OpenCode config, `AGENTS.md` guidance, setup docs, package validation, bootstrap injection when verified | That mirror sync alone proves runtime parity |
-| Cursor | `.cursor-plugin/plugin.json`, `.cursor/AGENTS.md`, project rules/skills/agents, optional hooks/MCP config shape, `scripts/model-routing.sh --host cursor`, `scripts/setup-cursor.sh`, host-specific dist + static adapter smoke | Internal compatibility via setup route + observed Desktop skill loading; not public supported claim; PM handoff docs are not adapter support; runtime guard / hook / Cloud Agent parity unproven |
-| GitHub Copilot CLI | CLI command investigation, tool mapping candidate, smoke proof when available | Support based only on Superpowers evidence |
-| Antigravity CLI | CLI/rules investigation, manual profile candidate if no plugin contract exists | Adapter support without an official or verified bootstrap route |
+| Adapter               | Owns                                                                                                                                                                                                                            | Must Not Claim                                                                                                                                                                                   |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Claude Code           | Claude plugin manifest, hooks, settings, output styles, runtime guardrails                                                                                                                                                      | That non-Claude hosts have identical hook enforcement                                                                                                                                            |
+| Codex CLI / Codex app | Codex skills, `AGENTS.md` guidance, companion wrapper, local plugin marketplace path, post-exec quality gates                                                                                                                   | That Codex can always stop unsafe actions before execution                                                                                                                                       |
+| OpenCode              | native skill packaging, OpenCode config, `AGENTS.md` guidance, setup docs, package validation, bootstrap injection when verified                                                                                                | That mirror sync alone proves runtime parity                                                                                                                                                     |
+| Cursor                | `.cursor-plugin/plugin.json`, `.cursor/AGENTS.md`, project rules/skills/agents, optional hooks/MCP config shape, `scripts/model-routing.sh --host cursor`, `scripts/setup-cursor.sh`, host-specific dist + static adapter smoke | Internal compatibility via setup route + observed Desktop skill loading; not public supported claim; PM handoff docs are not adapter support; runtime guard / hook / Cloud Agent parity unproven |
+| GitHub Copilot CLI    | CLI command investigation, tool mapping candidate, smoke proof when available                                                                                                                                                   | Support based only on Superpowers evidence                                                                                                                                                       |
+| Antigravity CLI       | CLI/rules investigation, manual profile candidate if no plugin contract exists                                                                                                                                                  | Adapter support without an official or verified bootstrap route                                                                                                                                  |
 
 An adapter manifest or support document may be added only when setup, docs
 generation, release preflight, or an adapter smoke test consumes it in the same
@@ -163,24 +163,24 @@ phase.
 
 Public support wording must use support tiers.
 
-| Tier | Meaning | Claim Allowed |
-|------|---------|---------------|
-| `supported` | Install/update path, bootstrap proof, skill loading, one workflow smoke, compatibility checks, and release/preflight gate all pass. | Public support claim for the verified host and version range. |
-| `internal-compatible` | Repo mirror, setup docs, static validation, or local tooling exists, but runtime proof is incomplete. | Internal compatibility or experimental wording only. |
-| `candidate` | Current official docs and local evidence suggest a viable adapter path, but no complete smoke proof exists. | Research or spike wording only. |
-| `future/unsupported` | No verified adapter path or no current proof. | No setup docs, README support claim, or release support claim. |
+| Tier                  | Meaning                                                                                                                             | Claim Allowed                                                  |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| `supported`           | Install/update path, bootstrap proof, skill loading, one workflow smoke, compatibility checks, and release/preflight gate all pass. | Public support claim for the verified host and version range.  |
+| `internal-compatible` | Repo mirror, setup docs, static validation, or local tooling exists, but runtime proof is incomplete.                               | Internal compatibility or experimental wording only.           |
+| `candidate`           | Current official docs and local evidence suggest a viable adapter path, but no complete smoke proof exists.                         | Research or spike wording only.                                |
+| `future/unsupported`  | No verified adapter path or no current proof.                                                                                       | No setup docs, README support claim, or release support claim. |
 
 Current default stance:
 
-| Host | Default Tier | Reason |
-|------|--------------|--------|
-| Claude Code | `supported` for Claude-first Harness | Primary product surface and distribution payload. |
-| Codex CLI | `internal-compatible` until direct plugin install and companion smoke are verified together | Existing Codex mirror and setup path exist; direct plugin path must be proven separately. |
-| Codex app | `candidate` under the Codex adapter | App behavior must be verified separately from CLI help output. |
-| OpenCode | `internal-compatible` until runtime bootstrap smoke passes | Existing mirror/setup validation exists; runtime parity is not yet proven. |
-| Cursor | `internal-compatible` | Host-specific dist build, `scripts/setup-cursor.sh` real-directory install, CI-gated package smoke, and observed Desktop skill loading (`/breezing` etc.) justify internal compatibility; CI-gated workflow smoke and runtime guard/hook parity are not proven; no public supported claim |
-| GitHub Copilot CLI | `candidate` | Current CLI docs must be verified and Harness-specific bootstrap proof is missing. |
-| Antigravity CLI | `future/unsupported` until an official/verified adapter route exists | No local Harness or Superpowers adapter evidence has been observed. |
+| Host               | Default Tier                                                                                | Reason                                                                                                                                                                                                                                                                                    |
+| ------------------ | ------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Claude Code        | `supported` for Claude-first Harness                                                        | Primary product surface and distribution payload.                                                                                                                                                                                                                                         |
+| Codex CLI          | `internal-compatible` until direct plugin install and companion smoke are verified together | Existing Codex mirror and setup path exist; direct plugin path must be proven separately.                                                                                                                                                                                                 |
+| Codex app          | `candidate` under the Codex adapter                                                         | App behavior must be verified separately from CLI help output.                                                                                                                                                                                                                            |
+| OpenCode           | `internal-compatible` until runtime bootstrap smoke passes                                  | Existing mirror/setup validation exists; runtime parity is not yet proven.                                                                                                                                                                                                                |
+| Cursor             | `internal-compatible`                                                                       | Host-specific dist build, `scripts/setup-cursor.sh` real-directory install, CI-gated package smoke, and observed Desktop skill loading (`/breezing` etc.) justify internal compatibility; CI-gated workflow smoke and runtime guard/hook parity are not proven; no public supported claim |
+| GitHub Copilot CLI | `candidate`                                                                                 | Current CLI docs must be verified and Harness-specific bootstrap proof is missing.                                                                                                                                                                                                        |
+| Antigravity CLI    | `future/unsupported` until an official/verified adapter route exists                        | No local Harness or Superpowers adapter evidence has been observed.                                                                                                                                                                                                                       |
 
 Phase 73.1.2 freezes this stance from
 `docs/research/superpowers-cherrypick.md`. These tiers are authoritative until
@@ -392,10 +392,10 @@ diagnostic and guidance profiles, not host-native global toggles. Cursor may
 still load Claude/Codex skill directories when the user enables host
 compatibility import in the Desktop app.
 
-| Profile | Meaning | Expected UX |
-|---------|---------|-------------|
-| `clean` (default) | One host, one Harness route. Cursor users should see Cursor package skills only after cleanup. | Fewer duplicate skills/plugins; explicit host-specific invocation. |
-| `compatibility` | Cross-host skill import remains enabled. Harness warns about duplicates but does not force-disable host import settings. | More skills visible; Harness recommends namespaced or explicit invocation. |
+| Profile           | Meaning                                                                                                                  | Expected UX                                                                |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------- |
+| `clean` (default) | One host, one Harness route. Cursor users should see Cursor package skills only after cleanup.                           | Fewer duplicate skills/plugins; explicit host-specific invocation.         |
+| `compatibility`   | Cross-host skill import remains enabled. Harness warns about duplicates but does not force-disable host import settings. | More skills visible; Harness recommends namespaced or explicit invocation. |
 
 Harness must not delete user home configuration by default. Environment cleanup
 uses dry-run inventory first, then user-confirmed archive or disable actions.
@@ -425,11 +425,11 @@ tests, smoke commands, and claim boundaries for the next tasks.
 
 Harness V2 uses lanes as task metadata, not as separate primary skills.
 
-| Lane | Use When | Required Closeout |
-|------|----------|-------------------|
-| `[lane:fast]` | Low-risk local docs, narrow cleanup, small isolated fixes | focused checks, concise evidence pack, no full review by default |
-| `[lane:gate]` | Skill, workflow, guardrail, mirror, CI, spec, or shared behavior changes | spec alignment, TDD when required, major-only or full review, re-review until clean |
-| `[lane:release]` | Public artifact, version, tag, GitHub Release, CI, binary/package surface | release preflight, version sync, tags, GitHub Release, CI/latest verification |
+| Lane             | Use When                                                                  | Required Closeout                                                                   |
+| ---------------- | ------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| `[lane:fast]`    | Low-risk local docs, narrow cleanup, small isolated fixes                 | focused checks, concise evidence pack, no full review by default                    |
+| `[lane:gate]`    | Skill, workflow, guardrail, mirror, CI, spec, or shared behavior changes  | spec alignment, TDD when required, major-only or full review, re-review until clean |
+| `[lane:release]` | Public artifact, version, tag, GitHub Release, CI, binary/package surface | release preflight, version sync, tags, GitHub Release, CI/latest verification       |
 
 Fast lane is not a bypass. It still needs a scope, DoD, focused verification,
 and an explicit residual-risk statement.

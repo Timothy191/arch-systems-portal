@@ -3,7 +3,15 @@ name: session-init
 description: "Internal sub-skill for session startup checks, Plans.md status, git state, and harness-mem resume pack. Invoked by session/startup workflows only. Do NOT load for: implementation, reviews, or mid-session tasks."
 description-en: "Internal sub-skill for session startup checks, Plans.md status, git state, and harness-mem resume pack. Invoked by session/startup workflows only. Do NOT load for: implementation, reviews, or mid-session tasks."
 description-ja: "セッション開始時の環境確認、Plans.md 状況、git状態、harness-mem resume pack を扱う内部サブスキル。session/startup 系からのみ呼ぶ。実装、レビュー、途中作業には使わない。"
-allowed-tools: ["Read", "Write", "Bash", "mcp__harness__harness_mem_resume_pack", "mcp__harness__harness_mem_sessions_list", "mcp__harness__harness_mem_health"]
+allowed-tools:
+  [
+    "Read",
+    "Write",
+    "Bash",
+    "mcp__harness__harness_mem_resume_pack",
+    "mcp__harness__harness_mem_sessions_list",
+    "mcp__harness__harness_mem_health",
+  ]
 user-invocable: false
 disable-model-invocation: true
 ---
@@ -87,6 +95,7 @@ harness_mem_resume_pack(project, session_id?, limit=5, include_private=false)
 ```
 
 運用ルール:
+
 - `project` は必ず現在プロジェクト名を指定
 - `session_id` は `$CLAUDE_SESSION_ID` → `.claude/state/session.json` の `.session_id` の順で取得する
 - `harness_mem_sessions_list(project, limit=1)` の先頭利用は read-only（resume確認）に限定し、`record_checkpoint` / `finalize_session` での書き込みには使わない
@@ -136,9 +145,11 @@ Plans.md から以下を抽出：
 ### 📋 今日のタスク
 
 **優先タスク**:
+
 - {{pm:依頼中（互換: cursor:依頼中） または cc:WIP のタスク}}
 
 **その他のタスク**:
+
 - {{cc:TODO のタスク一覧}}
 
 ---
@@ -158,12 +169,12 @@ Plans.md から以下を抽出：
 
 セッション開始時は、以下の情報を簡潔に提示：
 
-| 項目 | 内容 |
-|------|------|
-| 現在のブランチ | `staging` など |
-| 優先タスク | 最も重要な 1-2 件 |
-| 注意事項 | 禁止事項の要約 |
-| 次のアクション | 具体的な提案 |
+| 項目           | 内容              |
+| -------------- | ----------------- |
+| 現在のブランチ | `staging` など    |
+| 優先タスク     | 最も重要な 1-2 件 |
+| 注意事項       | 禁止事項の要約    |
+| 次のアクション | 具体的な提案      |
 
 ---
 

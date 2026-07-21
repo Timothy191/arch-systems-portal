@@ -6,7 +6,7 @@ description-ja: "セッション管理の総合窓口。初期化・記憶・状
 allowed-tools: ["Read", "Bash", "Write", "Edit", "Glob"]
 user-invocable: true
 disable-model-invocation: true
-argument-hint: "[list|inbox|broadcast \"message\"]"
+argument-hint: '[list|inbox|broadcast "message"]'
 ---
 
 # Session Skill (Unified)
@@ -62,12 +62,12 @@ Sends a message to all active sessions.
 
 ## Capabilities
 
-| Feature | Description | Reference |
-|---------|-------------|-----------|
-| **Initialization** | Start new session, load context | See [../session-init/SKILL.md](../session-init/SKILL.md) |
-| **Memory** | Persist learnings across sessions | See [../session-memory/SKILL.md](../session-memory/SKILL.md) |
-| **State Control** | Resume/fork session based on flags | See [references/session-control.md](${CLAUDE_SKILL_DIR}/references/session-control.md) |
-| **Communication** | Cross-session messaging | See [../session-state/SKILL.md](../session-state/SKILL.md) |
+| Feature            | Description                        | Reference                                                                              |
+| ------------------ | ---------------------------------- | -------------------------------------------------------------------------------------- |
+| **Initialization** | Start new session, load context    | See [../session-init/SKILL.md](../session-init/SKILL.md)                               |
+| **Memory**         | Persist learnings across sessions  | See [../session-memory/SKILL.md](../session-memory/SKILL.md)                           |
+| **State Control**  | Resume/fork session based on flags | See [references/session-control.md](${CLAUDE_SKILL_DIR}/references/session-control.md) |
+| **Communication**  | Cross-session messaging            | See [../session-state/SKILL.md](../session-state/SKILL.md)                             |
 
 ---
 
@@ -77,12 +77,12 @@ Claude Code 2.1.49 以降、セッション再開時のメモリ使用量が **6
 
 ### 長時間セッション管理のベストプラクティス
 
-| ワークロード | 推奨戦略 |
-|------------|---------|
-| **通常実装** | 1-2時間ごとに `--resume` で再開 |
+| ワークロード         | 推奨戦略                                             |
+| -------------------- | ---------------------------------------------------- |
+| **通常実装**         | 1-2時間ごとに `--resume` で再開                      |
 | **大規模リファクタ** | 機能単位でセッション分割 → 各セッションで `--resume` |
-| **並列タスク** | `/work all` で並列実行、長時間なら途中で `--resume` |
-| **メモリ警告時** | 即座に `--resume` で再開（以前より高速） |
+| **並列タスク**       | `/work all` で並列実行、長時間なら途中で `--resume`  |
+| **メモリ警告時**     | 即座に `--resume` で再開（以前より高速）             |
 
 ### セッション名の自動生成（CC 2.1.41+）
 
@@ -106,12 +106,12 @@ claude --resume "テストを追加"
 
 ### メモリ管理の推奨事項
 
-| 推奨事項 | 理由 |
-|---------|------|
-| **積極的なセッション再開** | 68% メモリ削減で再開コストが低い |
-| **定期的な再開** | コンテキストを整理し、集中力を維持 |
-| **機能単位の分割** | 大規模タスクを小さく分けて再開 |
-| **Plans.md を活用** | 再開時の引き継ぎがスムーズ |
+| 推奨事項                   | 理由                               |
+| -------------------------- | ---------------------------------- |
+| **積極的なセッション再開** | 68% メモリ削減で再開コストが低い   |
+| **定期的な再開**           | コンテキストを整理し、集中力を維持 |
+| **機能単位の分割**         | 大規模タスクを小さく分けて再開     |
+| **Plans.md を活用**        | 再開時の引き継ぎがスムーズ         |
 
 > 💡 メモリ効率が大幅に改善されたため、セッション再開を積極的に活用してください。
 
@@ -180,15 +180,16 @@ Session end
 
 ## Files Managed
 
-| File | Purpose |
-|------|---------|
-| `.claude/state/session.json` | Current session state |
+| File                                 | Purpose                                   |
+| ------------------------------------ | ----------------------------------------- |
+| `.claude/state/session.json`         | Current session state                     |
 | `.claude/state/session.events.jsonl` | Event log for cross-session communication |
-| `.claude/memory/*.md` | Persistent memory files |
+| `.claude/memory/*.md`                | Persistent memory files                   |
 
 ## Migration Note
 
 This skill consolidates:
+
 - `session-init` → Session initialization
 - `session-memory` → Memory persistence
 - `session-control` → Resume/fork control

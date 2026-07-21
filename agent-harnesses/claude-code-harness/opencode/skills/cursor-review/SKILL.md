@@ -77,6 +77,8 @@ cursor:review "Phase 88.5 command namespace diff"
 
    ```bash
    PROMPT="$(cat <<EOF
+   ```
+
 Review this diff as an advisory second opinion.
 Base ref: ${BASE_REF}
 Requested scope: ${ARGUMENTS:-full diff}
@@ -91,13 +93,14 @@ ${DIFF_TEXT}
 EOF
 )"
    bash "${HARNESS_PLUGIN_ROOT}/scripts/cursor-companion.sh" task "${PROMPT}"
-   ```
+
+```
 
 4. Host reads Cursor's output and performs the primary review:
 
-   - Findings first, ordered by severity.
-   - Mark Cursor-originated points as advisory when used.
-   - `APPROVE` / `REQUEST_CHANGES` must be the host decision, not a copied Cursor verdict.
+- Findings first, ordered by severity.
+- Mark Cursor-originated points as advisory when used.
+- `APPROVE` / `REQUEST_CHANGES` must be the host decision, not a copied Cursor verdict.
 
 ## Output
 
@@ -107,3 +110,4 @@ Use the standard review shape:
 - open questions
 - validation run
 - final host verdict
+```

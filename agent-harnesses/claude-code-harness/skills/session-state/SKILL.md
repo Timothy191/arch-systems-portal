@@ -15,8 +15,8 @@ disable-model-invocation: true
 
 ## 機能詳細
 
-| 機能 | 詳細 |
-|------|------|
+| 機能         | 詳細                                                                                     |
+| ------------ | ---------------------------------------------------------------------------------------- |
 | **状態遷移** | See [references/state-transition.md](${CLAUDE_SKILL_DIR}/references/state-transition.md) |
 
 ## 使用タイミング

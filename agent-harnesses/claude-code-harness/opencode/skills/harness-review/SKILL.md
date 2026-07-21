@@ -9,9 +9,9 @@ Harness の統合レビュースキル。
 この `SKILL.md` は薄い dispatcher であり、詳細な品質基準は `references/` を読む。
 
 if $ARGUMENTS == "":
-  → 「今までの作業のレビュー」と解釈し、Review target detection を実行する
-  → review target が 1 つに確定できる場合だけ自動開始する
-  → review target が不明または複数候補の場合は AskUserQuestion で選択肢を出し、認識を揃えてから開始する
+→ 「今までの作業のレビュー」と解釈し、Review target detection を実行する
+→ review target が 1 つに確定できる場合だけ自動開始する
+→ review target が不明または複数候補の場合は AskUserQuestion で選択肢を出し、認識を揃えてから開始する
 
 <!-- 上記 3 行は AUTO-START CONTRACT。skill-editing.md の「最冒頭 3 行以内」ルールに従い fence / HTML コメントで押し下げない -->
 
@@ -35,36 +35,36 @@ commit / push / release は既定では行わない。
 
 ## Quick Reference
 
-| Command | Mode | Purpose |
-|---|---|---|
-| `/harness-review` | `code` | 今までの作業を自動検出して review |
-| `/harness-review --quick` | `quick` | 小さな dirty change を軽く closeout |
-| `/harness-review --codex-closeout` | `codex-closeout` | Codex 助言 + focused tests で closeout |
-| `/harness-review --dual` | `dual` | Claude + Codex second opinion |
-| `/harness-review --cursor` | `code+cursor-second-opinion` | core review gates に cursor (composer-2.5-fast) second-opinion を加算 (read = lean、Opus reviewer 必須併走) |
-| `HARNESS_IMPL_BACKEND=cursor harness-review` | `code+cursor-second-opinion` | default ON 時も core review gates に cursor second-opinion を自動加算。primary verdict は Opus/brain 固定 |
-| `/harness-review --team-debate` | `team-debate` | TeamAgent Debate を強制 |
-| `/harness-review --security` | `security` | security 専用 review |
-| `/harness-review plan` | `plan` | `Plans.md` の計画 review |
-| `/harness-review scope` | `scope` | scope creep / 漏れ review |
+| Command                                      | Mode                         | Purpose                                                                                                     |
+| -------------------------------------------- | ---------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `/harness-review`                            | `code`                       | 今までの作業を自動検出して review                                                                           |
+| `/harness-review --quick`                    | `quick`                      | 小さな dirty change を軽く closeout                                                                         |
+| `/harness-review --codex-closeout`           | `codex-closeout`             | Codex 助言 + focused tests で closeout                                                                      |
+| `/harness-review --dual`                     | `dual`                       | Claude + Codex second opinion                                                                               |
+| `/harness-review --cursor`                   | `code+cursor-second-opinion` | core review gates に cursor (composer-2.5-fast) second-opinion を加算 (read = lean、Opus reviewer 必須併走) |
+| `HARNESS_IMPL_BACKEND=cursor harness-review` | `code+cursor-second-opinion` | default ON 時も core review gates に cursor second-opinion を自動加算。primary verdict は Opus/brain 固定   |
+| `/harness-review --team-debate`              | `team-debate`                | TeamAgent Debate を強制                                                                                     |
+| `/harness-review --security`                 | `security`                   | security 専用 review                                                                                        |
+| `/harness-review plan`                       | `plan`                       | `Plans.md` の計画 review                                                                                    |
+| `/harness-review scope`                      | `scope`                      | scope creep / 漏れ review                                                                                   |
 
 ## Mode Decision
 
 引数から実行 mode を決定し、必要な `references/` を選択ロードする。
 
-| 入力 | mode | 読む reference |
-|---|---|---|
-| 引数なし / `code` | `code` | `references/code-review.md`, `references/governance.md` |
-| `--quick` | `quick` | `references/codex-closeout.md`, `references/code-review.md` |
-| `--codex-closeout` | `codex-closeout` | `references/codex-closeout.md` |
-| `--dual` | `dual` | `references/dual-review.md`, `references/team-debate.md` |
-| `--team-debate` | `team-debate` | `references/team-debate.md`, `references/governance.md` |
-| `--security` | `security` | `references/security-profile.md`, `references/governance.md` |
-| `--ui-rubric` | `ui-rubric` | `references/ui-rubric.md` |
-| `plan` | `plan` | `references/plan-review.md`, `references/governance.md` |
-| `scope` | `scope` | `references/scope-review.md`, `references/governance.md` |
+| 入力                                                                   | mode                         | 読む reference                                                                                                      |
+| ---------------------------------------------------------------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| 引数なし / `code`                                                      | `code`                       | `references/code-review.md`, `references/governance.md`                                                             |
+| `--quick`                                                              | `quick`                      | `references/codex-closeout.md`, `references/code-review.md`                                                         |
+| `--codex-closeout`                                                     | `codex-closeout`             | `references/codex-closeout.md`                                                                                      |
+| `--dual`                                                               | `dual`                       | `references/dual-review.md`, `references/team-debate.md`                                                            |
+| `--team-debate`                                                        | `team-debate`                | `references/team-debate.md`, `references/governance.md`                                                             |
+| `--security`                                                           | `security`                   | `references/security-profile.md`, `references/governance.md`                                                        |
+| `--ui-rubric`                                                          | `ui-rubric`                  | `references/ui-rubric.md`                                                                                           |
+| `plan`                                                                 | `plan`                       | `references/plan-review.md`, `references/governance.md`                                                             |
+| `scope`                                                                | `scope`                      | `references/scope-review.md`, `references/governance.md`                                                            |
 | `--cursor` or resolver result `cursor` for no-arg / `code` review only | `code+cursor-second-opinion` | `references/code-review.md`, `references/governance.md`, `references/cursor-review.md`, `references/dual-review.md` |
-| `full` | `full` | `references/code-review.md`, `references/team-debate.md`, `references/dual-review.md` |
+| `full`                                                                 | `full`                       | `references/code-review.md`, `references/team-debate.md`, `references/dual-review.md`                               |
 
 `quick` と `codex-closeout` は軽量 path。
 小さな dirty change、single commit、PR branch の closeout を速く見る。
@@ -169,12 +169,12 @@ REVIEW_AUTOSTART: target={resolved_target}, base_ref={resolved_base_ref}, type={
 詳細は `references/team-debate.md`。
 TeamAgent Debate は、異なる見解を read-only で衝突させる review pass。
 
-| Agent | 主な問い |
-|---|---|
-| Spec Agent | 仕様正本と実装差分の矛盾を探す |
-| Plans Agent | `Plans.md` の task / DoD / Depends と差分の対応を確認する |
+| Agent            | 主な問い                                                   |
+| ---------------- | ---------------------------------------------------------- |
+| Spec Agent       | 仕様正本と実装差分の矛盾を探す                             |
+| Plans Agent      | `Plans.md` の task / DoD / Depends と差分の対応を確認する  |
 | Regression Agent | 既存挙動・テスト・配布 mirror・CLI/skill UX のデグレを探す |
-| Skeptic Agent | 合格させたい前提で見落としている major risk を探す |
+| Skeptic Agent    | 合格させたい前提で見落としている major risk を探す         |
 
 Codex 環境で native TeamAgent が使えない場合でも、この gate を省略してはいけない。
 `codex-companion.sh review`、利用可能な reviewer subagent、または明示的に分けた read-only manual-pass で同じ 2-4 視点を再現し、`team_agent_mode` に `native` / `codex-companion` / `manual-pass` / `unavailable` を記録する。
@@ -267,7 +267,7 @@ Machine-readable values stay English.
 
 Start with the result summary.
 
-~~~markdown
+````markdown
 ## Review Result
 
 ### {APPROVE | REQUEST_CHANGES | decision_needed} - {one-line conclusion}
@@ -276,15 +276,19 @@ Target: `{BASE_REF}..HEAD` or `{target}`
 Verification: {commands run}
 
 Strengths:
+
 - ...
 
 Findings:
+
 - [severity] file:line - issue and evidence
 
 Next Actions:
+
 - ...
 
 Details:
+
 ```json
 {
   "schema_version": "review-result.v1",
@@ -315,18 +319,18 @@ Details:
   "recommendations": []
 }
 ```
-~~~
+````
 
 ## Codex Environment
 
 Codex 環境では使える tool が異なる。
 それでも、合格ライン、仕様正本、`Plans.md`、デグレ、修正後再レビュー、AskUserQuestion / `decision_needed.v1` の契約は同じ。
 
-| 通常環境 | Codex fallback |
-|---|---|
-| Task tool の TeamAgent Debate | reviewer subagent / `codex-companion.sh review` / manual-pass |
-| AskUserQuestion | 使えない場合は `decision_needed.v1` を stdout に出し、推測で進めない |
-| TaskList | `Plans.md` を直接読む |
+| 通常環境                      | Codex fallback                                                       |
+| ----------------------------- | -------------------------------------------------------------------- |
+| Task tool の TeamAgent Debate | reviewer subagent / `codex-companion.sh review` / manual-pass        |
+| AskUserQuestion               | 使えない場合は `decision_needed.v1` を stdout に出し、推測で進めない |
+| TaskList                      | `Plans.md` を直接読む                                                |
 
 ## Related Skills
 

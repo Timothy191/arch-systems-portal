@@ -36,10 +36,10 @@ argument-hint: "[project-path|description]"
 
 ## 機能詳細
 
-| 機能 | 詳細 |
-|------|------|
-| **スライド画像生成** | See [references/slide-generator.md](${CLAUDE_SKILL_DIR}/references/slide-generator.md) |
-| **品質判定** | See [references/slide-quality-check.md](${CLAUDE_SKILL_DIR}/references/slide-quality-check.md) |
+| 機能                 | 詳細                                                                                           |
+| -------------------- | ---------------------------------------------------------------------------------------------- |
+| **スライド画像生成** | See [references/slide-generator.md](${CLAUDE_SKILL_DIR}/references/slide-generator.md)         |
+| **品質判定**         | See [references/slide-quality-check.md](${CLAUDE_SKILL_DIR}/references/slide-quality-check.md) |
 
 ---
 
@@ -77,11 +77,11 @@ argument-hint: "[project-path|description]"
 
 ## デザインパターン
 
-| パターン | コンセプト | 特徴 |
-|---------|-----------|------|
-| **Minimalist** | 余白とタイポグラフィ主体 | clean, whitespace, typography-driven, elegant |
-| **Infographic** | データ/フロー可視化 | data visualization, metrics, flow diagram, structured |
-| **Hero Visual** | 大ビジュアル + キャッチコピー | bold visual, impactful, hero image, catchy headline |
+| パターン        | コンセプト                    | 特徴                                                  |
+| --------------- | ----------------------------- | ----------------------------------------------------- |
+| **Minimalist**  | 余白とタイポグラフィ主体      | clean, whitespace, typography-driven, elegant         |
+| **Infographic** | データ/フロー可視化           | data visualization, metrics, flow diagram, structured |
+| **Hero Visual** | 大ビジュアル + キャッチコピー | bold visual, impactful, hero image, catchy headline   |
 
 ---
 
@@ -119,13 +119,13 @@ out/slides/
 
 抽出する情報:
 
-| 項目 | 例 |
-|------|-----|
-| プロジェクト名 | Claude Code Harness |
-| 概要（1-2文） | Claude Code を Plan-Work-Review で自律運用するプラグイン |
-| 主要機能（3-5個） | スキル管理、品質チェック、並列実行 |
-| 技術スタック | TypeScript, Node.js, Claude Code Plugin |
-| カラー（あれば） | ブランドカラー or 推測 |
+| 項目              | 例                                                       |
+| ----------------- | -------------------------------------------------------- |
+| プロジェクト名    | Claude Code Harness                                      |
+| 概要（1-2文）     | Claude Code を Plan-Work-Review で自律運用するプラグイン |
+| 主要機能（3-5個） | スキル管理、品質チェック、並列実行                       |
+| 技術スタック      | TypeScript, Node.js, Claude Code Plugin                  |
+| カラー（あれば）  | ブランドカラー or 推測                                   |
 
 ### Step 2: 仕様確認
 
@@ -186,6 +186,7 @@ cp out/slides/hero_best.png out/slides/selected/hero.png
 # Slide Quality Report
 
 ## 生成情報
+
 - プロジェクト: {project_name}
 - 生成日時: {datetime}
 - アスペクト比: {aspect_ratio}
@@ -193,13 +194,14 @@ cp out/slides/hero_best.png out/slides/selected/hero.png
 
 ## 結果サマリー
 
-| パターン | 候補1 | 候補2 | 採用 | スコア |
-|---------|-------|-------|------|--------|
-| Minimalist | 3/5 | 4/5 | 候補2 | 4/5 |
-| Infographic | 4/5 | 3/5 | 候補1 | 4/5 |
-| Hero Visual | 5/5 | 4/5 | 候補1 | 5/5 |
+| パターン    | 候補1 | 候補2 | 採用  | スコア |
+| ----------- | ----- | ----- | ----- | ------ |
+| Minimalist  | 3/5   | 4/5   | 候補2 | 4/5    |
+| Infographic | 4/5   | 3/5   | 候補1 | 4/5    |
+| Hero Visual | 5/5   | 4/5   | 候補1 | 5/5    |
 
 ## 詳細評価
+
 ...
 ```
 

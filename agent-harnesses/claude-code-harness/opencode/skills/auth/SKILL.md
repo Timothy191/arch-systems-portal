@@ -9,10 +9,10 @@ description: "Explicit helper for authentication and payment implementation with
 
 ## 機能詳細
 
-| 機能 | 詳細 |
-|------|------|
+| 機能         | 詳細                                                                                 |
+| ------------ | ------------------------------------------------------------------------------------ |
 | **認証機能** | See [references/authentication.md](${CLAUDE_SKILL_DIR}/references/authentication.md) |
-| **決済機能** | See [references/payments.md](${CLAUDE_SKILL_DIR}/references/payments.md) |
+| **決済機能** | See [references/payments.md](${CLAUDE_SKILL_DIR}/references/payments.md)             |
 
 ## 実行手順
 
@@ -31,18 +31,21 @@ description: "Explicit helper for authentication and payment implementation with
 この作業はセキュリティ上重要です。以下を確認してください：
 
 ### 認証関連
+
 - [ ] パスワードはハッシュ化（bcrypt/argon2）
 - [ ] セッション管理は安全か（HTTPOnly Cookie）
 - [ ] CSRF 対策は実装されているか
 - [ ] レート制限（ブルートフォース対策）
 
 ### 決済関連
+
 - [ ] 機密情報（カード番号等）をサーバーに保存しない
 - [ ] Stripe/決済プロバイダの SDK を正しく使用
 - [ ] Webhook の署名検証
 - [ ] 金額改ざん防止（サーバー側で金額を確定）
 
 ### 共通
+
 - [ ] エラーメッセージが詳細すぎないか（情報漏洩防止）
 - [ ] ログに機密情報を出力していないか
 ```
@@ -53,6 +56,7 @@ description: "Explicit helper for authentication and payment implementation with
 ⚠️ 注意レベル: 🔴 高
 
 この機能は以下のリスクがあります：
+
 - 認証情報の漏洩
 - 不正アクセス
 - 決済の不正操作

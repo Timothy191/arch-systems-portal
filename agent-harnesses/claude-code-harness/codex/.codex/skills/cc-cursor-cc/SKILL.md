@@ -16,16 +16,17 @@ Supports the flow of sending brainstormed content from Claude Code to **Cursor (
 
 This skill assumes **2-agent operation**.
 
-| Role | Agent | Description |
-|------|-------|-------------|
-| **PM** | Cursor | Validate plans, update Plans.md |
-| **Impl** | Claude Code | Brainstorming, implementation |
+| Role     | Agent       | Description                     |
+| -------- | ----------- | ------------------------------- |
+| **PM**   | Cursor      | Validate plans, update Plans.md |
+| **Impl** | Claude Code | Brainstorming, implementation   |
 
 ## Execution Flow
 
 ### Step 1: Extract Brainstorming Context
 
 Extract from recent conversation:
+
 1. **Goal** (feature/purpose)
 2. **Technology choices**
 3. **Decisions made**
@@ -38,10 +39,12 @@ Extract from recent conversation:
 ## 🟠 Under Validation: {{Project}} `pm:awaiting-validation`
 
 ### Provisional Tasks (To Validate)
+
 - [ ] {{task1}} `awaiting-validation`
 - [ ] {{task2}} `awaiting-validation`
 
 ### Undecided Items
+
 - {{item1}} → **Requesting PM decision**
 ```
 
@@ -55,10 +58,12 @@ Generate text to copy-paste to Cursor:
 **Goal**: {{summary}}
 
 **Provisional tasks**:
+
 1. {{task1}}
 2. {{task2}}
 
 ### ✅ Requesting Cursor (PM) to:
+
 1. Validate feasibility
 2. Break down tasks
 3. Decide undecided items

@@ -16,12 +16,12 @@ description: "Generate a Plan Brief HTML for non-engineer vibecoders before impl
 
 ## 責任境界
 
-| 範囲 | このスキルの責務 |
-|------|-----------------|
-| 検索 | **現プロジェクトのみ** (`project: <current>`, `strict_project: true` を必ず指定) |
-| クロスプロジェクト | **やらない** (Phase 65.3 以降で `--cross-project-group <name>` flag で opt-in 解放) |
-| 書き込み | やらない (Plan Brief 承認後の memory write は `plan-brief-record-decision.sh` の責務) |
-| confidence 算出 | 65.1.3 で実装される `scripts/plan-brief-compile.sh` に委譲 |
+| 範囲               | このスキルの責務                                                                      |
+| ------------------ | ------------------------------------------------------------------------------------- |
+| 検索               | **現プロジェクトのみ** (`project: <current>`, `strict_project: true` を必ず指定)      |
+| クロスプロジェクト | **やらない** (Phase 65.3 以降で `--cross-project-group <name>` flag で opt-in 解放)   |
+| 書き込み           | やらない (Plan Brief 承認後の memory write は `plan-brief-record-decision.sh` の責務) |
+| confidence 算出    | 65.1.3 で実装される `scripts/plan-brief-compile.sh` に委譲                            |
 
 ## 入力
 
@@ -30,10 +30,10 @@ description: "Generate a Plan Brief HTML for non-engineer vibecoders before impl
 
 ## 出力
 
-| 出力 | パス | 形式 |
-|------|------|------|
-| Plan Brief HTML | `.claude/state/views/plan-brief-<timestamp>.html` | 単独で開ける HTML (no server, no JS framework) |
-| Plan Brief context JSON | `.claude/state/views/plan-brief-<timestamp>.context.json` | `plan-brief-context.v1` schema |
+| 出力                    | パス                                                      | 形式                                           |
+| ----------------------- | --------------------------------------------------------- | ---------------------------------------------- |
+| Plan Brief HTML         | `.claude/state/views/plan-brief-<timestamp>.html`         | 単独で開ける HTML (no server, no JS framework) |
+| Plan Brief context JSON | `.claude/state/views/plan-brief-<timestamp>.context.json` | `plan-brief-context.v1` schema                 |
 
 ## Schema: `plan-brief-context.v1`
 
@@ -42,23 +42,27 @@ description: "Generate a Plan Brief HTML for non-engineer vibecoders before impl
   "schema": "plan-brief-context.v1",
   "user_request": "string (ユーザーの request 原文)",
   "my_understanding": "string (Claude の理解を 1-3 段落で)",
-  "options": [
-    { "name": "string", "summary": "string", "pros": ["string"], "cons": ["string"] }
-  ],
+  "options": [{ "name": "string", "summary": "string", "pros": ["string"], "cons": ["string"] }],
   "risks": [
-    { "kind": "string", "severity": "info|warn|critical", "description": "string", "mitigation": "string" }
+    {
+      "kind": "string",
+      "severity": "info|warn|critical",
+      "description": "string",
+      "mitigation": "string"
+    }
   ],
-  "acceptance_criteria": [
-    { "id": "string", "description": "string", "verifiable_by": "string" }
-  ],
+  "acceptance_criteria": [{ "id": "string", "description": "string", "verifiable_by": "string" }],
   "tdd_required": "yes|no|skip:<reason>",
   "confidence": 0,
   "confidence_evidence": ["string"],
-  "related_decisions": [
-    { "id": "string", "title": "string", "relevance": "string" }
-  ],
+  "related_decisions": [{ "id": "string", "title": "string", "relevance": "string" }],
   "similar_past_plans": [
-    { "archive_path": "string", "phase": "string", "outcome": "cc:完了|cc:WIP|cc:TODO|skipped", "relevance": "string" }
+    {
+      "archive_path": "string",
+      "phase": "string",
+      "outcome": "cc:完了|cc:WIP|cc:TODO|skipped",
+      "relevance": "string"
+    }
   ],
   "project": "string",
   "generated_at": "ISO8601"
@@ -137,6 +141,7 @@ for each project in MEMBERS_JSON:
 > 詳細は `.claude/rules/cross-repo-handoff.md` の「Phase 65.3 実装決定事項 (D43)」参照。
 
 cross-project 結果には Layer 2/3 (Phase 65.3.2-65.3.4) の redaction を必ず通すこと:
+
 - HTML レンダリング時に `bash scripts/render-html.sh ... --with-redaction` を使用
 - これにより辞書 + NER + final scan の 3 段で固有名詞が漏れない
 
@@ -200,12 +205,12 @@ bash scripts/plan-brief-open.sh "$HTML_OUT"
 
 ## 失敗時の挙動
 
-| 失敗 | 挙動 |
-|------|------|
-| `mcp__harness__harness_mem_search` 不達 | 警告を表示し、`related_decisions` / `similar_past_plans` を空配列で続行 |
-| `git rev-parse --show-toplevel` 失敗 | `PROJECT_NAME=current` で続行 |
-| `render-html.sh` 失敗 | エラーを stderr に出力し exit 1 |
-| `plan-brief-open.sh` 失敗 | HTML path を stdout に出力するだけで exit 0 (browser open は best-effort) |
+| 失敗                                    | 挙動                                                                      |
+| --------------------------------------- | ------------------------------------------------------------------------- |
+| `mcp__harness__harness_mem_search` 不達 | 警告を表示し、`related_decisions` / `similar_past_plans` を空配列で続行   |
+| `git rev-parse --show-toplevel` 失敗    | `PROJECT_NAME=current` で続行                                             |
+| `render-html.sh` 失敗                   | エラーを stderr に出力し exit 1                                           |
+| `plan-brief-open.sh` 失敗               | HTML path を stdout に出力するだけで exit 0 (browser open は best-effort) |
 
 ## Related
 

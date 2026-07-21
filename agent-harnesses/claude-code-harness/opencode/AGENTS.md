@@ -14,6 +14,7 @@ This file provides guidance for Claude Code when working in this repository.
 ## Claude Code Feature Utilization
 
 <!-- Feature Table は docs/CLAUDE-feature-table.md に集約。ここに行を追加しない -->
+
 CC v2.1.111+ と Opus 4.7 の機能を活用。詳細: [docs/CLAUDE-feature-table.md](docs/CLAUDE-feature-table.md)
 長時間タスクの手順: [docs/long-running-harness.md](docs/long-running-harness.md)
 
@@ -60,15 +61,15 @@ Japanese output.
 
 ### Top Skill Areas
 
-| Category | Purpose | Trigger Examples |
-|---------|---------|-----------------|
-| harness-work | Task implementation from Plans.md | "implement", "do it all", "/work" |
-| breezing | Full parallel run with Agent Teams | "run with team", "breezing" |
-| harness-review | Code review, quality checks | "review", "security", "performance" |
-| harness-plan | Planning and task shaping into Plans.md | "plan", "break this down", "/plan-with-agent" |
-| harness-sync | Check alignment across Plans.md, git state, and implementation | "sync", "is this aligned?", "check drift" |
-| memory | SSOT management, memory search, SSOT promotion | "SSOT", "decisions.md", "memory search", "harness-mem" |
-| cognitive-load (Plan Brief / Progress / Accept) | 3 surface HTML for non-engineer vibecoder review (Phase 65) | "plan brief", "進捗確認", "受け入れ判断", "ship/wait/reject" |
+| Category                                        | Purpose                                                        | Trigger Examples                                             |
+| ----------------------------------------------- | -------------------------------------------------------------- | ------------------------------------------------------------ |
+| harness-work                                    | Task implementation from Plans.md                              | "implement", "do it all", "/work"                            |
+| breezing                                        | Full parallel run with Agent Teams                             | "run with team", "breezing"                                  |
+| harness-review                                  | Code review, quality checks                                    | "review", "security", "performance"                          |
+| harness-plan                                    | Planning and task shaping into Plans.md                        | "plan", "break this down", "/plan-with-agent"                |
+| harness-sync                                    | Check alignment across Plans.md, git state, and implementation | "sync", "is this aligned?", "check drift"                    |
+| memory                                          | SSOT management, memory search, SSOT promotion                 | "SSOT", "decisions.md", "memory search", "harness-mem"       |
+| cognitive-load (Plan Brief / Progress / Accept) | 3 surface HTML for non-engineer vibecoder review (Phase 65)    | "plan brief", "進捗確認", "受け入れ判断", "ship/wait/reject" |
 
 Skills are organized as flat directories under `skills/`, with Codex-specific variants in `skills-codex/`. Full catalog: [docs/CLAUDE-skill-catalog.md](docs/CLAUDE-skill-catalog.md)
 Cognitive-load 3 surface 詳細: [docs/cognitive-load-surfaces.md](docs/cognitive-load-surfaces.md) / Cross-project safety: [docs/cross-project-safety.md](docs/cross-project-safety.md)
@@ -103,6 +104,7 @@ Details: [docs/CLAUDE-commands.md](docs/CLAUDE-commands.md)
 
 ユーザーレベル MCP は全て信頼済みソース。
 外部 MCP 追加時のルール:
+
 1. `harness_mem_ingest` 経由のメモリ書き込みには出所タグ (`source: "mcp:<server-name>"`) を付与
 2. 不特定の外部入力はサブエージェントで検疫（隔離コンテキストで検証後にメモリ昇格）
 3. プロジェクトレベル MCP 追加時は deny で `mcp__<新サーバー>__*` を制限し、必要なツールのみ allow
@@ -111,15 +113,15 @@ Details: [docs/CLAUDE-commands.md](docs/CLAUDE-commands.md)
 
 以下は settings.json の deny/ask + ガードレールエンジン (R01-R13) による**多層防御**。
 
-| Rule | 防御層 | 理由 |
-|------|--------|------|
-| `.claude-plugin/settings*`, `.claude/settings*` | deny | 自己書き換え防止 |
-| `.eslintrc*`, `eslint.config.*`, `biome.json`, `tsconfig*.json` | deny | 品質基準の保護 |
-| `.github/workflows/*` | deny | CI パイプラインの保護 |
-| `git push --force` | ask + R06 deny | 不可逆操作の防止 |
-| `git push origin main/master` | R12 ask（設定で deny / allow 可） | protected branch 保護 |
-| `git reset --hard` | ask + R11 deny | 不可逆操作の防止 |
-| `mcp__codex__*` | deny | Codex MCP 直接使用の防止 |
+| Rule                                                            | 防御層                            | 理由                     |
+| --------------------------------------------------------------- | --------------------------------- | ------------------------ |
+| `.claude-plugin/settings*`, `.claude/settings*`                 | deny                              | 自己書き換え防止         |
+| `.eslintrc*`, `eslint.config.*`, `biome.json`, `tsconfig*.json` | deny                              | 品質基準の保護           |
+| `.github/workflows/*`                                           | deny                              | CI パイプラインの保護    |
+| `git push --force`                                              | ask + R06 deny                    | 不可逆操作の防止         |
+| `git push origin main/master`                                   | R12 ask（設定で deny / allow 可） | protected branch 保護    |
+| `git reset --hard`                                              | ask + R11 deny                    | 不可逆操作の防止         |
+| `mcp__codex__*`                                                 | deny                              | Codex MCP 直接使用の防止 |
 
 変更が必要な場合はユーザーに手動操作を依頼すること。
 
@@ -129,14 +131,14 @@ Details: [docs/CLAUDE-commands.md](docs/CLAUDE-commands.md)
 
 ## Key Commands (for development)
 
-| Command | Purpose |
-|---------|---------|
-| `/plan-with-agent` | Add improvement tasks to Plans.md |
-| `/work` | Implement tasks (auto-scope detection, --codex support) |
-| `/breezing` | Full team parallel run with Agent Teams (--codex support) |
-| `/harness-review` | Review changes |
-| `/validate` | Validate plugin |
-| `/remember` | Record learnings |
+| Command            | Purpose                                                   |
+| ------------------ | --------------------------------------------------------- |
+| `/plan-with-agent` | Add improvement tasks to Plans.md                         |
+| `/work`            | Implement tasks (auto-scope detection, --codex support)   |
+| `/breezing`        | Full team parallel run with Agent Teams (--codex support) |
+| `/harness-review`  | Review changes                                            |
+| `/validate`        | Validate plugin                                           |
+| `/remember`        | Record learnings                                          |
 
 Details & handoff: [docs/CLAUDE-commands.md](docs/CLAUDE-commands.md)
 

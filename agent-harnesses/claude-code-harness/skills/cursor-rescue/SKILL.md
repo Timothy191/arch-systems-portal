@@ -63,13 +63,13 @@ bash "${HARNESS_PLUGIN_ROOT}/scripts/setup-cursor.sh" --check
 
 ## Common Fixes
 
-| Symptom | Fix |
-|---|---|
-| `cursor-agent` missing | Install / sign in to Cursor CLI, then rerun `cursor:setup --check`. |
+| Symptom                                   | Fix                                                                                                                                                          |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `cursor-agent` missing                    | Install / sign in to Cursor CLI, then rerun `cursor:setup --check`.                                                                                          |
 | backend resolves to `claude` unexpectedly | Run `bash scripts/set-impl-backend.sh --show`; set user default with `cursor:setup --user-default` or project default with `cursor:setup --project-default`. |
-| `setup-cursor.sh --check` fails | Report the first failing `[ERR]` line and the missing file path. |
-| companion exits 2 | Workspace guard or forbidden path. Recreate an isolated worktree and retry. |
-| companion exits 3 | `cursor-agent` not found in PATH or `$HOME/.local/bin`. |
+| `setup-cursor.sh --check` fails           | Report the first failing `[ERR]` line and the missing file path.                                                                                             |
+| companion exits 2                         | Workspace guard or forbidden path. Recreate an isolated worktree and retry.                                                                                  |
+| companion exits 3                         | `cursor-agent` not found in PATH or `$HOME/.local/bin`.                                                                                                      |
 
 ## Output
 

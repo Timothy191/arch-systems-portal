@@ -18,11 +18,11 @@ UIコンポーネントとフォームの生成を担当するスキル群です
 
 ## 機能詳細
 
-| 機能 | 詳細 |
-|------|------|
-| **制約セット** | See [references/ui-skills.md](${CLAUDE_SKILL_DIR}/references/ui-skills.md) / [references/frontend-design.md](${CLAUDE_SKILL_DIR}/references/frontend-design.md) |
-| **コンポーネント生成** | See [references/component-generation.md](${CLAUDE_SKILL_DIR}/references/component-generation.md) |
-| **フィードバックフォーム** | See [references/feedback-forms.md](${CLAUDE_SKILL_DIR}/references/feedback-forms.md) |
+| 機能                       | 詳細                                                                                                                                                            |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **制約セット**             | See [references/ui-skills.md](${CLAUDE_SKILL_DIR}/references/ui-skills.md) / [references/frontend-design.md](${CLAUDE_SKILL_DIR}/references/frontend-design.md) |
+| **コンポーネント生成**     | See [references/component-generation.md](${CLAUDE_SKILL_DIR}/references/component-generation.md)                                                                |
+| **フィードバックフォーム** | See [references/feedback-forms.md](${CLAUDE_SKILL_DIR}/references/feedback-forms.md)                                                                            |
 
 ## 実行手順
 
@@ -42,18 +42,21 @@ UI コンポーネント生成時は、アクセシビリティを確保:
 生成する UI は以下を満たすことを推奨：
 
 ### 必須項目
+
 - [ ] 画像に alt 属性を設定
 - [ ] フォーム要素に label を関連付け
 - [ ] キーボード操作可能（Tab でフォーカス移動）
 - [ ] フォーカス状態が視覚的に分かる
 
 ### 推奨項目
+
 - [ ] 色だけに依存しない情報伝達
 - [ ] コントラスト比 4.5:1 以上（テキスト）
 - [ ] aria-label / aria-describedby の適切な使用
 - [ ] 見出し構造（h1 → h2 → h3）が論理的
 
 ### インタラクティブ要素
+
 - [ ] ボタンに適切なラベル（「詳細」ではなく「製品詳細を見る」）
 - [ ] モーダル/ダイアログのフォーカストラップ
 - [ ] エラーメッセージがスクリーンリーダーで読まれる

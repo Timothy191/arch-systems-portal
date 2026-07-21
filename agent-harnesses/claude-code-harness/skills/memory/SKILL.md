@@ -15,13 +15,13 @@ context: fork
 
 ## 機能詳細
 
-| 機能 | 詳細 |
-|------|------|
-| **SSOT初期化** | See [references/ssot-initialization.md](${CLAUDE_SKILL_DIR}/references/ssot-initialization.md) |
-| **Plans.mdマージ** | See [references/plans-merging.md](${CLAUDE_SKILL_DIR}/references/plans-merging.md) |
-| **移行処理** | See [references/workflow-migration.md](${CLAUDE_SKILL_DIR}/references/workflow-migration.md) |
-| **プロジェクト仕様同期** | See [references/sync-project-specs.md](${CLAUDE_SKILL_DIR}/references/sync-project-specs.md) |
-| **メモリ→SSOT昇格** | See [references/sync-ssot-from-memory.md](${CLAUDE_SKILL_DIR}/references/sync-ssot-from-memory.md) |
+| 機能                     | 詳細                                                                                               |
+| ------------------------ | -------------------------------------------------------------------------------------------------- |
+| **SSOT初期化**           | See [references/ssot-initialization.md](${CLAUDE_SKILL_DIR}/references/ssot-initialization.md)     |
+| **Plans.mdマージ**       | See [references/plans-merging.md](${CLAUDE_SKILL_DIR}/references/plans-merging.md)                 |
+| **移行処理**             | See [references/workflow-migration.md](${CLAUDE_SKILL_DIR}/references/workflow-migration.md)       |
+| **プロジェクト仕様同期** | See [references/sync-project-specs.md](${CLAUDE_SKILL_DIR}/references/sync-project-specs.md)       |
+| **メモリ→SSOT昇格**      | See [references/sync-ssot-from-memory.md](${CLAUDE_SKILL_DIR}/references/sync-ssot-from-memory.md) |
 
 ## Unified Harness Memory（共通DB）
 

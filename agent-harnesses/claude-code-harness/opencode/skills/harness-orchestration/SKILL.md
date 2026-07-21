@@ -20,10 +20,10 @@ description: "Show how much this session/project orchestrated across backends (C
 
 ## Deliverables
 
-| 出力 | 生成物 |
-|------|--------|
+| 出力              | 生成物                                                                                                                  |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------- |
 | HTML スコアカード | `scripts/orchestration-scorecard.sh --format html-data` → `scripts/render-html.sh --template orchestration` で単一 HTML |
-| ターミナルサマリ | `scripts/orchestration-scorecard.sh --format terminal`（3-5 行） |
+| ターミナルサマリ  | `scripts/orchestration-scorecard.sh --format terminal`（3-5 行）                                                        |
 
 tri-state: `used`（count>0）/ `available`（設定済み未使用）/ `not-configured`（binary 不在＝中立、壊れではない）。
 委譲ゼロなら "no delegations observed" に degrade。

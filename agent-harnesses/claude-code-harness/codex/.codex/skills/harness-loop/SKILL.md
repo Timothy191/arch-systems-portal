@@ -38,19 +38,19 @@ Codex 版の `harness-loop` は、説明だけの擬似ループではなく、
 
 ## Quick Reference
 
-| 入力 | 動作 |
-|------|------|
-| `$harness-loop all` | 未完了タスク全体を長時間ループで開始 |
-| `$harness-loop 41.1-41.4` | 範囲を絞って開始 |
-| `$harness-loop JLB3R-02..JLB3R-08` | Plans.md の task ID 順で範囲を絞って開始 |
-| `$harness-loop all --max-cycles 3` | 最大 3 サイクルで停止 |
-| `$harness-loop all --max-workers 4` | 1 cycle の ready batch を最大 4 worker までに制限 |
+| 入力                                  | 動作                                                 |
+| ------------------------------------- | ---------------------------------------------------- |
+| `$harness-loop all`                   | 未完了タスク全体を長時間ループで開始                 |
+| `$harness-loop 41.1-41.4`             | 範囲を絞って開始                                     |
+| `$harness-loop JLB3R-02..JLB3R-08`    | Plans.md の task ID 順で範囲を絞って開始             |
+| `$harness-loop all --max-cycles 3`    | 最大 3 サイクルで停止                                |
+| `$harness-loop all --max-workers 4`   | 1 cycle の ready batch を最大 4 worker までに制限    |
 | `$harness-loop all --max-workers max` | ready batch 内で実行可能なタスク数を上限として並列化 |
-| `$harness-loop all --plan roadmap` | named Plans の `roadmap` を対象にループ実行 |
-| `$harness-loop all --executor task` | 旧来の 1 task per cycle local worker 実行へ逃がす |
-| `$harness-loop all --pacing night` | サイクル間の待機を長めにする |
-| `$harness-loop status` | 現在の実行状況を確認 |
-| `$harness-loop stop` | 進行中ジョブを止めてループ停止要求を出す |
+| `$harness-loop all --plan roadmap`    | named Plans の `roadmap` を対象にループ実行          |
+| `$harness-loop all --executor task`   | 旧来の 1 task per cycle local worker 実行へ逃がす    |
+| `$harness-loop all --pacing night`    | サイクル間の待機を長めにする                         |
+| `$harness-loop status`                | 現在の実行状況を確認                                 |
+| `$harness-loop stop`                  | 進行中ジョブを止めてループ停止要求を出す             |
 
 ## 実行コマンド
 
@@ -145,12 +145,12 @@ Advisor / Reviewer drift との関係:
 
 ## pacing
 
-| 値 | 用途 | 待機秒数 |
-|----|------|---------|
-| `worker` | 通常の開発ループ | 270 |
-| `ci` | 短めに確認したい時 | 270 |
-| `plateau` | 行き詰まり気味の再試行 | 1200 |
-| `night` | 長めの放置実行 | 3600 |
+| 値        | 用途                   | 待機秒数 |
+| --------- | ---------------------- | -------- |
+| `worker`  | 通常の開発ループ       | 270      |
+| `ci`      | 短めに確認したい時     | 270      |
+| `plateau` | 行き詰まり気味の再試行 | 1200     |
+| `night`   | 長めの放置実行         | 3600     |
 
 ## State Path Policy
 
@@ -184,19 +184,19 @@ Codex 版 `harness-loop` は、Codex native の会話・実行キャッシュと
 Advisor は「代わりに実装する役」ではなく、「次の一手だけ返す相談役」。
 loop では次の 3 箇所でだけ呼ぶ。
 
-| タイミング | reason_code | 何をするか |
-|-----------|-------------|-----------|
-| 高リスク task の初回実行前 | `high-risk-preflight` | 先に固める観点を聞く |
-| 同じ原因の 2 回目失敗後 | `retry-threshold` | 方針変更か局所修正かを聞く |
-| plateau による停止直前 | `plateau-pre-escalation` | 本当に止めるべきかを聞く |
+| タイミング                 | reason_code              | 何をするか                 |
+| -------------------------- | ------------------------ | -------------------------- |
+| 高リスク task の初回実行前 | `high-risk-preflight`    | 先に固める観点を聞く       |
+| 同じ原因の 2 回目失敗後    | `retry-threshold`        | 方針変更か局所修正かを聞く |
+| plateau による停止直前     | `plateau-pre-escalation` | 本当に止めるべきかを聞く   |
 
 decision は 3 種だけ。
 
-| decision | loop の扱い |
-|----------|-------------|
-| `PLAN` | advice を次の executor prompt 先頭に足して再実行 |
-| `CORRECTION` | 局所修正の指示として再実行 |
-| `STOP` | loop を停止し、理由を state と runner.log に残す |
+| decision     | loop の扱い                                      |
+| ------------ | ------------------------------------------------ |
+| `PLAN`       | advice を次の executor prompt 先頭に足して再実行 |
+| `CORRECTION` | 局所修正の指示として再実行                       |
+| `STOP`       | loop を停止し、理由を state と runner.log に残す |
 
 同じ trigger は `trigger_hash = task_id + reason_code + normalized_error_signature` で 1 回だけ相談する。
 相談回数は task ごとに最大 3 回で、それ以上はユーザー判断に上げる。

@@ -75,11 +75,11 @@ Feature Table に追加された各項目を、以下の A/B/C/P のいずれか
 
 例:
 
-| Feature Table 追加 | 対応する実装変更 | 判定 |
-|-------------------|----------------|------|
-| `AskUserQuestion updatedInput` | Go handler + hooks wiring + upstream integration test | A |
-| `sandbox.network.deniedDomains` | `.claude-plugin/settings.json` + jq test | A |
-| `find -delete hardening` | `go/internal/guardrail/` + unit test | A |
+| Feature Table 追加              | 対応する実装変更                                      | 判定 |
+| ------------------------------- | ----------------------------------------------------- | ---- |
+| `AskUserQuestion updatedInput`  | Go handler + hooks wiring + upstream integration test | A    |
+| `sandbox.network.deniedDomains` | `.claude-plugin/settings.json` + jq test              | A    |
+| `find -delete hardening`        | `go/internal/guardrail/` + unit test                  | A    |
 
 結果: OK。追加のアクション不要。
 
@@ -97,11 +97,11 @@ Feature Table に追加された各項目を、以下の A/B/C/P のいずれか
 
 例:
 
-| Feature Table 追加 | 対応する実装変更 | 判定 |
-|-------------------|----------------|------|
-| `PreCompact hook` | なし | B |
-| `permission hardening` | settings / guardrail / tests の確認なし | B |
-| `Codex marketplace` | Plans への切り出しなし | B |
+| Feature Table 追加     | 対応する実装変更                        | 判定 |
+| ---------------------- | --------------------------------------- | ---- |
+| `PreCompact hook`      | なし                                    | B    |
+| `permission hardening` | settings / guardrail / tests の確認なし | B    |
+| `Codex marketplace`    | Plans への切り出しなし                  | B    |
 
 結果: NG。PR をブロックし、実装案または Plans 化を要求する。
 
@@ -125,10 +125,10 @@ Feature Table に追加された各項目を、以下の A/B/C/P のいずれか
 
 例:
 
-| Feature Table 追加 | 理由 | 判定 |
-|-------------------|------|------|
-| `Agent Teams permission dialog crash fix` | CC 本体の crash fix。Harness 側変更不要 | C |
-| `Codex Guardian timeout wording` | Codex 側 UX 修正。Harness surface なし | C |
+| Feature Table 追加                        | 理由                                    | 判定 |
+| ----------------------------------------- | --------------------------------------- | ---- |
+| `Agent Teams permission dialog crash fix` | CC 本体の crash fix。Harness 側変更不要 | C    |
+| `Codex Guardian timeout wording`          | Codex 側 UX 修正。Harness surface なし  | C    |
 
 結果: OK。ただし理由を明記する。
 
@@ -146,10 +146,10 @@ Feature Table に追加された各項目を、以下の A/B/C/P のいずれか
 
 例:
 
-| Feature Table 追加 | Plans への切り出し | 判定 |
-|-------------------|-------------------|------|
-| `Codex marketplace / MCP Apps` | Codex workflow 比較軸タスク | P |
-| `Codex 0.122.0-alpha` | stable 化後の compare 調査タスク | P |
+| Feature Table 追加             | Plans への切り出し               | 判定 |
+| ------------------------------ | -------------------------------- | ---- |
+| `Codex marketplace / MCP Apps` | Codex workflow 比較軸タスク      | P    |
+| `Codex 0.122.0-alpha`          | stable 化後の compare 調査タスク | P    |
 
 結果: OK。次回 cycle で拾える。
 
@@ -159,28 +159,33 @@ Feature Table に追加された各項目を、以下の A/B/C/P のいずれか
 ## Claude/Codex update 統合チェックリスト
 
 ### 1. 一次情報と分解表
+
 - [ ] diff source が呼び出し元提供または read-only git inspection のどちらかで確定している
 - [ ] Claude / Codex の公式 URL を確認した
 - [ ] Version / Upstream item / Category / Harness surface / Action の表がある
 - [ ] alpha / stable / docs-only の区別がある
 
 ### 2. Feature Table 差分
+
 - [ ] `docs/CLAUDE-feature-table.md` の追加行を列挙した
 - [ ] 各行に A / C / P のいずれかが付いている
 - [ ] B が 0 件である
 
 ### 3. カテゴリ別の確認
+
 - [ ] (A) 実装あり: 対応する実装ファイルとテストがある
 - [ ] (B) 書いただけ: 0 件。残る場合は PR ブロック
 - [ ] (C) 自動継承: permission / sandbox / security / workflow 影響を確認済み
 - [ ] (P) Plans 化: `Plans.md` に将来タスクがある
 
 ### 4. Mirror と stale path
+
 - [ ] `skills/` と `codex/.codex/skills/` の意図しない drift がない
 - [ ] `.agents/skills/` が存在する場合、Claude/Codex 表記が壊れていない
 - [ ] 旧 TypeScript guardrail path、旧 Codex plugin directory、旧 Codex feature-table path などの旧参照がない
 
 ### 5. CHANGELOG / tests
+
 - [ ] CHANGELOG に「今まで / 今後」または相当する user-facing 説明がある
 - [ ] upstream integration test または対象 unit test が追加 / 更新されている
 ```
@@ -202,12 +207,13 @@ Feature Table に追加された各項目を、以下の A/B/C/P のいずれか
 
 **実装案**:
 
-| 対象ファイル | 変更内容 |
-|------------|---------|
+| 対象ファイル     | 変更内容           |
+| ---------------- | ------------------ |
 | `{ファイルパス}` | {具体的な変更内容} |
 | `{ファイルパス}` | {具体的な変更内容} |
 
 **ユーザー体験の改善**:
+
 - 今まで: {現在のユーザー体験}
 - 今後: {実装後のユーザー体験}
 

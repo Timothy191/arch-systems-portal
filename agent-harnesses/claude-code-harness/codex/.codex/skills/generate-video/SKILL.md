@@ -3,7 +3,8 @@ name: generate-video
 description: "Auto-generate product demo videos. Internal/manual workflow only; use from an explicit /generate-video command or a parent media workflow. Requires Remotion setup."
 description-en: "Auto-generate product demo videos. Internal/manual workflow only; use from an explicit /generate-video command or a parent media workflow. Requires Remotion setup."
 description-ja: "プロダクトデモ動画を自動生成。明示的な /generate-video または親メディアワークフローからのみ使う。通常発話からの自動起動はしない。Remotion セットアップが必要。"
-allowed-tools: ["Read", "Write", "Edit", "Grep", "Glob", "Bash", "Task", "AskUserQuestion", "WebFetch"]
+allowed-tools:
+  ["Read", "Write", "Edit", "Grep", "Glob", "Bash", "Task", "AskUserQuestion", "WebFetch"]
 disable-model-invocation: true
 user-invocable: false
 argument-hint: "[demo|arch|release]"
@@ -33,15 +34,15 @@ context: fork
 
 ## 機能詳細
 
-| 機能 | 詳細 |
-|------|------|
-| **ベストプラクティス** | See [references/best-practices.md](${CLAUDE_SKILL_DIR}/references/best-practices.md) |
-| **コードベース分析** | See [references/analyzer.md](${CLAUDE_SKILL_DIR}/references/analyzer.md) |
-| **シナリオプランニング** | See [references/planner.md](${CLAUDE_SKILL_DIR}/references/planner.md) |
-| **並列シーン生成** | See [references/generator.md](${CLAUDE_SKILL_DIR}/references/generator.md) |
-| **視覚効果ライブラリ** | See [references/visual-effects.md](${CLAUDE_SKILL_DIR}/references/visual-effects.md) |
-| **AI画像生成** | See [references/image-generator.md](${CLAUDE_SKILL_DIR}/references/image-generator.md) |
-| **画像品質判定** | See [references/image-quality-check.md](${CLAUDE_SKILL_DIR}/references/image-quality-check.md) |
+| 機能                     | 詳細                                                                                           |
+| ------------------------ | ---------------------------------------------------------------------------------------------- |
+| **ベストプラクティス**   | See [references/best-practices.md](${CLAUDE_SKILL_DIR}/references/best-practices.md)           |
+| **コードベース分析**     | See [references/analyzer.md](${CLAUDE_SKILL_DIR}/references/analyzer.md)                       |
+| **シナリオプランニング** | See [references/planner.md](${CLAUDE_SKILL_DIR}/references/planner.md)                         |
+| **並列シーン生成**       | See [references/generator.md](${CLAUDE_SKILL_DIR}/references/generator.md)                     |
+| **視覚効果ライブラリ**   | See [references/visual-effects.md](${CLAUDE_SKILL_DIR}/references/visual-effects.md)           |
+| **AI画像生成**           | See [references/image-generator.md](${CLAUDE_SKILL_DIR}/references/image-generator.md)         |
+| **画像品質判定**         | See [references/image-quality-check.md](${CLAUDE_SKILL_DIR}/references/image-quality-check.md) |
 
 ## Prerequisites
 
@@ -88,13 +89,13 @@ context: fork
 
 ## 動画タイプ（ファネル別）
 
-| タイプ | ファネル | 長さ目安 | 自動判定条件 | 構成の芯 |
-|--------|----------|----------|--------------|----------|
-| **LP/広告ティザー** | 認知〜興味 | 30-90秒 | 新規プロジェクト | 痛み→結果→CTA |
-| **Introデモ** | 興味→検討 | 2-3分 | UI変更検出 | 1ユースケース完走 |
-| **リリースノート** | 検討→確信 | 1-3分 | CHANGELOG更新 | Before/After重視 |
-| **アーキテクチャ解説** | 確信→決裁 | 5-30分 | 大規模構造変更 | 実運用+証拠 |
-| **オンボーディング** | 継続・活用 | 30秒-数分 | 初回セットアップ | Aha体験への最短パス |
+| タイプ                 | ファネル   | 長さ目安  | 自動判定条件     | 構成の芯            |
+| ---------------------- | ---------- | --------- | ---------------- | ------------------- |
+| **LP/広告ティザー**    | 認知〜興味 | 30-90秒   | 新規プロジェクト | 痛み→結果→CTA       |
+| **Introデモ**          | 興味→検討  | 2-3分     | UI変更検出       | 1ユースケース完走   |
+| **リリースノート**     | 検討→確信  | 1-3分     | CHANGELOG更新    | Before/After重視    |
+| **アーキテクチャ解説** | 確信→決裁  | 5-30分    | 大規模構造変更   | 実運用+証拠         |
+| **オンボーディング**   | 継続・活用 | 30秒-数分 | 初回セットアップ | Aha体験への最短パス |
 
 > 詳細: [references/best-practices.md](${CLAUDE_SKILL_DIR}/references/best-practices.md)
 
@@ -102,32 +103,32 @@ context: fork
 
 ### 90秒ティザー（LP/広告向け）
 
-| 時間 | シーン | 内容 |
-|------|--------|------|
-| 0-5秒 | Hook | 痛み or 望む結果 |
-| 5-15秒 | Problem+Promise | 対象ユーザーと約束 |
-| 15-55秒 | Workflow | 象徴ワークフロー |
-| 55-70秒 | Differentiator | 差別化の根拠 |
-| 70-90秒 | CTA | 次の一手 |
+| 時間    | シーン          | 内容               |
+| ------- | --------------- | ------------------ |
+| 0-5秒   | Hook            | 痛み or 望む結果   |
+| 5-15秒  | Problem+Promise | 対象ユーザーと約束 |
+| 15-55秒 | Workflow        | 象徴ワークフロー   |
+| 55-70秒 | Differentiator  | 差別化の根拠       |
+| 70-90秒 | CTA             | 次の一手           |
 
 ### 3分Introデモ（検討向け）
 
-| 時間 | シーン | 内容 |
-|------|--------|------|
-| 0-10秒 | Hook | 結論+痛み |
-| 10-30秒 | UseCase | ユースケース宣言 |
-| 30-140秒 | Demo | 実画面で完走 |
+| 時間      | シーン    | 内容                |
+| --------- | --------- | ------------------- |
+| 0-10秒    | Hook      | 結論+痛み           |
+| 10-30秒   | UseCase   | ユースケース宣言    |
+| 30-140秒  | Demo      | 実画面で完走        |
 | 140-170秒 | Objection | よくある不安1つ潰す |
-| 170-180秒 | CTA | 行動喚起 |
+| 170-180秒 | CTA       | 行動喚起            |
 
 ### 共通シーン
 
-| シーン | 推奨時間 | 内容 |
-|--------|----------|------|
-| イントロ | 3-5秒 | ロゴ + タグライン |
-| 機能デモ | 10-30秒 | Playwrightキャプチャ |
-| アーキテクチャ図 | 10-20秒 | Mermaid → アニメーション |
-| CTA | 3-5秒 | URL + 連絡先 |
+| シーン           | 推奨時間 | 内容                     |
+| ---------------- | -------- | ------------------------ |
+| イントロ         | 3-5秒    | ロゴ + タグライン        |
+| 機能デモ         | 10-30秒  | Playwrightキャプチャ     |
+| アーキテクチャ図 | 10-20秒  | Mermaid → アニメーション |
+| CTA              | 3-5秒    | URL + 連絡先             |
 
 > 詳細テンプレート: [${CLAUDE_SKILL_DIR}/references/best-practices.md](${CLAUDE_SKILL_DIR}/references/best-practices.md#テンプレート)
 
@@ -135,12 +136,12 @@ context: fork
 
 ナレーション付き動画では以下を厳守:
 
-| ルール | 値 |
-|--------|-----|
-| 音声開始 | シーン開始 + 30f（1秒待機） |
-| シーン長さ | 30f + 音声長さ + 20f余白 |
+| ルール         | 値                                |
+| -------------- | --------------------------------- |
+| 音声開始       | シーン開始 + 30f（1秒待機）       |
+| シーン長さ     | 30f + 音声長さ + 20f余白          |
 | トランジション | 15f（隣接シーンとオーバーラップ） |
-| シーン開始計算 | 前シーン開始 + 前シーン長 - 15f |
+| シーン開始計算 | 前シーン開始 + 前シーン長 - 15f   |
 
 **事前確認**: `ffprobe` で音声長さを確認してからシーン設計
 
@@ -148,21 +149,21 @@ context: fork
 
 ## BGM サポート
 
-| 項目 | 推奨値 |
-|------|--------|
+| 項目             | 推奨値                 |
+| ---------------- | ---------------------- |
 | ナレーションあり | bgmVolume: 0.20 - 0.30 |
 | ナレーションなし | bgmVolume: 0.50 - 0.80 |
-| ファイル配置 | `public/BGM/` |
+| ファイル配置     | `public/BGM/`          |
 
 > 詳細: [${CLAUDE_SKILL_DIR}/references/generator.md](${CLAUDE_SKILL_DIR}/references/generator.md#bgm-サポート)
 
 ## 字幕サポート
 
-| ルール | 値 |
-|--------|-----|
-| 字幕開始 | 音声開始と同じ |
-| 字幕duration | 音声長 + 10f |
-| フォント | Base64埋め込み推奨 |
+| ルール       | 値                 |
+| ------------ | ------------------ |
+| 字幕開始     | 音声開始と同じ     |
+| 字幕duration | 音声長 + 10f       |
+| フォント     | Base64埋め込み推奨 |
 
 > 詳細: [${CLAUDE_SKILL_DIR}/references/generator.md](${CLAUDE_SKILL_DIR}/references/generator.md#字幕サポート)
 
@@ -170,13 +171,13 @@ context: fork
 
 インパクトのある動画向けエフェクト集:
 
-| エフェクト | 用途 |
-|-----------|------|
-| GlitchText | Hook、タイトル |
-| Particles | 背景、CTA収束 |
-| ScanLine | 解析中演出 |
-| ProgressBar | 並列処理表示 |
-| 3D Parallax | カード表示 |
+| エフェクト  | 用途           |
+| ----------- | -------------- |
+| GlitchText  | Hook、タイトル |
+| Particles   | 背景、CTA収束  |
+| ScanLine    | 解析中演出     |
+| ProgressBar | 並列処理表示   |
+| 3D Parallax | カード表示     |
 
 > 詳細: [references/visual-effects.md](${CLAUDE_SKILL_DIR}/references/visual-effects.md)
 

@@ -23,9 +23,9 @@ description: "Browser automation through the repo agent-browser CLI. Explicit he
 
 ## 機能詳細
 
-| 機能 | 詳細 |
-|------|------|
-| **ブラウザ自動化** | See [references/browser-automation.md](${CLAUDE_SKILL_DIR}/references/browser-automation.md) |
+| 機能                                | 詳細                                                                                             |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------ |
+| **ブラウザ自動化**                  | See [references/browser-automation.md](${CLAUDE_SKILL_DIR}/references/browser-automation.md)     |
 | **AI スナップショットワークフロー** | See [references/ai-snapshot-workflow.md](${CLAUDE_SKILL_DIR}/references/ai-snapshot-workflow.md) |
 
 ## 実行手順
@@ -43,14 +43,14 @@ agent-browser install
 
 ### Step 1: ユーザーのリクエストを分類
 
-| リクエストタイプ | 対応アクション |
-|----------------|---------------|
-| URL を開く | `agent-browser open <url>` |
-| 要素をクリック | スナップショット → `agent-browser click @ref` |
-| フォーム入力 | スナップショット → `agent-browser fill @ref "text"` |
-| 状態確認 | `agent-browser snapshot -i -c` |
-| スクリーンショット | `agent-browser screenshot <path>` |
-| デバッグ | `agent-browser --headed open <url>` |
+| リクエストタイプ   | 対応アクション                                      |
+| ------------------ | --------------------------------------------------- |
+| URL を開く         | `agent-browser open <url>`                          |
+| 要素をクリック     | スナップショット → `agent-browser click @ref`       |
+| フォーム入力       | スナップショット → `agent-browser fill @ref "text"` |
+| 状態確認           | `agent-browser snapshot -i -c`                      |
+| スクリーンショット | `agent-browser screenshot <path>`                   |
+| デバッグ           | `agent-browser --headed open <url>`                 |
 
 ### Step 2: AI スナップショットワークフロー（推奨）
 
@@ -96,48 +96,48 @@ agent-browser screenshot result.png
 
 ### 基本操作
 
-| コマンド | 説明 |
-|---------|------|
-| `open <url>` | URL を開く |
-| `snapshot -i -c` | AI 向けスナップショット |
-| `click @e1` | 要素をクリック |
-| `fill @e1 "text"` | フォームに入力 |
-| `type @e1 "text"` | テキストを入力 |
-| `press Enter` | キーを押す |
-| `screenshot [path]` | スクリーンショット |
-| `close` | ブラウザを閉じる |
+| コマンド            | 説明                    |
+| ------------------- | ----------------------- |
+| `open <url>`        | URL を開く              |
+| `snapshot -i -c`    | AI 向けスナップショット |
+| `click @e1`         | 要素をクリック          |
+| `fill @e1 "text"`   | フォームに入力          |
+| `type @e1 "text"`   | テキストを入力          |
+| `press Enter`       | キーを押す              |
+| `screenshot [path]` | スクリーンショット      |
+| `close`             | ブラウザを閉じる        |
 
 ### ナビゲーション
 
-| コマンド | 説明 |
-|---------|------|
-| `back` | 戻る |
-| `forward` | 進む |
-| `reload` | リロード |
+| コマンド  | 説明     |
+| --------- | -------- |
+| `back`    | 戻る     |
+| `forward` | 進む     |
+| `reload`  | リロード |
 
 ### 情報取得
 
-| コマンド | 説明 |
-|---------|------|
-| `get text @e1` | テキスト取得 |
-| `get html @e1` | HTML 取得 |
-| `get url` | 現在の URL |
-| `get title` | ページタイトル |
+| コマンド       | 説明           |
+| -------------- | -------------- |
+| `get text @e1` | テキスト取得   |
+| `get html @e1` | HTML 取得      |
+| `get url`      | 現在の URL     |
+| `get title`    | ページタイトル |
 
 ### 待機
 
-| コマンド | 説明 |
-|---------|------|
-| `wait @e1` | 要素を待機 |
-| `wait 1000` | 1秒待機 |
+| コマンド    | 説明       |
+| ----------- | ---------- |
+| `wait @e1`  | 要素を待機 |
+| `wait 1000` | 1秒待機    |
 
 ### デバッグ
 
-| コマンド | 説明 |
-|---------|------|
-| `--headed` | ブラウザを表示 |
-| `console` | コンソールログ |
-| `errors` | ページエラー |
+| コマンド        | 説明             |
+| --------------- | ---------------- |
+| `--headed`      | ブラウザを表示   |
+| `console`       | コンソールログ   |
+| `errors`        | ページエラー     |
 | `highlight @e1` | 要素をハイライト |
 
 ---
@@ -162,11 +162,11 @@ agent-browser --session admin snapshot -i -c
 
 ## MCP ブラウザツールとの使い分け
 
-| ツール | 推奨度 | 用途 |
-|--------|--------|------|
-| **agent-browser** | ★★★ | 第一選択。AI 向けスナップショットが強力 |
-| chrome-devtools MCP | ★★☆ | Chrome が既に開いている場合 |
-| playwright MCP | ★★☆ | 複雑な E2E テスト |
+| ツール              | 推奨度 | 用途                                    |
+| ------------------- | ------ | --------------------------------------- |
+| **agent-browser**   | ★★★    | 第一選択。AI 向けスナップショットが強力 |
+| chrome-devtools MCP | ★★☆    | Chrome が既に開いている場合             |
+| playwright MCP      | ★★☆    | 複雑な E2E テスト                       |
 
 **原則**: まず agent-browser を試し、うまくいかない場合のみ MCP ツールを使用。
 

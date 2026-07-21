@@ -44,6 +44,7 @@ banner 1 行 (`🚀 cursor / composer-2.5-fast / <branch> / <task>`) + 計画 2-
 - **起動シーケンス中の ★ Insight ブロック**: Insight は最終 report で 1 回のみ
 
 違反例 (冗長):
+
 ```
 × 「composer 2.5 で実装する流れですね、まず確認します」（中身のない前置き）
 × 「Cursor を呼ぶ前に branch を見ます」 → bash → 「branch を確認しました」（言い換え）
@@ -51,6 +52,7 @@ banner 1 行 (`🚀 cursor / composer-2.5-fast / <branch> / <task>`) + 計画 2-
 ```
 
 正常例 (簡潔 + 計画明示):
+
 ```
 🚀 cursor / composer-2.5-fast / feat/foo-bar / Add login form validation
 これから: worktree 作成 → composer に実装委譲 → diff レビュー → cherry-pick
@@ -100,6 +102,7 @@ bash -c '
 ```
 
 判定:
+
 - `CURSOR_AGENT=NOT_INSTALLED` → `ERROR: cursor-agent not found (exit 3 expected from companion). Install via setup-cursor.sh.` を出し終了。
 - `BRANCH` が `main` / `master` → `WARN: on protected branch — cherry-pick target is HEAD of this branch. Confirm intent or switch.` を出し継続。
 
@@ -225,6 +228,7 @@ Constraints:
 ```
 
 判定:
+
 - exit 0 + result text → Step 6 へ
 - exit 1 (result-error) → companion stderr を 1 行要約して `ERROR: cursor returned is_error/empty result` を出し終了。worktree は Step 8 のクリーンアップで削除
 - exit 2 (bad-guard) → 設定不備。原因 (workspace 指定誤り等) を 1 行で示し終了
@@ -278,6 +282,7 @@ Lead は diff 全文を Read し、以下を確認する:
   ```
 
 判定:
+
 - 問題なし → Step 7 へ
 - 範囲外変更あり → 該当 commit を `git reset` で巻き戻すか、Cursor に再委譲 (Step 5 を 1 回だけ retry)。2 回失敗で `REQUEST_CHANGES: <理由>` を出し、worktree を残したまま終了
 - protected path / secret 検出 → 即 abort。`ABORT: protected path violation` を出し worktree 削除
@@ -366,13 +371,13 @@ cursor:do completed
 
 ## Full Containment (write mode 必須)
 
-| 層 | 役割 | skip 可否 |
-|---|---|---|
-| 専用 `.git` worktree | cursor の書込を main tree から隔離 | 不可（必須） |
-| Lead diff review | untrusted cursor 出力の品質ゲート | 不可（必須） |
-| contract-grep ゲート | docs / locale / matrix 固定文字列の保護 | 不可（必須） |
-| cherry-pick → main | R01-R13 guard rail を通す唯一の経路 | 不可（必須） |
-| Plans.md cc:done 更新 | 台帳との sync | 該当行なければ skip 可 |
+| 層                    | 役割                                    | skip 可否              |
+| --------------------- | --------------------------------------- | ---------------------- |
+| 専用 `.git` worktree  | cursor の書込を main tree から隔離      | 不可（必須）           |
+| Lead diff review      | untrusted cursor 出力の品質ゲート       | 不可（必須）           |
+| contract-grep ゲート  | docs / locale / matrix 固定文字列の保護 | 不可（必須）           |
+| cherry-pick → main    | R01-R13 guard rail を通す唯一の経路     | 不可（必須）           |
+| Plans.md cc:done 更新 | 台帳との sync                           | 該当行なければ skip 可 |
 
 ## Prohibited
 

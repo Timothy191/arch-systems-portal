@@ -25,6 +25,7 @@ Auto-generates CRUD functionality for specified entities (tables) at **productio
 - Minimize diff to match existing DB/code
 
 **Features**:
+
 - Validation (Zod) auto-add
 - Auth/authorization (Row Level Security) auto-config
 - Relations (one-to-many, many-to-many) support
@@ -37,10 +38,10 @@ Auto-generates CRUD functionality for specified entities (tables) at **productio
 
 **This skill must explicitly invoke the following skills with the Skill tool**:
 
-| Skill | Purpose | When to Call |
-|-------|---------|--------------|
-| `impl` | Implementation (parent skill) | CRUD feature implementation |
-| `verify` | Verification (parent skill) | Post-implementation verification |
+| Skill    | Purpose                       | When to Call                     |
+| -------- | ----------------------------- | -------------------------------- |
+| `impl`   | Implementation (parent skill) | CRUD feature implementation      |
+| `verify` | Verification (parent skill)   | Post-implementation verification |
 
 ---
 
@@ -77,12 +78,12 @@ Detailed steps are described in the phases below.
 
 ## Supported Frameworks
 
-| Framework | Detection | Generated Files |
-|-----------|-----------|-----------------|
-| **Next.js + Prisma** | `prisma/schema.prisma` | API routes, Prisma client |
-| **Next.js + Drizzle** | `drizzle.config.ts` | API routes, Drizzle queries |
-| **Express** | `express` in package.json | Controllers, routes |
-| **Hono** | `hono` in package.json | Route handlers |
+| Framework             | Detection                 | Generated Files             |
+| --------------------- | ------------------------- | --------------------------- |
+| **Next.js + Prisma**  | `prisma/schema.prisma`    | API routes, Prisma client   |
+| **Next.js + Drizzle** | `drizzle.config.ts`       | API routes, Drizzle queries |
+| **Express**           | `express` in package.json | Controllers, routes         |
+| **Hono**              | `hono` in package.json    | Route handlers              |
 
 ---
 

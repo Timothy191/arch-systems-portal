@@ -9,8 +9,8 @@ description: "Controls session resume/fork(branch) for /work based on --resume/-
 
 ## 機能詳細
 
-| 機能 | 詳細 |
-|------|------|
+| 機能                    | 詳細                                                                                   |
+| ----------------------- | -------------------------------------------------------------------------------------- |
 | **セッション再開/分岐** | See [references/session-control.md](${CLAUDE_SKILL_DIR}/references/session-control.md) |
 
 ## 実行手順

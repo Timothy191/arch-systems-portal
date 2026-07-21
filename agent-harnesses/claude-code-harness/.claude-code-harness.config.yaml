@@ -37,7 +37,7 @@ advisor:
   # Ask advisor once before escalating plateau/user-stop decisions
   consult_before_user_escalation: true
   # Default model mapping by runtime
-  claude_model: opus
+  claude_model: "ollama/Deepseek V4-pro:cloud"
   codex_model: gpt-5.4
 
 # Cleanup thresholds

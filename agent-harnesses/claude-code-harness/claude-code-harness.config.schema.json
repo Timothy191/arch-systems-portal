@@ -69,13 +69,32 @@
         "allowed_modify": {
           "type": "array",
           "items": { "type": "string" },
-          "default": ["src/", "app/", "components/", "lib/", "pages/", "Plans.md", "AGENTS.md", "CLAUDE.md"],
+          "default": [
+            "src/",
+            "app/",
+            "components/",
+            "lib/",
+            "pages/",
+            "Plans.md",
+            "AGENTS.md",
+            "CLAUDE.md"
+          ],
           "description": "Paths that can be modified (glob patterns supported)"
         },
         "protected": {
           "type": "array",
           "items": { "type": "string" },
-          "default": [".github/", ".gitlab/", "infra/", "k8s/", "terraform/", ".env", ".env.*", "credentials/", "secrets/"],
+          "default": [
+            ".github/",
+            ".gitlab/",
+            "infra/",
+            "k8s/",
+            "terraform/",
+            ".env",
+            ".env.*",
+            "credentials/",
+            "secrets/"
+          ],
           "description": "Paths that are never modified automatically"
         },
         "plans_file": {
@@ -268,4 +287,3 @@
   },
   "additionalProperties": false
 }
-

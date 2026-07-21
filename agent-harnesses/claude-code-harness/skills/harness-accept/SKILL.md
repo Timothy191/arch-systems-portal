@@ -23,12 +23,12 @@ Phase 65.1.x (`harness-plan-brief`) の対構造として動作し、Plan Brief 
 
 ## 責任境界
 
-| 範囲 | このスキルの責務 |
-|------|-----------------|
-| 検索 | **現プロジェクトのみ** (`project: <current>`, `strict_project: true` を必ず指定) |
-| クロスプロジェクト | **やらない** (Phase 65.3 以降で `--cross-project-group <name>` flag で opt-in 解放) |
-| Plan Brief 連携 | `user_request_hash` を join key として `personal-preference.v1` (Phase 65.1.4) を read |
-| 書き込み | やらない (Acceptance 承認後の memory write は `accept-record-decision.sh` の責務) |
+| 範囲                | このスキルの責務                                                                                   |
+| ------------------- | -------------------------------------------------------------------------------------------------- |
+| 検索                | **現プロジェクトのみ** (`project: <current>`, `strict_project: true` を必ず指定)                   |
+| クロスプロジェクト  | **やらない** (Phase 65.3 以降で `--cross-project-group <name>` flag で opt-in 解放)                |
+| Plan Brief 連携     | `user_request_hash` を join key として `personal-preference.v1` (Phase 65.1.4) を read             |
+| 書き込み            | やらない (Acceptance 承認後の memory write は `accept-record-decision.sh` の責務)                  |
 | recommendation 算出 | verified / 全 criteria の比率で 0.8 / 0.5 閾値判定。ロジックは `scripts/render-html.sh` 直前で計算 |
 
 ## 入力
@@ -38,10 +38,10 @@ Phase 65.1.x (`harness-plan-brief`) の対構造として動作し、Plan Brief 
 
 ## 出力
 
-| 出力 | パス | 形式 |
-|------|------|------|
-| Acceptance Demo HTML | `.claude/state/views/accept-<timestamp>.html` | 単独で開ける HTML (no server, no JS framework) |
-| Acceptance context JSON | `.claude/state/views/accept-<timestamp>.context.json` | `acceptance-context.v1` schema |
+| 出力                    | パス                                                  | 形式                                           |
+| ----------------------- | ----------------------------------------------------- | ---------------------------------------------- |
+| Acceptance Demo HTML    | `.claude/state/views/accept-<timestamp>.html`         | 単独で開ける HTML (no server, no JS framework) |
+| Acceptance context JSON | `.claude/state/views/accept-<timestamp>.context.json` | `acceptance-context.v1` schema                 |
 
 ## Schema: `acceptance-context.v1`
 
@@ -50,12 +50,8 @@ Phase 65.1.x (`harness-plan-brief`) の対構造として動作し、Plan Brief 
   "schema": "acceptance-context.v1",
   "user_request": "string",
   "user_request_hash": "sha256 hex (Plan Brief 側の personal-preference.v1 と join)",
-  "demo_artifacts": [
-    { "kind": "video|screenshot|text", "path": "string" }
-  ],
-  "verified_criteria": [
-    { "name": "string", "passed": true, "evidence": "string" }
-  ],
+  "demo_artifacts": [{ "kind": "video|screenshot|text", "path": "string" }],
+  "verified_criteria": [{ "name": "string", "passed": true, "evidence": "string" }],
   "tdd_verified": "yes|no|not-required|skip:<reason>",
   "unverified_caveats": ["string"],
   "past_issue_patterns": [
@@ -209,13 +205,13 @@ bash scripts/plan-brief-open.sh "$HTML_OUT"
 
 ## 失敗時の挙動
 
-| 失敗 | 挙動 |
-|------|------|
+| 失敗                                    | 挙動                                                                       |
+| --------------------------------------- | -------------------------------------------------------------------------- |
 | `mcp__harness__harness_mem_search` 不達 | 警告を表示し、`verified_criteria` を空配列で続行 (recommendation = reject) |
-| Plan Brief 側 record が見つからない | warning を出し、`verified_criteria` を空配列で続行 |
-| `git rev-parse --show-toplevel` 失敗 | `PROJECT_NAME=current` で続行 |
-| `accept-past-issues.sh` 失敗 | `past_issue_patterns: []` で続行 (best-effort) |
-| `render-html.sh` 失敗 | エラーを stderr に出力し exit 1 |
+| Plan Brief 側 record が見つからない     | warning を出し、`verified_criteria` を空配列で続行                         |
+| `git rev-parse --show-toplevel` 失敗    | `PROJECT_NAME=current` で続行                                              |
+| `accept-past-issues.sh` 失敗            | `past_issue_patterns: []` で続行 (best-effort)                             |
+| `render-html.sh` 失敗                   | エラーを stderr に出力し exit 1                                            |
 
 ## Related
 
