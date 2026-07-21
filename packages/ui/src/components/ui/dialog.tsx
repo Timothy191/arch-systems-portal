@@ -1,9 +1,14 @@
+import * as React from "react";
+
 interface DialogPartProps {
   children: React.ReactNode;
   className?: string;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
-export function Dialog({ children, className }: DialogPartProps) {
+export function Dialog({ children, className, open = true }: DialogPartProps) {
+  if (!open) return null;
   return <div className={className}>{children}</div>;
 }
 

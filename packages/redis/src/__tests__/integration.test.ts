@@ -7,20 +7,12 @@
  * persists across test files.
  */
 jest.mock("../client.js", () => ({
-  getRedisClient: jest
-    .fn()
-    .mockRejectedValue(new Error("Redis connection refused")),
+  getRedisClient: jest.fn().mockRejectedValue(new Error("Redis connection refused")),
   getClientIfOpen: jest.fn().mockReturnValue(null),
   closeRedis: jest.fn(),
 }));
 
-import {
-  cacheGet,
-  cacheSet,
-  cacheDelete,
-  clearMemoryCache,
-  cacheEvictL1ByPrefix,
-} from "../cache";
+import { cacheGet, cacheSet, cacheDelete, clearMemoryCache, cacheEvictL1ByPrefix } from "../cache";
 
 beforeEach(() => {
   clearMemoryCache();

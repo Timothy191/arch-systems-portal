@@ -18,14 +18,8 @@ interface AnimeTimelineProps {
   onComplete?: () => void;
 }
 
-export const AnimeTimeline = forwardRef<
-  AnimeTimelineHandle,
-  AnimeTimelineProps
->(
-  (
-    { children, className, childClassName, autoPlay = true, onComplete },
-    ref,
-  ) => {
+export const AnimeTimeline = forwardRef<AnimeTimelineHandle, AnimeTimelineProps>(
+  ({ children, className, childClassName, autoPlay = true, onComplete }, ref) => {
     const root = useRef<HTMLDivElement>(null);
     const scope = useRef<{ revert: () => void } | null>(null);
     const timelineRef = useRef<any>(null);
@@ -70,7 +64,7 @@ export const AnimeTimeline = forwardRef<
                     duration: stepDuration,
                     ease: stepEase,
                   },
-                  stepDelay || i * 200,
+                  stepDelay || i * 200
                 );
                 break;
               case "scalePop":
@@ -82,7 +76,7 @@ export const AnimeTimeline = forwardRef<
                     duration: stepDuration,
                     ease: stepEase,
                   },
-                  stepDelay || i * 200,
+                  stepDelay || i * 200
                 );
                 break;
               case "alertPulse":
@@ -94,7 +88,7 @@ export const AnimeTimeline = forwardRef<
                     duration: stepDuration,
                     ease: stepEase,
                   },
-                  stepDelay || i * 150,
+                  stepDelay || i * 150
                 );
                 break;
               case "slideRight":
@@ -106,14 +100,14 @@ export const AnimeTimeline = forwardRef<
                     duration: stepDuration,
                     ease: stepEase,
                   },
-                  stepDelay || i * 200,
+                  stepDelay || i * 200
                 );
                 break;
               default:
                 timelineRef.current?.add(
                   target,
                   { opacity: [0, 1], duration: stepDuration, ease: stepEase },
-                  stepDelay || i * 200,
+                  stepDelay || i * 200
                 );
             }
           });
@@ -130,19 +124,14 @@ export const AnimeTimeline = forwardRef<
       <div ref={root} className={cn(className)}>
         {Array.isArray(children)
           ? children.map((child, i) => (
-              <div
-                key={i}
-                data-anime-step
-                data-anime-index={i}
-                className={childClassName}
-              >
+              <div key={i} data-anime-step data-anime-index={i} className={childClassName}>
                 {child}
               </div>
             ))
           : children}
       </div>
     );
-  },
+  }
 );
 
 AnimeTimeline.displayName = "AnimeTimeline";

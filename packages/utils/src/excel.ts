@@ -15,10 +15,7 @@ export interface ExcelSheetConfig {
   data: Record<string, Primitive>[];
 }
 
-async function triggerDownload(
-  workbook: import("exceljs").Workbook,
-  fileName: string,
-) {
+async function triggerDownload(workbook: import("exceljs").Workbook, fileName: string) {
   const buffer = await workbook.xlsx.writeBuffer();
   const blob = new Blob([buffer], {
     type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -36,11 +33,7 @@ async function triggerDownload(
 /**
  * Exports JSON data to a single-sheet Excel file
  */
-export async function exportToExcel(
-  data: any[],
-  fileName: string,
-  sheetName: string = "Sheet1",
-) {
+export async function exportToExcel(data: any[], fileName: string, sheetName: string = "Sheet1") {
   const ExcelJS = await import("exceljs");
   const workbook = new ExcelJS.Workbook();
   const ws = workbook.addWorksheet(sheetName);
@@ -59,10 +52,7 @@ export async function exportToExcel(
 /**
  * Exports multiple sheets to an Excel file
  */
-export async function exportMultiSheetExcel(
-  sheets: ExcelSheetConfig[],
-  fileName: string,
-) {
+export async function exportMultiSheetExcel(sheets: ExcelSheetConfig[], fileName: string) {
   const ExcelJS = await import("exceljs");
   const workbook = new ExcelJS.Workbook();
 
@@ -90,8 +80,8 @@ export async function exportMultiSheetExcel(
               acc[col.key] = val ?? "";
               return acc;
             },
-            {} as Record<string, Primitive>,
-          ),
+            {} as Record<string, Primitive>
+          )
         );
       } else {
         ws.addRow(
@@ -101,7 +91,7 @@ export async function exportMultiSheetExcel(
               return col.type === "date" ? val.toISOString() : val;
             }
             return val ?? "";
-          }),
+          })
         );
       }
     }
@@ -120,7 +110,7 @@ export async function exportStyledExcel(
     headerFontColor?: string;
     currencyFormat?: string;
     dateFormat?: string;
-  },
+  }
 ) {
   const ExcelJS = await import("exceljs");
   const workbook = new ExcelJS.Workbook();
@@ -167,8 +157,8 @@ export async function exportStyledExcel(
             acc[col.key] = row[col.key];
             return acc;
           },
-          {} as Record<string, Primitive>,
-        ),
+          {} as Record<string, Primitive>
+        )
       );
 
       dataRow.eachCell({ includeEmpty: true }, (cell, colNumber) => {

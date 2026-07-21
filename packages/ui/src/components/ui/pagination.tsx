@@ -3,8 +3,14 @@
 import React from "react";
 import { cn } from "../../lib/utils";
 
+/**
+ * @deprecated Use `CursorPagination` for new implementations.
+ * This offset-based component is retained for backward compatibility only.
+ * All new paginated views should use cursor-based pagination via
+ * `CursorPagination` + `CursorPaginationControls`.
+ */
 /* ------------------------------------------------------------------ */
-/*  Offset-based pagination (page / pageSize)                          */
+/*  Offset-based pagination (page / pageSize)  [DEPRECATED]           */
 /* ------------------------------------------------------------------ */
 
 export interface PaginationProps {

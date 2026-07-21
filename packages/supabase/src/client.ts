@@ -6,10 +6,7 @@
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 
 function getEnv(key: string): string {
-  const val =
-    typeof process !== "undefined"
-      ? process.env[key]
-      : undefined;
+  const val = typeof process !== "undefined" ? process.env[key] : undefined;
   if (!val) {
     throw new Error(
       `[supabase] Missing environment variable: ${key}. ` +

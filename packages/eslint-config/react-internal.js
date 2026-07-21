@@ -3,7 +3,12 @@ module.exports = {
   extends: ["eslint:recommended", "plugin:react-hooks/recommended"],
   parser: "@typescript-eslint/parser",
   plugins: ["@typescript-eslint", "react-hooks"],
+  globals: {
+    React: "writable",
+    JSX: "readonly",
+  },
   rules: {
+    "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": [
       "warn",
       {

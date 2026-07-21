@@ -373,6 +373,24 @@
   --os-shell-radius-lg: 24px;
   --os-shell-radius-full: 9999px;
   --os-shell-font: var(--font-sans);
+  /* Taskbar chrome: denser fill + lighter blur/shadow so video backdrop
+     does not wash contrast (login/dock keep full liquid glass). */
+  --os-shell-taskbar-surface:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.88) 0%,
+      rgba(255, 255, 255, 0.78) 45%,
+      rgba(246, 246, 250, 0.84) 100%
+    ),
+    rgba(246, 246, 250, 0.92);
+  --os-shell-taskbar-backdrop: blur(12px) saturate(135%);
+  --os-shell-taskbar-shadow:
+    0 4px 14px rgba(4, 12, 24, 0.14),
+    0 1px 3px rgba(4, 12, 24, 0.1),
+    inset 0 1px 0 var(--palette-glass-specular-top),
+    inset 0 -1px 0 var(--palette-glass-contact-bottom),
+    inset 1px 0 0 var(--palette-glass-specular-side),
+    inset -1px 0 0 var(--palette-glass-specular-side);
   --os-shell-enter-duration: 700ms;
   --os-shell-enter-ease: cubic-bezier(0.16, 1, 0.3, 1);
   --os-shell-enter-delay-1: 0ms;

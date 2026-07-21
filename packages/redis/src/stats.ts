@@ -40,10 +40,7 @@ function computePercentile(sorted: number[], p: number): number {
 
 function buildSnapshot(): CacheStatsSnapshot {
   const sorted = [...latencies].sort((a, b) => a - b);
-  const avg =
-    sorted.length > 0
-      ? sorted.reduce((sum, v) => sum + v, 0) / sorted.length
-      : 0;
+  const avg = sorted.length > 0 ? sorted.reduce((sum, v) => sum + v, 0) / sorted.length : 0;
 
   return {
     hits: stats.hits,
@@ -67,9 +64,7 @@ export function recordCacheHit(source: "l1" | "l2", latencyMs: number): void {
   const redis = getClientIfOpen();
   if (redis) {
     redis.hincrby("stats:cache", "hits", 1).catch(() => {});
-    redis
-      .hincrby("stats:cache", source === "l1" ? "l1Hits" : "l2Hits", 1)
-      .catch(() => {});
+    redis.hincrby("stats:cache", source === "l1" ? "l1Hits" : "l2Hits", 1).catch(() => {});
     redis
       .lpush("stats:latencies", latencyMs.toString())
       .then(() => {

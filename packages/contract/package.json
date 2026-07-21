@@ -8,6 +8,12 @@
     ".": "./index.ts",
     "./validation": "./validation/index.ts"
   },
+  "scripts": {
+    "test": "pnpm exec jest --passWithNoTests"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.0"
+  },
   "dependencies": {
     "zod": "^3.24.0"
   }

@@ -1,9 +1,4 @@
-import {
-  Kysely,
-  PostgresDialect,
-  type Generated,
-  type ColumnType,
-} from "kysely";
+import { Kysely, PostgresDialect, type Generated, type ColumnType } from "kysely";
 import { Pool } from "pg";
 
 // AGENT-TRACE: Simple APIError class for package-level use
@@ -89,7 +84,7 @@ export function createKyselyClient() {
 
   if (!url) {
     throw new APIError(
-      "Missing DATABASE_URL. Set it in your env (Supabase connection pool string).",
+      "Missing DATABASE_URL. Set it in your env (Supabase connection pool string)."
     );
   }
 

@@ -12,8 +12,7 @@ import { motion } from "framer-motion";
 
 import { cn } from "@repo/ui/lib/utils";
 
-export interface AnimatedGridPatternProps
-  extends ComponentPropsWithoutRef<"svg"> {
+export interface AnimatedGridPatternProps extends ComponentPropsWithoutRef<"svg"> {
   width?: number;
   height?: number;
   x?: number;
@@ -64,7 +63,7 @@ export function AnimatedGridPattern({
         iteration: 0,
       }));
     },
-    [getPos],
+    [getPos]
   );
 
   const updateSquarePosition = useCallback(
@@ -83,7 +82,7 @@ export function AnimatedGridPattern({
         return nextSquares;
       });
     },
-    [getPos],
+    [getPos]
   );
 
   useEffect(() => {
@@ -102,10 +101,7 @@ export function AnimatedGridPattern({
           setDimensions((currentDimensions) => {
             const nextWidth = entry.contentRect.width;
             const nextHeight = entry.contentRect.height;
-            if (
-              currentDimensions.width === nextWidth &&
-              currentDimensions.height === nextHeight
-            ) {
+            if (currentDimensions.width === nextWidth && currentDimensions.height === nextHeight) {
               return currentDimensions;
             }
             return { width: nextWidth, height: nextHeight };
@@ -129,24 +125,13 @@ export function AnimatedGridPattern({
       aria-hidden="true"
       className={cn(
         "pointer-events-none absolute inset-0 h-full w-full fill-gray-400/30 stroke-gray-400/30",
-        className,
+        className
       )}
       {...props}
     >
       <defs>
-        <pattern
-          id={id}
-          width={width}
-          height={height}
-          patternUnits="userSpaceOnUse"
-          x={x}
-          y={y}
-        >
-          <path
-            d={`M.5 ${height}V.5H${width}`}
-            fill="none"
-            strokeDasharray={strokeDasharray}
-          />
+        <pattern id={id} width={width} height={height} patternUnits="userSpaceOnUse" x={x} y={y}>
+          <path d={`M.5 ${height}V.5H${width}`} fill="none" strokeDasharray={strokeDasharray} />
         </pattern>
       </defs>
       <rect width="100%" height="100%" fill={`url(#${id})`} />

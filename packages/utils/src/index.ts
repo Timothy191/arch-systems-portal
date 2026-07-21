@@ -33,9 +33,7 @@ export function isObject(val: unknown): val is Record<string, unknown> {
 
 /** Remove undefined keys from an object (shallow). */
 export function compact<T extends object>(obj: T): Partial<T> {
-  return Object.fromEntries(
-    Object.entries(obj).filter(([, v]) => v !== undefined)
-  ) as Partial<T>;
+  return Object.fromEntries(Object.entries(obj).filter(([, v]) => v !== undefined)) as Partial<T>;
 }
 
 /** Merge class names (clsx-lite; filters falsy). */
@@ -56,7 +54,7 @@ export interface ThreeShiftInfo {
  */
 export function getThreeShift(
   date: Date = new Date(),
-  timeZone = "Africa/Johannesburg",
+  timeZone = "Africa/Johannesburg"
 ): ThreeShiftInfo {
   const hourStr = new Intl.DateTimeFormat("en-GB", {
     timeZone,

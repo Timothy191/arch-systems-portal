@@ -69,27 +69,6 @@ export const CacheCategory = {
   TRAINING: "training",
 };
 
-export function cacheGet(key: string): Promise<string | null> {
-  return getRedis().get(key);
-}
-
-export function cacheSet(key: string, value: string, ttl?: number): Promise<"OK"> {
-  // Use nullish coalescing so explicit ttl=0 means "no expiry"
-  const expiresIn = ttl ?? 3600;
-  if (expiresIn <= 0) {
-    return getRedis().set(key, value);
-  }
-  return getRedis().set(key, value, "EX", expiresIn);
-}
-
-export function cacheEvictL1ByPrefix(prefix: string): Promise<number> {
-  const keys = getRedis().keys(`${prefix}*`);
-  return keys.then((keyList) => {
-    if (keyList.length === 0) return 0;
-    return getRedis().del(...keyList);
-  });
-}
-
 export { getCacheStats } from "./stats";
 
 // Re-export the modern L1/L2 caching implementation from cache.ts

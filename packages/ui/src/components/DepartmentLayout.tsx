@@ -28,7 +28,7 @@ function TabGlyph({ active }: { active?: boolean }) {
     <span
       className={cn(
         "inline-block w-1.5 h-1.5 rounded-full shrink-0",
-        active ? "bg-[var(--accent-blue)]" : "bg-[var(--text-muted)]",
+        active ? "bg-[var(--accent-blue)]" : "bg-[var(--text-muted)]"
       )}
       aria-hidden
     />
@@ -67,7 +67,7 @@ export function DepartmentLayout({ department, tabs, children }: DepartmentLayou
               department.color === "violet" && "bg-dept-engineering/10 text-dept-engineering",
               department.color === "red" && "bg-dept-control-room/10 text-dept-control-room",
               department.color === "cyan" && "bg-dept-training/10 text-dept-training",
-              department.color === "indigo" && "bg-dept-satellite/10 text-dept-satellite",
+              department.color === "indigo" && "bg-dept-satellite/10 text-dept-satellite"
             )}
           >
             <TabGlyph active />
@@ -90,7 +90,7 @@ export function DepartmentLayout({ department, tabs, children }: DepartmentLayou
                   "flex items-center gap-2.5 px-3 py-1.5 rounded-md text-[13px] transition-all relative group",
                   isActive
                     ? "bg-[var(--accent-blue)]/10 text-[var(--accent-blue)] font-medium"
-                    : "text-[var(--text-secondary)] hover:text-[var(--text-heading)] hover:bg-black/[0.04]",
+                    : "text-[var(--text-secondary)] hover:text-[var(--text-heading)] hover:bg-black/[0.04]"
                 )}
               >
                 {isActive && (

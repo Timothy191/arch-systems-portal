@@ -216,10 +216,7 @@ describe("cacheSetWithTags", () => {
 
     // Verify tags were indexed by checking invalidation mock was called
     const { indexCacheKeyByTags } = jest.requireMock("../invalidation");
-    expect(indexCacheKeyByTags).toHaveBeenCalledWith("tagged-key", [
-      "tag1",
-      "tag2",
-    ]);
+    expect(indexCacheKeyByTags).toHaveBeenCalledWith("tagged-key", ["tag1", "tag2"]);
   });
 
   it("should not index tags when none provided", async () => {

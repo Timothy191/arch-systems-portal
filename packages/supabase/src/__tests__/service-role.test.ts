@@ -30,7 +30,7 @@ describe("createServiceRoleClient", () => {
 
     const { createServiceRoleClient } = require("../service-role");
     expect(() => createServiceRoleClient()).toThrow(
-      "Missing SUPABASE_URL or SUPABASE_SERVICE_KEY environment variables",
+      "Missing SUPABASE_URL or SUPABASE_SERVICE_KEY environment variables"
     );
   });
 
@@ -40,7 +40,7 @@ describe("createServiceRoleClient", () => {
 
     const { createServiceRoleClient } = require("../service-role");
     expect(() => createServiceRoleClient()).toThrow(
-      "Missing SUPABASE_URL or SUPABASE_SERVICE_KEY environment variables",
+      "Missing SUPABASE_URL or SUPABASE_SERVICE_KEY environment variables"
     );
   });
 
@@ -59,7 +59,7 @@ describe("createServiceRoleClient", () => {
           autoRefreshToken: false,
           persistSession: false,
         },
-      }),
+      })
     );
     expect(client.__type).toBe("service-client");
   });
@@ -75,7 +75,7 @@ describe("createServiceRoleClient", () => {
     expect(mockCreateClient).toHaveBeenCalledWith(
       "https://pub-test.supabase.co",
       expect.any(String),
-      expect.any(Object),
+      expect.any(Object)
     );
   });
 
@@ -90,7 +90,7 @@ describe("createServiceRoleClient", () => {
     expect(mockCreateClient).toHaveBeenCalledWith(
       "https://private.supabase.co",
       expect.any(String),
-      expect.any(Object),
+      expect.any(Object)
     );
   });
 });

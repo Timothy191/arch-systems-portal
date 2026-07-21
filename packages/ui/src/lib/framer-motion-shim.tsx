@@ -23,7 +23,7 @@ type AnyProps = React.HTMLAttributes<HTMLElement> & {
 function createMotionTag(Tag: keyof React.JSX.IntrinsicElements) {
   const Comp = React.forwardRef<HTMLElement, AnyProps>(function MotionShim(
     { children, className, style, ...rest },
-    ref,
+    ref
   ) {
     // Strip motion-only props
     const {
@@ -71,10 +71,7 @@ export function useMotionValue(initial: number | string = 0) {
   return ref.current;
 }
 
-export function useMotionTemplate(
-  _strings: TemplateStringsArray,
-  ..._values: unknown[]
-): string {
+export function useMotionTemplate(_strings: TemplateStringsArray, ..._values: unknown[]): string {
   return "";
 }
 

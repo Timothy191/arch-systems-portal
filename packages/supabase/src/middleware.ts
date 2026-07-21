@@ -10,7 +10,7 @@ function getEnv(key: string): string {
   if (!val) {
     throw new Error(
       `[supabase/middleware] Missing environment variable: ${key}. ` +
-        "Check your apps/portal/.env.local file.",
+        "Check your apps/portal/.env.local file."
     );
   }
   return val;
@@ -26,7 +26,7 @@ export interface MiddlewareClientResult {
  * mutable NextResponse that carries refreshed auth cookies.
  */
 export async function createMiddlewareClient(
-  request: NextRequest,
+  request: NextRequest
 ): Promise<MiddlewareClientResult> {
   let response = NextResponse.next({
     request: {
@@ -61,7 +61,7 @@ export async function createMiddlewareClient(
           });
         },
       },
-    },
+    }
   );
 
   return { supabase, response };

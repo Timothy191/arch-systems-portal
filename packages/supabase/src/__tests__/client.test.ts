@@ -45,7 +45,7 @@ describe("createBrowserSupabaseClient", () => {
       "test-anon-key",
       expect.objectContaining({
         auth: { persistSession: true, storage: undefined },
-      }),
+      })
     );
     expect(client.__type).toBe("browser-client");
   });

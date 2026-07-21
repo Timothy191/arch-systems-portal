@@ -27,13 +27,7 @@ const archTheme: Config = {
           "system-ui",
           "sans-serif",
         ],
-        display: [
-          "var(--font-display)",
-          "Orbitron",
-          "ui-sans-serif",
-          "system-ui",
-          "sans-serif",
-        ],
+        display: ["var(--font-display)", "Orbitron", "ui-sans-serif", "system-ui", "sans-serif"],
         mono: [
           "var(--font-mono)",
           "ui-monospace",

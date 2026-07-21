@@ -68,12 +68,7 @@ describe("instrumentedFetch", () => {
       method: "POST",
     });
 
-    expect(recordDbQuery).toHaveBeenCalledWith(
-      "machines",
-      "POST",
-      expect.any(Number),
-      true,
-    );
+    expect(recordDbQuery).toHaveBeenCalledWith("machines", "POST", expect.any(Number), true);
   });
 
   it("should handle failed requests and report success=false", async () => {
@@ -86,12 +81,7 @@ describe("instrumentedFetch", () => {
 
     await instrumentedFetch(new URL("http://example.com/rest/v1/employees"));
 
-    expect(recordDbQuery).toHaveBeenCalledWith(
-      "employees",
-      "GET",
-      expect.any(Number),
-      false,
-    );
+    expect(recordDbQuery).toHaveBeenCalledWith("employees", "GET", expect.any(Number), false);
   });
 
   it("should handle URL input objects", async () => {
@@ -104,12 +94,7 @@ describe("instrumentedFetch", () => {
 
     await instrumentedFetch(new URL("http://example.com/rest/v1/data"));
 
-    expect(recordDbQuery).toHaveBeenCalledWith(
-      "data",
-      "GET",
-      expect.any(Number),
-      true,
-    );
+    expect(recordDbQuery).toHaveBeenCalledWith("data", "GET", expect.any(Number), true);
   });
 
   it("should extract table name correctly from URL path", async () => {
@@ -120,16 +105,9 @@ describe("instrumentedFetch", () => {
       status: 200,
     } as Response);
 
-    await instrumentedFetch(
-      "http://example.com/rest/v1/rpc/get_dashboard?param=1",
-    );
+    await instrumentedFetch("http://example.com/rest/v1/rpc/get_dashboard?param=1");
 
-    expect(recordDbQuery).toHaveBeenCalledWith(
-      "rpc",
-      "GET",
-      expect.any(Number),
-      true,
-    );
+    expect(recordDbQuery).toHaveBeenCalledWith("rpc", "GET", expect.any(Number), true);
   });
 
   it("should report 'unknown' table when URL has no rest path", async () => {
@@ -142,19 +120,14 @@ describe("instrumentedFetch", () => {
 
     await instrumentedFetch("http://example.com/health");
 
-    expect(recordDbQuery).toHaveBeenCalledWith(
-      "unknown",
-      "GET",
-      expect.any(Number),
-      true,
-    );
+    expect(recordDbQuery).toHaveBeenCalledWith("unknown", "GET", expect.any(Number), true);
   });
 
   it("should re-throw when fetch throws", async () => {
     (global.fetch as jest.Mock).mockRejectedValue(new Error("Network error"));
-    await expect(
-      instrumentedFetch("http://example.com/rest/v1/test"),
-    ).rejects.toThrow("Network error");
+    await expect(instrumentedFetch("http://example.com/rest/v1/test")).rejects.toThrow(
+      "Network error"
+    );
   });
 
   it("should record failure timing when fetch throws", async () => {
@@ -162,16 +135,9 @@ describe("instrumentedFetch", () => {
     (globalThis as any).__recordDbQuery = recordDbQuery;
     (global.fetch as jest.Mock).mockRejectedValue(new Error("Network error"));
 
-    await expect(
-      instrumentedFetch("http://example.com/rest/v1/test"),
-    ).rejects.toThrow();
+    await expect(instrumentedFetch("http://example.com/rest/v1/test")).rejects.toThrow();
     // The finally block runs even on error, so recordDbQuery gets called
-    expect(recordDbQuery).toHaveBeenCalledWith(
-      "test",
-      "GET",
-      expect.any(Number),
-      false,
-    );
+    expect(recordDbQuery).toHaveBeenCalledWith("test", "GET", expect.any(Number), false);
   });
 });
 
@@ -213,9 +179,7 @@ describe("getUserSafely", () => {
   });
 
   it("should return null when getUser throws a refresh token error", async () => {
-    mockGetUser().mockRejectedValue(
-      new Error("Invalid Refresh Token: Refresh Token Not Found"),
-    );
+    mockGetUser().mockRejectedValue(new Error("Invalid Refresh Token: Refresh Token Not Found"));
     const result = await getUserSafely(getSupabaseClient());
     expect(result).toBeNull();
   });

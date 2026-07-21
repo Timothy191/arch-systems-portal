@@ -23,11 +23,7 @@ jest.mock("../client.js", () => ({
   getRedisClient: jest.fn().mockResolvedValue(mockRedis),
 }));
 
-import {
-  indexCacheKeyByTags,
-  cacheInvalidateTags,
-  cacheInvalidatePrefixes,
-} from "../invalidation";
+import { indexCacheKeyByTags, cacheInvalidateTags, cacheInvalidatePrefixes } from "../invalidation";
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -43,14 +39,8 @@ describe("indexCacheKeyByTags", () => {
     expect(mockRedis.multi).toHaveBeenCalled();
     const multiInstance = mockRedis.multi();
     expect(multiInstance.sAdd).toHaveBeenCalledTimes(2);
-    expect(multiInstance.sAdd).toHaveBeenCalledWith(
-      "arch:__tags__:tag1",
-      "cache-key-1",
-    );
-    expect(multiInstance.sAdd).toHaveBeenCalledWith(
-      "arch:__tags__:tag2",
-      "cache-key-1",
-    );
+    expect(multiInstance.sAdd).toHaveBeenCalledWith("arch:__tags__:tag1", "cache-key-1");
+    expect(multiInstance.sAdd).toHaveBeenCalledWith("arch:__tags__:tag2", "cache-key-1");
     expect(multiInstance.exec).toHaveBeenCalled();
   });
 

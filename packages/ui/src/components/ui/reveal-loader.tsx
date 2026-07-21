@@ -10,12 +10,7 @@ interface RevealLoaderProps {
   gap?: number;
 }
 
-export function RevealLoader({
-  className,
-  rows = 3,
-  columns = 1,
-  gap = 12,
-}: RevealLoaderProps) {
+export function RevealLoader({ className, rows = 3, columns = 1, gap = 12 }: RevealLoaderProps) {
   return (
     <div
       className={cn("w-full", className)}
@@ -31,7 +26,7 @@ export function RevealLoader({
           className={cn(
             "relative overflow-hidden rounded-xl",
             "bg-[var(--bg-tertiary)]/50 border border-[var(--border-default)]/30",
-            "h-24",
+            "h-24"
           )}
         >
           {/* Shimmer sweep */}

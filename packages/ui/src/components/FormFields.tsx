@@ -31,14 +31,9 @@ export function FormInput({
   const errorId = error ? `${inputId}-error` : undefined;
   return (
     <div className="space-y-2">
-      <label
-        htmlFor={inputId}
-        className="block text-sm text-[var(--text-secondary)]"
-      >
+      <label htmlFor={inputId} className="block text-sm text-[var(--text-secondary)]">
         {label}
-        {optional && (
-          <span className="text-[var(--text-muted)]"> (Optional)</span>
-        )}
+        {optional && <span className="text-[var(--text-muted)]"> (Optional)</span>}
         {!optional && props.required && <span className="text-danger"> *</span>}
       </label>
       <input
@@ -57,8 +52,7 @@ export function FormInput({
   );
 }
 
-interface FormSelectProps
-  extends React.SelectHTMLAttributes<HTMLSelectElement> {
+interface FormSelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   label: string;
   error?: string;
   optional?: boolean;
@@ -81,14 +75,9 @@ export function FormSelect({
   const errorId = error ? `${inputId}-error` : undefined;
   return (
     <div className="space-y-2">
-      <label
-        htmlFor={inputId}
-        className="block text-sm text-[var(--text-secondary)]"
-      >
+      <label htmlFor={inputId} className="block text-sm text-[var(--text-secondary)]">
         {label}
-        {optional && (
-          <span className="text-[var(--text-muted)]"> (Optional)</span>
-        )}
+        {optional && <span className="text-[var(--text-muted)]"> (Optional)</span>}
       </label>
       <select
         id={inputId}
@@ -113,8 +102,7 @@ export function FormSelect({
   );
 }
 
-interface FormTextareaProps
-  extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+interface FormTextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   label: string;
   error?: string;
   optional?: boolean;
@@ -133,14 +121,9 @@ export function FormTextarea({
   const errorId = error ? `${inputId}-error` : undefined;
   return (
     <div className="space-y-2">
-      <label
-        htmlFor={inputId}
-        className="block text-sm text-[var(--text-secondary)]"
-      >
+      <label htmlFor={inputId} className="block text-sm text-[var(--text-secondary)]">
         {label}
-        {optional && (
-          <span className="text-[var(--text-muted)]"> (Optional)</span>
-        )}
+        {optional && <span className="text-[var(--text-muted)]"> (Optional)</span>}
       </label>
       <textarea
         id={inputId}
@@ -158,17 +141,11 @@ export function FormTextarea({
   );
 }
 
-interface SubmitButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface SubmitButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   loading?: boolean;
 }
 
-export function SubmitButton({
-  loading,
-  children,
-  className,
-  ...props
-}: SubmitButtonProps) {
+export function SubmitButton({ loading, children, className, ...props }: SubmitButtonProps) {
   return (
     <button
       type="submit"
@@ -176,7 +153,7 @@ export function SubmitButton({
       className={cn(
         "bg-[var(--accent-blue)] hover:bg-[var(--accent-blue)]/90 disabled:bg-[var(--bg-tertiary)] disabled:text-[var(--text-muted)]",
         "text-[var(--bg-secondary)] font-medium py-2.5 px-6 rounded-lg transition-colors",
-        className,
+        className
       )}
       {...props}
     >

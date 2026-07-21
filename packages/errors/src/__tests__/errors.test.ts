@@ -1,3 +1,4 @@
+/* eslint-env jest */
 import {
   AppError,
   APIError,
@@ -9,12 +10,7 @@ import {
   ConflictError,
   RateLimitError,
 } from "../index";
-import {
-  isAppError,
-  isValidationError,
-  isAuthError,
-  isNotFoundError,
-} from "../type-guards";
+import { isAppError, isValidationError, isAuthError, isNotFoundError } from "../type-guards";
 
 describe("AppError", () => {
   it("should create an error with message and string code", () => {

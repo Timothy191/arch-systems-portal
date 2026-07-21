@@ -22,6 +22,6 @@ interface KPIGridProps {
   cols?: number;
 }
 
-export function KPIGrid({ children, cols }: KPIGridProps) {
+export function KPIGrid({ children, cols: _cols }: KPIGridProps) {
   return <div>{children}</div>;
 }

@@ -1,19 +1,14 @@
 "use client";
 
 import React, { memo } from "react";
-import {
-  BaseEdge,
-  EdgeLabelRenderer,
-  type EdgeProps,
-  getBezierPath,
-} from "@xyflow/react";
+import { BaseEdge, EdgeLabelRenderer, type EdgeProps, getBezierPath } from "@xyflow/react";
 
 // =============================================================================
 // Flow Edge Component
 // =============================================================================
 
 export const FlowEdge = memo(function FlowEdge({
-  // eslint-disable-next-line no-unused-vars
+  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
   id,
   sourceX,
   sourceY,

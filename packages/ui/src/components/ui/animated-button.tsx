@@ -35,24 +35,17 @@ const animatedButtonVariants = cva(
       variant: "default",
       size: "default",
     },
-  },
+  }
 );
 
 interface AnimatedButtonProps
-  extends Omit<HTMLMotionProps<"button">, "size">,
-    VariantProps<typeof animatedButtonVariants> {
+  extends Omit<HTMLMotionProps<"button">, "size">, VariantProps<typeof animatedButtonVariants> {
   hoverScale?: number;
   tapScale?: number;
 }
 
-export const AnimatedButton = React.forwardRef<
-  HTMLButtonElement,
-  AnimatedButtonProps
->(
-  (
-    { className, variant, size, hoverScale = 1.02, tapScale = 0.97, ...props },
-    ref,
-  ) => {
+export const AnimatedButton = React.forwardRef<HTMLButtonElement, AnimatedButtonProps>(
+  ({ className, variant, size, hoverScale = 1.02, tapScale = 0.97, ...props }, ref) => {
     return (
       <motion.button
         ref={ref}
@@ -63,7 +56,7 @@ export const AnimatedButton = React.forwardRef<
         {...props}
       />
     );
-  },
+  }
 );
 
 AnimatedButton.displayName = "AnimatedButton";

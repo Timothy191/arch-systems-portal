@@ -62,7 +62,7 @@ export interface DailyLogs {
   id: string;
   department_id: string;
   log_date: string; // DATE type
-  shift: 'day' | 'night';
+  shift: "day" | "night";
   notes: string | null;
   created_at: Date;
 }
@@ -117,7 +117,7 @@ export interface AccessLogs {
   id?: string;
   badge_id: string | null;
   access_type: string;
-  direction: 'IN' | 'OUT';
+  direction: "IN" | "OUT";
   gate_location: string;
   access_granted?: boolean;
   denial_reason: string | null;
@@ -130,7 +130,7 @@ export interface ControlRoomShifts {
   id: string;
   department_id: string;
   shift_date: string;
-  shift_type: 'day' | 'night';
+  shift_type: "day" | "night";
   crew_size: number;
   notes: string | null;
   created_at: Date;
@@ -150,7 +150,7 @@ export interface ControlRoomActivities {
 export interface Badges {
   id?: string;
   qr_code: string;
-  entity_type: 'personnel' | 'visitor';
+  entity_type: "personnel" | "visitor";
   personnel_id: string | null;
   visitor_id: string | null;
   is_active?: boolean;
@@ -179,7 +179,7 @@ export interface MachineOperations {
   id: string;
   machine_id: string;
   shift_date: string;
-  shift_type: 'day' | 'night';
+  shift_type: "day" | "night";
   hours_operated: number;
   total_loads: number;
   created_at: Date;
@@ -189,7 +189,7 @@ export interface ExcavatorActivity {
   id: string;
   excavator_id: string;
   activity_date: string;
-  shift_type: 'day' | 'night';
+  shift_type: "day" | "night";
   hours_worked: number;
   loads_count: number;
   created_at: Date;
@@ -199,7 +199,7 @@ export interface DozerRolls {
   id: string;
   dozer_id: string;
   roll_date: string;
-  shift_type: 'day' | 'night';
+  shift_type: "day" | "night";
   rolls_count: number;
   created_at: Date;
 }
@@ -269,7 +269,7 @@ export interface DrillOperations {
   id: string;
   machine_id: string;
   shift_date: string;
-  shift_type: 'day' | 'night';
+  shift_type: "day" | "night";
   meters_drilled: number;
   created_at: Date;
 }
@@ -318,7 +318,7 @@ export interface ExcavatorDumperAssignments {
   excavator_id: string;
   dumper_id: string;
   shift_date: string;
-  shift_type: 'day' | 'night';
+  shift_type: "day" | "night";
   created_at: Date;
 }
 
@@ -358,7 +358,7 @@ export interface HourlyLoads {
   department_id: string;
   machine_id: string;
   load_date: string;
-  shift_type: 'day' | 'night';
+  shift_type: "day" | "night";
   hour_01: number;
   hour_02: number;
   hour_03: number;
@@ -461,7 +461,7 @@ export interface ProductionLogs {
   id: string;
   machine_id: string;
   shift_date: string;
-  shift_type: 'day' | 'night';
+  shift_type: "day" | "night";
   production_data: Json;
   created_at: Date;
 }
@@ -538,6 +538,13 @@ export interface VectorSearchPerformance {
   duration_ms: number;
   created_at: Date;
 }
+
+// Row type aliases for query-builder
+export type DepartmentRow = Departments;
+export type EmployeeRow = Employees;
+export type MachineRow = Machines;
+export type DailyLogRow = DailyLogs;
+export type MachineHoursRow = MachineHours;
 
 // Main database interface
 export interface Database {

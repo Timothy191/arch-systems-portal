@@ -70,15 +70,13 @@ describe("createMiddlewareClient", () => {
       "test-anon-key",
       expect.objectContaining({
         cookies: expect.any(Object),
-      }),
+      })
     );
   });
 
   it("should pass cookies from the request to Supabase", async () => {
     const mockCookieGetAll = (globalThis as any).__mockCookieGetAll;
-    mockCookieGetAll.mockReturnValue([
-      { name: "sb-auth-token", value: "token123" },
-    ]);
+    mockCookieGetAll.mockReturnValue([{ name: "sb-auth-token", value: "token123" }]);
 
     const { NextRequest } = jest.requireMock("next/server");
     const mockReq = new NextRequest();
@@ -121,7 +119,7 @@ describe("createMiddlewareClient", () => {
         path: "/",
         httpOnly: true,
         sameSite: "lax",
-      }),
+      })
     );
   });
 
@@ -145,7 +143,7 @@ describe("createMiddlewareClient", () => {
     expect(mockResponseCookieSet).toHaveBeenCalledWith(
       "t",
       "v",
-      expect.objectContaining({ secure: true }),
+      expect.objectContaining({ secure: true })
     );
 
     // Test development
@@ -156,8 +154,7 @@ describe("createMiddlewareClient", () => {
 
     await createMiddlewareClient(new NextRequest());
 
-    const { createServerClient: createClient2 } =
-      jest.requireMock("@supabase/ssr");
+    const { createServerClient: createClient2 } = jest.requireMock("@supabase/ssr");
     const allCalls = createClient2.mock.calls;
     const latestCall = allCalls[allCalls.length - 1];
     latestCall[2].cookies.setAll([{ name: "t", value: "v", options: {} }]);
@@ -165,7 +162,7 @@ describe("createMiddlewareClient", () => {
     expect(mockResponseCookieSet).toHaveBeenCalledWith(
       "t",
       "v",
-      expect.objectContaining({ secure: false }),
+      expect.objectContaining({ secure: false })
     );
 
     process.env.NODE_ENV = originalNodeEnv;

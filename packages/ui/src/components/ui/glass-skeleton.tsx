@@ -8,7 +8,9 @@ interface GlassSkeletonProps {
 
 export function GlassSkeleton({ showHeader = true, rows = 3, className = "" }: GlassSkeletonProps) {
   return (
-    <div className={`space-y-4 animate-pulse bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-6 ${className}`}>
+    <div
+      className={`space-y-4 animate-pulse bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-6 ${className}`}
+    >
       {showHeader && (
         <div className="flex items-center space-x-4 mb-6">
           <div className="h-12 w-12 bg-white/10 rounded-full" />

@@ -34,7 +34,7 @@ export function DropdownMenu({ children, open, onOpenChange }: DropdownMenuProps
       if (!isControlled) setUncontrolledOpen(next);
       onOpenChange?.(next);
     },
-    [isControlled, onOpenChange],
+    [isControlled, onOpenChange]
   );
 
   React.useEffect(() => {
@@ -59,7 +59,7 @@ export function DropdownMenu({ children, open, onOpenChange }: DropdownMenuProps
 
   const value = React.useMemo<DropdownMenuContextValue>(
     () => ({ open: currentOpen, setOpen }),
-    [currentOpen, setOpen],
+    [currentOpen, setOpen]
   );
 
   return (
@@ -120,7 +120,11 @@ export function DropdownMenuContent({
     "w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none";
 
   return (
-    <div role="menu" style={{ marginTop: sideOffset }} className={`${base} ${className ?? fallback}`}>
+    <div
+      role="menu"
+      style={{ marginTop: sideOffset }}
+      className={`${base} ${className ?? fallback}`}
+    >
       {children}
     </div>
   );
@@ -167,8 +171,7 @@ export function DropdownMenuItem({
         handleSelect(e);
       }}
       className={
-        className ??
-        "block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+        className ?? "block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
       }
     >
       {children}

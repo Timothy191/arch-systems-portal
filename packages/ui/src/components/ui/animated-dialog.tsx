@@ -41,7 +41,8 @@ export function AnimatedDialog({
   className,
 }: AnimatedDialogProps) {
   const titleId = useId();
-  const descriptionId = description ? useId() : undefined;
+  const descId = useId();
+  const descriptionId = description ? descId : undefined;
   const panelRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<Element | null>(null);
 
@@ -82,8 +83,7 @@ export function AnimatedDialog({
 
       if (e.key !== "Tab" || !panelRef.current) return;
 
-      const focusable =
-        panelRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR);
+      const focusable = panelRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR);
       if (focusable.length === 0) {
         e.preventDefault();
         return;
@@ -108,7 +108,7 @@ export function AnimatedDialog({
         }
       }
     },
-    [onClose],
+    [onClose]
   );
 
   return (
@@ -148,7 +148,7 @@ export function AnimatedDialog({
             transition={{ type: "spring", stiffness: 300, damping: 28 }}
             className={cn(
               "relative z-10 w-full max-w-lg rounded-2xl border border-[var(--border-default)] bg-[var(--bg-secondary)]/90 backdrop-blur-xl p-6 outline-none",
-              className,
+              className
             )}
           >
             {/* Close button */}
@@ -164,18 +164,12 @@ export function AnimatedDialog({
             {(title || description) && (
               <div className="mb-4 pr-8">
                 {title && (
-                  <h2
-                    id={titleId}
-                    className="text-lg font-medium text-[var(--text-heading)]"
-                  >
+                  <h2 id={titleId} className="text-lg font-medium text-[var(--text-heading)]">
                     {title}
                   </h2>
                 )}
                 {description && (
-                  <p
-                    id={descriptionId}
-                    className="text-sm text-[var(--text-muted)] mt-1"
-                  >
+                  <p id={descriptionId} className="text-sm text-[var(--text-muted)] mt-1">
                     {description}
                   </p>
                 )}

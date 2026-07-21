@@ -1720,6 +1720,41 @@
   -webkit-font-smoothing: antialiased;
 }
 
+/* Hub hero title — Anurati display face, charcoal, raised extrusion 3D */
+.hub-hero-title,
+.hub-hero-title-letter {
+  font-family: var(--font-display), "Orbitron", ui-sans-serif, system-ui, sans-serif;
+  color: var(--text-heading, #0f172a);
+  max-width: 100%;
+  -webkit-font-smoothing: antialiased;
+}
+
+.hub-hero-title-letter {
+  display: inline-block;
+  color: var(--text-heading, #0f172a);
+  text-shadow:
+    /* top-left specular */
+    -1px -1px 0 rgba(255, 255, 255, 0.95),
+    0 -1px 0 rgba(255, 255, 255, 0.8),
+    /* stepped depth */
+    1px 1px 0 rgba(15, 23, 42, 0.18),
+    2px 2px 0 rgba(15, 23, 42, 0.14),
+    3px 3px 0 rgba(15, 23, 42, 0.11),
+    4px 4px 0 rgba(15, 23, 42, 0.08),
+    5px 5px 0 rgba(15, 23, 42, 0.06),
+    /* soft contact shadow */
+    6px 6px 10px rgba(15, 23, 42, 0.22);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hub-hero-title-letter {
+    text-shadow:
+      -1px -1px 0 rgba(255, 255, 255, 0.85),
+      2px 2px 0 rgba(15, 23, 42, 0.12),
+      3px 3px 6px rgba(15, 23, 42, 0.16);
+  }
+}
+
 .login-brand-mark {
   display: inline-flex;
   align-items: center;
@@ -1861,6 +1896,11 @@
 
 .os-shell--taskbar {
   border-radius: var(--os-shell-radius-full);
+  background: var(--os-shell-taskbar-surface);
+  backdrop-filter: var(--os-shell-taskbar-backdrop);
+  -webkit-backdrop-filter: var(--os-shell-taskbar-backdrop);
+  box-shadow: var(--os-shell-taskbar-shadow);
+  color: var(--text-heading);
 }
 
 .os-shell--login,
@@ -1870,7 +1910,14 @@
 
 /* Reduced-transparency / low-performance fallback: opaque surface, no blur */
 .low-perf-fallback .os-shell {
-  background: rgba(246, 246, 250, 0.77);
+  background: rgba(246, 246, 250, 0.92);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
+}
+
+.low-perf-fallback .os-shell--taskbar {
+  background: rgba(246, 246, 250, 0.96);
+  box-shadow:
+    0 2px 8px rgba(4, 12, 24, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }

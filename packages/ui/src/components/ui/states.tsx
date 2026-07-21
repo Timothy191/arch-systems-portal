@@ -23,12 +23,7 @@ export interface SpinnerProps extends React.HTMLAttributes<HTMLSpanElement> {
   label?: string;
 }
 
-export function Spinner({
-  size = "md",
-  label,
-  className,
-  ...props
-}: SpinnerProps) {
+export function Spinner({ size = "md", label, className, ...props }: SpinnerProps) {
   return (
     <span
       role="status"
@@ -58,7 +53,7 @@ export function LoadingState({
       aria-live="polite"
       className={cn(
         "flex flex-col items-center justify-center gap-3 py-8 text-[var(--text-secondary)] text-sm",
-        className,
+        className
       )}
     >
       <Spinner size={iconSize} />
@@ -84,14 +79,12 @@ export function EmptyState({
     <div
       className={cn(
         "flex flex-col items-center justify-center gap-2 py-8 text-center text-[var(--text-secondary)] text-sm",
-        className,
+        className
       )}
     >
       {icon ?? <Inbox className="h-6 w-6 text-[var(--text-muted)]" />}
       <p className="font-medium text-[var(--text-body)]">{title}</p>
-      {description ? (
-        <p className="text-[var(--text-muted)]">{description}</p>
-      ) : null}
+      {description ? <p className="text-[var(--text-muted)]">{description}</p> : null}
     </div>
   );
 }
@@ -129,7 +122,7 @@ export function FormError({ message, className }: FormErrorProps) {
       aria-live="assertive"
       className={cn(
         "flex items-center gap-2 rounded-lg border border-[var(--accent-red)]/30 bg-[var(--accent-red)]/10 px-3 py-2 text-sm text-[var(--accent-red)]",
-        className,
+        className
       )}
     >
       <AlertCircle className="h-4 w-4 shrink-0" />
