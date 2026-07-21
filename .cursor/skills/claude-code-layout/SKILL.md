@@ -13,3 +13,9 @@ Standard: `.cursor/standards/claude-code/STANDARD.md`
 
 1. `.claude/scripts/sync-surfaces.sh`
 2. `scripts/validate.sh`
+
+## See also
+
+- [`skill-layout`](../skill-layout/SKILL.md) — skill folder standard
+- [`agent-layout`](../agent-layout/SKILL.md) — Cursor hybrid agents
+- Agent families: [`../../agents/_shared/references/agent-families.md`](../../agents/_shared/references/agent-families.md)

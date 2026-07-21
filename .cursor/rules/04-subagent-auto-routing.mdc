@@ -13,7 +13,7 @@ Project subagents live in `.cursor/agents/`. When a user task matches a row belo
 |---|---|---|---|
 | Non-trivial multi-step work, map critical aspects/gaps/handoffs, pre-flight outline, "outline first", scout scope before specialists | `fast-outliner` | **Before** other agents | Implementation, visual design, docs sync, idle fill, adversarial review |
 | Landing/branded/marketing UI, hero, first viewport, visual composition, "looks AI", brand hierarchy | `frontend-design` | **Before** implementing UI | App Router plumbing, CRUD without branded need, docs sync, outlining, sceptic review |
-| Portal pages/components/forms, App Router, Server Actions UI, Tailwind in `apps/portal`, a11y wiring | `frontend-implementer` | **When** building/changing portal UI | Branded first-viewport composition, docs sync, outlining, idle work, sceptic |
+| Portal pages/components/forms, App Router, Server Actions UI, Tailwind in `apps/portal`, a11y wiring | `frontend-implementer` | **When** building/changing portal UI | End-to-end vertical slice (nextjs-fullstack), branded first-viewport, docs sync, outlining, idle, sceptic |
 | End-to-end portal feature, Next.js fullstack slice, RSC+Server Actions+data+UI together, "fullstack", vertical slice | `nextjs-fullstack` | **When** feature spans UI + server data/actions | UI-only paint, branded hero only, pure API architecture, AI docs, sceptic |
 | Skills, rules, agents, hooks, AGENTS drift, CLAUDE.md, wiki, docs sync | `ai-docs-sync` | **When** auditing/changing AI/docs surfaces | Product UI, visual design, formal alignment score, adversarial code review |
 | Review, reality-check, "is this done", verify fix, PR/diff critique, production readiness, sceptic/skeptic | `sceptic` | **After** non-trivial changes, **before** claiming done | Formal score emission, UI implementation, docs sync, outlining |
@@ -35,6 +35,7 @@ Project subagents live in `.cursor/agents/`. When a user task matches a row belo
 | Root cause hypothesis provided, deploy fix after diagnosis, heal from stated cause, close incident loop, fix + harden AI surfaces | `root-cause-healer` | **When hypothesis exists** | Pure analysis without hypothesis, UI-only, formal score |
 | Audit imports/paths, broken module resolution, after file moves/renames/refactors, tsconfig path map review | `import-auditor` | **After** import/path changes | Security review, UI, performance-only |
 | **System optimization, bloat detection, compliance enforcement, skill rot pruning, token cache optimization, unbloating AI surfaces** | `ai-system-optimizer` | **Background/maint cycles** | Product features, frontend UI, security audits, test writing |
+| **Agent memory updates from transcripts, high-signal pattern extraction, AGENTS.md integration** | `agents-memory-updater` | **When** processing transcripts for memory | Real-time decisions, secrets storage, one-off details, ai-docs-sync |
 | Repeatable procedure after 3+ successes, 5+ tool-call task, error recovery, user correction, or Alignment FAIL with pattern | `skill-self-improve` **skill** | **After** done or FAIL (parent runs skill) | Inventing AGENTS policy; duplicate skills; replacing sceptic/score |
 | **Every user prompt** — background layout/sync/dedupe; parent awaits on AI-surface work | `ai-maintenance-checker` | **Start** of prompt (background) | Product features, AGENTS policy edits, ai-docs-sync rewrites, sceptic |
 
@@ -51,6 +52,7 @@ Project subagents live in `.cursor/agents/`. When a user task matches a row belo
 9. **Descriptions win.** Each agent's `description` frontmatter is the trigger source of truth.
 10. **Do not invent agents.** Only route to files under `.cursor/agents/` (skills are separate).
 11. **User override.** If the user names an agent, use that agent even if another also matches.
+12. **Swarm edge / Critique→Refine** (on demand): `.cursor/agents/_shared/references/swarm-edge-critique-refine.md` — score handoffs, prune dead routes; Generate→Critique(`sceptic`)→Refine→Score(`agent-alignment-score`).
 
 ## Inventory (keep in sync)
 
@@ -58,7 +60,7 @@ Project subagents live in `.cursor/agents/`. When a user task matches a row belo
 |---|---|---|---|
 | fast-outliner | `fast-outliner.md` | `fast-outliner/` | No implementation, design, docs, idle, sceptic |
 | frontend-design | `frontend-design.md` | `frontend-design/` | No plumbing, CRUD-only, docs, outline, sceptic |
-| frontend-implementer | `frontend-implementer.md` | `frontend-implementer/` | No branded hero, docs, outline, idle, sceptic |
+| frontend-implementer | `frontend-implementer.md` | `frontend-implementer/` | No fullstack slice, branded hero, docs, outline, idle, sceptic |
 | nextjs-fullstack | `nextjs-fullstack.md` | `nextjs-fullstack/` | No UI-only, brand hero, pure API arch, docs, sceptic |
 | ai-docs-sync | `ai-docs-sync.md` | `ai-docs-sync/` | No UI, design, formal score, sceptic |
 | sceptic | `sceptic.md` | `sceptic/` | No formal score, UI, docs, outline |
@@ -81,9 +83,10 @@ Project subagents live in `.cursor/agents/`. When a user task matches a row belo
 | root-cause-healer | `root-cause-healer.md` | `root-cause-healer/` | No hypothesis, UI-only, formal score |
 | import-auditor | `import-auditor.md` | `import-auditor/` | Security, UI, implementing fixes |
 | ai-system-optimizer | `ai-system-optimizer.md` | (collateral optional) | No product features, UI, security, tests |
+| agents-memory-updater | `agents-memory-updater.md` | `agents-memory-updater/` | Real-time decisions, secrets storage, one-off details, ai-docs-sync |
 
 Layout standard: `.cursor/standards/agent-layout/STANDARD.md`  
 AI system command: `pnpm ai` · `.cursor/standards/ai-system/STANDARD.md`  
-Shared refs: `.cursor/agents/_shared/references/`
+Shared refs: `.cursor/agents/_shared/references/` · families (orchestrators, not flattened agents): `_shared/references/agent-families.md`
 
 When adding a new project agent, update this table in the same change.

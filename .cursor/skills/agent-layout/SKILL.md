@@ -46,6 +46,12 @@ Subagents **must** be flat `.cursor/agents/<name>.md` — Cursor does not load n
 - CLI wrappers: [`references/cli-headless-wrappers.md`](references/cli-headless-wrappers.md)
 - Skills counterpart: `.cursor/skills/skill-layout/`
 
+## See also
+
+- [`skill-layout`](../skill-layout/SKILL.md) — skill folder standard
+- [`claude-code-layout`](../claude-code-layout/SKILL.md) — `.claude/` sync/validate
+- Agent families: [`../../agents/_shared/references/agent-families.md`](../../agents/_shared/references/agent-families.md)
+
 ## Related surfaces
 
 | Surface | Path                                    |

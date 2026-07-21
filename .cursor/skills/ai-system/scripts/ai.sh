@@ -1,1 +1,1 @@
-../../../scripts/ai.sh
+../../../../scripts/ai.sh

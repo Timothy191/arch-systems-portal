@@ -48,8 +48,7 @@ for base in .cursor/skills .qoder/skills .github/skills; do
     if grep -qE '(^|/)scripts/' "$skill_md" && [[ ! -d "${dir}scripts" ]]; then
       warn "$name: SKILL.md references scripts/ but directory missing"
     fi
-    # Vendored/community skills may exceed lean limit
-    if [[ "$name" != awesome-copilot--* ]] && [[ $(wc -l < "$skill_md") -gt 80 ]]; then
+    if [[ $(wc -l < "$skill_md") -gt 80 ]]; then
       warn "$name: SKILL.md >80 lines — move detail to references/"
     fi
   done

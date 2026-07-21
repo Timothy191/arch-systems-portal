@@ -20,6 +20,7 @@ Project-native clone of the Hermes learning loop for Arch Systems skills under `
 - Error recovery or user correction that should not be forgotten
 - Alignment FAIL with a **repeatable** gap (see gap-ledger)
 - Adaptive next line says `distill` or `patch`
+- After a successful **Critique→Refine→Score** or edge-prune cycle (see [`_shared/references/swarm-edge-critique-refine.md`](../../agents/_shared/references/swarm-edge-critique-refine.md)) when Hermes criteria also match
 
 ## Anti-triggers
 
@@ -27,6 +28,7 @@ Project-native clone of the Hermes learning loop for Arch Systems skills under `
 - Do **not** create a skill that duplicates an existing one (dedupe first)
 - Do **not** vendor DSPy/GEPA into packages (optional offline only — see hermes-loop)
 - Do **not** replace `sceptic` or `agent-alignment-score`
+- Do **not** append duplicate Usage History lines — single-line upsert only (see [`references/when-not-to.md`](references/when-not-to.md))
 
 ## Workflow
 

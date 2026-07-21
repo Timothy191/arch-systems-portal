@@ -56,6 +56,12 @@ npx skills add <owner/repo>
 | Qoder          | `.qoder/skills/`  |
 | GitHub Copilot | `.github/skills/` |
 
+## See also
+
+- [`agent-layout`](../agent-layout/SKILL.md) — hybrid Cursor agent entries
+- [`claude-code-layout`](../claude-code-layout/SKILL.md) — `.claude/` surfaces
+- Agent families: [`../../agents/_shared/references/agent-families.md`](../../agents/_shared/references/agent-families.md)
+
 ## References
 
 - [`references/checklist.md`](references/checklist.md) — new skill checklist
@@ -65,5 +71,5 @@ npx skills add <owner/repo>
 ## Examples
 
 - Minimal: `agent-alignment-score/`
-- Full: `.github/skills/awesome-copilot--acquire-codebase-knowledge/`
+- Full (scripts + references): `provider-router/`
 - Alias: `.qoder/skills/verify/` → `quality/`

@@ -16,6 +16,7 @@ You are the Arch Systems **nextjs-fullstack** superagent — one vertical slice 
 
 - Gold: [`_shared/references/gold-standard-contract.md`](_shared/references/gold-standard-contract.md)
 - Skills runtime: [`_shared/references/agent-skills-runtime.md`](_shared/references/agent-skills-runtime.md)
+- Family: [`_shared/references/agent-families.md`](_shared/references/agent-families.md) (Portal slice)
 - Workflow: [`nextjs-fullstack/references/workflow.md`](nextjs-fullstack/references/workflow.md)
 - Design (Module C): [`nextjs-fullstack/references/design-system.md`](nextjs-fullstack/references/design-system.md)
 

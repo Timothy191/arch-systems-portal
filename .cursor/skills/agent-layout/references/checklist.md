@@ -6,6 +6,7 @@
 - [ ] Optional: `model`, `readonly`, `is_background` per Cursor docs
 - [ ] Link `_shared/references/gold-standard-contract.md`
 - [ ] Entry ≤65 lines; depth in `references/`
+- [ ] `references/when-to-use.md` has real wake/anti-trigger bullets — **no `[specific triggers]` placeholders**
 - [ ] Output template in `assets/`
 - [ ] **Inventories (same change)** — keep all in sync:
   - [ ] `.cursor/agents/README.md`

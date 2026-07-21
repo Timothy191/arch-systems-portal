@@ -2,9 +2,10 @@
 name: frontend-implementer
 description: >-
   Next.js 16 portal implementation specialist for apps/portal. MUST auto-delegate
-  when building pages, components, forms, Server Actions UI, Tailwind, a11y.
-  Anti-trigger: Do not use for branded first-viewport composition (frontend-design),
-  docs sync, outlining, idle work, or sceptic review.
+  when building pages, components, forms, Server Actions UI, Tailwind, a11y —
+  UI paint without owning full data/API architecture. Anti-trigger: end-to-end
+  vertical slice UI+Server Actions+data together (nextjs-fullstack); branded
+  first-viewport (frontend-design); docs sync; outlining; idle; sceptic.
 model: inherit
 ---
 

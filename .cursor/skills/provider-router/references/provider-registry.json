@@ -1,7 +1,35 @@
 {
-  "version": "1.1.0",
+  "version": "2.0.0",
   "last_updated": "2026-07-20",
-  "priority": ["openrouter", "opencode", "gemini", "aihubmix", "venice"],
+  "research_sources": [
+    "OpenRouter docs (confirmed working)",
+    "Google AI Studio docs (generous free tier)",
+    "Anthropic API docs (v1/messages)",
+    "Groq API docs (free tier, no CC)",
+    "Cerebras API docs (free tier, high throughput)",
+    "Mistral AI docs (free experimental tier)",
+    "HuggingFace Inference API (free serverless)",
+    "DeepSeek API docs",
+    "Together AI docs (no free tier)",
+    "Cohere API docs"
+  ],
+  "priority": [
+    "openrouter",
+    "groq",
+    "cerebras",
+    "google-gemini",
+    "mistral",
+    "huggingface",
+    "deepseek",
+    "ollama",
+    "opencode",
+    "aihubmix",
+    "venice",
+    "anthropic",
+    "perplexity",
+    "cohere",
+    "together"
+  ],
   "cooldown_seconds": 300,
   "key_rotation": {
     "enabled": true,
@@ -15,120 +43,543 @@
   "providers": {
     "openrouter": {
       "name": "OpenRouter",
-      "base_url": "https://openrouter.ai/api/v1",
-      "free_model": "cohere/north-mini-code:free",
-      "auth_type": "header",
+      "category": "aggregator",
+      "docs_url": "https://openrouter.ai/docs",
+      "free_tier": true,
+      "free_tier_detail": "Free models with rate limits per model",
+      "credit_card_required": false,
       "key_pool_support": true,
-      "pool_size": 50,
-      "status": "configured_keys_all_auth_failed",
-      "notes": "50 OpenAI-compatible keys loaded; all returned 401 on probe. Replace with valid OpenRouter keys (sk-or-v1-...) or use with a compatible proxy endpoint."
+      "auth_type": "header",
+      "auth_header": "Authorization: Bearer",
+      "base_url": "https://openrouter.ai/api/v1",
+      "endpoints": {
+        "chat_completions": {
+          "method": "POST",
+          "path": "/chat/completions",
+          "openai_compat": true
+        },
+        "models": { "method": "GET", "path": "/models", "openai_compat": true }
+      },
+      "free_models": [
+        "cohere/north-mini-code:free",
+        "google/gemini-2.0-flash-exp:free",
+        "meta-llama/llama-3.2-3b-instruct:free",
+        "mistralai/mistral-7b-instruct:free"
+      ],
+      "rate_limits": "~10-20 req/min per key",
+      "status": "configured",
+      "notes": "Single key in OPENROUTER_KEY_POOL; HTTP-Referer + X-Title sent per OpenRouter docs."
+    },
+    "groq": {
+      "name": "Groq",
+      "category": "inference",
+      "docs_url": "https://console.groq.com/docs",
+      "free_tier": true,
+      "free_tier_detail": "Permanent free tier, no credit card, org-level rate limits",
+      "credit_card_required": false,
+      "key_pool_support": false,
+      "auth_type": "header",
+      "auth_header": "Authorization: Bearer",
+      "base_url": "https://api.groq.com/openai/v1",
+      "endpoints": {
+        "chat_completions": {
+          "method": "POST",
+          "path": "/chat/completions",
+          "openai_compat": true
+        },
+        "models": { "method": "GET", "path": "/models", "openai_compat": true },
+        "transcriptions": {
+          "method": "POST",
+          "path": "/audio/transcriptions",
+          "openai_compat": true
+        }
+      },
+      "free_models": [
+        "llama-3.3-70b-versatile",
+        "llama-3.1-8b-instant",
+        "mixtral-8x7b-32768",
+        "gemma2-9b-it"
+      ],
+      "rate_limits": "30 req/min (free tier)",
+      "best_for": "low-latency inference, voice agents",
+      "status": "not_configured"
+    },
+    "cerebras": {
+      "name": "Cerebras",
+      "category": "inference",
+      "docs_url": "https://inference-docs.cerebras.ai",
+      "free_tier": true,
+      "free_tier_detail": "~1M tokens/day free, high throughput wafer-scale",
+      "credit_card_required": false,
+      "key_pool_support": false,
+      "auth_type": "header",
+      "auth_header": "Authorization: Bearer",
+      "base_url": "https://api.cerebras.ai/v1",
+      "endpoints": {
+        "chat_completions": {
+          "method": "POST",
+          "path": "/chat/completions",
+          "openai_compat": true
+        },
+        "models": { "method": "GET", "path": "/models", "openai_compat": true }
+      },
+      "free_models": ["llama-3.3-70b", "llama-3.1-8b"],
+      "rate_limits": "~1M tokens/day",
+      "best_for": "high-throughput, large prompts, agentic workflows",
+      "status": "not_configured"
+    },
+    "google-gemini": {
+      "name": "Google Gemini (AI Studio)",
+      "category": "official",
+      "docs_url": "https://ai.google.dev/gemini-api/docs",
+      "free_tier": true,
+      "free_tier_detail": "Extremely generous free tier, high rate limits for Gemini Flash",
+      "credit_card_required": false,
+      "key_pool_support": false,
+      "auth_type": "query_param",
+      "auth_header": "key={API_KEY}",
+      "base_url": "https://generativelanguage.googleapis.com/v1",
+      "endpoints": {
+        "generate_content": {
+          "method": "POST",
+          "path": "/models/{model}:generateContent",
+          "openai_compat": false,
+          "auth_in_url": true
+        },
+        "stream_generate_content": {
+          "method": "POST",
+          "path": "/models/{model}:streamGenerateContent",
+          "openai_compat": false
+        },
+        "count_tokens": {
+          "method": "POST",
+          "path": "/models/{model}:countTokens",
+          "openai_compat": false
+        },
+        "embed_content": {
+          "method": "POST",
+          "path": "/models/{model}:embedContent",
+          "openai_compat": false
+        },
+        "models": { "method": "GET", "path": "/models", "openai_compat": false }
+      },
+      "free_models": ["gemini-2.0-flash-exp", "gemini-1.5-flash", "gemini-1.5-flash-8b"],
+      "rate_limits": "60 req/min (free tier)",
+      "best_for": "multimodal, high context, general purpose",
+      "status": "configured_key_invalid"
+    },
+    "mistral": {
+      "name": "Mistral AI",
+      "category": "official",
+      "docs_url": "https://docs.mistral.ai",
+      "free_tier": true,
+      "free_tier_detail": "Free 'experimental' tier with high monthly token quota (~1B tokens/mo)",
+      "credit_card_required": false,
+      "key_pool_support": false,
+      "auth_type": "header",
+      "auth_header": "Authorization: Bearer",
+      "base_url": "https://api.mistral.ai/v1",
+      "endpoints": {
+        "chat_completions": {
+          "method": "POST",
+          "path": "/chat/completions",
+          "openai_compat": true
+        },
+        "embeddings": { "method": "POST", "path": "/embeddings", "openai_compat": true },
+        "models": { "method": "GET", "path": "/models", "openai_compat": true },
+        "agents": { "method": "POST", "path": "/agents/completions", "openai_compat": false }
+      },
+      "free_models": ["mistral-small-latest", "open-mistral-nemo", "codestral-latest"],
+      "rate_limits": "~1B tokens/month (experimental)",
+      "best_for": "code generation, general purpose",
+      "status": "not_configured"
+    },
+    "huggingface": {
+      "name": "Hugging Face Inference API",
+      "category": "hub",
+      "docs_url": "https://huggingface.co/docs/api-inference",
+      "free_tier": true,
+      "free_tier_detail": "Free serverless inference, rate-limited, no CC required. Thousands of open models.",
+      "credit_card_required": false,
+      "key_pool_support": false,
+      "auth_type": "header",
+      "auth_header": "Authorization: Bearer",
+      "base_url": "https://api-inference.huggingface.co",
+      "endpoints": {
+        "model_inference": {
+          "method": "POST",
+          "path": "/models/{model}",
+          "openai_compat": false,
+          "hf_native": true
+        },
+        "chat_completions": {
+          "method": "POST",
+          "path": "/models/{model}/v1/chat/completions",
+          "openai_compat": true
+        },
+        "conversational": {
+          "method": "POST",
+          "path": "/models/{model}/conversational",
+          "openai_compat": false
+        }
+      },
+      "free_models": [
+        "meta-llama/Meta-Llama-3-8B-Instruct",
+        "microsoft/Phi-3-mini-4k-instruct",
+        "HuggingFaceH4/zephyr-7b-beta",
+        "mistralai/Mistral-7B-Instruct-v0.3"
+      ],
+      "rate_limits": "~100 req/hour (free tier)",
+      "best_for": "prototyping, exploring open models",
+      "status": "not_configured"
+    },
+    "deepseek": {
+      "name": "DeepSeek",
+      "category": "official",
+      "docs_url": "https://platform.deepseek.com/docs",
+      "free_tier": true,
+      "free_tier_detail": "Free tier with rate-limited access to DeepSeek models",
+      "credit_card_required": false,
+      "key_pool_support": false,
+      "auth_type": "header",
+      "auth_header": "Authorization: Bearer",
+      "base_url": "https://api.deepseek.com/v1",
+      "endpoints": {
+        "chat_completions": {
+          "method": "POST",
+          "path": "/chat/completions",
+          "openai_compat": true
+        },
+        "models": { "method": "GET", "path": "/models", "openai_compat": true }
+      },
+      "free_models": ["deepseek-chat", "deepseek-coder"],
+      "rate_limits": "~500 req/day (free tier)",
+      "best_for": "coding, reasoning",
+      "status": "not_configured"
+    },
+    "ollama": {
+      "name": "Ollama (local or cloud)",
+      "category": "inference",
+      "docs_url": "https://docs.ollama.com/cloud",
+      "free_tier": true,
+      "free_tier_detail": "Local inference free; ollama.com cloud requires account + API key",
+      "credit_card_required": false,
+      "key_pool_support": false,
+      "auth_type": "header",
+      "auth_header": "Authorization: Bearer",
+      "base_url": "https://ollama.com/api",
+      "env_vars": {
+        "url": "OLLAMA_URL",
+        "api_key": "OLLAMA_API_KEY",
+        "model": "OLLAMA_DEFAULT_MODEL"
+      },
+      "endpoints": {
+        "chat": {
+          "method": "POST",
+          "path": "/chat",
+          "openai_compat": false,
+          "ollama_native": true
+        },
+        "generate": { "method": "POST", "path": "/generate", "openai_compat": false },
+        "embed": { "method": "POST", "path": "/embed", "openai_compat": false },
+        "tags": { "method": "GET", "path": "/tags", "openai_compat": false }
+      },
+      "free_models": ["gemma4:latest", "gpt-oss:120b-cloud", "deepseek-v3.2", "qwen3.5:397b-cloud"],
+      "best_for": "local dev, cloud offload, unified native API",
+      "status": "not_configured"
+    },
+    "anthropic": {
+      "name": "Anthropic (Claude)",
+      "category": "official",
+      "docs_url": "https://docs.anthropic.com/en/api",
+      "free_tier": false,
+      "free_tier_detail": "No free tier, pay-as-you-go or API credits",
+      "credit_card_required": true,
+      "key_pool_support": false,
+      "auth_type": "header",
+      "auth_header": "x-api-key",
+      "headers_extra": { "anthropic-version": "2023-06-01" },
+      "base_url": "https://api.anthropic.com",
+      "endpoints": {
+        "messages": {
+          "method": "POST",
+          "path": "/v1/messages",
+          "openai_compat": false,
+          "anthropic_native": true
+        },
+        "stream_messages": {
+          "method": "POST",
+          "path": "/v1/messages?stream=true",
+          "openai_compat": false
+        },
+        "complete": {
+          "method": "POST",
+          "path": "/v1/complete",
+          "openai_compat": false,
+          "legacy": true
+        },
+        "count_tokens": {
+          "method": "POST",
+          "path": "/v1/messages/count_tokens",
+          "openai_compat": false
+        }
+      },
+      "paid_models": ["claude-sonnet-4.5", "claude-3.5-haiku", "claude-3-opus"],
+      "best_for": "reasoning, coding, analysis",
+      "status": "not_configured"
+    },
+    "perplexity": {
+      "name": "Perplexity AI",
+      "category": "search",
+      "docs_url": "https://docs.perplexity.ai",
+      "free_tier": false,
+      "free_tier_detail": "No free API tier (has free web search product)",
+      "credit_card_required": true,
+      "key_pool_support": false,
+      "auth_type": "header",
+      "auth_header": "Authorization: Bearer",
+      "base_url": "https://api.perplexity.ai",
+      "endpoints": {
+        "chat_completions": { "method": "POST", "path": "/chat/completions", "openai_compat": true }
+      },
+      "paid_models": ["sonar-pro", "sonar"],
+      "best_for": "web-search augmented generation",
+      "status": "not_configured"
+    },
+    "cohere": {
+      "name": "Cohere",
+      "category": "official",
+      "docs_url": "https://docs.cohere.com",
+      "free_tier": true,
+      "free_tier_detail": "Free trial API key with rate limits (Trial tier)",
+      "credit_card_required": false,
+      "key_pool_support": false,
+      "auth_type": "header",
+      "auth_header": "Authorization: Bearer",
+      "base_url": "https://api.cohere.ai/v1",
+      "endpoints": {
+        "chat": {
+          "method": "POST",
+          "path": "/chat",
+          "openai_compat": false,
+          "cohere_native": true
+        },
+        "generate": {
+          "method": "POST",
+          "path": "/generate",
+          "openai_compat": false,
+          "legacy": true
+        },
+        "embed": { "method": "POST", "path": "/embed", "openai_compat": false },
+        "rerank": { "method": "POST", "path": "/rerank", "openai_compat": false }
+      },
+      "free_models": ["command-r", "command-r-plus", "embed-english-v3.0"],
+      "rate_limits": "~100 req/min (trial)",
+      "best_for": "RAG, embeddings, classification",
+      "status": "not_configured",
+      "notes": "Cohere uses its own API schema, not OpenAI-compatible"
     },
     "opencode": {
       "name": "OpenCode",
-      "base_url": "https://opencode.ai/zen/go/v1",
-      "free_model": "deepseek-v4-flash",
+      "category": "platform",
+      "docs_url": "https://opencode.ai",
+      "free_tier": "unknown",
       "auth_type": "header",
-      "key_pool_support": false,
-      "status": "server_error_500",
-      "notes": "Has API key in .env, endpoint returning 500."
-    },
-    "gemini": {
-      "name": "Google Gemini",
-      "base_url": "https://generativelanguage.googleapis.com/v1",
-      "free_model": "gemini-2.0-flash-exp",
-      "auth_type": "query_param",
-      "key_pool_support": false,
-      "status": "http_400",
-      "notes": "Current key invalid per crush logs. Replace with valid Gemini API key."
+      "auth_header": "Authorization: Bearer",
+      "base_url": "https://opencode.ai/zen/go/v1",
+      "endpoints": {
+        "chat_completions": { "method": "POST", "path": "/chat/completions", "openai_compat": true }
+      },
+      "free_models": ["deepseek-v4-flash"],
+      "status": "endpoint_returned_500"
     },
     "aihubmix": {
       "name": "AIHubMix",
-      "base_url": "https://api.aihubmix.com/v1",
-      "free_model": "coding-glm-4.6-free",
+      "category": "aggregator",
+      "free_tier": true,
+      "free_tier_detail": "Free models available with valid API key",
       "auth_type": "header",
-      "key_pool_support": false,
-      "status": "no_key",
-      "notes": "No API key configured. Sign up at aihubmix.com."
+      "auth_header": "Authorization: Bearer",
+      "base_url": "https://api.aihubmix.com/v1",
+      "endpoints": {
+        "chat_completions": { "method": "POST", "path": "/chat/completions", "openai_compat": true }
+      },
+      "free_models": ["coding-glm-4.6-free"],
+      "status": "not_configured"
     },
     "venice": {
       "name": "Venice.ai",
-      "base_url": "https://api.venice.ai/api/v1",
-      "free_model": "kimi-k3",
+      "category": "platform",
+      "free_tier": true,
+      "free_tier_detail": "Privacy-focused API with free tier",
       "auth_type": "header",
+      "auth_header": "Authorization: Bearer",
+      "base_url": "https://api.venice.ai/api/v1",
+      "endpoints": {
+        "chat_completions": { "method": "POST", "path": "/chat/completions", "openai_compat": true }
+      },
+      "free_models": ["kimi-k3"],
+      "status": "not_configured"
+    },
+    "together": {
+      "name": "Together AI",
+      "category": "inference",
+      "docs_url": "https://docs.together.ai",
+      "free_tier": false,
+      "free_tier_detail": "No free tier; requires $5 minimum funding",
+      "credit_card_required": true,
       "key_pool_support": false,
-      "status": "no_key",
-      "notes": "No API key configured. Sign up at venice.ai."
+      "auth_type": "header",
+      "auth_header": "Authorization: Bearer",
+      "base_url": "https://api.together.xyz/v1",
+      "endpoints": {
+        "chat_completions": {
+          "method": "POST",
+          "path": "/chat/completions",
+          "openai_compat": true
+        },
+        "images": { "method": "POST", "path": "/images/generations", "openai_compat": true },
+        "embeddings": { "method": "POST", "path": "/embeddings", "openai_compat": true }
+      },
+      "paid_models": [
+        "meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo",
+        "mistralai/Mixtral-8x22B-Instruct-v0.1"
+      ],
+      "best_for": "production inference, fine-tuning",
+      "status": "not_configured",
+      "notes": "No free tier; but has best model selection among paid providers"
     }
   },
-  "free_models_list": [
+  "endpoint_verbs_summary": {
+    "POST /chat/completions": {
+      "count": 10,
+      "providers": [
+        "openrouter",
+        "groq",
+        "cerebras",
+        "mistral",
+        "deepseek",
+        "opencode",
+        "aihubmix",
+        "venice",
+        "perplexity",
+        "together"
+      ],
+      "openai_compatible": true
+    },
+    "POST /v1/messages": {
+      "count": 1,
+      "providers": ["anthropic"],
+      "openai_compatible": false,
+      "requires_headers": ["x-api-key", "anthropic-version"]
+    },
+    "POST /models/{model}:generateContent": {
+      "count": 1,
+      "providers": ["google-gemini"],
+      "openai_compatible": false,
+      "auth_in_url": true
+    },
+    "POST /models/{model}": {
+      "count": 1,
+      "providers": ["huggingface"],
+      "openai_compatible": false
+    }
+  },
+  "free_tier_providers_summary": [
     {
-      "provider": "openrouter",
-      "model": "cohere/north-mini-code:free",
-      "status": "needs_valid_key",
-      "rate_limit": "~20 req/min per key (50 keys = effectively 1000 req/min with rotation)",
-      "use_case": "code generation, lightweight inference"
+      "rank": 1,
+      "provider": "Groq",
+      "free_tier": true,
+      "cc_required": false,
+      "speed": "fastest",
+      "best_for": "low-latency, voice, real-time"
     },
     {
-      "provider": "openrouter",
-      "model": "google/gemini-2.0-flash-exp:free",
-      "status": "needs_valid_key",
-      "rate_limit": "~10 req/min per key",
-      "use_case": "fast generation, general purpose"
+      "rank": 2,
+      "provider": "Google Gemini",
+      "free_tier": true,
+      "cc_required": false,
+      "speed": "fast",
+      "best_for": "multimodal, high context"
     },
     {
-      "provider": "openrouter",
-      "model": "mistralai/mistral-7b-instruct:free",
-      "status": "needs_valid_key",
-      "rate_limit": "~10 req/min per key",
-      "use_case": "instruction following"
+      "rank": 3,
+      "provider": "Cerebras",
+      "free_tier": true,
+      "cc_required": false,
+      "speed": "very fast",
+      "best_for": "high-throughput, agentic"
     },
     {
-      "provider": "openrouter",
-      "model": "meta-llama/llama-3.2-3b-instruct:free",
-      "status": "needs_valid_key",
-      "rate_limit": "~10 req/min per key",
-      "use_case": "small & fast inference"
+      "rank": 4,
+      "provider": "Mistral AI",
+      "free_tier": true,
+      "cc_required": false,
+      "speed": "fast",
+      "best_for": "coding, high volume"
     },
     {
-      "provider": "opencode",
-      "model": "deepseek-v4-flash",
-      "status": "endpoint_down",
-      "rate_limit": "unknown",
-      "use_case": "coding assistant"
+      "rank": 5,
+      "provider": "OpenRouter",
+      "free_tier": true,
+      "cc_required": false,
+      "speed": "varies",
+      "best_for": "model variety, failover"
     },
     {
-      "provider": "gemini",
-      "model": "gemini-2.0-flash-exp",
-      "status": "key_invalid",
-      "rate_limit": "60 req/min (free tier)",
-      "use_case": "multimodal, general purpose"
+      "rank": 6,
+      "provider": "DeepSeek",
+      "free_tier": true,
+      "cc_required": false,
+      "speed": "fast",
+      "best_for": "coding, reasoning"
+    },
+    {
+      "rank": 7,
+      "provider": "HuggingFace",
+      "free_tier": true,
+      "cc_required": false,
+      "speed": "rate-limited",
+      "best_for": "open models, prototyping"
+    },
+    {
+      "rank": 8,
+      "provider": "Cohere",
+      "free_tier": "trial",
+      "cc_required": false,
+      "speed": "moderate",
+      "best_for": "RAG, embeddings"
     }
   ],
-  "agents": {
+  "agents_endpoint_map": {
     "fullstack-nextjs-pro": {
-      "roles": ["nextjs", "react", "server-actions", "supabase"],
-      "provider": "any"
+      "recommended": ["openrouter", "groq", "cerebras"],
+      "reason": "coding + reasoning"
     },
-    "backend-nestjs-pro": { "roles": ["nestjs", "fastify", "zod", "api"], "provider": "any" },
-    "frontend-ui-pro": { "roles": ["react", "tailwind", "wcag", "testing"], "provider": "any" },
-    "devops-ci-pro": { "roles": ["turborepo", "pnpm", "docker", "ci"], "provider": "any" },
-    "architect-pro": { "roles": ["adr", "boundaries", "migration"], "provider": "any" },
-    "security-pro": { "roles": ["supabase-auth", "rls", "rate-limit"], "provider": "any" },
-    "fast-outliner": { "roles": ["scoping", "planning", "handoff"], "provider": "inherit" },
-    "frontend-design": { "roles": ["visual", "brand", "ux"], "provider": "inherit" },
-    "frontend-implementer": { "roles": ["ui", "components", "tailwind"], "provider": "inherit" },
-    "ai-docs-sync": { "roles": ["docs", "drift", "mirror"], "provider": "inherit" },
-    "sceptic": {
-      "roles": ["review", "adversarial", "quality"],
-      "provider": "inherit",
-      "readonly": true
+    "backend-nestjs-pro": {
+      "recommended": ["openrouter", "deepseek", "mistral"],
+      "reason": "code generation"
     },
-    "idle-runner": { "roles": ["background", "parallel"], "provider": "inherit" },
-    "ai-maintenance-checker": { "roles": ["layout", "sync", "janitor"], "provider": "inherit" },
-    "vercel-brand-sync": { "roles": ["brand", "vercel"], "provider": "inherit" },
-    "openspec": { "roles": ["specs", "proposals"], "provider": "cli" },
-    "aider": { "roles": ["surgical", "pair-edit"], "provider": "aider" },
-    "goose": { "roles": ["mcp", "recipes", "automation"], "provider": "goose" },
-    "omp": { "roles": ["refactor", "heavy-coding"], "provider": "omp" }
+    "frontend-ui-pro": {
+      "recommended": ["openrouter", "groq", "google-gemini"],
+      "reason": "UI design + fast iteration"
+    },
+    "devops-ci-pro": { "recommended": ["groq", "cerebras"], "reason": "fast tooling, scripting" },
+    "architect-pro": { "recommended": ["openrouter", "anthropic"], "reason": "complex reasoning" },
+    "security-pro": { "recommended": ["openrouter", "google-gemini"], "reason": "analysis" },
+    "fast-outliner": { "recommended": ["groq", "openrouter"], "reason": "fast outlines" },
+    "frontend-design": {
+      "recommended": ["google-gemini", "openrouter"],
+      "reason": "visual reasoning"
+    },
+    "frontend-implementer": {
+      "recommended": ["groq", "cerebras"],
+      "reason": "fast code generation"
+    },
+    "sceptic": { "recommended": ["openrouter", "anthropic"], "reason": "deep analysis" },
+    "ai-maintenance-checker": {
+      "recommended": ["groq", "openrouter"],
+      "reason": "lightweight checks"
+    }
   }
 }

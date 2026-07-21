@@ -35,10 +35,12 @@ Collateral: `.cursor/agents/<name>/{references,scripts,assets}/`.
 | [routing-optimizer.md](routing-optimizer.md)           | Provider latency/cooldowns         | [routing-optimizer/](routing-optimizer/)           |
 | [patch-builder.md](patch-builder.md)                   | Structural auto-patches            | [patch-builder/](patch-builder/)                   |
 | [ai-system-optimizer.md](ai-system-optimizer.md)       | AI surface bloat/compliance        | [ai-system-optimizer/](ai-system-optimizer/)       |
+| [agents-memory-updater.md](agents-memory-updater.md)     | Agent memory from transcripts       | [agents-memory-updater/](agents-memory-updater/)   |
 
 ## Shared
 
 - [_shared/references/](_shared/references/) — gold contract, skills runtime, ACI, CLI matrix, knowledge base
+- [_shared/references/agent-families.md](_shared/references/agent-families.md) — superagent families (orchestrators + specialists; not flattened agents)
 
 ## Validate
 
