@@ -8,19 +8,42 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 > **Canonical agent policy:** `AGENTS.md` (including §20 Alignment Score). Cursor rules in `.cursor/rules/` always apply. Do not drift.
 
+**Two Layers:** Product (`apps/`, `packages/`, product scripts) must build/run/test without AI content. Agentic surfaces (`.cursor/`, `AGENTS.md`, `pnpm ai`) are CLI-agents only. Contract: [`.cursor/standards/layer-boundary/STANDARD.md`](.cursor/standards/layer-boundary/STANDARD.md).
+
+**Reasoning contract:** `SOUL.md` — evidence-based decisions, test-driven delivery, adversarial review before committing.
+
 ## Essential Commands
 
 ```bash
-pnpm dev              # Full stack: Docker infra + Next.js (Turbopack HMR on :3000)
-pnpm dev --quick      # Portal only, skip Docker
+# Product (standalone)
+pnpm dev              # Full stack: Redis → Supabase → Next.js (Turbopack HMR on :3000)
+pnpm dev --quick      # Portal + DB (skip Redis, start Supabase)
+pnpm dev --no-infra   # Assume Redis + Supabase already up
+pnpm dev --quality    # Also run pnpm quality after smoke test
 pnpm build            # Turborepo full build
 pnpm lint             # ESLint across all packages (--max-warnings 0 enforced)
 pnpm type-check       # tsc --noEmit across all packages
 pnpm test             # Jest across all packages
 pnpm quality          # lint + type-check + test + prettier check (run before marking done)
-pnpm format           # Prettier write
+pnpm format           # Prettier write (product paths; agentic dirs ignored)
+pnpm format:check     # Prettier check only
 pnpm clean            # Remove .next and dist dirs
 pnpm --filter portal <cmd>  # Run a command for just the portal app
+
+# Supabase (local dev)
+pnpm supabase:start   # Start local Supabase (--workdir packages)
+pnpm supabase:stop    # Stop local Supabase
+pnpm supabase:status  # Check Supabase status
+
+# RLS & policy
+pnpm audit:rls        # Verify RLS after migration changes
+
+# Agentic (optional)
+pnpm ai               # AI system health (guardrails, layouts, sync, dedupe, drift)
+pnpm ai check         # Validate AI surfaces only
+pnpm ai fix           # Safe repair + validate
+pnpm ai init          # First clone / cold start — restore + sync + validate
+pnpm ai onboard       # Onboarding checklist for humans + agents
 ```
 
 ## Architecture
@@ -41,11 +64,11 @@ packages/
   rate-limiter/           # @repo/rate-limiter — Redis-backed
   redis/                  # @repo/redis — shared ioredis singleton
   supabase/               # @repo/supabase — server + browser clients
-  theme/                  # @repo/theme — Tailwind preset & design tokens
+  theme/                  # @repo/theme — Tailwind preset & design tokens (+ ArchThemeProvider at @repo/theme/react)
   typescript-config/      # @repo/typescript-config
-  ui/                     # @repo/ui — shared headless React components
+  ui/                     # @repo/ui — shared React components (styled: GlassCard, Toaster, Pagination, etc.)
   utils/                  # @repo/utils — pure utility helpers
-scripts/                  # dev.sh, shutdown.sh, ai.sh
+scripts/                  # dev.sh, shutdown.sh, ai.sh, agency-*, delegate-agent.sh
 ```
 
 ### Portal src/ Layout
@@ -76,6 +99,7 @@ apps/portal/src/
 | Observability       | OpenTelemetry + Sentry                                 |
 | Error classes       | `@repo/errors` — AppError subclasses only              |
 | Icons               | lucide-react only                                      |
+| Toasts              | sonner only                                            |
 | Package manager     | pnpm 9 (Never use npm or yarn)                         |
 | Build orchestration | Turborepo 2                                            |
 | Node                | >= 22 (Volta pin: 24)                                  |
@@ -117,6 +141,7 @@ Every non-trivial task follows a three-phase spec cycle. Spec files go in `.kiro
 - Every new utility in `packages/` needs at least one test
 - Every Server Action needs happy-path + validation-failure test
 - Coverage targets: lines 40%, branches 30%, functions 35%
+- Run a single test: `pnpm --filter portal test -- proxy.test.ts` or `pnpm --filter portal test -- --testPathPattern=proxy`
 
 ## Git & Commits
 
@@ -137,6 +162,14 @@ Every non-trivial task follows a three-phase spec cycle. Spec files go in `.kiro
 - Use `next/image` for all images — never raw `<img>` tags. Exception: signed Supabase storage URLs with rotating signatures (e.g. `card-actions-view.tsx`) where `next/image` cannot handle URL expiry.
 - Lazy-load heavy Client Components with `next/dynamic` + `{ ssr: false }`
 - Never commit `.env.local` or any secrets
+
+## Portal Architecture Details
+
+- **Auth/authorization**: `apps/portal/proxy.ts` is the central middleware (successor to `middleware.ts`) — handles session, role, department, and route-restriction logic. The `employees` table is the source of truth for roles. Server Components use `getUserSafely()` from `@repo/supabase/server`.
+- **API proxy**: `apps/portal/src/app/api/backend/[[...slug]]/` proxies all HTTP methods to the NestJS backend (`API_BASE_URL`, default `http://localhost:3004/api`) so the browser talks to a single origin.
+- **Telemetry**: `apps/portal/instrumentation.ts` registers OpenTelemetry via `@vercel/otel` and Catalyst tracing via `@inference/tracing` (when `CATALYST_OTLP_TOKEN` is set).
+- **Agent tracing**: When modifying portal code, update `apps/portal/AGENT_TRACER.md` with a dated entry and leave `// AGENT-TRACE:` breadcrumbs for complex logic.
+- **External services at runtime**: Supabase, Redis, Ollama, NestJS API. See `.env.example` files.
 
 ## Real-World Thinking & Proven Methods
 
@@ -175,7 +208,7 @@ Hard fails: <none | list>
 ### Scoring Dimensions
 
 | Dimension         | Pts | Evidence Required                                                       |
-| ----------------- | --- | ----------------------------------------------------------------------- |
+| ----------------- | --- | ---------------------------------------------------------------------- |
 | Spec compliance   | 20  | Multi-file → `.kiro/specs/` phases followed; single-file → N/A full pts |
 | Stack fidelity    | 15  | pnpm, Next 16 patterns, `@repo/*`, no banned deps                       |
 | Boundaries        | 15  | Server/client correct; no server-only imports in client                 |
@@ -224,6 +257,7 @@ Hybrid layout: entry `<name>.md` + folder `<name>/`. Auto-routing: [`.cursor/rul
 | `db-optimizer`           | PostgreSQL/Supabase performance tuning       |
 | `backend-architect`      | API design, service architecture             |
 | `agency-lead`            | Background self-healing loops                |
+| `agents-memory-updater`  | Update agent memory from transcripts        |
 | `gap-analyst`            | Compile/gap log analysis                     |
 | `spec-auditor`           | OpenSpec & AGENTS compliance                 |
 | `routing-optimizer`      | Provider latency and cooldowns               |
@@ -244,9 +278,9 @@ Routing: `.cursor/rules/04-subagent-auto-routing.mdc` · Maintenance: `.cursor/r
 
 | Location          | Skills                                                                                                                                               |
 | ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `.cursor/skills/` | `agent-alignment-score`, `skill-self-improve`, `ai-system`, `skill-layout`, `agent-layout`, `claude-code-layout`, `provider-router`, `redis-caching` |
+| `.cursor/skills/` | `agent-alignment-score`, `skill-self-improve`, `ai-system`, `skill-layout`, `agent-layout`, `claude-code-layout`, `continual-learning`, `provider-router`, `redis-caching` |
 | `.qoder/skills/`  | `quality`, `verify` (portal alias), `specs`, `dev`, `deploy`, `rls-audit`                                                                            |
-| `.github/skills/` | `verify-changes`, `frontend-api-integration-patterns`                                                                                                |
+| `.github/skills/` | `verify-changes` (alias → `quality` full), `frontend-api-integration-patterns`                                                                       |
 
 Each skill folder: `SKILL.md` + `scripts/` + `references/` + `assets/`. See `.cursor/skills/README.md` for layout and commands.
 

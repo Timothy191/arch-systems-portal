@@ -1,43 +1,36 @@
-# Cursor Project Skills (`.cursor/skills/`)
+# Cursor Skills
 
-Agent Skills open standard ([agentskills.io](https://agentskills.io/home)). **Canonical reference:** [`.cursor/standards/agent-skills/STANDARD.md`](../standards/agent-skills/STANDARD.md)
+Skills are structured AI capabilities under `.cursor/skills/<name>/`. Each skill has a `SKILL.md` entry, optional `scripts/`, `references/`, and `assets/` directories.
 
-## Layout
+## Skills Index
+
+| Skill | Description |
+|-------|-------------|
+| `agent-alignment-score` | Formal Alignment Score (0–100) against AGENTS.md rubric. Use before claiming done or after multi-file changes. |
+| `agent-layout` | Meta-skill for creating/refactoring Cursor subagents to the hybrid agent layout standard. |
+| `ai-system` | Unified AI system check — guardrails, layouts, sync, dedupe, drift. Powers `pnpm ai`. |
+| `claude-code-layout` | Validates and syncs Claude Code `.claude/` surfaces. |
+| `continual-learning` | Updates agent memory from transcripts. Extracts high-signal recurring user corrections and durable workspace facts. |
+| `provider-router` | Multi-provider AI router with key pool rotation and omni parallel routing. |
+| `redis-caching` | L1/L2 cache design, cacheWrap usage, stampede prevention, cache invalidation via `@repo/redis`. |
+| `skill-layout` | Meta-skill for creating/refactoring skills to the Agent Skills open standard (agentskills.io). |
+| `skill-self-improve` | Hermes-style skill self-improvement: observe → distill → reuse → refine. |
+
+## Layout Standard
+
+Each skill folder follows:
 
 ```
-skill-name/
-├── SKILL.md          # YAML frontmatter + workflow entry
-├── scripts/          # Executable wrappers (optional)
-├── references/       # Detailed docs (optional)
-└── assets/           # Templates, static resources (optional)
+<skill-name>/
+  SKILL.md          # YAML frontmatter + lean body (≤80 lines)
+  scripts/          # Subprocess helpers
+  references/       # Detailed docs — load on demand
+  assets/           # Templates, static outputs
 ```
 
-## Skills in this repo
+See `.cursor/standards/agent-skills/STANDARD.md` for the full standard.
 
-| Skill                                           | Purpose                                    | Key script                 |
-| ----------------------------------------------- | ------------------------------------------ | -------------------------- |
-| [agent-alignment-score](agent-alignment-score/) | Formal Alignment Score (0–100)             | `scripts/score.mjs`        |
-| [skill-self-improve](skill-self-improve/)       | Hermes observe→distill→patch skills        | `scripts/skill-manage.sh`  |
-| [ai-system](ai-system/)                         | Unified `pnpm ai` command                  | `scripts/ai.sh`            |
-| [skill-layout](skill-layout/)                   | Meta-skill for creating/refactoring skills | `assets/TEMPLATE-SKILL.md` |
-| [agent-layout](agent-layout/)                   | Meta-skill for hybrid agent layout         | `scripts/validate.sh`      |
-| [claude-code-layout](claude-code-layout/)       | Claude Code `.claude/` surfaces            | `scripts/validate.sh`      |
+## Commands
 
-## Usage
-
-```bash
-pnpm ai status
-node .cursor/skills/agent-alignment-score/scripts/score.mjs --interactive
-```
-
-## Validation
-
-```bash
-pnpm ai check
-```
-
-## Related surfaces
-
-- Qoder workflows: `.qoder/skills/README.md`
-- GitHub Copilot: `.github/skills/README.md`
-- Project subagents: `.cursor/agents/` + `.cursor/rules/04-subagent-auto-routing.mdc`
+- `pnpm ai check` — Validate all AI surfaces (skills, agents, guardrails, drift)
+- `pnpm ai fix` — Safe repair + validate

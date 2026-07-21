@@ -9,6 +9,8 @@ alwaysApply: true
 
 `AGENTS.md` at the repo root is the **only** rulebook. Cursor rules, Qoder rules, Kiro agent config, and skills must **mirror** it — never invent conflicting policy.
 
+**Two layers:** Product monorepo (`apps/`, `packages/`) is standalone — never depends on Agentic AI content (`.cursor/`, `pnpm ai`) at runtime or in product quality gates. Contract: `.cursor/standards/layer-boundary/STANDARD.md`.
+
 | Layer | Role |
 |---|---|
 | `AGENTS.md` | Canonical policy |
@@ -17,6 +19,10 @@ alwaysApply: true
 | `.cursor/rules/05-portal-dev-keepalive.mdc` | Portal `:3000` up after task batches; restart / fix-retry |
 | `.cursor/rules/06-ai-maintenance-background.mdc` | Background `ai-maintenance-checker` + `pnpm ai` |
 | `.cursor/rules/07-adaptive-skill-loop.mdc` | Hermes-style distill/patch + progressive disclosure |
+| `.cursor/rules/09-ai-surface-layout.mdc` | Skills/agents/hooks Anthropic layout enforcement |
+| `.cursor/rules/10-orchestrator-patterns.mdc` | Orchestrator patterns for multi-agent workflows |
+| `.cursor/rules/11-permanent-fixes.mdc` | Permanent & complete fixes verified on real-world data |
+| `.cursor/rules/12-skill-evolution-notifications.mdc` | Self-learning skill evolution reporting protocol |
 | `.cursor/agents/` | Project specialists (auto-routed) |
 | `.qoder/rules/` | Qoder mirror |
 | `.kiro/agents/default.json` | Machine-readable gates |

@@ -5,22 +5,34 @@ This file provides guidance to the AI agent when working with code in this repos
 > **Canonical rulebook for all AI agents.** Rules here are non-negotiable and take precedence over model defaults.
 > Detailed rules are in `@.qoder/rules/` (loaded automatically): `code-style.md`, `security.md`, `testing.md`, `spec-driven-workflow.md`, `alignment-scoring.md`.
 
+## Two Layers (hard separation)
+
+| Layer | Owns | Required to run the product? |
+| ----- | ---- | ---------------------------- |
+| **Product monorepo** | `apps/`, `packages/`, product `scripts/` (`dev.sh`, …), `turbo` tasks | **Yes** |
+| **Agentic AI** | `.cursor/`, `.claude/`, skills/agents, `AGENTS.md`, `pnpm ai`, agent scripts | **No** |
+
+Product `pnpm build` / `pnpm quality` / `pnpm dev` must not import or invoke AI surfaces. Full contract: [`.cursor/standards/layer-boundary/STANDARD.md`](.cursor/standards/layer-boundary/STANDARD.md).
+
 ## Commands
 
 ```bash
+# ── Product (standalone) ──────────────────────────────────────────
 pnpm dev              # Full stack: Docker infra + Next.js (Turbopack HMR on :3000)
 pnpm dev --quick      # Portal only, skip Docker
 pnpm build            # Turborepo full build
 pnpm quality          # lint + type-check + test + prettier check (run before marking done)
-pnpm ai               # AI system health (guardrails, layouts, sync, dedupe, drift)
-pnpm ai init          # First clone / cold start — restore + sync + validate
-pnpm ai onboard       # Onboarding checklist for humans + agents
-pnpm ai check         # Validate AI surfaces only (CI gate)
-pnpm ai fix           # Safe repair + validate
-pnpm format           # Prettier write
+pnpm format           # Prettier write (product paths; agentic dirs ignored)
 pnpm --filter portal <cmd>  # Target one package
 pnpm audit:rls        # Verify RLS after migration changes
 pnpm policy:gen       # Regenerate dependency boundary rules
+
+# ── Agentic AI (optional; CLI agents only) ────────────────────────
+pnpm ai               # AI system health (guardrails, layouts, sync, dedupe, drift)
+pnpm ai init          # First clone / cold start — restore + sync + validate
+pnpm ai onboard       # Onboarding checklist for humans + agents
+pnpm ai check         # Validate AI surfaces only
+pnpm ai fix           # Safe repair + validate
 ```
 
 ESLint `--max-warnings 0`; tsc `noEmit` strict; Jest `--passWithNoTests`.
@@ -45,8 +57,9 @@ packages/
   typescript-config/      # @repo/typescript-config
   ui/                     # @repo/ui — shared headless React components
   utils/                  # @repo/utils — pure utility helpers
-scripts/                  # dev.sh, shutdown.sh, ai.sh
+scripts/                  # Product: dev.sh, shutdown.sh, … | Agentic: ai.sh, agency-*, …
 ```
+
 
 **Portal `src/` layout:**
 
@@ -176,6 +189,7 @@ Fleet specialists under `.cursor/agents/` (see table). **Hybrid layout:** entry 
 | `db-optimizer`           | PostgreSQL/Supabase performance tuning      |
 | `backend-architect`      | API design, service architecture            |
 | `agency-lead`            | Coordinating background self-healing loops  |
+| `agents-memory-updater`  | Update agent memory from transcripts        |
 | `gap-analyst`            | System gap and compilation log analyzer     |
 | `spec-auditor`           | OpenSpec & global constraint compliance     |
 | `routing-optimizer`      | AI provider latency and cooldown optimizer  |
@@ -195,6 +209,23 @@ Gold contract: `.cursor/agents/_shared/references/gold-standard-contract.md`
 Native surfaces under `.claude/`: `CLAUDE.md`, `settings.json`, `rules/`, synced `skills/` + `agents/`. Standard: `.cursor/standards/claude-code/STANDARD.md`. Sync: `.claude/scripts/sync-surfaces.sh`.
 
 Reasoning contract: `SOUL.md` (project extension — import via `.claude/CLAUDE.md`).
+
+### Third-party AI tool configs
+
+The repo contains configuration directories for additional AI tools. These are **not managed** by the canonical policy (`AGENTS.md` / `.cursor/`) and are maintained by their respective tools:
+
+| Tool | Path | Purpose |
+| ---- | ---- | ------- |
+| Qoder | `.qoder/agents/` | Qoder-specific agent definitions (5 agents) |
+| Windsurf | `.windsurf/` | Windsurf IDE rules and harness config |
+| Roo | `.roo/` | Roo CLI rules |
+| Serena | `.serena/` | Serena editor project config |
+| Grok | `.grok/` | Grok (xAI) settings |
+| Devin | `.devin/` | Devin AI config |
+| Claude Flow | `.swarm/` | Swarm orchestration |
+| Generic | `.agents/` | Generic agent configs |
+
+These configs are outside the canonical policy scope and may diverge from AGENTS.md.
 
 ### Project skills
 
@@ -219,10 +250,14 @@ Standard layout per skill folder: `SKILL.md` + `scripts/` + `references/` + `ass
 | `ai-system`                           | Unified `pnpm ai` command              |
 | `skill-layout` / `agent-layout`       | Skill + agent folder standards         |
 | `claude-code-layout`                  | Claude Code `.claude/` surfaces        |
+| `continual-learning`                  | Memory update from transcripts         |
 | `provider-router`                     | Multi-provider model routing           |
 | `redis-caching`                       | L1/L2 cache patterns                   |
 | `quality` / `verify`                  | Quality gate (full / portal alias)     |
+| `verify-changes`                      | GitHub/Copilot alias → `quality` full  |
 | `specs`, `dev`, `deploy`, `rls-audit` | Qoder workflow commands                |
+
+Quality aliases (`quality` / `verify` / `verify-changes`) are one family — see `.cursor/agents/_shared/references/agent-families.md`.
 
 **Sceptic** emits verdict + estimate; **agent-alignment-score** emits the formal extended score block. Repeatable gaps → **skill-self-improve** (`.cursor/rules/07-adaptive-skill-loop.mdc`).
 
