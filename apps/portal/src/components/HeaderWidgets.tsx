@@ -5,19 +5,19 @@ import { lazy, Suspense } from "react";
 const WeatherWidget = lazy(() =>
   import("@/components/weather/WeatherWidget").then((m) => ({
     default: m.WeatherWidget,
-  })),
+  }))
 );
 
 const SystemClock = lazy(() =>
   import("@/components/clock/SystemClock").then((m) => ({
     default: m.SystemClock,
-  })),
+  }))
 );
 
 const ServicesDropdown = lazy(() =>
   import("@/components/nav/ServicesDropdown").then((m) => ({
     default: m.ServicesDropdown,
-  })),
+  }))
 );
 
 /**

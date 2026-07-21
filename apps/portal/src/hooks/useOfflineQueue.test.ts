@@ -41,21 +41,18 @@ describe("useOfflineQueue", () => {
 
   describe("initial state", () => {
     it("starts with isOnline true when navigator.onLine is true", async () => {
-      resetEnv();
       const { result } = renderHook(() => useOfflineQueue());
       await flush();
       expect(result.current.isOnline).toBe(true);
     });
 
     it("starts with pendingCount 0", async () => {
-      resetEnv();
       const { result } = renderHook(() => useOfflineQueue());
       await flush();
       expect(result.current.pendingCount).toBe(0);
     });
 
     it("exposes enqueue, syncNow, and clearQueue functions", async () => {
-      resetEnv();
       const { result } = renderHook(() => useOfflineQueue());
       await flush();
       expect(typeof result.current.enqueue).toBe("function");
@@ -66,7 +63,6 @@ describe("useOfflineQueue", () => {
 
   describe("enqueue", () => {
     it("calls fetch immediately when online", async () => {
-      resetEnv();
       Object.defineProperty(navigator, "onLine", { value: true });
       const mockResponse = new Response(null, { status: 200 });
       (global.fetch as jest.Mock).mockResolvedValue(mockResponse);
@@ -88,7 +84,6 @@ describe("useOfflineQueue", () => {
     });
 
     it("queues when offline", async () => {
-      resetEnv();
       Object.defineProperty(navigator, "onLine", { value: false });
 
       const { result } = renderHook(() => useOfflineQueue());
@@ -106,7 +101,6 @@ describe("useOfflineQueue", () => {
     });
 
     it("queues when online but server returns error", async () => {
-      resetEnv();
       Object.defineProperty(navigator, "onLine", { value: true });
       const mockResponse = new Response(null, { status: 500 });
       (global.fetch as jest.Mock).mockResolvedValue(mockResponse);
@@ -126,7 +120,6 @@ describe("useOfflineQueue", () => {
     });
 
     it("queues when online but fetch throws", async () => {
-      resetEnv();
       Object.defineProperty(navigator, "onLine", { value: true });
       (global.fetch as jest.Mock).mockRejectedValue(new Error("Network error"));
 
@@ -144,7 +137,6 @@ describe("useOfflineQueue", () => {
 
   describe("online/offline events", () => {
     it("updates isOnline when window fires 'offline' event", async () => {
-      resetEnv();
       Object.defineProperty(navigator, "onLine", { value: true });
       const { result } = renderHook(() => useOfflineQueue());
       await flush();
@@ -159,7 +151,6 @@ describe("useOfflineQueue", () => {
     });
 
     it("updates isOnline when window fires 'online' event", async () => {
-      resetEnv();
       Object.defineProperty(navigator, "onLine", { value: false });
       const { result } = renderHook(() => useOfflineQueue());
       await flush();
@@ -176,7 +167,6 @@ describe("useOfflineQueue", () => {
 
   describe("syncNow", () => {
     it("replays pending mutations when called manually", async () => {
-      resetEnv();
       Object.defineProperty(navigator, "onLine", { value: false });
       const { result } = renderHook(() => useOfflineQueue());
       await flush();
@@ -210,7 +200,6 @@ describe("useOfflineQueue", () => {
 
   describe("clearQueue", () => {
     it("clears all mutations from the queue", async () => {
-      resetEnv();
       Object.defineProperty(navigator, "onLine", { value: false });
       const { result } = renderHook(() => useOfflineQueue());
       await flush();
@@ -232,7 +221,6 @@ describe("useOfflineQueue", () => {
 
   describe("event callbacks", () => {
     it("calls onSyncStart and onSyncComplete during sync", async () => {
-      resetEnv();
       const onSyncStart = jest.fn();
       const onSyncComplete = jest.fn();
       const events = { onSyncStart, onSyncComplete };

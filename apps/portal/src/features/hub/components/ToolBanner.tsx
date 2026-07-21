@@ -61,7 +61,10 @@ export function ToolBanner({ tools }: ToolBannerProps) {
   };
 
   return (
-    <div className="relative w-full overflow-hidden" style={maskStyle}>
+    <div
+      className="os-shell relative w-full overflow-hidden rounded-[var(--os-shell-radius-lg)] py-4"
+      style={maskStyle}
+    >
       <Marquee pauseOnHover className="[--duration:25s] gap-6 py-2">
         {tools.map((tool) => {
           const Icon = ICON_MAP[tool.icon] || Factory;
@@ -81,7 +84,7 @@ export function ToolBanner({ tools }: ToolBannerProps) {
                   <div
                     className={cn(
                       "p-3 rounded-xl mb-4 transition-transform duration-300 hover:scale-110",
-                      config.iconBg,
+                      config.iconBg
                     )}
                   >
                     <Icon className="w-6 h-6" />

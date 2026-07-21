@@ -7,5 +7,10 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <DepartmentSectionShell title="Production" description="Coal yield, tonnage and extraction tracking." />;
+  return (
+    <DepartmentSectionShell
+      title="Production"
+      description="Coal yield, tonnage and extraction tracking."
+    />
+  );
 }

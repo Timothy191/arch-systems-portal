@@ -1,12 +1,7 @@
 /**
  * @jest-environment node
  */
-import {
-  normalizeRole,
-  isTokenExpiredError,
-  isValidRedirect,
-  proxy,
-} from "./proxy";
+import { normalizeRole, isTokenExpiredError, isValidRedirect, proxy } from "./proxy";
 import { NextRequest } from "next/server";
 
 jest.mock("@repo/supabase/middleware", () => ({
@@ -24,9 +19,7 @@ jest.mock("@repo/redis/cache", () => ({
   cacheEvictL1ByPrefix: jest.fn(),
 }));
 
-const { createMiddlewareClient } = jest.requireMock(
-  "@repo/supabase/middleware",
-);
+const { createMiddlewareClient } = jest.requireMock("@repo/supabase/middleware");
 const { cacheGet } = jest.requireMock("@repo/redis/cache");
 
 function buildMiddlewareMock(
@@ -34,7 +27,7 @@ function buildMiddlewareMock(
     user?: unknown;
     employee?: unknown;
     deptData?: unknown;
-  } = {},
+  } = {}
 ) {
   const user = overrides.user !== undefined ? overrides.user : { id: "auth-1" };
   const employee =
@@ -45,10 +38,7 @@ function buildMiddlewareMock(
           department_id: "dept-uuid-1",
           accessible_departments: [],
         };
-  const deptData =
-    overrides.deptData !== undefined
-      ? overrides.deptData
-      : { id: "dept-uuid-1" };
+  const deptData = overrides.deptData !== undefined ? overrides.deptData : { id: "dept-uuid-1" };
 
   const mockResponse = { headers: new Headers() };
 
@@ -94,9 +84,7 @@ function makeRequest(path: string) {
 describe("normalizeRole", () => {
   it("returns the role as-is for valid non-empty strings", () => {
     expect(normalizeRole("admin")).toBe("admin");
-    expect(normalizeRole("control_room_operator")).toBe(
-      "control_room_operator",
-    );
+    expect(normalizeRole("control_room_operator")).toBe("control_room_operator");
     expect(normalizeRole("supervisor")).toBe("supervisor");
   });
 
@@ -122,15 +110,11 @@ describe("normalizeRole", () => {
 
 describe("isTokenExpiredError", () => {
   it("returns true for 'Invalid Refresh Token' message", () => {
-    expect(isTokenExpiredError({ message: "Invalid Refresh Token" })).toBe(
-      true,
-    );
+    expect(isTokenExpiredError({ message: "Invalid Refresh Token" })).toBe(true);
   });
 
   it("returns true for 'Refresh Token Not Found' message", () => {
-    expect(isTokenExpiredError({ message: "Refresh Token Not Found" })).toBe(
-      true,
-    );
+    expect(isTokenExpiredError({ message: "Refresh Token Not Found" })).toBe(true);
   });
 
   it("returns false for other error messages", () => {

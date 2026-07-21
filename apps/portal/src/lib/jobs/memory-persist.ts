@@ -1,3 +1,4 @@
+import { InngestFunction } from "inngest";
 import { inngest, aiMemoryPersistEvent } from "@repo/utils/inngest";
 import { createServerSupabaseClient } from "@repo/supabase/server";
 import { logError } from "@/lib/errors/error-logger";
@@ -87,4 +88,4 @@ export const memoryPersistFn = inngest.createFunction(
       recordJobExecution("memory-persist", performance.now() - start, success);
     }
   }
-);
+) as unknown as InngestFunction.Any;

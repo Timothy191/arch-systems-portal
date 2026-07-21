@@ -78,7 +78,7 @@ export async function searchPersonnel(query: string): Promise<PersonnelSearchRes
       status,
       department_id,
       badges!left(id)
-    `,
+    `
     )
     .or(`first_name.ilike.${searchTerm},surname.ilike.${searchTerm},id_number.ilike.${searchTerm}`)
     .order("surname", { ascending: true })

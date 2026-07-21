@@ -39,8 +39,8 @@ export function Sparkline({
   const pathD = `M${points.join(" L")}`;
   const trend = data[data.length - 1]! - data[0]!;
 
-  // Neon cyan for steady metrics, high-saturation neon coral for alerts
-  const strokeColor = trend >= 0 ? "#00f0ff" : "#ff4b5c";
+  // Light-theme accents (login/hub parity) — mint up, coral down
+  const strokeColor = trend >= 0 ? "var(--accent-green, #10b981)" : "var(--accent-red, #ef4444)";
 
   const endX = points[points.length - 1]?.split(",")[0] ?? "0";
   const endY = points[points.length - 1]?.split(",")[1] ?? "0";

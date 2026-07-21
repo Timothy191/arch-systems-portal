@@ -51,7 +51,7 @@ describe("POST /api/sync/playback – validation", () => {
 
   it("returns 400 when idempotencyKey is missing", async () => {
     const req = makeRequest({
-      actionType: "ADD_BREAKDOWN",
+      actionType: "create",
       payload: {},
       departmentId: "dept-1",
     });
@@ -74,7 +74,7 @@ describe("POST /api/sync/playback – validation", () => {
   it("returns 400 when payload is missing", async () => {
     const req = makeRequest({
       idempotencyKey: "key-1",
-      actionType: "ADD_BREAKDOWN",
+      actionType: "create",
       departmentId: "dept-1",
     });
     const res = await POST(req);
@@ -84,7 +84,7 @@ describe("POST /api/sync/playback – validation", () => {
   it("returns 400 when departmentId is missing", async () => {
     const req = makeRequest({
       idempotencyKey: "key-1",
-      actionType: "ADD_BREAKDOWN",
+      actionType: "create",
       payload: {},
     });
     const res = await POST(req);
@@ -99,10 +99,10 @@ describe("POST /api/sync/playback – validation", () => {
 describe("POST /api/sync/playback – queuing", () => {
   beforeEach(() => jest.clearAllMocks());
 
-  it("queues ADD_BREAKDOWN via Inngest and returns 200", async () => {
+  it("queues a create event via Inngest and returns 200", async () => {
     const req = makeRequest({
       idempotencyKey: "idem-1",
-      actionType: "ADD_BREAKDOWN",
+      actionType: "create",
       payload: {
         fleetId: "EXC-01",
         machineType: "Excavator",
@@ -120,17 +120,17 @@ describe("POST /api/sync/playback – queuing", () => {
       name: "sync/playback",
       data: {
         idempotencyKey: "idem-1",
-        actionType: "ADD_BREAKDOWN",
+        actionType: "create",
         payload: expect.any(Object),
         departmentId: "dept-1",
       },
     });
   });
 
-  it("queues RESOLVE_BREAKDOWN via Inngest and returns 200", async () => {
+  it("queues an update event via Inngest and returns 200", async () => {
     const req = makeRequest({
       idempotencyKey: "idem-resolve",
-      actionType: "RESOLVE_BREAKDOWN",
+      actionType: "update",
       payload: { id: "bd-1" },
       departmentId: "dept-1",
     });
@@ -140,10 +140,10 @@ describe("POST /api/sync/playback – queuing", () => {
     expect(body.queued).toBe(true);
   });
 
-  it("queues ADD_SAFETY_INCIDENT via Inngest and returns 200", async () => {
+  it("queues a create safety incident event via Inngest and returns 200", async () => {
     const req = makeRequest({
       idempotencyKey: "si-1",
-      actionType: "ADD_SAFETY_INCIDENT",
+      actionType: "create",
       payload: {
         incidentDate: "2026-05-17",
         shiftType: "day",
@@ -158,10 +158,10 @@ describe("POST /api/sync/playback – queuing", () => {
     expect((await res.json()).queued).toBe(true);
   });
 
-  it("queues ADD_DAILY_LOG via Inngest and returns 200", async () => {
+  it("queues a create daily log event via Inngest and returns 200", async () => {
     const req = makeRequest({
       idempotencyKey: "dl-1",
-      actionType: "ADD_DAILY_LOG",
+      actionType: "create",
       payload: { logDate: "2026-05-17", shift: "day", notes: "All good" },
       departmentId: "dept-1",
     });
@@ -174,7 +174,7 @@ describe("POST /api/sync/playback – queuing", () => {
     mockSend.mockRejectedValueOnce(new Error("Inngest down"));
     const req = makeRequest({
       idempotencyKey: "idem-fail",
-      actionType: "ADD_BREAKDOWN",
+      actionType: "create",
       payload: { fleetId: "EXC-01" },
       departmentId: "dept-1",
     });

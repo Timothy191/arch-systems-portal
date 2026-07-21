@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabaseClient } from "@repo/supabase/server";
+import { serverLogger } from "@repo/logger";
 
 export async function GET() {
   try {
@@ -31,8 +32,7 @@ export async function GET() {
     if (error) throw error;
     return NextResponse.json({ printers: data ?? [] });
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error("Failed to list printers:", error);
+    serverLogger().error("Failed to list printers:", error);
     return NextResponse.json({ error: "Failed to list printers", printers: [] }, { status: 500 });
   }
 }
@@ -86,7 +86,7 @@ export async function POST(request: NextRequest) {
       if (error.code === "23505") {
         return NextResponse.json(
           { error: "A printer with this CUPS name is already registered" },
-          { status: 409 },
+          { status: 409 }
         );
       }
       throw error;
@@ -94,8 +94,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ printer: data }, { status: 201 });
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error("Failed to register printer:", error);
+    serverLogger().error("Failed to register printer:", error);
     return NextResponse.json({ error: "Failed to register printer" }, { status: 500 });
   }
 }

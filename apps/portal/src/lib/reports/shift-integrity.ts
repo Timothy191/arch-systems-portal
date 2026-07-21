@@ -1,3 +1,4 @@
+import { InngestFunction } from "inngest";
 import { inngest } from "@repo/utils/inngest";
 
 export const shiftIntegrityReportFn = inngest.createFunction(
@@ -5,4 +6,4 @@ export const shiftIntegrityReportFn = inngest.createFunction(
   async () => {
     return { success: true };
   }
-);
+) as unknown as InngestFunction.Any;

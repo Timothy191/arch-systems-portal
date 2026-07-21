@@ -1,3 +1,4 @@
+import { InngestFunction } from "inngest";
 import { inngest } from "@repo/utils/inngest";
 import { createServiceRoleClient } from "@repo/supabase/service-role";
 import { logError } from "@/lib/errors/error-logger";
@@ -162,4 +163,4 @@ export const orphanedRecordDetectionFn = inngest.createFunction(
       recordJobExecution("orphaned-record-detection", performance.now() - start, success);
     }
   }
-);
+) as unknown as InngestFunction.Any;

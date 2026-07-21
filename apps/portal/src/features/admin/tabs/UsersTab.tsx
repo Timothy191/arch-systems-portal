@@ -27,7 +27,7 @@ export function UsersTab() {
     data: employees,
     loading: empsLoading,
     reload: reloadEmployees,
-  } = useAdminData<Employee>((supabase) =>
+  } = useAdminData<Employee>(async (supabase) =>
     supabase
       .from("employees")
       .select("*, departments(display_name)")
@@ -38,7 +38,7 @@ export function UsersTab() {
     data: departments,
     loading: deptsLoading,
     reload: reloadDepartments,
-  } = useAdminData<{ id: string; display_name: string }>((supabase) =>
+  } = useAdminData<{ id: string; display_name: string }>(async (supabase) =>
     supabase.from("departments").select("id, display_name")
   );
 

@@ -38,7 +38,7 @@ export function DepartmentsTab() {
     data: departments,
     loading,
     reload,
-  } = useAdminData<Department>((supabase) =>
+  } = useAdminData<Department>(async (supabase) =>
     supabase.from("departments").select("*").order("display_name")
   );
   const [editingDept, setEditingDept] = useState<Department | null>(null);

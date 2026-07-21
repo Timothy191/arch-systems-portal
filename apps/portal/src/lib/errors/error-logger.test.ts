@@ -9,17 +9,26 @@ jest.mock("@sentry/nextjs", () => ({
   captureException: (...args: unknown[]) => mockCaptureException(...args),
 }));
 
+const mockLoggerError = jest.fn();
+const mockLoggerWarn = jest.fn();
+jest.mock("@repo/logger", () => ({
+  serverLogger: () => ({
+    error: (...args: unknown[]) => mockLoggerError(...args),
+    warn: (...args: unknown[]) => mockLoggerWarn(...args),
+  }),
+}));
+
 describe("logError", () => {
   beforeEach(() => {
-    jest.spyOn(console, "error").mockImplementation(() => {});
     mockCaptureException.mockClear();
+    mockLoggerError.mockClear();
+    mockLoggerWarn.mockClear();
   });
-  afterEach(() => jest.restoreAllMocks());
 
   it("logs a generic error without throwing", async () => {
     const err = new Error("something broke");
     await expect(logError(err)).resolves.toBeUndefined();
-    expect(console.error).toHaveBeenCalled();
+    expect(mockLoggerError).toHaveBeenCalled();
   });
 
   it("forwards generic errors (no statusCode) to Sentry", async () => {
@@ -34,28 +43,24 @@ describe("logError", () => {
   });
 
   it("logs AppError with statusCode determining severity", async () => {
-    const warnSpy = jest.spyOn(console, "warn").mockImplementation(() => {});
     const { ValidationError } = await import("@/lib/errors/error-classes");
     const err = new ValidationError("bad input", { field: "email" });
     await logError(err, { url: "/api/users" });
-    warnSpy.mockRestore();
+    expect(mockLoggerWarn).toHaveBeenCalled();
   });
 
   it("uses warn for 4xx status codes", async () => {
-    const warnSpy = jest.spyOn(console, "warn").mockImplementation(() => {});
     const { AuthError } = await import("@/lib/errors/error-classes");
     const err = new AuthError("Unauthorized");
     await logError(err);
-    warnSpy.mockRestore();
+    expect(mockLoggerWarn).toHaveBeenCalled();
   });
 
   it("does NOT forward 4xx AppErrors to Sentry", async () => {
-    const warnSpy = jest.spyOn(console, "warn").mockImplementation(() => {});
     const { AuthError, ValidationError } = await import("@/lib/errors/error-classes");
     await logError(new AuthError("Unauthorized"));
     await logError(new ValidationError("bad input"));
     expect(mockCaptureException).not.toHaveBeenCalled();
-    warnSpy.mockRestore();
   });
 
   it("forwards 5xx AppErrors to Sentry with extra context", async () => {
@@ -75,14 +80,16 @@ describe("logError", () => {
           url: "/api/machines",
           method: "POST",
         }),
-      }),
+      })
     );
   });
 });
 
 describe("withErrorLogging", () => {
-  beforeEach(() => jest.spyOn(console, "error").mockImplementation(() => {}));
-  afterEach(() => jest.restoreAllMocks());
+  beforeEach(() => {
+    mockLoggerError.mockClear();
+    mockCaptureException.mockClear();
+  });
 
   it("returns handler result when no error is thrown", async () => {
     const req = new Request("http://localhost/api/test", { method: "GET" });
@@ -95,9 +102,9 @@ describe("withErrorLogging", () => {
     await expect(
       withErrorLogging(req, async () => {
         throw new Error("handler failed");
-      }),
+      })
     ).rejects.toThrow("handler failed");
-    expect(console.error).toHaveBeenCalled();
+    expect(mockLoggerError).toHaveBeenCalled();
   });
 
   it("re-throws non-Error objects without calling logError", async () => {
@@ -105,7 +112,7 @@ describe("withErrorLogging", () => {
     await expect(
       withErrorLogging(req, async () => {
         throw "string error";
-      }),
+      })
     ).rejects.toBe("string error");
   });
 
@@ -117,15 +124,17 @@ describe("withErrorLogging", () => {
         async () => {
           throw new Error("context error");
         },
-        { userId: "u-1", sessionId: "s-1" },
-      ),
+        { userId: "u-1", sessionId: "s-1" }
+      )
     ).rejects.toThrow("context error");
   });
 });
 
 describe("withServerActionLogging", () => {
-  beforeEach(() => jest.spyOn(console, "error").mockImplementation(() => {}));
-  afterEach(() => jest.restoreAllMocks());
+  beforeEach(() => {
+    mockLoggerError.mockClear();
+    mockCaptureException.mockClear();
+  });
 
   it("returns handler result on success", async () => {
     const result = await withServerActionLogging(async () => 42, "createUser");
@@ -136,16 +145,16 @@ describe("withServerActionLogging", () => {
     await expect(
       withServerActionLogging(async () => {
         throw new Error("action failed");
-      }, "deleteRecord"),
+      }, "deleteRecord")
     ).rejects.toThrow("action failed");
-    expect(console.error).toHaveBeenCalled();
+    expect(mockLoggerError).toHaveBeenCalled();
   });
 
   it("re-throws non-Error without calling logError", async () => {
     await expect(
       withServerActionLogging(async () => {
         throw "non-error thrown";
-      }, "someAction"),
+      }, "someAction")
     ).rejects.toBe("non-error thrown");
   });
 });

@@ -48,7 +48,7 @@ describe("LoginPage Server Component", () => {
     const pageElement = await LoginPage();
     render(pageElement);
 
-    expect(screen.getByText("Welcome Back")).toBeInTheDocument();
+    expect(screen.getByText("ARCH-SYSTEM")).toBeInTheDocument();
     expect(screen.getByTestId("mock-login-form")).toBeInTheDocument();
   });
 });

@@ -41,9 +41,7 @@ function RouteBackgroundVideo({ className, videoRef }: RouteBackgroundVideoProps
  * Browsers require muted (+ playsInline on iOS) for autoplay; set both
  * properties before play() so attribute-only markup cannot race.
  */
-export async function ensureAmbientVideoPlaying(
-  video: HTMLVideoElement,
-): Promise<boolean> {
+export async function ensureAmbientVideoPlaying(video: HTMLVideoElement): Promise<boolean> {
   video.defaultMuted = true;
   video.muted = true;
   video.playsInline = true;
@@ -177,10 +175,7 @@ export function RouteBackground() {
       <div className="route-bg-orb route-bg-orb-c animate-wave-canvas-c" aria-hidden="true" />
 
       <div className="route-bg-video-container" aria-hidden="true">
-        <RouteBackgroundVideo
-          videoRef={videoRef}
-          className="route-bg-video"
-        />
+        <RouteBackgroundVideo videoRef={videoRef} className="route-bg-video" />
       </div>
 
       <div className="route-bg-tint" aria-hidden="true" />

@@ -16,7 +16,11 @@
  *       Track: https://github.com/your-org/Arch-Mk2/issues/[issue-number]
  */
 
+import { Building2, Cpu, ShieldCheck, type LucideIcon } from "lucide-react";
 import { Logo } from "@repo/ui/Logo";
+import { cn } from "@repo/ui/lib/utils";
+import { semanticIconClass } from "@/lib/semantic-icon";
+import { HERO_ARCH_PILL } from "@/features/hub/constants/hero-pill";
 
 interface TrustLogo {
   src: string;
@@ -27,19 +31,39 @@ interface TrustLogosProps {
   logos?: TrustLogo[];
 }
 
-const PLACEHOLDERS = [
-  { label: "Arch Mining" },
-  { label: "Sector-01" },
-  { label: "Modbus Ready" },
-  { label: "ISO 27001" },
+interface TrustPlaceholder {
+  label: string;
+  icon: LucideIcon | "arch-logo";
+}
+
+const PLACEHOLDERS: TrustPlaceholder[] = [
+  { label: "Arch Mining", icon: "arch-logo" },
+  { label: "Sector-01", icon: Building2 },
+  { label: "Modbus Ready", icon: Cpu },
+  { label: "ISO 27001", icon: ShieldCheck },
 ];
+
+const TRUST_BADGE_CLASS = cn(
+  HERO_ARCH_PILL,
+  "inline-flex items-center justify-center gap-1.5 h-7 px-3 text-sm font-medium"
+);
+
+function TrustBadgeIcon({ icon }: { icon: TrustPlaceholder["icon"] }) {
+  if (icon === "arch-logo") {
+    return <Logo className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />;
+  }
+  const Icon = icon;
+  return (
+    <Icon className={cn("w-3.5 h-3.5 shrink-0", semanticIconClass("neutral"))} aria-hidden="true" />
+  );
+}
 
 export function TrustLogos({ logos }: TrustLogosProps) {
   const hasLogos = logos && logos.length > 0;
 
   return (
     <div className="pt-6 border-t border-arch-border-subtle">
-      <p className="text-[10px] uppercase tracking-wider text-arch-text-tertiary font-medium mb-3">
+      <p className="font-display text-[11px] font-normal uppercase tracking-[0.18em] text-text-heading mb-3">
         Trusted by forward-thinking teams
       </p>
 
@@ -60,11 +84,8 @@ export function TrustLogos({ logos }: TrustLogosProps) {
       ) : (
         <div className="flex flex-wrap items-center gap-3">
           {PLACEHOLDERS.map((p) => (
-            <span
-              key={p.label}
-              className="inline-flex items-center justify-center h-7 px-3 text-xs font-medium text-arch-text-secondary bg-arch-surface-tertiary/80 rounded-md border border-arch-border-subtle"
-            >
-              {p.label === "Arch Mining" && <Logo className="w-3.5 h-3.5 mr-1.5 shrink-0" />}
+            <span key={p.label} className={TRUST_BADGE_CLASS}>
+              <TrustBadgeIcon icon={p.icon} />
               {p.label}
             </span>
           ))}

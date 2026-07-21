@@ -87,7 +87,7 @@ function DelaysOutput({ output }: { output: Record<string, unknown> }) {
   const delays = (output.delays as Array<Record<string, unknown>>) ?? [];
   const totalMinutes = delays.reduce(
     (sum, d) => sum + (typeof d.delay_minutes === "number" ? d.delay_minutes : 0),
-    0,
+    0
   );
 
   if (output.error) {

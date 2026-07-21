@@ -7,5 +7,10 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <DepartmentSectionShell title="Safety" description="Incident logs, compliance and inspections." />;
+  return (
+    <DepartmentSectionShell
+      title="Safety"
+      description="Incident logs, compliance and inspections."
+    />
+  );
 }

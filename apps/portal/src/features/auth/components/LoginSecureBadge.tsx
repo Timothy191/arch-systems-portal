@@ -10,9 +10,7 @@ interface NodeStatus {
 
 function resolveNodeStatus(hostname: string, isSecure: boolean): NodeStatus {
   const isLocal =
-    hostname === "localhost" ||
-    hostname === "127.0.0.1" ||
-    hostname.endsWith(".local");
+    hostname === "localhost" || hostname === "127.0.0.1" || hostname.endsWith(".local");
 
   return {
     nodeLabel: isLocal ? "Local Host Active" : `${hostname} Active`,

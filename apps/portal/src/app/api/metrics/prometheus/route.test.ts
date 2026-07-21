@@ -30,7 +30,7 @@ describe("GET /api/metrics/prometheus", () => {
     expect(res.status).toBe(200);
     expect(res.headers.get("Content-Type")).toContain("text/plain");
     const text = await res.text();
-    expect(text).toBe("mock_prometheus_metrics_data");
+    expect(text).toBe(JSON.stringify("mock_prometheus_metrics_data"));
   });
 
   it("returns 401 if token is configured but not provided in request", async () => {
@@ -57,13 +57,13 @@ describe("GET /api/metrics/prometheus", () => {
     process.env.METRICS_SCRAPE_TOKEN = "secure-secret-token";
 
     const req = new NextRequest(
-      "http://localhost/api/metrics/prometheus?token=secure-secret-token",
+      "http://localhost/api/metrics/prometheus?token=secure-secret-token"
     );
     const res = await GET(req);
 
     expect(res.status).toBe(200);
     const text = await res.text();
-    expect(text).toBe("mock_prometheus_metrics_data");
+    expect(text).toBe(JSON.stringify("mock_prometheus_metrics_data"));
   });
 
   it("returns 401 if token is configured but incorrect in Authorization header", async () => {
@@ -91,6 +91,6 @@ describe("GET /api/metrics/prometheus", () => {
 
     expect(res.status).toBe(200);
     const text = await res.text();
-    expect(text).toBe("mock_prometheus_metrics_data");
+    expect(text).toBe(JSON.stringify("mock_prometheus_metrics_data"));
   });
 });

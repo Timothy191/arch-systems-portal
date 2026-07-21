@@ -190,6 +190,7 @@ import { createServerSupabaseClient } from "@repo/supabase/server";
 import { withRateLimit } from "@/lib/api/rate-limit-middleware";
 import { RateLimiter, RedisStore, FixedWindowStrategy } from "@repo/rate-limiter";
 import { getRedisClient } from "@repo/redis";
+import { serverLogger } from "@repo/logger";
 
 const OPERATIONAL_TABLES = new Set([
   "machines",
@@ -233,7 +234,9 @@ async function getMachineStatusRateLimiter(): Promise<RateLimiter | null> {
   try {
     const redis = getRedisClient();
     if (redis.status === "ready") {
-      const store = new RedisStore(redis as unknown as import("@repo/rate-limiter").SimpleRedisClient);
+      const store = new RedisStore(
+        redis as unknown as import("@repo/rate-limiter").SimpleRedisClient
+      );
       const strategy = new FixedWindowStrategy();
       return new RateLimiter({
         store,
@@ -244,8 +247,7 @@ async function getMachineStatusRateLimiter(): Promise<RateLimiter | null> {
       });
     }
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.warn("Redis not available for machine rate limiting:", error);
+    serverLogger().warn("Redis not available for machine rate limiting:", error);
   }
   return null;
 }

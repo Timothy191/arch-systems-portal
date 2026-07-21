@@ -1,4 +1,5 @@
 import { createReadReplicaClient } from "@repo/supabase/read-replica";
+import { serverLogger } from "@repo/logger";
 import { PRODUCTIVITY_TOOLS } from "@/lib/departments";
 
 interface Tool {
@@ -33,8 +34,7 @@ export async function getTools(): Promise<Tool[]> {
     .order("sort_order", { ascending: true });
 
   if (error) {
-    // eslint-disable-next-line no-console
-    console.warn("Failed to fetch tools from database, falling back to constant:", error);
+    serverLogger().warn("Failed to fetch tools from database, falling back to constant:", error);
     return PRODUCTIVITY_TOOLS.map((t, i) => ({
       id: String(i),
       name: t.name,

@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 
 const SmoothScrollProvider = dynamic(
   () => import("@/components/SmoothScrollProvider").then((mod) => mod.SmoothScrollProvider),
-  { ssr: false },
+  { ssr: false }
 ) as React.FC<{ children: ReactNode }>;
 
 export default function ClientProviders({ children }: { children: ReactNode }) {

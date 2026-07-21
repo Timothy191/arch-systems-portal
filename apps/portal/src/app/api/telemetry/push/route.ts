@@ -116,7 +116,7 @@ async function getRedisLastValue(key: string): Promise<number | null> {
 async function setRedisLastValue(key: string, value: number): Promise<void> {
   try {
     const client = await getRedisClient();
-    await client.set(`telemetry:last:${key}`, String(value), { EX: 86400 }); // 24 hours TTL
+    await client.set(`telemetry:last:${key}`, String(value), "EX", 86400); // 24 hours TTL
   } catch {
     // ignore
   }

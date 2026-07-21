@@ -61,7 +61,7 @@ const severityConfig = {
 export function AlertTicker({ events }: AlertTickerProps) {
   if (events.length === 0) {
     return (
-      <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-accent-green/20 w-fit backdrop-blur-xl">
+      <div className="login-oauth flex items-center gap-2 px-3 py-1.5 w-fit">
         <div className="w-1.5 h-1.5 rounded-full bg-accent-green animate-pulse" />
         <p className="text-xs text-accent-green font-medium">All systems operational</p>
       </div>
@@ -69,17 +69,13 @@ export function AlertTicker({ events }: AlertTickerProps) {
   }
 
   return (
-    <div
-      className={cn(
-        "w-full rounded-xl border border-arch-border-primary overflow-hidden backdrop-blur-xl will-change-[backdrop-filter]",
-      )}
-    >
-      <div className="flex items-center gap-2 px-4 py-2 border-b border-arch-border-primary bg-arch-surface-tertiary/60">
+    <div className="os-shell w-full rounded-[var(--os-shell-radius-lg)] overflow-hidden">
+      <div className="flex items-center gap-2 px-4 py-2 border-b border-arch-border-subtle">
         <AlertTriangle className="w-3.5 h-3.5 text-accent-amber" />
-        <span className="text-xs font-medium text-arch-text-primary uppercase tracking-wider">
+        <span className="text-xs font-medium login-text-emphasis uppercase tracking-wider">
           Live Alerts
         </span>
-        <span className="ml-auto text-[10px] font-mono text-arch-text-tertiary">
+        <span className="ml-auto text-[10px] font-mono login-muted-text">
           {events.length} active
         </span>
       </div>
@@ -95,7 +91,7 @@ export function AlertTicker({ events }: AlertTickerProps) {
               href={event.href}
               className={cn(
                 "flex items-start gap-3 px-4 py-3 border-b border-arch-border-subtle last:border-b-0",
-                "hover:bg-arch-surface-secondary/50 transition-colors duration-150",
+                "hover:bg-arch-surface-secondary/50 transition-colors duration-150"
               )}
             >
               <div className={cn("mt-0.5 p-1.5 rounded-lg shrink-0", config.iconBg)}>
@@ -110,7 +106,7 @@ export function AlertTicker({ events }: AlertTickerProps) {
                   <span
                     className={cn(
                       "shrink-0 px-1.5 py-0.5 rounded text-[9px] font-medium tracking-wider",
-                      config.iconBg,
+                      config.iconBg
                     )}
                   >
                     {config.label}

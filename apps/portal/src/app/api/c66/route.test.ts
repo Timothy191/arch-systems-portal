@@ -123,7 +123,7 @@ describe("P0 /api/c66 secure access checks", () => {
       const body = await res.json();
       expect(body.success).toBe(false);
       expect(body.error).toBe("Unauthorized scanner token");
-    },
+    }
   );
 
   it.each(PUBLICLY_DOCUMENTED_SCANNER_SOURCES)(
@@ -136,7 +136,7 @@ describe("P0 /api/c66 secure access checks", () => {
       expect(body.name).toBe("Test User");
       expect(lastServiceRoleClient).not.toBeNull();
       expect(lastServiceRoleClient!.from).toHaveBeenCalledWith("access_logs");
-    },
+    }
   );
 
   it("missing token is rejected with 401", async () => {

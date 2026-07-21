@@ -9,7 +9,10 @@ interface StatusBadgeProps {
   size?: "sm" | "md" | "lg";
 }
 
-const statusConfig: Record<AccessStatus, { icon: React.ElementType; color: string; bgColor: string }> = {
+const statusConfig: Record<
+  AccessStatus,
+  { icon: React.ElementType; color: string; bgColor: string }
+> = {
   Granted: {
     icon: CheckCircle2,
     color: "text-success",

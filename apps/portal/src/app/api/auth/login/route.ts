@@ -181,7 +181,7 @@ export async function POST(request: NextRequest) {
                 ? "Too many attempts. Please wait a moment and try again."
                 : "Invalid credentials",
             },
-            { status: 401 },
+            { status: 401 }
           );
         }
 
@@ -192,7 +192,7 @@ export async function POST(request: NextRequest) {
             success: true,
             redirectTo: "/hub",
           },
-          { status: 200 },
+          { status: 200 }
         );
       } catch (err) {
         // Distinguish malformed JSON from internal server errors
@@ -207,6 +207,6 @@ export async function POST(request: NextRequest) {
         windowMs: 15 * 60 * 1000, // 15 minutes
         maxRequests: 5, // 5 attempts per 15 minutes
       },
-    },
+    }
   );
 }

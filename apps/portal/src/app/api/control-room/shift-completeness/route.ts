@@ -85,11 +85,12 @@ export async function GET(req: NextRequest) {
   if (!deptId || !deptSlug || !date || !shift) {
     return NextResponse.json(
       { error: "Missing required params: deptId, deptSlug, date, shift" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
-  const completeness = await getShiftCompleteness(supabase, deptId, deptSlug, date, shift);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const completeness = await getShiftCompleteness(supabase as any, deptId, deptSlug, date, shift);
 
   return NextResponse.json(completeness);
 }

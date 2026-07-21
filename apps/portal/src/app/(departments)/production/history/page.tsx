@@ -7,5 +7,10 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <DepartmentSectionShell title="Production — History" description="This section is ready for navigation." />;
+  return (
+    <DepartmentSectionShell
+      title="Production — History"
+      description="This section is ready for navigation."
+    />
+  );
 }

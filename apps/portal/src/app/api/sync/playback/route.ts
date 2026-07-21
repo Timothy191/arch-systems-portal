@@ -101,7 +101,7 @@ async function handlePlaybackRequest(req: NextRequest): Promise<NextResponse> {
     });
     return NextResponse.json(
       { error: err instanceof Error ? err.message : "Internal Server Error" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
@@ -112,6 +112,6 @@ export async function POST(req: NextRequest) {
     async () => {
       return applyCors(req, await withRateLimit(req, () => handlePlaybackRequest(req)));
     },
-    { maxSize: 1048576 },
+    { maxSize: 1048576 }
   );
 }

@@ -45,7 +45,7 @@ describe("DepartmentCard", () => {
   });
 
   it("renders department information correctly", () => {
-    render(<DepartmentCard department={mockDepartment} index={0} />);
+    render(<DepartmentCard department={mockDepartment} index={0} accessible />);
     expect(screen.getByText("Drilling Operations")).toBeInTheDocument();
     expect(
       screen.getByText("Core drilling operations telemetry and systems control.")
@@ -55,7 +55,7 @@ describe("DepartmentCard", () => {
   });
 
   it("triggers router push on click", () => {
-    render(<DepartmentCard department={mockDepartment} index={0} />);
+    render(<DepartmentCard department={mockDepartment} index={0} accessible />);
     const card = screen.getByText("Drilling Operations").closest(".interactive-element");
     expect(card).toBeInTheDocument();
     if (card) {
@@ -65,7 +65,7 @@ describe("DepartmentCard", () => {
   });
 
   it("triggers router push on Enter keydown", () => {
-    render(<DepartmentCard department={mockDepartment} index={0} />);
+    render(<DepartmentCard department={mockDepartment} index={0} accessible />);
     const card = screen.getByText("Drilling Operations").closest(".interactive-element");
     expect(card).toBeInTheDocument();
     if (card) {
@@ -75,7 +75,7 @@ describe("DepartmentCard", () => {
   });
 
   it("triggers router push on Space keydown", () => {
-    render(<DepartmentCard department={mockDepartment} index={0} />);
+    render(<DepartmentCard department={mockDepartment} index={0} accessible />);
     const card = screen.getByText("Drilling Operations").closest(".interactive-element");
     expect(card).toBeInTheDocument();
     if (card) {
@@ -85,8 +85,25 @@ describe("DepartmentCard", () => {
   });
 
   it("applies tabIndex=0 to the outer interactive wrapper", () => {
-    render(<DepartmentCard department={mockDepartment} index={0} />);
+    render(<DepartmentCard department={mockDepartment} index={0} accessible />);
     const card = screen.getByText("Drilling Operations").closest(".interactive-element");
     expect(card).toHaveAttribute("tabIndex", "0");
+  });
+
+  it("defaults to locked when accessible prop is omitted", () => {
+    render(<DepartmentCard department={mockDepartment} index={0} />);
+    const card = screen.getByRole("link", { name: /no access/i });
+    expect(card).toHaveAttribute("aria-disabled", "true");
+    fireEvent.click(card);
+    expect(mockPush).not.toHaveBeenCalled();
+  });
+
+  it("does not navigate when accessible is false and uses no-entry cursor", () => {
+    render(<DepartmentCard department={mockDepartment} index={0} accessible={false} />);
+    const card = screen.getByRole("link", { name: /no access/i });
+    expect(card).toHaveAttribute("aria-disabled", "true");
+    expect(card.className).toMatch(/cursor-not-allowed/);
+    fireEvent.click(card);
+    expect(mockPush).not.toHaveBeenCalled();
   });
 });

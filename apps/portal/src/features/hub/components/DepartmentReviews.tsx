@@ -124,7 +124,7 @@ export function DepartmentReviews() {
       </div>
 
       <div
-        className="relative flex w-full flex-col items-center justify-center overflow-hidden"
+        className="relative flex w-full flex-col items-center justify-center overflow-hidden bg-transparent py-6"
         style={maskStyle}
       >
         <Marquee pauseOnHover className="[--duration:30s] gap-6 py-1">

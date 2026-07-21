@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createServerSupabaseClient } from "@repo/supabase/server";
+import { serverLogger } from "@repo/logger";
 
 export async function DELETE(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -33,8 +34,7 @@ export async function DELETE(_request: Request, { params }: { params: Promise<{ 
     if (error) throw error;
     return NextResponse.json({ success: true });
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error("Failed to delete printer:", error);
+    serverLogger().error("Failed to delete printer:", error);
     return NextResponse.json({ error: "Failed to delete printer" }, { status: 500 });
   }
 }

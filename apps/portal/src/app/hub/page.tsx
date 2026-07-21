@@ -16,11 +16,7 @@ import {
 import type { AlertEvent } from "@/features/hub";
 import type { TrendDataPoint } from "@/features/hub";
 import { getTools } from "@/lib/tools";
-import {
-  departmentsForHub,
-  resolveAccessibleDepartmentNames,
-} from "@/lib/accessible-departments";
-import { GlassCard } from "@repo/ui/GlassCard";
+import { departmentsForHub, resolveAccessibleDepartmentNames } from "@/lib/accessible-departments";
 import {
   Shield,
   Activity,
@@ -248,11 +244,11 @@ async function getRecentAlertEvents(
 
 async function getEmployeeDepartments(userId: string) {
   return cachedRSC(
-    ["user", userId, "accessible-dept-names-v2"],
+    ["user", userId, "accessible-dept-names-v3"],
     async () => {
       return withCache(async () => resolveAccessibleDepartmentNames(userId), {
         category: CacheCategory.AUTH,
-        keyParts: ["user", userId, "accessible-dept-names-v2"],
+        keyParts: ["user", userId, "accessible-dept-names-v3"],
         tags: [`auth:${userId}`, "table:employees", "table:departments"],
       });
     },
@@ -287,17 +283,13 @@ export default async function HubPage({
   // shell streams immediately. The slow ProductionTrend fetch is hoisted into
   // a Suspense child (`ProductionTrendSection`) so it streams after the shell
   // paints. `AlertTicker` data is already fast and stays inline.
-  const [
-    { incidentCount, breakdownCount, offlineMachineCount },
-    access,
-    tools,
-    alertEvents,
-  ] = await Promise.all([
-    getDashboardCounts(today, cookieList),
-    getEmployeeDepartments(userId),
-    getTools(),
-    getRecentAlertEvents(today, cookieList),
-  ]);
+  const [{ incidentCount, breakdownCount, offlineMachineCount }, access, tools, alertEvents] =
+    await Promise.all([
+      getDashboardCounts(today, cookieList),
+      getEmployeeDepartments(userId),
+      getTools(),
+      getRecentAlertEvents(today, cookieList),
+    ]);
 
   const accessibleNames = access.names;
   const departments = departmentsForHub(accessibleNames, access.role);
@@ -307,7 +299,7 @@ export default async function HubPage({
       {accessError ? (
         <div
           role="alert"
-          className="rounded-lg border border-arch-border-primary bg-arch-surface-tertiary/50 px-4 py-3 text-sm text-arch-text-secondary"
+          className="os-shell rounded-[var(--os-shell-radius-lg)] px-4 py-3 text-sm login-muted-text"
         >
           {accessError === "unauthorized_department"
             ? "You do not have access to that department."
@@ -316,8 +308,7 @@ export default async function HubPage({
               : "Unable to open that department."}
         </div>
       ) : null}
-      {/* Light-theme glass hero section */}
-      {/* Light-theme glass hero section */}
+      {/* Light-theme glass hero section — os-shell parity with login */}
       <section
         className="relative overflow-hidden rounded-xl pt-1 pb-0 sm:pt-2 sm:pb-0 md:pt-3 md:pb-0 lg:pt-4 lg:pb-0 px-4 sm:px-6 md:px-10 motion-reduce:animate-none animate-fade-up"
         style={{
@@ -327,26 +318,16 @@ export default async function HubPage({
       >
         <HeroBackground />
 
-        <GlassCard
-          variant="liquid"
-          hover={false}
-          padding={false}
-          className="relative z-10 rounded-xl shadow-card overflow-hidden"
-        >
-          {/* Inner glass highlight ring */}
-          <div
-            className="absolute inset-0 rounded-xl ring-1 ring-inset ring-arch-border-emphasis/40 pointer-events-none"
-            aria-hidden="true"
-          />
-
-          <div className="px-6 py-6 sm:px-10 sm:py-8 md:px-14 md:py-10 max-w-xl space-y-5 relative">
+        <div className="relative z-10 os-shell rounded-[var(--os-shell-radius-lg)] overflow-hidden">
+          {/* No `relative` here — hero dots position against this os-shell */}
+          <div className="w-full px-6 py-6 sm:px-10 sm:py-8 md:px-14 md:py-10 space-y-5 pb-12">
             {/* Eyebrow badge row */}
             <div className="flex items-center gap-3 flex-wrap liquid-shift-y">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-arch-border-subtle bg-arch-surface-secondary/80 backdrop-blur-sm text-xs font-medium tracking-wide text-arch-text-secondary">
+              <span className="inline-flex h-[26px] items-center gap-1.5 rounded-full border border-border-subtle bg-black/[0.03] px-2.5 text-xs font-medium tracking-wide text-text-heading">
                 <span className="w-1.5 h-1.5 rounded-full bg-accent-green" aria-hidden="true" />
                 Sector-01 Active
               </span>
-              <span className="text-xs font-mono text-arch-text-tertiary tracking-wider">
+              <span className="text-xs font-mono login-muted-text tracking-wider">
                 PORTAL v{PORTAL_VERSION}
               </span>
               {incidentCount > 0 && (
@@ -383,23 +364,25 @@ export default async function HubPage({
               defaultTitle="Central Operations Portal"
               defaultDescription="Centralized monitoring and control system for Arch Systems industrial complexes. Access Modbus diagnostics, machine breakdowns, shifts, and live telemetry."
               primaryHref={
-                departments.some((d) => d.name === "control-room")
+                departments.some((d) => d.name === "control-room" && d.accessible)
                   ? "/control-room"
-                  : departments.length > 0
-                    ? `/${departments[0]!.name}`
-                    : "/hub"
+                  : (() => {
+                      const open = departments.find((d) => d.accessible);
+                      return open ? `/${open.name}` : "/hub";
+                    })()
               }
               primaryLabel={
-                departments.some((d) => d.name === "control-room")
+                departments.some((d) => d.name === "control-room" && d.accessible)
                   ? "Launch Monitor"
                   : "Go to Department"
               }
               secondaryHref={
-                departments.some((d) => d.name === "training")
+                departments.some((d) => d.name === "training" && d.accessible)
                   ? "/training"
-                  : departments.length > 0
-                    ? `/${departments[0]!.name}`
-                    : "/hub"
+                  : (() => {
+                      const open = departments.find((d) => d.accessible);
+                      return open ? `/${open.name}` : "/hub";
+                    })()
               }
               secondaryLabel="System Guidelines"
               departments={departments}
@@ -408,7 +391,7 @@ export default async function HubPage({
             {/* Trust section */}
             <TrustLogos />
           </div>
-        </GlassCard>
+        </div>
       </section>
 
       {/* Department & Operational Testimonials Double Marquee */}
@@ -420,7 +403,7 @@ export default async function HubPage({
         style={{ animationDelay: "0.1s", animationFillMode: "both" }}
       >
         <div className="flex items-center justify-between pb-2 border-b border-arch-border-subtle">
-          <h2 className="text-[17px] font-medium text-arch-text-primary flex items-center gap-2">
+          <h2 className="text-[17px] font-medium login-text-emphasis flex items-center gap-2">
             <Shield className="w-4 h-4 text-arch-accent-red" />
             Live System Urgency & Incident Controls
           </h2>
@@ -430,38 +413,30 @@ export default async function HubPage({
 
       {/* Core Operational Modules - Responsive Grid */}
       <section
-        className="space-y-4 animate-fade-up group/row relative aurora-shadow rounded-lg"
+        className="space-y-4 animate-fade-up group/row relative rounded-lg"
         style={{ animationDelay: "0.2s", animationFillMode: "both" }}
       >
         <div className="flex items-center justify-between pb-2 border-b border-arch-border-subtle">
-          <h2 className="text-[17px] font-medium text-arch-text-primary group-hover/row:text-arch-accent-blue transition-colors duration-300 flex items-center gap-2">
+          <h2 className="text-[17px] font-medium login-text-emphasis flex items-center gap-2">
             <Boxes className="w-4 h-4 text-arch-accent-blue opacity-70" />
             Core Operational Modules
-            <span className="ml-1 px-1.5 py-0.5 rounded-md bg-arch-surface-tertiary text-arch-text-tertiary text-[11px] font-mono">
+            <span className="login-oauth login-muted-text ml-1 px-1.5 py-0.5 text-[11px] font-mono">
               {departments.length}
             </span>
           </h2>
         </div>
 
-        {departments.length === 0 ? (
-          <div className="p-8 text-center rounded-lg bg-arch-surface-tertiary/40 border border-arch-border-primary">
-            <p className="text-sm text-arch-text-tertiary">
-              No departments available for your account.
-            </p>
-          </div>
-        ) : (
-          <div
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-fr"
-            aria-label="Department modules"
-            role="list"
-          >
-            {departments.map((dept, i) => (
-              <div key={dept.name} role="listitem">
-                <DepartmentCard department={dept} index={i} />
-              </div>
-            ))}
-          </div>
-        )}
+        <div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-fr"
+          aria-label="Department modules"
+          role="list"
+        >
+          {departments.map((dept, i) => (
+            <div key={dept.name} role="listitem">
+              <DepartmentCard department={dept} index={i} accessible={dept.accessible} />
+            </div>
+          ))}
+        </div>
       </section>
 
       {/* Productivity & Workflow Tools - Marquee Banner */}
@@ -471,7 +446,7 @@ export default async function HubPage({
           style={{ animationDelay: "0.3s", animationFillMode: "both" }}
         >
           <div className="flex items-center justify-between pb-2 border-b border-arch-border-subtle">
-            <h2 className="text-[17px] font-medium text-arch-text-primary group-hover/row:text-arch-accent-blue transition-colors duration-300 flex items-center gap-2">
+            <h2 className="text-[17px] font-medium login-text-emphasis flex items-center gap-2">
               <WrenchIcon className="w-4 h-4 text-arch-accent-blue opacity-70" />
               Daily Workflow & Efficiency Tools
             </h2>
@@ -491,22 +466,18 @@ export default async function HubPage({
         style={{ animationDelay: "0.4s", animationFillMode: "both" }}
       >
         <div className="flex items-center justify-between pb-2 border-b border-arch-border-subtle">
-          <h2 className="text-[17px] font-medium text-arch-text-primary flex items-center gap-2">
+          <h2 className="text-[17px] font-medium login-text-emphasis flex items-center gap-2">
             <Activity className="w-4 h-4 text-arch-accent-green" />
             Operational Ingestion Telemetry
           </h2>
         </div>
-        <GlassCard
-          variant="default"
-          padding
-          className="bg-arch-surface-secondary/70 border-arch-border-subtle"
-        >
+        <div className="os-shell rounded-[var(--os-shell-radius-lg)] p-6">
           <Suspense
             fallback={<div className="h-64 animate-pulse bg-arch-surface-tertiary rounded-xl" />}
           >
             <ProductionTrendSection />
           </Suspense>
-        </GlassCard>
+        </div>
       </section>
     </div>
   );

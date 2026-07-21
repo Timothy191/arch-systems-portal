@@ -7,5 +7,10 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <DepartmentSectionShell title="Control Room Reports" description="This section is ready for navigation." />;
+  return (
+    <DepartmentSectionShell
+      title="Control Room Reports"
+      description="This section is ready for navigation."
+    />
+  );
 }

@@ -2,6 +2,7 @@ import { BottomNav } from "@/components/nav/BottomNav";
 import { createServerSupabaseClient, getUserSafely } from "@repo/supabase/server";
 import { redirect } from "next/navigation";
 import { resolveAccessibleDepartmentNames } from "@/lib/accessible-departments";
+import { isDeptAllowedForRole } from "@/lib/dept-access";
 
 export default async function HubLayout({ children }: { children: React.ReactNode }) {
   const supabase = await createServerSupabaseClient();
@@ -11,7 +12,9 @@ export default async function HubLayout({ children }: { children: React.ReactNod
     redirect("/login");
   }
 
-  const { names: accessibleDepartments } = await resolveAccessibleDepartmentNames(user.id);
+  // AGENT-TRACE: Same ACL ∩ role gate as hub cards so Control nav cannot bypass role deny.
+  const { names, role } = await resolveAccessibleDepartmentNames(user.id);
+  const accessibleDepartments = names.filter((name) => isDeptAllowedForRole(name, role));
 
   return (
     <div className="min-h-[calc(100vh-28px)] text-arch-text-primary">

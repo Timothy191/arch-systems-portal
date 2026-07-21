@@ -7,5 +7,10 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <DepartmentSectionShell title="Control Room" description="SCADA systems and real-time monitoring." />;
+  return (
+    <DepartmentSectionShell
+      title="Control Room"
+      description="SCADA systems and real-time monitoring."
+    />
+  );
 }

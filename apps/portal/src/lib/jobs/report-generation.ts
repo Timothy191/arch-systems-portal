@@ -1,3 +1,4 @@
+import { InngestFunction } from "inngest";
 import { inngest } from "@repo/utils/inngest";
 import { createServerSupabaseClient } from "@repo/supabase/server";
 import { logError } from "@/lib/errors/error-logger";
@@ -57,4 +58,4 @@ export const generateReportFn = inngest.createFunction(
       recordJobExecution("generate-shift-report", performance.now() - start, success);
     }
   }
-);
+) as unknown as InngestFunction.Any;

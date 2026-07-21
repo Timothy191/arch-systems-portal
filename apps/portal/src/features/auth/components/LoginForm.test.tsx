@@ -20,7 +20,15 @@ jest.mock("next/link", () => ({
 }));
 
 jest.mock("@repo/ui/Input", () => ({
-  Input: (props: React.InputHTMLAttributes<HTMLInputElement>) => <input {...props} />,
+  Input: ({
+    variant,
+    className,
+    ...props
+  }: React.InputHTMLAttributes<HTMLInputElement> & { variant?: string }) => {
+    const variantClass =
+      variant === "login" ? "login-field block w-full min-w-0 max-w-full h-11" : "";
+    return <input className={[variantClass, className].filter(Boolean).join(" ")} {...props} />;
+  },
 }));
 
 jest.mock("sonner", () => ({

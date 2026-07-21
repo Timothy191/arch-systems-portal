@@ -113,8 +113,8 @@ async function handleExportRequest(req: NextRequest) {
       req,
       NextResponse.json(
         { error: "Invalid query parameters", details: parsed.error.issues },
-        { status: 400 },
-      ),
+        { status: 400 }
+      )
     );
   }
   const { month, dept, limit, offset } = parsed.data;

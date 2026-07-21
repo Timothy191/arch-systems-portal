@@ -1,3 +1,4 @@
+import { InngestFunction } from "inngest";
 import { inngest } from "@repo/utils/inngest";
 import { createServiceRoleClient } from "@repo/supabase/service-role";
 import { getShiftCompleteness } from "@/lib/shift-completeness";
@@ -53,7 +54,7 @@ export const shiftCompletenessCheckFn = inngest.createFunction(
         if (department.name !== "control-room") continue;
 
         const completeness = await getShiftCompleteness(
-          serviceRole,
+          serviceRole as any,
           department.id,
           null,
           today,
@@ -111,4 +112,4 @@ export const shiftCompletenessCheckFn = inngest.createFunction(
       recordJobExecution("shift-completeness-check", performance.now() - start, success);
     }
   }
-);
+) as unknown as InngestFunction.Any;

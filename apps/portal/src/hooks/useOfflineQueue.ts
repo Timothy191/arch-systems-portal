@@ -244,8 +244,13 @@ async function syncAll(events?: OfflineQueueEvents): Promise<{ synced: number; f
   for (const mutation of pending) {
     try {
       await updateMutation({ ...mutation, status: "syncing" });
-    } catch {
-      // If we can't mark as syncing, skip this mutation
+    } catch (err) {
+      // If we can't mark as syncing, reset to pending and skip
+      try {
+        await updateMutation({ ...mutation, status: "pending" });
+      } catch {
+        // Best effort — mutation may be stuck
+      }
       failed++;
       continue;
     }

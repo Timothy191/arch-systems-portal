@@ -145,7 +145,7 @@ describe("ResetPasswordPage", () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText("Unable to send reset email. Please try again or contact IT Support."),
+        screen.getByText("Unable to send reset email. Please try again or contact IT Support.")
       ).toBeInTheDocument();
     });
   });

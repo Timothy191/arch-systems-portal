@@ -72,6 +72,16 @@ describe("env validation", () => {
     }
   });
 
+  beforeEach(() => {
+    // Ensure required Supabase vars are always set for every test
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
+      setEnvVar("NEXT_PUBLIC_SUPABASE_URL", "http://127.0.0.1:54321");
+    }
+    if (!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+      setEnvVar("NEXT_PUBLIC_SUPABASE_ANON_KEY", "test-anon-key");
+    }
+  });
+
   afterEach(() => {
     // Restore env vars via helper to handle readonly properties
     for (const key of ENV_KEYS) {
@@ -86,6 +96,9 @@ describe("env validation", () => {
     }
     // Clear the DISABLE_RATE_LIMIT that setupTests.ts sets
     setEnvVar("DISABLE_RATE_LIMIT", undefined);
+    // Set required Supabase values (superRefine enforces these)
+    setEnvVar("NEXT_PUBLIC_SUPABASE_URL", "http://127.0.0.1:54321");
+    setEnvVar("NEXT_PUBLIC_SUPABASE_ANON_KEY", "test-anon-key");
     resetEnv();
 
     expect(env.NEXT_PUBLIC_SUPABASE_URL).toBe("http://127.0.0.1:54321");

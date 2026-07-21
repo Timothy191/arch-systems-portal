@@ -21,7 +21,7 @@ function buildMock(
     webhooks?: unknown;
     insertData?: unknown;
     dbError?: unknown;
-  } = {},
+  } = {}
 ) {
   const user = overrides.user !== undefined ? overrides.user : { id: "user-1" };
   const employee =
@@ -163,7 +163,7 @@ describe("GET /api/webhooks", () => {
             is: jest.fn().mockReturnValue(
               Object.assign(isResult, {
                 or: jest.fn().mockResolvedValue({ data: webhookList, error: null }),
-              }),
+              })
             ),
           }),
         };
@@ -212,7 +212,7 @@ describe("POST /api/webhooks", () => {
     const req = makeRequest({ event_types: ["daily_log.created"] });
     const res = await POST(req);
     expect(res.status).toBe(400);
-    expect((await res.json()).error).toContain("invalid input");
+    expect((await res.json()).error).toContain("invalid request body");
   });
 
   it("returns 400 when event_types is empty", async () => {

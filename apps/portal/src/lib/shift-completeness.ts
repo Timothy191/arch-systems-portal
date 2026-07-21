@@ -17,7 +17,7 @@ export async function getShiftCompleteness(
   _departmentId: string,
   _areaId: string | null,
   _date: string,
-  _shiftType: "day" | "night",
+  _shiftType: "day" | "night"
 ): Promise<ShiftCompletenessResult> {
   return { statuses: [] };
 }

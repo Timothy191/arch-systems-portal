@@ -18,9 +18,26 @@ export interface WeatherData {
 }
 
 export function getWindDirection(deg: number): string {
-  const directions = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
-  const val = Math.floor((deg / 22.5) + 0.5);
-  return directions[val % 16];
+  const directions = [
+    "N",
+    "NNE",
+    "NE",
+    "ENE",
+    "E",
+    "ESE",
+    "SE",
+    "SSE",
+    "S",
+    "SSW",
+    "SW",
+    "WSW",
+    "W",
+    "WNW",
+    "NW",
+    "NNW",
+  ];
+  const val = Math.floor(deg / 22.5 + 0.5);
+  return directions[val % 16]!;
 }
 
 export function getWeatherAlert(weather: WeatherData) {
@@ -55,7 +72,7 @@ export async function fetchWeather(
     if (!res.ok) throw new Error("Weather fetch failed");
     const data = await res.json();
     const current = data.current;
-    
+
     const getCodeDetails = (code: number) => {
       if (code === 0) return { desc: "Clear sky", icon: "☀️" };
       if (code <= 3) return { desc: "Partly cloudy", icon: "⛅" };

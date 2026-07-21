@@ -3,7 +3,7 @@ import type { z } from "zod";
 
 export async function validateBody<T extends z.ZodTypeAny>(
   request: Request,
-  schema: T,
+  schema: T
 ): Promise<{ data: z.infer<T> } | NextResponse> {
   try {
     const body = await request.json();
@@ -18,7 +18,7 @@ export async function validateBody<T extends z.ZodTypeAny>(
           error: `invalid request body: ${errorMsg}`,
           details: result.error.issues,
         },
-        { status: 400 },
+        { status: 400 }
       );
     }
     return { data: result.data };

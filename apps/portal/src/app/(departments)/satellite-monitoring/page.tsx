@@ -7,5 +7,10 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <DepartmentSectionShell title="Satellite Monitoring" description="SAR/InSAR, hyperspectral and high-resolution imagery." />;
+  return (
+    <DepartmentSectionShell
+      title="Satellite Monitoring"
+      description="SAR/InSAR, hyperspectral and high-resolution imagery."
+    />
+  );
 }

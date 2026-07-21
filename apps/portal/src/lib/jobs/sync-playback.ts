@@ -1,3 +1,4 @@
+import { InngestFunction } from "inngest";
 import { inngest } from "@repo/utils/inngest";
 import { createServerSupabaseClient } from "@repo/supabase/server";
 import { revalidatePath } from "next/cache";
@@ -116,4 +117,4 @@ export const syncPlaybackFn = inngest.createFunction(
       recordJobExecution("sync-playback", performance.now() - start, success);
     }
   }
-);
+) as unknown as InngestFunction.Any;

@@ -1,3 +1,4 @@
+import { InngestFunction } from "inngest";
 import { inngest, aiGenerateEmbeddingEvent } from "@repo/utils/inngest";
 // Module stubs for type safety - embeddings module not yet created
 async function generateEmbedding(_text: string, _userId: string): Promise<void> {
@@ -35,4 +36,4 @@ export const generateEmbeddingFn = inngest.createFunction(
       recordJobExecution("generate-embedding", performance.now() - start, success);
     }
   }
-);
+) as unknown as InngestFunction.Any;

@@ -24,7 +24,7 @@ import { logError } from "@/lib/errors/error-logger";
  * Use this instead of calling createBrowserSupabaseClient() in components directly.
  */
 export function useSupabaseClient(): SupabaseClient {
-  return useMemo(() => createBrowserSupabaseClient(), []);
+  return useMemo(() => createBrowserSupabaseClient() as any, []);
 }
 
 export interface AdminDataState<T> {

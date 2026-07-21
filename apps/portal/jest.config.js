@@ -1,5 +1,6 @@
 module.exports = {
   testEnvironment: "jsdom",
+  clearMocks: false,
   forceExit: true,
   setupFilesAfterEnv: ["<rootDir>/setupTests.ts"],
   testPathIgnorePatterns: [],
@@ -25,7 +26,7 @@ module.exports = {
   moduleNameMapper: {
     "^(\\.{1,2}/.*)\\.js$": "$1",
     "^@/(.*)$": "<rootDir>/src/$1",
-    "^@repo/contract$": "<rootDir>/../../packages/contract/src/index.ts",
+    "^@repo/contract$": "<rootDir>/../../packages/contract/index.ts",
     "^@repo/supabase/(.*)$": "<rootDir>/../../packages/supabase/src/$1",
     "^@repo/supabase$": "<rootDir>/../../packages/supabase/src/index.ts",
     "^@repo/redis$": "<rootDir>/../../packages/redis/src/index.ts",

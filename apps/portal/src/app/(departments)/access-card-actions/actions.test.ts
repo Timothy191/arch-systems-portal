@@ -50,7 +50,7 @@ describe("actions - searchEmployees", () => {
     mockSupabaseClient(
       { id: "user-1" },
       { role: "access_control" },
-      { data: mockEmployees, error: null },
+      { data: mockEmployees, error: null }
     );
 
     const result = await searchEmployees("John");
@@ -61,7 +61,7 @@ describe("actions - searchEmployees", () => {
     mockSupabaseClient(
       { id: "user-1" },
       { role: "access_control" },
-      { data: null, error: { message: "DB Error" } },
+      { data: null, error: { message: "DB Error" } }
     );
 
     await expect(searchEmployees("John")).rejects.toThrow(DatabaseError);

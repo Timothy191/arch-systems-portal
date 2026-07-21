@@ -71,7 +71,11 @@ export default async function AccessCardActionsDashboardPage() {
       entityName: name,
       daysRemaining: days,
       expiryStatus: status,
-    } as ExpiringCard & { entityName: string; daysRemaining: number; expiryStatus: ReturnType<typeof getExpiryStatus> };
+    } as ExpiringCard & {
+      entityName: string;
+      daysRemaining: number;
+      expiryStatus: ReturnType<typeof getExpiryStatus>;
+    };
   });
 
   const onlinePrintersPct =

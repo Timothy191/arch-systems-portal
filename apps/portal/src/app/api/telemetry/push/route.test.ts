@@ -64,7 +64,7 @@ describe("POST /api/telemetry/push", () => {
       expect.objectContaining({
         method: "POST",
         body: JSON.stringify({ name: "machine_1_engine_rpm", value: 1200 }),
-      }),
+      })
     );
   });
 
@@ -141,7 +141,7 @@ describe("POST /api/telemetry/push", () => {
           name: "machine_machine-uuid-456_engine_rpm",
           value: 1500,
         }),
-      }),
+      })
     );
     expect(mockFetch).toHaveBeenNthCalledWith(
       2,
@@ -151,7 +151,7 @@ describe("POST /api/telemetry/push", () => {
           name: "machine_machine-uuid-456_engine_temp",
           value: 92.4,
         }),
-      }),
+      })
     );
   });
 

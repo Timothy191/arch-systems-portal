@@ -108,7 +108,7 @@ export const dynamic = "force-dynamic";
 
 async function handlePutWebhook(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse> {
   const { id } = await params;
   const supabase = await createServerSupabaseClient();
@@ -187,7 +187,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
 
 async function handleDeleteWebhook(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse> {
   const { id } = await params;
   const supabase = await createServerSupabaseClient();
@@ -250,7 +250,7 @@ async function handleDeleteWebhook(
 // DELETE /api/webhooks/[id] - Delete a webhook endpoint
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const response = await withRateLimit(request, () => handleDeleteWebhook(request, { params }));
   return applyCors(request, response);

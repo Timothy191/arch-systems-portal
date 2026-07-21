@@ -132,7 +132,7 @@ import { scannerBadgeSchema } from "@repo/contract";
  */
 
 const ALLOWED_SCANNER_SOURCES = process.env.ALLOWED_SCANNER_SOURCES?.split(",").map((s) =>
-  s.trim(),
+  s.trim()
 ) || ["C66-HARDWARE", "C66-SCANNER", "GATE-TERMINAL"];
 
 export async function POST(request: Request) {
@@ -142,7 +142,7 @@ export async function POST(request: Request) {
       const response = await handlePost(request);
       return applyCors(request, response);
     },
-    { maxSize: 65536 },
+    { maxSize: 65536 }
   );
 }
 
@@ -155,14 +155,14 @@ async function handlePost(request: Request) {
     if (!expectedToken || token !== expectedToken) {
       return NextResponse.json(
         { success: false, error: "Unauthorized scanner token" },
-        { status: 401 },
+        { status: 401 }
       );
     }
 
     if (!ALLOWED_SCANNER_SOURCES.includes(source)) {
       return NextResponse.json(
         { success: false, error: "Unauthorized scanner source" },
-        { status: 403 },
+        { status: 403 }
       );
     }
 
@@ -242,7 +242,7 @@ async function handlePost(request: Request) {
       badge.entity_type,
       isAuthorized ? null : denialReason,
       source,
-      isAuthorized,
+      isAuthorized
     );
 
     return NextResponse.json({
@@ -265,7 +265,7 @@ async function logAccess(
   entityType: string,
   denialReason: string | null,
   gateLocation: string,
-  accessGranted: boolean = false,
+  accessGranted: boolean = false
 ) {
   const { error } = await supabase.from("access_logs").insert([
     {

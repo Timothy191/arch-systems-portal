@@ -8,6 +8,7 @@ import {
   isValidationError,
   isAuthError,
   isNotFoundError,
+  type AppError,
 } from "@/lib/errors/error-classes";
 import { logError } from "@/lib/errors/error-logger";
 
@@ -61,7 +62,7 @@ export default function RootError({ error, reset }: RootErrorProps) {
   const message = getErrorMessage(error);
   const context = getErrorContext(error);
   const isDev = process.env.NODE_ENV === "development";
-  const appError = isAppError(error) ? error : null;
+  const appError = isAppError(error) ? (error as AppError) : null;
 
   return (
     <div className="fixed inset-0 z-50 bg-arch-surface-primary flex items-center justify-center p-4">

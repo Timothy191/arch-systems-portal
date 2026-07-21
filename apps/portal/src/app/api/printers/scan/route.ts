@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createServerSupabaseClient } from "@repo/supabase/server";
 import { detectAllPrinters } from "@/app/(departments)/access-card-actions/lib/printer-detection";
+import { serverLogger } from "@repo/logger";
 
 export async function GET() {
   try {
@@ -44,11 +45,10 @@ export async function GET() {
 
     return NextResponse.json({ printers: results, count: results.length });
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error("Printer scan failed:", error);
+    serverLogger().error("Printer scan failed:", error);
     return NextResponse.json(
       { error: "Failed to scan printers", printers: [], count: 0 },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
