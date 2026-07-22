@@ -1,6 +1,6 @@
-"use client";
+'use client'
 
-import React, { useState } from "react";
+import React, { useState } from 'react'
 import {
   Sliders,
   Zap,
@@ -11,46 +11,46 @@ import {
   Layers,
   ShieldCheck,
   Activity,
-} from "lucide-react";
+} from 'lucide-react'
 
 export function CrpSimulator() {
   // Config state
-  const [scriptMode, setScriptMode] = useState<"sync" | "async" | "defer">("sync");
-  const [useCriticalCss, setUseCriticalCss] = useState<boolean>(false);
-  const [useNonBlockingMediaCss, setUseNonBlockingMediaCss] = useState<boolean>(false);
-  const [nodeCount, setNodeCount] = useState<number>(1500);
-  const [cssSpecificityLevel, setCssSpecificityLevel] = useState<"simple" | "medium" | "deep">(
-    "medium"
-  );
-  const [hasViewportMeta, setHasViewportMeta] = useState<boolean>(true);
+  const [scriptMode, setScriptMode] = useState<'sync' | 'async' | 'defer'>('sync')
+  const [useCriticalCss, setUseCriticalCss] = useState<boolean>(false)
+  const [useNonBlockingMediaCss, setUseNonBlockingMediaCss] = useState<boolean>(false)
+  const [nodeCount, setNodeCount] = useState<number>(1500)
+  const [cssSpecificityLevel, setCssSpecificityLevel] = useState<'simple' | 'medium' | 'deep'>(
+    'medium'
+  )
+  const [hasViewportMeta, setHasViewportMeta] = useState<boolean>(true)
 
   // Calculations based on simulation variables
-  const blockingScripts = scriptMode === "sync" ? 2 : 0;
-  const blockingCss = (useCriticalCss ? 0 : 1) + (useNonBlockingMediaCss ? 0 : 1);
-  const totalBlockingResources = blockingScripts + blockingCss;
+  const blockingScripts = scriptMode === 'sync' ? 2 : 0
+  const blockingCss = (useCriticalCss ? 0 : 1) + (useNonBlockingMediaCss ? 0 : 1)
+  const totalBlockingResources = blockingScripts + blockingCss
 
   // Path length calculation (HTTP round trips required before FCP)
-  const criticalPathLength = 1 + (blockingCss > 0 ? 1 : 0) + (scriptMode === "sync" ? 1 : 0);
+  const criticalPathLength = 1 + (blockingCss > 0 ? 1 : 0) + (scriptMode === 'sync' ? 1 : 0)
 
   // Parse & CSSOM estimation
-  const baseParseTimeMs = (nodeCount / 1000) * 1.5;
+  const baseParseTimeMs = (nodeCount / 1000) * 1.5
   const cssomTimeMs =
     blockingCss * 12 +
-    (cssSpecificityLevel === "deep" ? 8 : cssSpecificityLevel === "medium" ? 3 : 1);
-  const totalParseCssomMs = Number((baseParseTimeMs + cssomTimeMs).toFixed(1));
+    (cssSpecificityLevel === 'deep' ? 8 : cssSpecificityLevel === 'medium' ? 3 : 1)
+  const totalParseCssomMs = Number((baseParseTimeMs + cssomTimeMs).toFixed(1))
 
   // Layout geometry estimation
   const specificityFactor =
-    cssSpecificityLevel === "deep" ? 1.8 : cssSpecificityLevel === "medium" ? 1.2 : 1.0;
-  const viewportFactor = hasViewportMeta ? 1.0 : 1.3;
-  const rawLayoutTimeMs = (nodeCount / 800) * 2.2 * specificityFactor * viewportFactor;
-  const layoutTimeMs = Number(rawLayoutTimeMs.toFixed(1));
+    cssSpecificityLevel === 'deep' ? 1.8 : cssSpecificityLevel === 'medium' ? 1.2 : 1.0
+  const viewportFactor = hasViewportMeta ? 1.0 : 1.3
+  const rawLayoutTimeMs = (nodeCount / 800) * 2.2 * specificityFactor * viewportFactor
+  const layoutTimeMs = Number(rawLayoutTimeMs.toFixed(1))
 
   // Frame calculation (1000ms / frameTime = FPS)
-  const frameBudgetMs = 16.67; // 60 FPS budget
-  const frameDurationMs = Number((layoutTimeMs + 4.5).toFixed(1));
-  const isJanky = frameDurationMs > frameBudgetMs;
-  const calculatedFps = Math.min(60, Math.max(10, Math.round(1000 / frameDurationMs)));
+  const frameBudgetMs = 16.67 // 60 FPS budget
+  const frameDurationMs = Number((layoutTimeMs + 4.5).toFixed(1))
+  const isJanky = frameDurationMs > frameBudgetMs
+  const calculatedFps = Math.min(60, Math.max(10, Math.round(1000 / frameDurationMs)))
 
   return (
     <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl space-y-6">
@@ -70,8 +70,8 @@ export function CrpSimulator() {
           <div
             className={`px-3 py-1.5 rounded-lg border flex items-center gap-2 text-xs font-mono font-bold ${
               isJanky
-                ? "bg-rose-500/10 text-rose-400 border-rose-500/30"
-                : "bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
+                ? 'bg-rose-500/10 text-rose-400 border-rose-500/30'
+                : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
             }`}
           >
             <Activity className="w-4 h-4" />
@@ -92,25 +92,25 @@ export function CrpSimulator() {
               <span className="text-emerald-400 font-mono text-xs">{scriptMode.toUpperCase()}</span>
             </label>
             <div className="grid grid-cols-3 gap-2">
-              {(["sync", "async", "defer"] as const).map((mode) => (
+              {(['sync', 'async', 'defer'] as const).map((mode) => (
                 <button
                   key={mode}
                   onClick={() => setScriptMode(mode)}
                   className={`py-2 px-3 text-xs font-medium rounded-lg border transition-all ${
                     scriptMode === mode
-                      ? "bg-emerald-500/20 text-emerald-300 border-emerald-500"
-                      : "bg-slate-950 text-slate-400 border-slate-800 hover:border-slate-700"
+                      ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500'
+                      : 'bg-slate-950 text-slate-400 border-slate-800 hover:border-slate-700'
                   }`}
                 >
-                  {mode === "sync" ? "Synchronous" : mode === "async" ? "async" : "defer"}
+                  {mode === 'sync' ? 'Synchronous' : mode === 'async' ? 'async' : 'defer'}
                 </button>
               ))}
             </div>
             <p className="text-[11px] text-slate-400">
-              {scriptMode === "sync" && "Blocks HTML parser until downloaded and executed."}
-              {scriptMode === "async" && "Downloads in parallel, executes immediately when ready."}
-              {scriptMode === "defer" &&
-                "Downloads in parallel, executes after HTML parsing completes."}
+              {scriptMode === 'sync' && 'Blocks HTML parser until downloaded and executed.'}
+              {scriptMode === 'async' && 'Downloads in parallel, executes immediately when ready.'}
+              {scriptMode === 'defer' &&
+                'Downloads in parallel, executes after HTML parsing completes.'}
             </p>
           </div>
 
@@ -175,17 +175,17 @@ export function CrpSimulator() {
               </span>
             </label>
             <div className="grid grid-cols-3 gap-2">
-              {(["simple", "medium", "deep"] as const).map((lvl) => (
+              {(['simple', 'medium', 'deep'] as const).map((lvl) => (
                 <button
                   key={lvl}
                   onClick={() => setCssSpecificityLevel(lvl)}
                   className={`py-2 px-3 text-xs font-medium rounded-lg border transition-all ${
                     cssSpecificityLevel === lvl
-                      ? "bg-emerald-500/20 text-emerald-300 border-emerald-500"
-                      : "bg-slate-950 text-slate-400 border-slate-800 hover:border-slate-700"
+                      ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500'
+                      : 'bg-slate-950 text-slate-400 border-slate-800 hover:border-slate-700'
                   }`}
                 >
-                  {lvl === "simple" ? ".class" : lvl === "medium" ? ".card .title" : ".a .b .c .d"}
+                  {lvl === 'simple' ? '.class' : lvl === 'medium' ? '.card .title' : '.a .b .c .d'}
                 </button>
               ))}
             </div>
@@ -252,8 +252,8 @@ export function CrpSimulator() {
             <div
               className={`p-4 rounded-lg border flex items-start gap-3 ${
                 isJanky
-                  ? "bg-rose-950/40 border-rose-500/40 text-rose-200"
-                  : "bg-emerald-950/40 border-emerald-500/40 text-emerald-200"
+                  ? 'bg-rose-950/40 border-rose-500/40 text-rose-200'
+                  : 'bg-emerald-950/40 border-emerald-500/40 text-emerald-200'
               }`}
             >
               {isJanky ? (
@@ -263,7 +263,7 @@ export function CrpSimulator() {
               )}
               <div>
                 <h5 className="text-xs font-bold uppercase tracking-wider">
-                  {isJanky ? "Layout Jank Detected (>16.6ms)" : "Smooth Frame Rate (60 FPS)"}
+                  {isJanky ? 'Layout Jank Detected (>16.6ms)' : 'Smooth Frame Rate (60 FPS)'}
                 </h5>
                 <p className="text-xs mt-1 text-slate-300 leading-relaxed">
                   {isJanky
@@ -282,5 +282,5 @@ export function CrpSimulator() {
         </div>
       </div>
     </div>
-  );
+  )
 }

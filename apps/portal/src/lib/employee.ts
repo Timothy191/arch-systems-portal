@@ -1,5 +1,5 @@
-import { headers } from "next/headers";
-import { SupabaseClient } from "@supabase/supabase-js";
+import { headers } from 'next/headers'
+import type { SupabaseClient } from '@supabase/supabase-js'
 
 /** Resolve employees.id from Supabase Auth user id (auth.users).
  *  Checks middleware header first to avoid redundant DB query.
@@ -9,17 +9,17 @@ export async function getEmployeeIdForAuthUser(
   authUserId: string
 ): Promise<string | null> {
   try {
-    const headerEmployeeId = (await headers()).get("x-auth-employee-id");
-    if (headerEmployeeId) return headerEmployeeId;
+    const headerEmployeeId = (await headers()).get('x-auth-employee-id')
+    if (headerEmployeeId) return headerEmployeeId
   } catch {
     // Called outside request scope (e.g. tests); fall through to DB query.
   }
 
   const { data } = await supabase
-    .from("employees")
-    .select("id")
-    .eq("auth_id", authUserId)
-    .maybeSingle();
+    .from('employees')
+    .select('id')
+    .eq('auth_id', authUserId)
+    .maybeSingle()
 
-  return data?.id ?? null;
+  return data?.id ?? null
 }

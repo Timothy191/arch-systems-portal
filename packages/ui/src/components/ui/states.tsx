@@ -1,6 +1,6 @@
-import * as React from "react";
-import { Loader2, Inbox, AlertCircle } from "lucide-react";
-import { cn } from "@repo/ui/lib/utils";
+import * as React from 'react'
+import { Loader2, Inbox, AlertCircle } from 'lucide-react'
+import { cn } from '@repo/ui/lib/utils'
 
 /**
  * Shared loading / empty / error state primitives.
@@ -13,64 +13,64 @@ import { cn } from "@repo/ui/lib/utils";
  */
 
 const spinnerSize = {
-  sm: "h-4 w-4",
-  md: "h-6 w-6",
-  lg: "h-8 w-8",
-} as const;
+  sm: 'h-4 w-4',
+  md: 'h-6 w-6',
+  lg: 'h-8 w-8',
+} as const
 
 export interface SpinnerProps extends React.HTMLAttributes<HTMLSpanElement> {
-  size?: keyof typeof spinnerSize;
-  label?: string;
+  size?: keyof typeof spinnerSize
+  label?: string
 }
 
-export function Spinner({ size = "md", label, className, ...props }: SpinnerProps) {
+export function Spinner({ size = 'md', label, className, ...props }: SpinnerProps) {
   return (
     <span
       role="status"
-      aria-label={label ?? "Loading"}
-      className={cn("inline-flex items-center justify-center", className)}
+      aria-label={label ?? 'Loading'}
+      className={cn('inline-flex items-center justify-center', className)}
       {...props}
     >
-      <Loader2 className={cn("animate-spin", spinnerSize[size])} />
+      <Loader2 className={cn('animate-spin', spinnerSize[size])} />
     </span>
-  );
+  )
 }
 
 export interface LoadingStateProps {
-  label?: string;
-  className?: string;
-  iconSize?: keyof typeof spinnerSize;
+  label?: string
+  className?: string
+  iconSize?: keyof typeof spinnerSize
 }
 
 export function LoadingState({
-  label = "Loading...",
+  label = 'Loading...',
   className,
-  iconSize = "md",
+  iconSize = 'md',
 }: LoadingStateProps) {
   return (
     <div
       role="status"
       aria-live="polite"
       className={cn(
-        "flex flex-col items-center justify-center gap-3 py-8 text-[var(--text-secondary)] text-sm",
+        'flex flex-col items-center justify-center gap-3 py-8 text-[var(--text-secondary)] text-sm',
         className
       )}
     >
       <Spinner size={iconSize} />
       <span>{label}</span>
     </div>
-  );
+  )
 }
 
 export interface EmptyStateProps {
-  title?: string;
-  description?: string;
-  icon?: React.ReactNode;
-  className?: string;
+  title?: string
+  description?: string
+  icon?: React.ReactNode
+  className?: string
 }
 
 export function EmptyState({
-  title = "No data found",
+  title = 'No data found',
   description,
   icon,
   className,
@@ -78,7 +78,7 @@ export function EmptyState({
   return (
     <div
       className={cn(
-        "flex flex-col items-center justify-center gap-2 py-8 text-center text-[var(--text-secondary)] text-sm",
+        'flex flex-col items-center justify-center gap-2 py-8 text-center text-[var(--text-secondary)] text-sm',
         className
       )}
     >
@@ -86,47 +86,47 @@ export function EmptyState({
       <p className="font-medium text-[var(--text-body)]">{title}</p>
       {description ? <p className="text-[var(--text-muted)]">{description}</p> : null}
     </div>
-  );
+  )
 }
 
 export interface FieldErrorProps {
-  id?: string;
-  message?: string;
-  className?: string;
+  id?: string
+  message?: string
+  className?: string
 }
 
 export function FieldError({ id, message, className }: FieldErrorProps) {
-  if (!message) return null;
+  if (!message) return null
   return (
     <p
       id={id}
       role="alert"
       aria-live="assertive"
-      className={cn("text-[var(--accent-red)] text-xs", className)}
+      className={cn('text-[var(--accent-red)] text-xs', className)}
     >
       {message}
     </p>
-  );
+  )
 }
 
 export interface FormErrorProps {
-  message?: string;
-  className?: string;
+  message?: string
+  className?: string
 }
 
 export function FormError({ message, className }: FormErrorProps) {
-  if (!message) return null;
+  if (!message) return null
   return (
     <div
       role="alert"
       aria-live="assertive"
       className={cn(
-        "flex items-center gap-2 rounded-lg border border-[var(--accent-red)]/30 bg-[var(--accent-red)]/10 px-3 py-2 text-sm text-[var(--accent-red)]",
+        'flex items-center gap-2 rounded-lg border border-[var(--accent-red)]/30 bg-[var(--accent-red)]/10 px-3 py-2 text-sm text-[var(--accent-red)]',
         className
       )}
     >
       <AlertCircle className="h-4 w-4 shrink-0" />
       <span>{message}</span>
     </div>
-  );
+  )
 }

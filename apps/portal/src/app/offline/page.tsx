@@ -1,12 +1,12 @@
-import React from "react";
-import { CloudOff } from "lucide-react";
-import type { Metadata } from "next";
-import ReloadButton from "./ReloadButton";
+import React from 'react'
+import { CloudOff } from 'lucide-react'
+import type { Metadata } from 'next'
+import ReloadButton from './ReloadButton'
 
 export const metadata: Metadata = {
-  title: "Offline | Arch OS",
-  description: "You are currently offline.",
-};
+  title: 'Offline | Arch OS',
+  description: 'You are currently offline.',
+}
 
 export default function OfflinePage(): React.JSX.Element {
   return (
@@ -21,5 +21,5 @@ export default function OfflinePage(): React.JSX.Element {
       </p>
       <ReloadButton />
     </div>
-  );
+  )
 }

@@ -1,31 +1,31 @@
-"use server";
+'use server'
 
-import { createServerSupabaseClient, createAdminClient } from "@repo/supabase/server";
-import { cacheTag } from "next/cache";
-import { AuthError, DatabaseError, ForbiddenError } from "@/lib/errors/error-classes";
+import { createServerSupabaseClient, createAdminClient } from '@repo/supabase/server'
+import { cacheTag } from 'next/cache'
+import { AuthError, DatabaseError, ForbiddenError } from '@/lib/errors/error-classes'
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
 /* ------------------------------------------------------------------ */
 
 export interface SafetyMetrics {
-  openIncidents: number;
-  resolvedThisMonth: number;
-  lostTimeIncidents: number;
-  nearMissCount: number;
-  underInvestigation: number;
-  incidentsTodayCount: number;
+  openIncidents: number
+  resolvedThisMonth: number
+  lostTimeIncidents: number
+  nearMissCount: number
+  underInvestigation: number
+  incidentsTodayCount: number
 }
 
 export interface RecentSafetyIncident {
-  id: string;
-  incidentDate: string;
-  shiftType: "day" | "night";
-  incidentType: string;
-  status: string;
-  description: string;
-  location: string | null;
-  injuredParties: number;
+  id: string
+  incidentDate: string
+  shiftType: 'day' | 'night'
+  incidentType: string
+  status: string
+  description: string
+  location: string | null
+  injuredParties: number
 }
 
 /* ------------------------------------------------------------------ */
@@ -33,26 +33,26 @@ export interface RecentSafetyIncident {
 /* ------------------------------------------------------------------ */
 
 async function assertSafetyRole() {
-  const supabase = await createServerSupabaseClient();
+  const supabase = await createServerSupabaseClient()
   const {
     data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) throw new AuthError("Unauthorized");
+  } = await supabase.auth.getUser()
+  if (!user) throw new AuthError('Unauthorized')
 
   const { data: employee } = await supabase
-    .from("employees")
-    .select("role, department_id")
-    .eq("auth_id", user.id)
-    .single();
+    .from('employees')
+    .select('role, department_id')
+    .eq('auth_id', user.id)
+    .single()
 
-  if (!employee || !["admin", "safety", "supervisor"].includes(employee.role)) {
-    throw new ForbiddenError("Forbidden: safety or admin role required", {
-      resource: "safety",
-      action: "assert_role",
-    });
+  if (!employee || !['admin', 'safety', 'supervisor'].includes(employee.role)) {
+    throw new ForbiddenError('Forbidden: safety or admin role required', {
+      resource: 'safety',
+      action: 'assert_role',
+    })
   }
 
-  return { supabase, user, employee };
+  return { supabase, user, employee }
 }
 
 /* ------------------------------------------------------------------ */
@@ -60,14 +60,14 @@ async function assertSafetyRole() {
 /* ------------------------------------------------------------------ */
 
 async function _getCachedSafetyMetrics(deptId: string): Promise<SafetyMetrics> {
-  "use cache";
-  cacheTag(`dept:${deptId}`, "table:safety_incidents", "department-safety", "department-dashboard");
+  'use cache'
+  cacheTag(`dept:${deptId}`, 'table:safety_incidents', 'department-safety', 'department-dashboard')
 
-  const supabase = createAdminClient();
-  const today = new Date().toISOString().split("T")[0];
-  const firstOfMonth = new Date();
-  firstOfMonth.setDate(1);
-  const monthStart = firstOfMonth.toISOString().split("T")[0];
+  const supabase = createAdminClient()
+  const today = new Date().toISOString().split('T')[0]
+  const firstOfMonth = new Date()
+  firstOfMonth.setDate(1)
+  const monthStart = firstOfMonth.toISOString().split('T')[0]
 
   const [
     { count: openIncidents },
@@ -78,37 +78,37 @@ async function _getCachedSafetyMetrics(deptId: string): Promise<SafetyMetrics> {
     { count: incidentsTodayCount },
   ] = await Promise.all([
     supabase
-      .from("safety_incidents")
-      .select("id", { count: "exact", head: true })
-      .eq("department_id", deptId)
-      .eq("status", "open"),
+      .from('safety_incidents')
+      .select('id', { count: 'exact', head: true })
+      .eq('department_id', deptId)
+      .eq('status', 'open'),
     supabase
-      .from("safety_incidents")
-      .select("id", { count: "exact", head: true })
-      .eq("department_id", deptId)
-      .in("status", ["resolved", "closed"])
-      .gte("closed_at", monthStart),
+      .from('safety_incidents')
+      .select('id', { count: 'exact', head: true })
+      .eq('department_id', deptId)
+      .in('status', ['resolved', 'closed'])
+      .gte('closed_at', monthStart),
     supabase
-      .from("safety_incidents")
-      .select("id", { count: "exact", head: true })
-      .eq("department_id", deptId)
-      .eq("incident_type", "lost-time"),
+      .from('safety_incidents')
+      .select('id', { count: 'exact', head: true })
+      .eq('department_id', deptId)
+      .eq('incident_type', 'lost-time'),
     supabase
-      .from("safety_incidents")
-      .select("id", { count: "exact", head: true })
-      .eq("department_id", deptId)
-      .eq("incident_type", "near-miss"),
+      .from('safety_incidents')
+      .select('id', { count: 'exact', head: true })
+      .eq('department_id', deptId)
+      .eq('incident_type', 'near-miss'),
     supabase
-      .from("safety_incidents")
-      .select("id", { count: "exact", head: true })
-      .eq("department_id", deptId)
-      .eq("status", "under-investigation"),
+      .from('safety_incidents')
+      .select('id', { count: 'exact', head: true })
+      .eq('department_id', deptId)
+      .eq('status', 'under-investigation'),
     supabase
-      .from("safety_incidents")
-      .select("id", { count: "exact", head: true })
-      .eq("department_id", deptId)
-      .eq("incident_date", today),
-  ]);
+      .from('safety_incidents')
+      .select('id', { count: 'exact', head: true })
+      .eq('department_id', deptId)
+      .eq('incident_date', today),
+  ])
 
   return {
     openIncidents: openIncidents ?? 0,
@@ -117,12 +117,12 @@ async function _getCachedSafetyMetrics(deptId: string): Promise<SafetyMetrics> {
     nearMissCount: nearMissCount ?? 0,
     underInvestigation: underInvestigation ?? 0,
     incidentsTodayCount: incidentsTodayCount ?? 0,
-  };
+  }
 }
 
 export async function getSafetyMetrics(deptId: string): Promise<SafetyMetrics> {
-  await assertSafetyRole();
-  return _getCachedSafetyMetrics(deptId);
+  await assertSafetyRole()
+  return _getCachedSafetyMetrics(deptId)
 }
 
 /* ------------------------------------------------------------------ */
@@ -133,10 +133,10 @@ export async function getRecentSafetyIncidents(
   deptId: string,
   limit = 8
 ): Promise<RecentSafetyIncident[]> {
-  const { supabase } = await assertSafetyRole();
+  const { supabase } = await assertSafetyRole()
 
   const { data, error } = await supabase
-    .from("safety_incidents")
+    .from('safety_incidents')
     .select(
       `
       id,
@@ -149,28 +149,28 @@ export async function getRecentSafetyIncidents(
       injured_parties
     `
     )
-    .eq("department_id", deptId)
-    .order("incident_date", { ascending: false })
-    .order("created_at", { ascending: false })
-    .limit(limit);
+    .eq('department_id', deptId)
+    .order('incident_date', { ascending: false })
+    .order('created_at', { ascending: false })
+    .limit(limit)
 
   if (error) {
-    throw new DatabaseError("Failed to load recent safety incidents", {
-      operation: "select",
+    throw new DatabaseError('Failed to load recent safety incidents', {
+      operation: 'select',
       context: { error: error.message },
-    });
+    })
   }
 
   return (
     (data ?? []) as {
-      id: string;
-      incident_date: string;
-      shift_type: "day" | "night";
-      incident_type: string;
-      status: string;
-      description: string;
-      location: string | null;
-      injured_parties: number;
+      id: string
+      incident_date: string
+      shift_type: 'day' | 'night'
+      incident_type: string
+      status: string
+      description: string
+      location: string | null
+      injured_parties: number
     }[]
   ).map((row) => ({
     id: row.id,
@@ -181,5 +181,5 @@ export async function getRecentSafetyIncidents(
     description: row.description,
     location: row.location,
     injuredParties: row.injured_parties,
-  }));
+  }))
 }

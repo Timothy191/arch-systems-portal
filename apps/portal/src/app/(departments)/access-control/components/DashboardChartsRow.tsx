@@ -1,27 +1,27 @@
-"use client";
+'use client'
 
-import React from "react";
-import dynamic from "next/dynamic";
-import { Skeleton } from "@repo/ui/components/ui/skeleton";
-import type { HourlyAccessPoint, BadgeStatusDistribution } from "../actions";
+import React from 'react'
+import dynamic from 'next/dynamic'
+import { Skeleton } from '@repo/ui/components/ui/skeleton'
+import type { HourlyAccessPoint, BadgeStatusDistribution } from '../actions'
 
-const HourlyAccessChart = dynamic(() => import("./HourlyAccessChart"), {
+const HourlyAccessChart = dynamic(() => import('./HourlyAccessChart'), {
   ssr: false,
   loading: () => <Skeleton className="h-[240px] w-full" />,
-});
+})
 
-const QRStatusDistributionChart = dynamic(() => import("./QRStatusDistributionChart"), {
+const QRStatusDistributionChart = dynamic(() => import('./QRStatusDistributionChart'), {
   ssr: false,
   loading: () => <Skeleton className="h-[240px] w-full" />,
-});
+})
 
 interface DashboardChartsRowProps {
-  hourlyStats: HourlyAccessPoint[];
-  distribution: BadgeStatusDistribution[];
+  hourlyStats: HourlyAccessPoint[]
+  distribution: BadgeStatusDistribution[]
 }
 
 export default function DashboardChartsRow({ hourlyStats, distribution }: DashboardChartsRowProps) {
-  const total = distribution.reduce((s, d) => s + d.value, 0);
+  const total = distribution.reduce((s, d) => s + d.value, 0)
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
@@ -49,5 +49,5 @@ export default function DashboardChartsRow({ hourlyStats, distribution }: Dashbo
         <QRStatusDistributionChart data={distribution} />
       </div>
     </div>
-  );
+  )
 }

@@ -1,22 +1,22 @@
-"use client";
+'use client'
 
-import { createContext, useContext, useEffect, useCallback, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useCallback, type ReactNode } from 'react'
 
 interface ArchThemeContextType {
-  theme: "light";
-  resolvedTheme: "light";
-  setTheme: () => void;
-  toggleTheme: () => void;
+  theme: 'light'
+  resolvedTheme: 'light'
+  setTheme: () => void
+  toggleTheme: () => void
 }
 
-const ArchThemeContext = createContext<ArchThemeContextType | undefined>(undefined);
+const ArchThemeContext = createContext<ArchThemeContextType | undefined>(undefined)
 
 const LIGHT_THEME = {
-  theme: "light" as const,
-  resolvedTheme: "light" as const,
+  theme: 'light' as const,
+  resolvedTheme: 'light' as const,
   setTheme: () => {},
   toggleTheme: () => {},
-};
+}
 
 /**
  * ArchThemeProvider — Light-only theme provider for the Arch System.
@@ -26,28 +26,28 @@ const LIGHT_THEME = {
  */
 export function ArchThemeProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
-    const root = document.documentElement;
-    root.setAttribute("data-theme", "light");
-    root.style.colorScheme = "light";
+    const root = document.documentElement
+    root.setAttribute('data-theme', 'light')
+    root.style.colorScheme = 'light'
 
-    const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+    const metaThemeColor = document.querySelector('meta[name="theme-color"]')
     if (metaThemeColor) {
-      metaThemeColor.setAttribute("content", "#ffffff");
+      metaThemeColor.setAttribute('content', '#ffffff')
     }
-  }, []);
+  }, [])
 
-  return <ArchThemeContext.Provider value={LIGHT_THEME}>{children}</ArchThemeContext.Provider>;
+  return <ArchThemeContext.Provider value={LIGHT_THEME}>{children}</ArchThemeContext.Provider>
 }
 
 export function useArchTheme() {
-  const ctx = useContext(ArchThemeContext);
+  const ctx = useContext(ArchThemeContext)
   if (!ctx) {
-    throw new Error("useArchTheme must be used within an ArchThemeProvider");
+    throw new Error('useArchTheme must be used within an ArchThemeProvider')
   }
-  return ctx;
+  return ctx
 }
 
 /** @deprecated use useArchTheme — light-only stub for legacy imports */
 export function useTheme() {
-  return useArchTheme();
+  return useArchTheme()
 }

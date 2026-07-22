@@ -1,10 +1,10 @@
-import React from "react";
-import { LucideIcon } from "lucide-react";
+import React from 'react'
+import { LucideIcon } from 'lucide-react'
 
 interface EmptyStateProps {
-  icon?: LucideIcon;
-  title: string;
-  description: string;
+  icon?: LucideIcon
+  title: string
+  description: string
 }
 
 export function EmptyState({ icon: Icon, title, description }: EmptyStateProps) {
@@ -18,5 +18,5 @@ export function EmptyState({ icon: Icon, title, description }: EmptyStateProps) 
       <h3 className="text-lg font-semibold text-white mb-2">{title}</h3>
       <p className="text-sm text-white/40">{description}</p>
     </div>
-  );
+  )
 }

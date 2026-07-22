@@ -1,6 +1,6 @@
-import { PageHeader } from "@repo/ui/PageHeader";
-import { GlassCard } from "@repo/ui/GlassCard";
-import { KPICard, KPIGrid } from "@repo/ui/KPI";
+import { PageHeader } from '@repo/ui/PageHeader'
+import { GlassCard } from '@repo/ui/GlassCard'
+import { KPICard, KPIGrid } from '@repo/ui/KPI'
 import {
   Table,
   TableBody,
@@ -8,42 +8,42 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@repo/ui/components/ui/table";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@repo/ui/components/ui/tabs";
-import { CardActionsTab } from "./components/CardActionsTab";
-import { Printer, Layers, Clock, AlertTriangle, Wifi, WifiOff } from "lucide-react";
-import { cn } from "@repo/ui/lib/utils";
-import type { IssuedCardsRow } from "@repo/supabase";
-import { getDashboardMetrics, getExpiringCards } from "./actions";
+} from '@repo/ui/components/ui/table'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@repo/ui/components/ui/tabs'
+import { CardActionsTab } from './components/CardActionsTab'
+import { Printer, Layers, Clock, AlertTriangle, Wifi, WifiOff } from 'lucide-react'
+import { cn } from '@repo/ui/lib/utils'
+import type { IssuedCardsRow } from '@repo/supabase'
+import { getDashboardMetrics, getExpiringCards } from './actions'
 
 interface ExpiringCard extends IssuedCardsRow {
-  personnel: { first_name: string; surname: string } | null;
+  personnel: { first_name: string; surname: string } | null
 }
 
 function daysRemaining(expiresAt: string): number {
-  return Math.ceil((new Date(expiresAt).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+  return Math.ceil((new Date(expiresAt).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
 }
 
 function getExpiryStatus(days: number): { label: string; pillClass: string } {
   if (days < 0)
     return {
-      label: "Expired",
-      pillClass: "bg-red-50/70 border-red-200/50 text-red-700",
-    };
+      label: 'Expired',
+      pillClass: 'bg-red-50/70 border-red-200/50 text-red-700',
+    }
   if (days <= 2)
     return {
-      label: "Critical",
-      pillClass: "bg-red-50/70 border-red-200/50 text-red-700",
-    };
+      label: 'Critical',
+      pillClass: 'bg-red-50/70 border-red-200/50 text-red-700',
+    }
   if (days <= 5)
     return {
-      label: "Warning",
-      pillClass: "bg-amber-50/70 border-amber-200/50 text-amber-700",
-    };
+      label: 'Warning',
+      pillClass: 'bg-amber-50/70 border-amber-200/50 text-amber-700',
+    }
   return {
     label: `${days} days`,
-    pillClass: "bg-accent-green/10 border-accent-green/20 text-accent-green",
-  };
+    pillClass: 'bg-accent-green/10 border-accent-green/20 text-accent-green',
+  }
 }
 
 export default async function AccessCardActionsDashboardPage() {
@@ -56,13 +56,13 @@ export default async function AccessCardActionsDashboardPage() {
       expiringCards: 0,
     })),
     getExpiringCards().catch(() => ({ cards: [] })),
-  ]);
+  ])
 
   const cards = expiring.cards.map((card: ExpiringCard) => {
-    const person = card.personnel;
-    const name = person ? `${person.first_name} ${person.surname}` : "Unknown";
-    const days = daysRemaining(card.expires_at ?? "");
-    const status = getExpiryStatus(days);
+    const person = card.personnel
+    const name = person ? `${person.first_name} ${person.surname}` : 'Unknown'
+    const days = daysRemaining(card.expires_at ?? '')
+    const status = getExpiryStatus(days)
     return {
       id: card.id,
       ...card,
@@ -70,16 +70,16 @@ export default async function AccessCardActionsDashboardPage() {
       daysRemaining: days,
       expiryStatus: status,
     } as ExpiringCard & {
-      entityName: string;
-      daysRemaining: number;
-      expiryStatus: ReturnType<typeof getExpiryStatus>;
-    };
-  });
+      entityName: string
+      daysRemaining: number
+      expiryStatus: ReturnType<typeof getExpiryStatus>
+    }
+  })
 
   const onlinePrintersPct =
     metrics.totalPrinters > 0
       ? Math.round((metrics.onlinePrinters / metrics.totalPrinters) * 100)
-      : 0;
+      : 0
 
   return (
     <div className="space-y-6">
@@ -96,11 +96,11 @@ export default async function AccessCardActionsDashboardPage() {
             <KPICard
               label="Printers Online"
               value={`${metrics.onlinePrinters} / ${metrics.totalPrinters}`}
-              color={onlinePrintersPct >= 50 ? "green" : onlinePrintersPct > 0 ? "default" : "red"}
+              color={onlinePrintersPct >= 50 ? 'green' : onlinePrintersPct > 0 ? 'default' : 'red'}
               sub={
                 metrics.totalPrinters > 0
                   ? `${onlinePrintersPct}% online`
-                  : "No printers registered"
+                  : 'No printers registered'
               }
               icon={<Printer className="w-8 h-8" />}
             />
@@ -113,15 +113,15 @@ export default async function AccessCardActionsDashboardPage() {
             <KPICard
               label="Pending Jobs"
               value={metrics.pendingJobs}
-              color={metrics.pendingJobs > 0 ? "blue" : "default"}
-              sub={metrics.pendingJobs > 0 ? "Awaiting processing" : "All clear"}
+              color={metrics.pendingJobs > 0 ? 'blue' : 'default'}
+              sub={metrics.pendingJobs > 0 ? 'Awaiting processing' : 'All clear'}
               icon={<Clock className="w-8 h-8" />}
             />
             <KPICard
               label="Expiring Cards (7 days)"
               value={metrics.expiringCards}
-              color={metrics.expiringCards > 0 ? "red" : "default"}
-              sub={metrics.expiringCards > 0 ? "Action required" : "No cards expiring"}
+              color={metrics.expiringCards > 0 ? 'red' : 'default'}
+              sub={metrics.expiringCards > 0 ? 'Action required' : 'No cards expiring'}
               icon={<AlertTriangle className="w-8 h-8" />}
             />
           </KPIGrid>
@@ -133,7 +133,7 @@ export default async function AccessCardActionsDashboardPage() {
                 Expiring Cards
               </h3>
               <span className="text-xs text-arch-text-muted">
-                {cards.length} card{cards.length !== 1 ? "s" : ""}
+                {cards.length} card{cards.length !== 1 ? 's' : ''}
               </span>
             </div>
             <Table>
@@ -161,20 +161,20 @@ export default async function AccessCardActionsDashboardPage() {
                     <TableCell className="text-arch-text-primary">{card.entityName}</TableCell>
                     <TableCell className="text-arch-text-secondary">
                       {card.expires_at
-                        ? new Date(card.expires_at).toLocaleDateString("en-ZA", {
-                            day: "numeric",
-                            month: "short",
-                            year: "numeric",
+                        ? new Date(card.expires_at).toLocaleDateString('en-ZA', {
+                            day: 'numeric',
+                            month: 'short',
+                            year: 'numeric',
                           })
-                        : "—"}
+                        : '—'}
                     </TableCell>
                     <TableCell className="font-mono text-sm text-arch-text-secondary">
-                      {card.daysRemaining < 0 ? "Overdue" : `${card.daysRemaining}d`}
+                      {card.daysRemaining < 0 ? 'Overdue' : `${card.daysRemaining}d`}
                     </TableCell>
                     <TableCell className="text-right">
                       <span
                         className={cn(
-                          "inline-flex items-center gap-1.5 text-xs font-medium px-2 py-0.5 rounded-full border",
+                          'inline-flex items-center gap-1.5 text-xs font-medium px-2 py-0.5 rounded-full border',
                           card.expiryStatus.pillClass
                         )}
                       >
@@ -197,5 +197,5 @@ export default async function AccessCardActionsDashboardPage() {
         </TabsContent>
       </Tabs>
     </div>
-  );
+  )
 }

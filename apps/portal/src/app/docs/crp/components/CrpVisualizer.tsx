@@ -1,6 +1,6 @@
-"use client";
+'use client'
 
-import React, { useState } from "react";
+import React, { useState } from 'react'
 import {
   FileCode,
   Palette,
@@ -13,201 +13,201 @@ import {
   Info,
   Clock,
   Cpu,
-} from "lucide-react";
+} from 'lucide-react'
 
-export type CrpStageId = "dom" | "cssom" | "rendertree" | "layout" | "paint";
+export type CrpStageId = 'dom' | 'cssom' | 'rendertree' | 'layout' | 'paint'
 
 interface StageDetail {
-  id: CrpStageId;
-  title: string;
-  subtitle: string;
-  icon: React.ComponentType<{ className?: string }>;
-  isIncremental: boolean;
-  isRenderBlocking: boolean;
-  keyTakeaway: string;
-  description: string;
-  steps: string[];
-  metrics: { label: string; value: string; hint: string }[];
+  id: CrpStageId
+  title: string
+  subtitle: string
+  icon: React.ComponentType<{ className?: string }>
+  isIncremental: boolean
+  isRenderBlocking: boolean
+  keyTakeaway: string
+  description: string
+  steps: string[]
+  metrics: { label: string; value: string; hint: string }[]
 }
 
 const STAGES: StageDetail[] = [
   {
-    id: "dom",
-    title: "Document Object Model (DOM)",
-    subtitle: "Incremental HTML parsing & node hierarchy construction",
+    id: 'dom',
+    title: 'Document Object Model (DOM)',
+    subtitle: 'Incremental HTML parsing & node hierarchy construction',
     icon: FileCode,
     isIncremental: true,
     isRenderBlocking: false,
     keyTakeaway:
-      "HTML parsing is incremental. Bytes are converted to tokens, nodes, and linked into a hierarchy as data streams in.",
+      'HTML parsing is incremental. Bytes are converted to tokens, nodes, and linked into a hierarchy as data streams in.',
     description:
-      "The browser parses raw HTML bytes received over HTTP into tokens, converts those tokens into nodes, and constructs the DOM tree based on tag nesting hierarchy.",
+      'The browser parses raw HTML bytes received over HTTP into tokens, converts those tokens into nodes, and constructs the DOM tree based on tag nesting hierarchy.',
     steps: [
-      "Bytes -> Characters: Convert raw HTML byte stream to string characters based on encoding (UTF-8).",
-      "Tokens: Identify start/end tags, attributes, and text values (e.g. <html>, <body>, <div>).",
-      "Nodes: Wrap tokens with properties and rules into object representations.",
-      "DOM Tree Construction: Link parent-child nodes based on nested startTag / endTag positions.",
+      'Bytes -> Characters: Convert raw HTML byte stream to string characters based on encoding (UTF-8).',
+      'Tokens: Identify start/end tags, attributes, and text values (e.g. <html>, <body>, <div>).',
+      'Nodes: Wrap tokens with properties and rules into object representations.',
+      'DOM Tree Construction: Link parent-child nodes based on nested startTag / endTag positions.',
     ],
     metrics: [
       {
-        label: "Processing",
-        value: "Incremental / Streaming",
-        hint: "Renders partial nodes as received",
+        label: 'Processing',
+        value: 'Incremental / Streaming',
+        hint: 'Renders partial nodes as received',
       },
       {
-        label: "Render Blocking",
-        value: "No (HTML itself)",
-        hint: "Scripts can halt parsing unless async/defer",
+        label: 'Render Blocking',
+        value: 'No (HTML itself)',
+        hint: 'Scripts can halt parsing unless async/defer',
       },
       {
-        label: "Key Bottleneck",
-        value: "Excessive DOM Node Count",
-        hint: "Large DOM trees slow down subsequent layout & paint",
+        label: 'Key Bottleneck',
+        value: 'Excessive DOM Node Count',
+        hint: 'Large DOM trees slow down subsequent layout & paint',
       },
     ],
   },
   {
-    id: "cssom",
-    title: "CSS Object Model (CSSOM)",
-    subtitle: "Style rule cascade resolution & selector matching",
+    id: 'cssom',
+    title: 'CSS Object Model (CSSOM)',
+    subtitle: 'Style rule cascade resolution & selector matching',
     icon: Palette,
     isIncremental: false,
     isRenderBlocking: true,
     keyTakeaway:
-      "CSS is render-blocking. Unlike HTML, CSSOM cannot be processed incrementally because later rules can override earlier ones (Cascade).",
+      'CSS is render-blocking. Unlike HTML, CSSOM cannot be processed incrementally because later rules can override earlier ones (Cascade).',
     description:
-      "CSS rules are parsed to form the CSS Object Model tree. Because rules cascade, the browser must wait for all CSS files to finish downloading before building the Render Tree.",
+      'CSS rules are parsed to form the CSS Object Model tree. Because rules cascade, the browser must wait for all CSS files to finish downloading before building the Render Tree.',
     steps: [
       "Style Request: Initiated upon encountering <link rel='stylesheet'> or <style> tags.",
-      "Tokenization & Node Creation: CSS rules are parsed into selectors, declarations, and values.",
-      "Cascade Resolution: Styles descend down tree nodes, inheriting parent properties.",
-      "Specificity Evaluation: Simple selectors (.foo) evaluate faster than deeply nested ancestors (.bar .foo).",
+      'Tokenization & Node Creation: CSS rules are parsed into selectors, declarations, and values.',
+      'Cascade Resolution: Styles descend down tree nodes, inheriting parent properties.',
+      'Specificity Evaluation: Simple selectors (.foo) evaluate faster than deeply nested ancestors (.bar .foo).',
     ],
     metrics: [
       {
-        label: "Processing",
-        value: "Non-incremental",
-        hint: "Must wait for complete CSS file download",
+        label: 'Processing',
+        value: 'Non-incremental',
+        hint: 'Must wait for complete CSS file download',
       },
       {
-        label: "Render Blocking",
-        value: "Yes (Critical CSS)",
-        hint: "Blocks Render Tree construction until complete",
+        label: 'Render Blocking',
+        value: 'Yes (Critical CSS)',
+        hint: 'Blocks Render Tree construction until complete',
       },
       {
-        label: "Optimization Tip",
-        value: "Media Queries / Critical CSS",
+        label: 'Optimization Tip',
+        value: 'Media Queries / Critical CSS',
         hint: "Mark non-critical CSS with media='print' or defer",
       },
     ],
   },
   {
-    id: "rendertree",
-    title: "Render Tree",
-    subtitle: "Combining DOM + CSSOM for visible content",
+    id: 'rendertree',
+    title: 'Render Tree',
+    subtitle: 'Combining DOM + CSSOM for visible content',
     icon: Layers,
     isIncremental: false,
     isRenderBlocking: false,
     keyTakeaway:
-      "The Render Tree only captures visible elements. Elements with display: none and <head> content are completely excluded.",
+      'The Render Tree only captures visible elements. Elements with display: none and <head> content are completely excluded.',
     description:
-      "The browser traverses the DOM tree starting from the root node and matches corresponding CSSOM rules to compute final computed styles for visible elements.",
+      'The browser traverses the DOM tree starting from the root node and matches corresponding CSSOM rules to compute final computed styles for visible elements.',
     steps: [
-      "Traverse DOM: Iterate through visible nodes starting from <html> and <body>.",
-      "Filter Non-Visible Content: Skip <head>, <script>, <style>, and nodes with display: none.",
-      "Attach CSSOM Rules: Compute exact computed styles (colors, font-size, visibility) for each visible node.",
-      "Construct Render Nodes: Output styled render object nodes ready for geometry placement.",
+      'Traverse DOM: Iterate through visible nodes starting from <html> and <body>.',
+      'Filter Non-Visible Content: Skip <head>, <script>, <style>, and nodes with display: none.',
+      'Attach CSSOM Rules: Compute exact computed styles (colors, font-size, visibility) for each visible node.',
+      'Construct Render Nodes: Output styled render object nodes ready for geometry placement.',
     ],
     metrics: [
-      { label: "Includes Head?", value: "No", hint: "Metadata and script nodes are omitted" },
+      { label: 'Includes Head?', value: 'No', hint: 'Metadata and script nodes are omitted' },
       {
-        label: "Includes display:none?",
-        value: "No",
-        hint: "Excluded entirely from Render Tree & Layout",
+        label: 'Includes display:none?',
+        value: 'No',
+        hint: 'Excluded entirely from Render Tree & Layout',
       },
       {
-        label: "Includes visibility:hidden?",
-        value: "Yes",
-        hint: "Occupies spatial layout, but invisible",
+        label: 'Includes visibility:hidden?',
+        value: 'Yes',
+        hint: 'Occupies spatial layout, but invisible',
       },
     ],
   },
   {
-    id: "layout",
-    title: "Layout (Reflow)",
-    subtitle: "Viewport-based geometry & spatial position calculations",
+    id: 'layout',
+    title: 'Layout (Reflow)',
+    subtitle: 'Viewport-based geometry & spatial position calculations',
     icon: Maximize2,
     isIncremental: false,
     isRenderBlocking: false,
     keyTakeaway:
-      "Layout computes exact geometry (width, height, top, left). Reflows occur whenever DOM structure or box model properties change.",
+      'Layout computes exact geometry (width, height, top, left). Reflows occur whenever DOM structure or box model properties change.',
     description:
-      "The layout phase determines the exact vector geometry, width, height, and coordinates of every node in relation to the screen layout viewport.",
+      'The layout phase determines the exact vector geometry, width, height, and coordinates of every node in relation to the screen layout viewport.',
     steps: [
       "Viewport Setup: Measure viewport dimensions (<meta name='viewport' content='width=device-width'>).",
-      "Box Model Computation: Calculate margins, borders, padding, and element widths/heights.",
-      "Relative Positioning: Position elements relative to parent flow, flexboxes, or grids.",
-      "Reflow Calculation: Triggered by orientation changes, window resizing, or DOM mutations.",
+      'Box Model Computation: Calculate margins, borders, padding, and element widths/heights.',
+      'Relative Positioning: Position elements relative to parent flow, flexboxes, or grids.',
+      'Reflow Calculation: Triggered by orientation changes, window resizing, or DOM mutations.',
     ],
     metrics: [
       {
-        label: "Frame Budget",
-        value: "16.6ms (60 FPS)",
-        hint: "Layout spikes >16ms cause frame drops / jank",
+        label: 'Frame Budget',
+        value: '16.6ms (60 FPS)',
+        hint: 'Layout spikes >16ms cause frame drops / jank',
       },
       {
-        label: "Impact Factor",
-        value: "DOM Size & Box Mutators",
-        hint: "Animating width/height forces reflow",
+        label: 'Impact Factor',
+        value: 'DOM Size & Box Mutators',
+        hint: 'Animating width/height forces reflow',
       },
       {
-        label: "Best Practice",
-        value: "Batch DOM Updates",
-        hint: "Avoid synchronous layout thrashing",
+        label: 'Best Practice',
+        value: 'Batch DOM Updates',
+        hint: 'Avoid synchronous layout thrashing',
       },
     ],
   },
   {
-    id: "paint",
-    title: "Paint & Composite",
-    subtitle: "Rasterizing pixels & compositing GPU layers",
+    id: 'paint',
+    title: 'Paint & Composite',
+    subtitle: 'Rasterizing pixels & compositing GPU layers',
     icon: Paintbrush,
     isIncremental: true,
     isRenderBlocking: false,
     keyTakeaway:
-      "Painting converts layout boxes into actual screen pixels. Subsequent repaints target only affected dirty regions.",
+      'Painting converts layout boxes into actual screen pixels. Subsequent repaints target only affected dirty regions.',
     description:
-      "The browser paints colors, borders, shadows, text, and images onto screen layers, then composites layers together for display.",
+      'The browser paints colors, borders, shadows, text, and images onto screen layers, then composites layers together for display.',
     steps: [
-      "Layer Tree Creation: Group elements into composite layers (GPU accelerated elements, z-indexes).",
-      "Rasterization: Draw vectors, text strings, gradients, and images into bitmap pixels.",
-      "Dirty Region Repaint: Re-paint minimal changed regions on dynamic state updates.",
-      "GPU Compositing: Combine painted layer bitmaps onto final frame buffer for display output.",
+      'Layer Tree Creation: Group elements into composite layers (GPU accelerated elements, z-indexes).',
+      'Rasterization: Draw vectors, text strings, gradients, and images into bitmap pixels.',
+      'Dirty Region Repaint: Re-paint minimal changed regions on dynamic state updates.',
+      'GPU Compositing: Combine painted layer bitmaps onto final frame buffer for display output.',
     ],
     metrics: [
       {
-        label: "Initial Load",
-        value: "Full Screen Paint",
-        hint: "Entire viewport painted on first render",
+        label: 'Initial Load',
+        value: 'Full Screen Paint',
+        hint: 'Entire viewport painted on first render',
       },
       {
-        label: "Subsequent Renders",
-        value: "Dirty Rectangle Repaint",
-        hint: "Only repaints modified screen area",
+        label: 'Subsequent Renders',
+        value: 'Dirty Rectangle Repaint',
+        hint: 'Only repaints modified screen area',
       },
       {
-        label: "GPU Acceleration",
-        value: "transform & opacity",
-        hint: "Bypasses layout and paint during animations",
+        label: 'GPU Acceleration',
+        value: 'transform & opacity',
+        hint: 'Bypasses layout and paint during animations',
       },
     ],
   },
-];
+]
 
 export function CrpVisualizer() {
-  const [activeStage, setActiveStage] = useState<CrpStageId>("dom");
-  const selectedStage = STAGES.find((s) => s.id === activeStage);
-  const stage = selectedStage ?? STAGES[0]!;
+  const [activeStage, setActiveStage] = useState<CrpStageId>('dom')
+  const selectedStage = STAGES.find((s) => s.id === activeStage)
+  const stage = selectedStage ?? STAGES[0]!
 
   return (
     <div className="w-full space-y-6">
@@ -220,24 +220,24 @@ export function CrpVisualizer() {
 
         <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-3">
           {STAGES.map((s, idx) => {
-            const Icon = s.icon;
-            const isActive = s.id === activeStage;
+            const Icon = s.icon
+            const isActive = s.id === activeStage
             return (
               <button
                 key={s.id}
                 onClick={() => setActiveStage(s.id)}
                 className={`relative flex flex-col items-start p-3.5 rounded-lg border text-left transition-all group ${
                   isActive
-                    ? "bg-emerald-950/40 border-emerald-500 text-white shadow-lg shadow-emerald-950/50 ring-1 ring-emerald-500/50"
-                    : "bg-slate-850/60 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-slate-200 hover:bg-slate-800/40"
+                    ? 'bg-emerald-950/40 border-emerald-500 text-white shadow-lg shadow-emerald-950/50 ring-1 ring-emerald-500/50'
+                    : 'bg-slate-850/60 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-slate-200 hover:bg-slate-800/40'
                 }`}
               >
                 <div className="flex items-center justify-between w-full mb-2">
                   <span
                     className={`inline-flex items-center justify-center text-xs font-mono font-bold w-5 h-5 rounded-full ${
                       isActive
-                        ? "bg-emerald-500 text-slate-950"
-                        : "bg-slate-800 text-slate-400 group-hover:bg-slate-700"
+                        ? 'bg-emerald-500 text-slate-950'
+                        : 'bg-slate-800 text-slate-400 group-hover:bg-slate-700'
                     }`}
                   >
                     {idx + 1}
@@ -250,10 +250,10 @@ export function CrpVisualizer() {
                 </div>
 
                 <div className="flex items-center gap-2 mb-1">
-                  <Icon className={`w-4 h-4 ${isActive ? "text-emerald-400" : "text-slate-400"}`} />
+                  <Icon className={`w-4 h-4 ${isActive ? 'text-emerald-400' : 'text-slate-400'}`} />
                   <span className="text-sm font-bold truncate">{s.id.toUpperCase()}</span>
                 </div>
-                <span className="text-xs text-slate-400 line-clamp-1">{s.title.split("(")[0]}</span>
+                <span className="text-xs text-slate-400 line-clamp-1">{s.title.split('(')[0]}</span>
 
                 {idx < STAGES.length - 1 && (
                   <div className="hidden lg:block absolute -right-3 top-1/2 -translate-y-1/2 z-10 text-slate-600 pointer-events-none">
@@ -261,7 +261,7 @@ export function CrpVisualizer() {
                   </div>
                 )}
               </button>
-            );
+            )
           })}
         </div>
       </div>
@@ -271,7 +271,7 @@ export function CrpVisualizer() {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-800">
           <div className="flex items-center gap-3">
             <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-emerald-400">
-              {React.createElement(stage.icon, { className: "w-6 h-6" })}
+              {React.createElement(stage.icon, { className: 'w-6 h-6' })}
             </div>
             <div>
               <h2 className="text-xl font-bold text-white flex items-center gap-2">
@@ -285,20 +285,20 @@ export function CrpVisualizer() {
             <span
               className={`px-3 py-1 text-xs font-semibold rounded-full border ${
                 stage.isIncremental
-                  ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
-                  : "bg-blue-500/10 text-blue-400 border-blue-500/30"
+                  ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
+                  : 'bg-blue-500/10 text-blue-400 border-blue-500/30'
               }`}
             >
-              {stage.isIncremental ? "Incremental Stream" : "Non-Incremental (Atomic)"}
+              {stage.isIncremental ? 'Incremental Stream' : 'Non-Incremental (Atomic)'}
             </span>
             <span
               className={`px-3 py-1 text-xs font-semibold rounded-full border ${
                 stage.isRenderBlocking
-                  ? "bg-amber-500/10 text-amber-400 border-amber-500/30"
-                  : "bg-slate-800 text-slate-300 border-slate-700"
+                  ? 'bg-amber-500/10 text-amber-400 border-amber-500/30'
+                  : 'bg-slate-800 text-slate-300 border-slate-700'
               }`}
             >
-              {stage.isRenderBlocking ? "Render Blocking" : "Non-Blocking Phase"}
+              {stage.isRenderBlocking ? 'Render Blocking' : 'Non-Blocking Phase'}
             </span>
           </div>
         </div>
@@ -321,7 +321,7 @@ export function CrpVisualizer() {
             </h4>
             <ul className="space-y-2.5">
               {stage.steps.map((step, idx) => {
-                const parts = step.split(":");
+                const parts = step.split(':')
                 return (
                   <li key={idx} className="flex items-start gap-2.5 text-xs text-slate-300">
                     <span className="flex items-center justify-center text-[10px] font-mono font-bold w-4 h-4 rounded bg-slate-800 text-emerald-400 shrink-0 mt-0.5">
@@ -329,10 +329,10 @@ export function CrpVisualizer() {
                     </span>
                     <span>
                       <strong className="text-slate-100">{parts[0]}:</strong>
-                      {parts.slice(1).join(":")}
+                      {parts.slice(1).join(':')}
                     </span>
                   </li>
-                );
+                )
               })}
             </ul>
           </div>
@@ -360,5 +360,5 @@ export function CrpVisualizer() {
         </div>
       </div>
     </div>
-  );
+  )
 }

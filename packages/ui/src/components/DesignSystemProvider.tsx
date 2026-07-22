@@ -1,15 +1,15 @@
-"use client";
+'use client'
 
-import { type ReactNode } from "react";
-import { ArchThemeProvider } from "@repo/theme/react";
-import { ErrorBoundary } from "./ErrorBoundary";
+import { type ReactNode } from 'react'
+import { ArchThemeProvider } from '@repo/theme/react'
+import { ErrorBoundary } from './ErrorBoundary'
 
 interface DesignSystemProviderProps {
-  children: ReactNode;
+  children: ReactNode
   /** Optional fallback UI for errors. Receives error and reset function. */
-  errorFallback?: (error: Error, reset: () => void) => ReactNode;
+  errorFallback?: (error: Error, reset: () => void) => ReactNode
   /** Called when ErrorBoundary catches an error */
-  onError?: (error: Error, errorInfo: { componentStack: string }) => void;
+  onError?: (error: Error, errorInfo: { componentStack: string }) => void
 }
 
 /**
@@ -39,7 +39,7 @@ export function DesignSystemProvider({
         {children}
       </ErrorBoundary>
     </ArchThemeProvider>
-  );
+  )
 }
 
-export type { DesignSystemProviderProps };
+export type { DesignSystemProviderProps }

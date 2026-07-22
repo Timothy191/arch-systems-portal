@@ -59,24 +59,24 @@ The Design System promotes semantic control and accessibility through a set of c
 ### API Properties
 
 ```tsx
-interface GlassCardProps extends HTMLMotionProps<"div"> {
-  children: React.ReactNode;
-  className?: string;
-  hover?: boolean; // Enable standard scale/lift animation
-  onClick?: () => void;
-  accent?: "green" | "blue" | "red" | "none"; // Border highlight color on hover
-  variant?: "default" | "window" | "spotlight" | "glowborder";
-  title?: string; // Title text (only used in "window" variant)
-  padding?: boolean; // Enable default padding spacing (24px)
+interface GlassCardProps extends HTMLMotionProps<'div'> {
+  children: React.ReactNode
+  className?: string
+  hover?: boolean // Enable standard scale/lift animation
+  onClick?: () => void
+  accent?: 'green' | 'blue' | 'red' | 'none' // Border highlight color on hover
+  variant?: 'default' | 'window' | 'spotlight' | 'glowborder'
+  title?: string // Title text (only used in "window" variant)
+  padding?: boolean // Enable default padding spacing (24px)
 
   // Spotlight properties
-  spotlightColor?: string; // Custom color for the radial hover gradient
+  spotlightColor?: string // Custom color for the radial hover gradient
 
   // GlowBorder properties
-  animationDuration?: number; // Spin duration in seconds (default: 4s)
-  colorPreset?: "nature" | "ocean" | "sunset" | "aurora" | "custom";
-  gradientColors?: string[]; // Explicit array of hex/HSL values for custom gradient
-  paused?: boolean; // Pause rotating animation
+  animationDuration?: number // Spin duration in seconds (default: 4s)
+  colorPreset?: 'nature' | 'ocean' | 'sunset' | 'aurora' | 'custom'
+  gradientColors?: string[] // Explicit array of hex/HSL values for custom gradient
+  paused?: boolean // Pause rotating animation
 }
 ```
 
@@ -91,21 +91,21 @@ Legacy components `SpotlightCard` and `GlowBorderCard` have been consolidated in
 **Before:**
 
 ```tsx
-import { SpotlightCard } from "@repo/ui/SpotlightCard";
+import { SpotlightCard } from '@repo/ui/SpotlightCard'
 
-<SpotlightCard spotlightColor="rgba(0, 122, 255, 0.1)">
+;<SpotlightCard spotlightColor="rgba(0, 122, 255, 0.1)">
   <div>Content</div>
-</SpotlightCard>;
+</SpotlightCard>
 ```
 
 **After:**
 
 ```tsx
-import { GlassCard } from "@repo/ui/GlassCard";
+import { GlassCard } from '@repo/ui/GlassCard'
 
-<GlassCard variant="spotlight" spotlightColor="rgba(0, 122, 255, 0.1)">
+;<GlassCard variant="spotlight" spotlightColor="rgba(0, 122, 255, 0.1)">
   <div>Content</div>
-</GlassCard>;
+</GlassCard>
 ```
 
 ### 2. Migrating GlowBorderCard
@@ -113,21 +113,21 @@ import { GlassCard } from "@repo/ui/GlassCard";
 **Before:**
 
 ```tsx
-import { GlowBorderCard } from "@repo/ui/GlowBorderCard";
+import { GlowBorderCard } from '@repo/ui/GlowBorderCard'
 
-<GlowBorderCard colorPreset="aurora" animationDuration={5}>
+;<GlowBorderCard colorPreset="aurora" animationDuration={5}>
   <div>Content</div>
-</GlowBorderCard>;
+</GlowBorderCard>
 ```
 
 **After:**
 
 ```tsx
-import { GlassCard } from "@repo/ui/GlassCard";
+import { GlassCard } from '@repo/ui/GlassCard'
 
-<GlassCard variant="glowborder" colorPreset="aurora" animationDuration={5}>
+;<GlassCard variant="glowborder" colorPreset="aurora" animationDuration={5}>
   <div>Content</div>
-</GlassCard>;
+</GlassCard>
 ```
 
 ---

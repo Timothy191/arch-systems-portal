@@ -1,113 +1,113 @@
-import { GlassCard } from "@repo/ui/GlassCard";
-import { Award, CheckCircle, AlertTriangle, AlertOctagon, Plus } from "lucide-react";
-import { SearchForm } from "../components/SearchForm";
-import { FilterTabs } from "../components/FilterTabs";
+import { GlassCard } from '@repo/ui/GlassCard'
+import { Award, CheckCircle, AlertTriangle, AlertOctagon, Plus } from 'lucide-react'
+import { SearchForm } from '../components/SearchForm'
+import { FilterTabs } from '../components/FilterTabs'
 
 interface Certification {
-  id: number;
-  employee: string;
-  role: string;
-  certification: string;
-  issueDate: string;
-  expiryDate: string;
-  status: "Active" | "Expiring Soon" | "Expired";
+  id: number
+  employee: string
+  role: string
+  certification: string
+  issueDate: string
+  expiryDate: string
+  status: 'Active' | 'Expiring Soon' | 'Expired'
 }
 
 const initialCertifications: Certification[] = [
   {
     id: 1,
-    employee: "Jared Leto",
-    role: "Drill Operator",
-    certification: "Class A Rig Telemetry",
-    issueDate: "2025-05-28",
-    expiryDate: "2027-05-28",
-    status: "Active",
+    employee: 'Jared Leto',
+    role: 'Drill Operator',
+    certification: 'Class A Rig Telemetry',
+    issueDate: '2025-05-28',
+    expiryDate: '2027-05-28',
+    status: 'Active',
   },
   {
     id: 2,
-    employee: "Sarah Connor",
-    role: "Safety Inspector",
-    certification: "Advanced First Aid & Rescue",
-    issueDate: "2025-05-26",
-    expiryDate: "2026-06-26",
-    status: "Expiring Soon",
+    employee: 'Sarah Connor',
+    role: 'Safety Inspector',
+    certification: 'Advanced First Aid & Rescue',
+    issueDate: '2025-05-26',
+    expiryDate: '2026-06-26',
+    status: 'Expiring Soon',
   },
   {
     id: 3,
-    employee: "Mark Ronson",
-    role: "Haul Dumper Pilot",
-    certification: "HD-785 Mechanical Induction",
-    issueDate: "2025-05-25",
-    expiryDate: "2026-06-25",
-    status: "Expiring Soon",
+    employee: 'Mark Ronson',
+    role: 'Haul Dumper Pilot',
+    certification: 'HD-785 Mechanical Induction',
+    issueDate: '2025-05-25',
+    expiryDate: '2026-06-25',
+    status: 'Expiring Soon',
   },
   {
     id: 4,
-    employee: "Elena Rostova",
-    role: "Excavator Operator",
-    certification: "PC-2000 Operation & Maintenance",
-    issueDate: "2025-05-22",
-    expiryDate: "2027-05-22",
-    status: "Active",
+    employee: 'Elena Rostova',
+    role: 'Excavator Operator',
+    certification: 'PC-2000 Operation & Maintenance',
+    issueDate: '2025-05-22',
+    expiryDate: '2027-05-22',
+    status: 'Active',
   },
   {
     id: 5,
-    employee: "Peter Parker",
-    role: "Electrical Specialist",
-    certification: "High Voltage Site Isolation",
-    issueDate: "2024-03-10",
-    expiryDate: "2026-03-10",
-    status: "Expired",
+    employee: 'Peter Parker',
+    role: 'Electrical Specialist',
+    certification: 'High Voltage Site Isolation',
+    issueDate: '2024-03-10',
+    expiryDate: '2026-03-10',
+    status: 'Expired',
   },
   {
     id: 6,
-    employee: "Bruce Wayne",
-    role: "Site Supervisor",
-    certification: "Mine Safety Act Compliance (MHSAC)",
-    issueDate: "2025-01-15",
-    expiryDate: "2028-01-15",
-    status: "Active",
+    employee: 'Bruce Wayne',
+    role: 'Site Supervisor',
+    certification: 'Mine Safety Act Compliance (MHSAC)',
+    issueDate: '2025-01-15',
+    expiryDate: '2028-01-15',
+    status: 'Active',
   },
   {
     id: 7,
-    employee: "Diana Prince",
-    role: "Environmental Engineer",
-    certification: "Hazardous Dust Mitigation",
-    issueDate: "2025-11-20",
-    expiryDate: "2026-11-20",
-    status: "Active",
+    employee: 'Diana Prince',
+    role: 'Environmental Engineer',
+    certification: 'Hazardous Dust Mitigation',
+    issueDate: '2025-11-20',
+    expiryDate: '2026-11-20',
+    status: 'Active',
   },
   {
     id: 8,
-    employee: "Clark Kent",
-    role: "Heavy Equipment Mech",
-    certification: "Hydraulic Systems Diagnosis",
-    issueDate: "2024-09-12",
-    expiryDate: "2026-09-12",
-    status: "Active",
+    employee: 'Clark Kent',
+    role: 'Heavy Equipment Mech',
+    certification: 'Hydraulic Systems Diagnosis',
+    issueDate: '2024-09-12',
+    expiryDate: '2026-09-12',
+    status: 'Active',
   },
-];
+]
 
 export default async function CertificationsPage({
   searchParams,
 }: {
-  searchParams?: Promise<{ q?: string; status?: string }>;
+  searchParams?: Promise<{ q?: string; status?: string }>
 }) {
-  const { q, status } = (await searchParams) ?? {};
+  const { q, status } = (await searchParams) ?? {}
 
   const filteredCerts = initialCertifications.filter((c) => {
     const matchesSearch =
       !q ||
       c.employee.toLowerCase().includes(q.toLowerCase()) ||
       c.certification.toLowerCase().includes(q.toLowerCase()) ||
-      c.role.toLowerCase().includes(q.toLowerCase());
-    const matchesFilter = !status || status === "All" || c.status === status;
-    return matchesSearch && matchesFilter;
-  });
+      c.role.toLowerCase().includes(q.toLowerCase())
+    const matchesFilter = !status || status === 'All' || c.status === status
+    return matchesSearch && matchesFilter
+  })
 
-  const activeCount = initialCertifications.filter((c) => c.status === "Active").length;
-  const expiringCount = initialCertifications.filter((c) => c.status === "Expiring Soon").length;
-  const expiredCount = initialCertifications.filter((c) => c.status === "Expired").length;
+  const activeCount = initialCertifications.filter((c) => c.status === 'Active').length
+  const expiringCount = initialCertifications.filter((c) => c.status === 'Expiring Soon').length
+  const expiredCount = initialCertifications.filter((c) => c.status === 'Expired').length
 
   return (
     <div className="space-y-6">
@@ -171,12 +171,12 @@ export default async function CertificationsPage({
           <SearchForm
             value={q}
             placeholder="Search employee, cert, or role..."
-            hiddenParams={status && status !== "All" ? { status } : {}}
+            hiddenParams={status && status !== 'All' ? { status } : {}}
           />
           <FilterTabs
             paramName="status"
-            options={["All", "Active", "Expiring Soon", "Expired"]}
-            currentValue={status || "All"}
+            options={['All', 'Active', 'Expiring Soon', 'Expired']}
+            currentValue={status || 'All'}
             hiddenParams={q ? { q } : {}}
           />
         </div>
@@ -208,11 +208,11 @@ export default async function CertificationsPage({
                     <td className="py-3 text-right">
                       <span
                         className={`text-[10px] px-2.5 py-0.5 rounded-full font-semibold ${
-                          cert.status === "Active"
-                            ? "bg-emerald-500/10 text-emerald-600"
-                            : cert.status === "Expiring Soon"
-                              ? "bg-amber-500/10 text-amber-600"
-                              : "bg-rose-500/10 text-rose-600 animate-pulse"
+                          cert.status === 'Active'
+                            ? 'bg-emerald-500/10 text-emerald-600'
+                            : cert.status === 'Expiring Soon'
+                              ? 'bg-amber-500/10 text-amber-600'
+                              : 'bg-rose-500/10 text-rose-600 animate-pulse'
                         }`}
                       >
                         {cert.status}
@@ -232,5 +232,5 @@ export default async function CertificationsPage({
         </div>
       </GlassCard>
     </div>
-  );
+  )
 }

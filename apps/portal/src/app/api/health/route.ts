@@ -1,62 +1,62 @@
-import { NextResponse } from "next/server";
-import { createServerSupabaseClient } from "@repo/supabase/server";
-import { getRedisClient } from "@repo/redis";
+import { NextResponse } from 'next/server'
+import { createServerSupabaseClient } from '@repo/supabase/server'
+import { getRedisClient } from '@repo/redis'
 
 export async function GET() {
-  const startedAt = Date.now();
-  const checks: Record<string, unknown> = {};
-  let status: "healthy" | "degraded" | "unhealthy" = "healthy";
+  const startedAt = Date.now()
+  const checks: Record<string, unknown> = {}
+  let status: 'healthy' | 'degraded' | 'unhealthy' = 'healthy'
 
   // 1. Check Supabase / PostgreSQL Database connectivity
   try {
-    const supabase = await createServerSupabaseClient();
+    const supabase = await createServerSupabaseClient()
     // Fetch a single row/count from a basic table to check if connection works
-    const { error } = await supabase.from("employees").select("role").limit(1);
+    const { error } = await supabase.from('employees').select('role').limit(1)
 
     if (error) {
-      checks.database = { status: "degraded", error: error.message };
-      status = "degraded";
+      checks.database = { status: 'degraded', error: error.message }
+      status = 'degraded'
     } else {
-      checks.database = { status: "healthy" };
+      checks.database = { status: 'healthy' }
     }
   } catch (err: unknown) {
     checks.database = {
-      status: "unhealthy",
+      status: 'unhealthy',
       error: err instanceof Error ? err.message : String(err),
-    };
-    status = "unhealthy";
+    }
+    status = 'unhealthy'
   }
 
   // 2. Check Redis Cache connectivity (ioredis — status === "ready")
   try {
-    const redis = getRedisClient();
-    let redisConnected = redis.status === "ready";
+    const redis = getRedisClient()
+    let redisConnected = redis.status === 'ready'
     if (!redisConnected) {
       try {
-        const pong = await redis.ping();
-        redisConnected = pong === "PONG";
+        const pong = await redis.ping()
+        redisConnected = pong === 'PONG'
       } catch {
-        redisConnected = false;
+        redisConnected = false
       }
     }
     checks.redis = {
-      status: redisConnected ? "healthy" : "degraded",
+      status: redisConnected ? 'healthy' : 'degraded',
       connected: redisConnected,
-    };
+    }
     if (!redisConnected) {
-      if (status !== "unhealthy") {
-        status = "degraded";
+      if (status !== 'unhealthy') {
+        status = 'degraded'
       }
     }
   } catch (err: unknown) {
     checks.redis = {
-      status: "unhealthy",
+      status: 'unhealthy',
       error: err instanceof Error ? err.message : String(err),
-    };
-    status = "unhealthy";
+    }
+    status = 'unhealthy'
   }
 
-  const responseStatus = status === "unhealthy" ? 503 : 200;
+  const responseStatus = status === 'unhealthy' ? 503 : 200
 
   return NextResponse.json(
     {
@@ -66,5 +66,5 @@ export async function GET() {
       checks,
     },
     { status: responseStatus }
-  );
+  )
 }

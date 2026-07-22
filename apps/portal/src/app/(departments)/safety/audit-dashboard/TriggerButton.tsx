@@ -1,24 +1,22 @@
-"use client";
+'use client'
 
-import React, { useTransition } from "react";
-import { triggerManualAudit } from "./actions";
-import { Button } from "@repo/ui";
+import React, { useTransition } from 'react'
+import { triggerManualAudit } from './actions'
+import { Button } from '@repo/ui'
 
 export function TriggerButton() {
-  const [isPending, startTransition] = useTransition();
+  const [isPending, startTransition] = useTransition()
 
   const handleTrigger = () => {
     startTransition(async () => {
       try {
-        await triggerManualAudit();
+        await triggerManualAudit()
       } catch (err) {
-        // eslint-disable-next-line no-alert
-        alert(
-          `Failed to trigger audit report: ${err instanceof Error ? err.message : String(err)}`
-        );
+         
+        alert(`Failed to trigger audit report: ${err instanceof Error ? err.message : String(err)}`)
       }
-    });
-  };
+    })
+  }
 
   return (
     <Button
@@ -46,8 +44,8 @@ export function TriggerButton() {
           Generating Audit Report...
         </span>
       ) : (
-        "Run Daily Audit Now"
+        'Run Daily Audit Now'
       )}
     </Button>
-  );
+  )
 }

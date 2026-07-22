@@ -1,69 +1,69 @@
-"use client";
+'use client'
 
-import { useCallback, useEffect, useRef, useState } from "react";
-import { MessageCircle, X } from "lucide-react";
-import { Button } from "@repo/ui/components/ui/button";
-import { cn } from "@repo/ui/lib/utils";
-import { analytics } from "@repo/utils";
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { MessageCircle, X } from 'lucide-react'
+import { Button } from '@repo/ui/components/ui/button'
+import { cn } from '@repo/ui/lib/utils'
+import { analytics } from '@repo/utils'
 
 /**
  * Taskbar feedback control — compact trigger in the top menu bar with a
  * dropdown panel for bug reports, feature requests, and support.
  */
 export function FeedbackWidget() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [type, setType] = useState("bug");
-  const [message, setMessage] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const [isOpen, setIsOpen] = useState(false)
+  const [type, setType] = useState('bug')
+  const [message, setMessage] = useState('')
+  const [submitting, setSubmitting] = useState(false)
+  const containerRef = useRef<HTMLDivElement>(null)
 
   const closePanel = useCallback(() => {
-    setIsOpen(false);
-  }, []);
+    setIsOpen(false)
+  }, [])
 
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen) return
 
     const handlePointerDown = (event: PointerEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-        closePanel();
+        closePanel()
       }
-    };
+    }
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        event.preventDefault();
-        closePanel();
+      if (event.key === 'Escape') {
+        event.preventDefault()
+        closePanel()
       }
-    };
+    }
 
-    document.addEventListener("pointerdown", handlePointerDown);
-    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener('pointerdown', handlePointerDown)
+    document.addEventListener('keydown', handleKeyDown)
     return () => {
-      document.removeEventListener("pointerdown", handlePointerDown);
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [closePanel, isOpen]);
+      document.removeEventListener('pointerdown', handlePointerDown)
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [closePanel, isOpen])
 
   const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-    setSubmitting(true);
+    event.preventDefault()
+    setSubmitting(true)
 
     analytics.track({
-      eventName: "User Feedback Submitted",
+      eventName: 'User Feedback Submitted',
       properties: { type, messageLength: message.length },
-    });
+    })
 
-    await fetch("/api/feedback", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+    await fetch('/api/feedback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ type, message }),
-    }).catch(() => {});
+    }).catch(() => {})
 
-    setSubmitting(false);
-    setMessage("");
-    closePanel();
-    alert("Thank you for your feedback! Our support team has received it.");
-  };
+    setSubmitting(false)
+    setMessage('')
+    closePanel()
+    alert('Thank you for your feedback! Our support team has received it.')
+  }
 
   return (
     <div ref={containerRef} className="relative shrink-0">
@@ -74,11 +74,11 @@ export function FeedbackWidget() {
         aria-haspopup="dialog"
         onClick={() => setIsOpen((open) => !open)}
         className={cn(
-          "flex h-[26px] items-center gap-1.5 rounded-full border px-2.5 text-[12px] font-medium",
-          "select-none outline-none transition-colors active:scale-[0.97]",
-          "border-border-subtle bg-black/[0.03] text-text-heading",
-          "hover:bg-black/[0.06] focus-visible:ring-2 focus-visible:ring-arch-accent-charcoal/50",
-          isOpen && "border-border-default bg-black/[0.1] shadow-sm"
+          'flex h-[26px] items-center gap-1.5 rounded-full border px-2.5 text-[12px] font-medium',
+          'select-none outline-none transition-colors active:scale-[0.97]',
+          'border-border-subtle bg-black/[0.03] text-text-heading',
+          'hover:bg-black/[0.06] focus-visible:ring-2 focus-visible:ring-arch-accent-charcoal/50',
+          isOpen && 'border-border-default bg-black/[0.1] shadow-sm'
         )}
       >
         <MessageCircle className="h-3.5 w-3.5 shrink-0" strokeWidth={2} aria-hidden />
@@ -90,9 +90,9 @@ export function FeedbackWidget() {
           role="dialog"
           aria-label="Send feedback"
           className={cn(
-            "absolute right-0 top-full z-[60] mt-1.5 w-80 p-4",
-            "flex flex-col gap-4 rounded-xl border border-border-subtle",
-            "bg-white/95 shadow-window backdrop-blur-xl"
+            'absolute right-0 top-full z-[60] mt-1.5 w-80 p-4',
+            'flex flex-col gap-4 rounded-xl border border-border-subtle',
+            'bg-white/95 shadow-window backdrop-blur-xl'
           )}
         >
           <div className="flex items-center justify-between">
@@ -123,12 +123,12 @@ export function FeedbackWidget() {
             />
             <div className="flex justify-end gap-2">
               <Button type="submit" disabled={submitting || !message}>
-                {submitting ? "Sending..." : "Submit"}
+                {submitting ? 'Sending...' : 'Submit'}
               </Button>
             </div>
           </form>
         </div>
       )}
     </div>
-  );
+  )
 }

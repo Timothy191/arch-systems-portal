@@ -1,33 +1,33 @@
-import { Suspense } from "react";
-import { getDepartmentContext } from "@/lib/dept-context";
-import { GlassCard } from "@repo/ui/GlassCard";
-import { Skeleton } from "@repo/ui/components/ui/skeleton";
-import type { Metadata } from "next";
-import { BarChart3, Layers, Truck, ClipboardList, TrendingUp, ArrowDownUp } from "lucide-react";
+import { Suspense } from 'react'
+import { getDepartmentContext } from '@/lib/dept-context'
+import { GlassCard } from '@repo/ui/GlassCard'
+import { Skeleton } from '@repo/ui/components/ui/skeleton'
+import type { Metadata } from 'next'
+import { BarChart3, Layers, Truck, ClipboardList, TrendingUp, ArrowDownUp } from 'lucide-react'
 import {
   getProductionMetrics,
   getRecentProductionLogs,
   type ProductionMetrics,
   type RecentProductionLog,
-} from "./actions";
+} from './actions'
 
 export const metadata: Metadata = {
-  title: "Production | Arch OS",
-  description: "Coal yield, tonnage and extraction tracking.",
-};
+  title: 'Production | Arch OS',
+  description: 'Coal yield, tonnage and extraction tracking.',
+}
 
 /* ------------------------------------------------------------------ */
 /*  Server component wrappers for streaming                            */
 /* ------------------------------------------------------------------ */
 
 async function ProductionMetricsSection({ deptId }: { deptId: string }) {
-  const metrics = await getProductionMetrics(deptId);
-  return <ProductionMetricsGrid metrics={metrics} />;
+  const metrics = await getProductionMetrics(deptId)
+  return <ProductionMetricsGrid metrics={metrics} />
 }
 
 async function ProductionLogsSection({ deptId }: { deptId: string }) {
-  const logs = await getRecentProductionLogs(deptId, 8);
-  return <ProductionLogsTable logs={logs} />;
+  const logs = await getRecentProductionLogs(deptId, 8)
+  return <ProductionLogsTable logs={logs} />
 }
 
 /* ------------------------------------------------------------------ */
@@ -37,56 +37,56 @@ async function ProductionLogsSection({ deptId }: { deptId: string }) {
 function ProductionMetricsGrid({ metrics }: { metrics: ProductionMetrics }) {
   const kpis = [
     {
-      label: "Coal Tonnes Today",
+      label: 'Coal Tonnes Today',
       value: metrics.coalTonnesToday.toLocaleString(),
       icon: BarChart3,
-      color: "text-yellow-400",
-      bg: "bg-yellow-400/10",
+      color: 'text-yellow-400',
+      bg: 'bg-yellow-400/10',
     },
     {
-      label: "Waste Tonnes Today",
+      label: 'Waste Tonnes Today',
       value: metrics.wasteTonnesToday.toLocaleString(),
       icon: Layers,
-      color: "text-orange-400",
-      bg: "bg-orange-400/10",
+      color: 'text-orange-400',
+      bg: 'bg-orange-400/10',
     },
     {
-      label: "Strip Ratio",
+      label: 'Strip Ratio',
       value: metrics.stripRatio.toFixed(2),
       icon: ArrowDownUp,
-      color: "text-blue-400",
-      bg: "bg-blue-400/10",
+      color: 'text-blue-400',
+      bg: 'bg-blue-400/10',
     },
     {
-      label: "Active Machines",
+      label: 'Active Machines',
       value: `${metrics.activeMachines} / ${metrics.totalMachines}`,
       icon: Truck,
-      color: "text-accent-green",
-      bg: "bg-accent-green/10",
+      color: 'text-accent-green',
+      bg: 'bg-accent-green/10',
     },
     {
-      label: "Shift Logs Today",
+      label: 'Shift Logs Today',
       value: metrics.dailyLogsToday.toString(),
       icon: ClipboardList,
-      color: "text-purple-400",
-      bg: "bg-purple-400/10",
+      color: 'text-purple-400',
+      bg: 'bg-purple-400/10',
     },
     {
-      label: "Productivity",
+      label: 'Productivity',
       value:
         metrics.totalMachines > 0
           ? `${Math.round((metrics.activeMachines / metrics.totalMachines) * 100)}%`
-          : "—",
+          : '—',
       icon: TrendingUp,
-      color: "text-cyan-400",
-      bg: "bg-cyan-400/10",
+      color: 'text-cyan-400',
+      bg: 'bg-cyan-400/10',
     },
-  ];
+  ]
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
       {kpis.map((kpi) => {
-        const Icon = kpi.icon;
+        const Icon = kpi.icon
         return (
           <GlassCard key={kpi.label}>
             <div className="flex items-center gap-3">
@@ -101,10 +101,10 @@ function ProductionMetricsGrid({ metrics }: { metrics: ProductionMetrics }) {
               </div>
             </div>
           </GlassCard>
-        );
+        )
       })}
     </div>
-  );
+  )
 }
 
 function ProductionLogsTable({ logs }: { logs: RecentProductionLog[] }) {
@@ -133,7 +133,7 @@ function ProductionLogsTable({ logs }: { logs: RecentProductionLog[] }) {
             <tbody>
               {logs.map((log) => {
                 const strip =
-                  log.coalTonnes > 0 ? (log.wasteTonnes / log.coalTonnes).toFixed(2) : "—";
+                  log.coalTonnes > 0 ? (log.wasteTonnes / log.coalTonnes).toFixed(2) : '—'
                 return (
                   <tr
                     key={log.id}
@@ -143,9 +143,9 @@ function ProductionLogsTable({ logs }: { logs: RecentProductionLog[] }) {
                     <td className="py-2">
                       <span
                         className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                          log.shift === "day"
-                            ? "bg-yellow-400/20 text-yellow-400"
-                            : "bg-blue-400/20 text-blue-400"
+                          log.shift === 'day'
+                            ? 'bg-yellow-400/20 text-yellow-400'
+                            : 'bg-blue-400/20 text-blue-400'
                         }`}
                       >
                         {log.shift}
@@ -159,14 +159,14 @@ function ProductionLogsTable({ logs }: { logs: RecentProductionLog[] }) {
                     </td>
                     <td className="py-2 text-right text-arch-text-muted font-mono">{strip}</td>
                   </tr>
-                );
+                )
               })}
             </tbody>
           </table>
         </div>
       )}
     </GlassCard>
-  );
+  )
 }
 
 /* ------------------------------------------------------------------ */
@@ -174,7 +174,7 @@ function ProductionLogsTable({ logs }: { logs: RecentProductionLog[] }) {
 /* ------------------------------------------------------------------ */
 
 export default async function ProductionPage() {
-  const { deptId } = await getDepartmentContext({ department: "production" });
+  const { deptId } = await getDepartmentContext({ department: 'production' })
 
   return (
     <div className="space-y-6">
@@ -196,5 +196,5 @@ export default async function ProductionPage() {
         <ProductionLogsSection deptId={deptId} />
       </Suspense>
     </div>
-  );
+  )
 }

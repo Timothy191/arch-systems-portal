@@ -3,16 +3,16 @@
  * Executes before React hydration begins.
  */
 
-if (typeof window !== "undefined" && "performance" in window) {
-  performance.mark("portal-init");
+if (typeof window !== 'undefined' && 'performance' in window) {
+  performance.mark('portal-init')
 }
 
 export function onRouterTransitionStart(
   url: string,
-  navigationType: "push" | "replace" | "traverse"
+  navigationType: 'push' | 'replace' | 'traverse'
 ) {
-  if (process.env.NODE_ENV === "development") {
-    // eslint-disable-next-line no-console
-    console.log(`[Router Transition] ${navigationType} to ${url}`);
+  if (process.env.NODE_ENV === 'development') {
+     
+    console.log(`[Router Transition] ${navigationType} to ${url}`)
   }
 }

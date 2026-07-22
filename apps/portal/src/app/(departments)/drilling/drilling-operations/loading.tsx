@@ -1,4 +1,4 @@
-import { GlassSkeleton } from "@repo/ui/components/ui/glass-skeleton";
+import { GlassSkeleton } from '@repo/ui/components/ui/glass-skeleton'
 
 export default function DrillingOperationsLoading() {
   return (
@@ -14,5 +14,5 @@ export default function DrillingOperationsLoading() {
       </div>
       <GlassSkeleton className="h-96" rows={1} />
     </div>
-  );
+  )
 }

@@ -1,5 +1,5 @@
-import { PageHeader } from "@repo/ui/PageHeader";
-import { GlassCard } from "@repo/ui/GlassCard";
+import { PageHeader } from '@repo/ui/PageHeader'
+import { GlassCard } from '@repo/ui/GlassCard'
 import {
   Table,
   TableBody,
@@ -7,8 +7,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@repo/ui/components/ui/table";
-import { Button } from "@repo/ui/components/ui/button";
+} from '@repo/ui/components/ui/table'
+import { Button } from '@repo/ui/components/ui/button'
 import {
   Printer,
   RefreshCw,
@@ -21,17 +21,17 @@ import {
   Clock,
   CheckCircle,
   Layers,
-} from "lucide-react";
+} from 'lucide-react'
 import {
   rescanPrinters,
   getPrintJobs,
   unregisterPrinter,
   cancelPrintJob,
   retryPrintJob,
-} from "../actions";
-import { RegisterPrinterForm } from "./register-form";
-import { StatusFilter } from "./status-filter";
-import { cn } from "@repo/ui/lib/utils";
+} from '../actions'
+import { RegisterPrinterForm } from './register-form'
+import { StatusFilter } from './status-filter'
+import { cn } from '@repo/ui/lib/utils'
 
 /* ------------------------------------------------------------------ */
 /*  Wrapper server actions for form actions                             */
@@ -39,23 +39,23 @@ import { cn } from "@repo/ui/lib/utils";
 /* ------------------------------------------------------------------ */
 
 async function rescanAction() {
-  "use server";
-  await rescanPrinters();
+  'use server'
+  await rescanPrinters()
 }
 
 async function unregisterAction(printerId: string) {
-  "use server";
-  await unregisterPrinter(printerId);
+  'use server'
+  await unregisterPrinter(printerId)
 }
 
 async function cancelAction(jobId: string) {
-  "use server";
-  await cancelPrintJob(jobId);
+  'use server'
+  await cancelPrintJob(jobId)
 }
 
 async function retryAction(jobId: string) {
-  "use server";
-  await retryPrintJob(jobId);
+  'use server'
+  await retryPrintJob(jobId)
 }
 
 /* ------------------------------------------------------------------ */
@@ -63,81 +63,81 @@ async function retryAction(jobId: string) {
 /* ------------------------------------------------------------------ */
 
 function PrinterStatusPill({ status }: { status: string }) {
-  if (status === "online") {
+  if (status === 'online') {
     return (
       <span className="inline-flex items-center gap-1.5 text-xs font-medium px-2 py-0.5 rounded-full border bg-accent-green/10 border-accent-green/20 text-accent-green">
         <Wifi className="w-3 h-3" />
         Online
       </span>
-    );
+    )
   }
-  if (status === "offline") {
+  if (status === 'offline') {
     return (
       <span className="inline-flex items-center gap-1.5 text-xs font-medium px-2 py-0.5 rounded-full border bg-red-50/70 border-red-200/50 text-red-700">
         <WifiOff className="w-3 h-3" />
         Offline
       </span>
-    );
+    )
   }
   return (
     <span className="inline-flex items-center gap-1.5 text-xs font-medium px-2 py-0.5 rounded-full border bg-amber-50/70 border-amber-200/50 text-amber-700">
       <AlertTriangle className="w-3 h-3" />
       Error
     </span>
-  );
+  )
 }
 
 function JobStatusPill({ status }: { status: string }) {
   const pills: Record<string, { label: string; icon: React.ReactNode; className: string }> = {
     queued: {
-      label: "Queued",
+      label: 'Queued',
       icon: <Clock className="w-3 h-3" />,
-      className: "bg-blue-50/70 border-blue-200/50 text-blue-700",
+      className: 'bg-blue-50/70 border-blue-200/50 text-blue-700',
     },
     rendering: {
-      label: "Rendering",
+      label: 'Rendering',
       icon: <Layers className="w-3 h-3" />,
-      className: "bg-violet-50/70 border-violet-200/50 text-violet-700",
+      className: 'bg-violet-50/70 border-violet-200/50 text-violet-700',
     },
     printing: {
-      label: "Printing",
+      label: 'Printing',
       icon: <Printer className="w-3 h-3" />,
-      className: "bg-cyan-50/70 border-cyan-200/50 text-cyan-700",
+      className: 'bg-cyan-50/70 border-cyan-200/50 text-cyan-700',
     },
     completed: {
-      label: "Completed",
+      label: 'Completed',
       icon: <CheckCircle className="w-3 h-3" />,
-      className: "bg-accent-green/10 border-accent-green/20 text-accent-green",
+      className: 'bg-accent-green/10 border-accent-green/20 text-accent-green',
     },
     failed: {
-      label: "Failed",
+      label: 'Failed',
       icon: <XCircle className="w-3 h-3" />,
-      className: "bg-red-50/70 border-red-200/50 text-red-700",
+      className: 'bg-red-50/70 border-red-200/50 text-red-700',
     },
     cancelled: {
-      label: "Cancelled",
+      label: 'Cancelled',
       icon: <Trash2 className="w-3 h-3" />,
-      className: "bg-amber-50/70 border-amber-200/50 text-amber-700",
+      className: 'bg-amber-50/70 border-amber-200/50 text-amber-700',
     },
-  };
+  }
 
   const pill = pills[status] ?? {
     label: status,
     icon: null,
-    className: "bg-gray-50/70 border-gray-200/50 text-gray-700",
-  };
+    className: 'bg-gray-50/70 border-gray-200/50 text-gray-700',
+  }
 
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 text-xs font-medium px-2 py-0.5 rounded-full border",
+        'inline-flex items-center gap-1.5 text-xs font-medium px-2 py-0.5 rounded-full border',
         pill.className
       )}
     >
       {pill.icon}
       {pill.label}
     </span>
-  );
+  )
 }
 
 /* ------------------------------------------------------------------ */
@@ -147,15 +147,15 @@ function JobStatusPill({ status }: { status: string }) {
 export default async function PrintCardsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ status?: string }>;
+  searchParams: Promise<{ status?: string }>
 }) {
-  const params = await searchParams;
-  const statusFilter = params.status ?? "all";
+  const params = await searchParams
+  const statusFilter = params.status ?? 'all'
 
   const [{ printers }, { jobs }] = await Promise.all([
     rescanPrinters().catch(() => ({ printers: [], count: 0 })),
-    getPrintJobs(statusFilter === "all" ? undefined : statusFilter).catch(() => ({ jobs: [] })),
-  ]);
+    getPrintJobs(statusFilter === 'all' ? undefined : statusFilter).catch(() => ({ jobs: [] })),
+  ])
 
   return (
     <div className="space-y-6">
@@ -255,7 +255,7 @@ export default async function PrintCardsPage({
               </h3>
               <div className="flex items-center gap-2">
                 <span className="text-xs text-arch-text-muted">
-                  {jobs.length} job{jobs.length !== 1 ? "s" : ""}
+                  {jobs.length} job{jobs.length !== 1 ? 's' : ''}
                 </span>
                 <StatusFilter current={statusFilter} />
               </div>
@@ -286,24 +286,24 @@ export default async function PrintCardsPage({
                   >
                     <TableCell className="text-arch-text-primary">{job.employee_name}</TableCell>
                     <TableCell className="text-arch-text-secondary text-sm">
-                      {job.department_name ?? "—"}
+                      {job.department_name ?? '—'}
                     </TableCell>
                     <TableCell>
                       <JobStatusPill status={job.status} />
                     </TableCell>
                     <TableCell className="text-arch-text-secondary text-sm">
-                      {new Date(job.queued_at).toLocaleString("en-ZA", {
-                        day: "numeric",
-                        month: "short",
-                        hour: "2-digit",
-                        minute: "2-digit",
+                      {new Date(job.queued_at).toLocaleString('en-ZA', {
+                        day: 'numeric',
+                        month: 'short',
+                        hour: '2-digit',
+                        minute: '2-digit',
                       })}
                     </TableCell>
                     <TableCell className="text-arch-text-secondary text-sm">
-                      {job.printer?.name ?? "—"}
+                      {job.printer?.name ?? '—'}
                     </TableCell>
                     <TableCell className="text-right">
-                      {job.status === "queued" && (
+                      {job.status === 'queued' && (
                         <form action={cancelAction.bind(null, job.id)}>
                           <Button
                             type="submit"
@@ -316,7 +316,7 @@ export default async function PrintCardsPage({
                           </Button>
                         </form>
                       )}
-                      {job.status === "failed" && (
+                      {job.status === 'failed' && (
                         <form action={retryAction.bind(null, job.id)}>
                           <Button
                             type="submit"
@@ -338,5 +338,5 @@ export default async function PrintCardsPage({
         </div>
       </div>
     </div>
-  );
+  )
 }

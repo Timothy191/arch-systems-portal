@@ -1,8 +1,8 @@
-"use client";
+'use client'
 
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react'
 import {
   ArrowUpRight,
   Ban,
@@ -17,12 +17,12 @@ import {
   Satellite,
   ShieldCheck,
   Wrench,
-} from "lucide-react";
-import { cn } from "@repo/ui/lib/utils";
-import type { Department } from "@/lib/departments";
-import { semanticIconClass } from "@/lib/semantic-icon";
-import { Sparkline } from "./Sparkline";
-import { toast } from "sonner";
+} from 'lucide-react'
+import { cn } from '@repo/ui/lib/utils'
+import type { Department } from '@/lib/departments'
+import { semanticIconClass } from '@/lib/semantic-icon'
+import { Sparkline } from './Sparkline'
+import { toast } from 'sonner'
 
 const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
   Drill: Pickaxe,
@@ -34,98 +34,98 @@ const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
   GraduationCap,
   Satellite,
   CreditCard,
-};
+}
 
 const COLOR_MAP: Record<string, { bg: string; text: string }> = {
   amber: {
-    bg: "border-accent-amber/20 text-accent-amber bg-accent-amber/5",
-    text: "text-accent-amber",
+    bg: 'border-accent-amber/20 text-accent-amber bg-accent-amber/5',
+    text: 'text-accent-amber',
   },
   emerald: {
-    bg: "border-accent-green/20 text-accent-green bg-accent-green/5",
-    text: "text-accent-green",
+    bg: 'border-accent-green/20 text-accent-green bg-accent-green/5',
+    text: 'text-accent-green',
   },
   blue: {
-    bg: "border-accent-blue/20 text-accent-blue bg-accent-blue/5",
-    text: "text-accent-blue",
+    bg: 'border-accent-blue/20 text-accent-blue bg-accent-blue/5',
+    text: 'text-accent-blue',
   },
   violet: {
-    bg: "border-accent-blue/20 text-accent-blue bg-accent-blue/5",
-    text: "text-accent-blue",
+    bg: 'border-accent-blue/20 text-accent-blue bg-accent-blue/5',
+    text: 'text-accent-blue',
   },
   red: {
-    bg: "border-accent-red/20 text-accent-red bg-accent-red/5",
-    text: "text-accent-red",
+    bg: 'border-accent-red/20 text-accent-red bg-accent-red/5',
+    text: 'text-accent-red',
   },
   orange: {
-    bg: "border-accent-amber/20 text-accent-amber bg-accent-amber/5",
-    text: "text-accent-amber",
+    bg: 'border-accent-amber/20 text-accent-amber bg-accent-amber/5',
+    text: 'text-accent-amber',
   },
   cyan: {
-    bg: "border-accent-blue/20 text-accent-blue bg-accent-blue/5",
-    text: "text-accent-blue",
+    bg: 'border-accent-blue/20 text-accent-blue bg-accent-blue/5',
+    text: 'text-accent-blue',
   },
   indigo: {
-    bg: "border-accent-blue/20 text-accent-blue bg-accent-blue/5",
-    text: "text-accent-blue",
+    bg: 'border-accent-blue/20 text-accent-blue bg-accent-blue/5',
+    text: 'text-accent-blue',
   },
-};
+}
 
 interface DepartmentCardProps {
-  department: Department;
-  index: number;
+  department: Department
+  index: number
   /** When false, card stays visible with no-entry cursor and does not navigate. */
-  accessible?: boolean;
+  accessible?: boolean
 }
 
 export function DepartmentCard({ department, index, accessible = false }: DepartmentCardProps) {
-  const router = useRouter();
-  const [isPinned, setIsPinned] = useState(false);
+  const router = useRouter()
+  const [isPinned, setIsPinned] = useState(false)
 
   useEffect(() => {
-    const pinned = localStorage.getItem(`pinned_dept_${department.name}`);
-    setIsPinned(pinned === "true");
-  }, [department.name]);
+    const pinned = localStorage.getItem(`pinned_dept_${department.name}`)
+    setIsPinned(pinned === 'true')
+  }, [department.name])
 
   const togglePin = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    const nextState = !isPinned;
-    localStorage.setItem(`pinned_dept_${department.name}`, String(nextState));
-    setIsPinned(nextState);
+    e.stopPropagation()
+    const nextState = !isPinned
+    localStorage.setItem(`pinned_dept_${department.name}`, String(nextState))
+    setIsPinned(nextState)
     if (nextState) {
-      toast.success(`Pinned ${department.displayName} to dashboard`);
+      toast.success(`Pinned ${department.displayName} to dashboard`)
     } else {
-      toast.success(`Unpinned ${department.displayName}`);
+      toast.success(`Unpinned ${department.displayName}`)
     }
-  };
+  }
 
   const openDepartment = () => {
-    if (!accessible) return;
-    router.push(`/${department.name}`);
-  };
+    if (!accessible) return
+    router.push(`/${department.name}`)
+  }
 
-  const Icon = ICON_MAP[department.icon] || Factory;
+  const Icon = ICON_MAP[department.icon] || Factory
   const config = COLOR_MAP[department.color] || {
-    bg: "border-arch-border-subtle text-arch-text-primary",
-    text: "text-arch-text-primary",
-  };
+    bg: 'border-arch-border-subtle text-arch-text-primary',
+    text: 'text-arch-text-primary',
+  }
 
   return (
     <div
       style={
         {
           animation: `fade-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) ${index * 0.05}s both`,
-          ["--shimmer-delay" as string]: `${-(index * 1.5)}s`,
+          ['--shimmer-delay' as string]: `${-(index * 1.5)}s`,
         } as React.CSSProperties
       }
-      className={cn("h-full", department.gridSpan)}
+      className={cn('h-full', department.gridSpan)}
     >
       <div
         onClick={openDepartment}
         onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            openDepartment();
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault()
+            openDepartment()
           }
         }}
         tabIndex={0}
@@ -134,10 +134,10 @@ export function DepartmentCard({ department, index, accessible = false }: Depart
         aria-label={
           accessible ? `Open ${department.displayName}` : `${department.displayName} — no access`
         }
-        title={accessible ? undefined : "No access to this department"}
+        title={accessible ? undefined : 'No access to this department'}
         className={cn(
-          "uiverse-card group relative outline-none h-full interactive-element",
-          !accessible && "cursor-not-allowed opacity-70"
+          'uiverse-card group relative outline-none h-full interactive-element',
+          !accessible && 'cursor-not-allowed opacity-70'
         )}
       >
         {!accessible ? (
@@ -149,24 +149,24 @@ export function DepartmentCard({ department, index, accessible = false }: Depart
           </span>
         ) : null}
         {/* Banner area */}
-        <div className={cn("uiverse-card-banner", `uiverse-card-banner-${department.name}`)}>
+        <div className={cn('uiverse-card-banner', `uiverse-card-banner-${department.name}`)}>
           {/* Save/Pin Button */}
           <button
             type="button"
             onClick={togglePin}
             className="uiverse-card-pin hover:scale-110 active:scale-95"
-            title={isPinned ? "Unpin department" : "Pin department"}
+            title={isPinned ? 'Unpin department' : 'Pin department'}
           >
             <Bookmark
               className={cn(
-                "w-3.5 h-3.5 transition-all duration-200",
-                isPinned ? "fill-arch-accent-blue text-arch-accent-blue" : "text-arch-text-tertiary"
+                'w-3.5 h-3.5 transition-all duration-200',
+                isPinned ? 'fill-arch-accent-blue text-arch-accent-blue' : 'text-arch-text-tertiary'
               )}
             />
           </button>
 
           {/* Department Icon Bubble */}
-          <div className={cn("uiverse-card-icon-bubble border-arch-border-emphasis/25", config.bg)}>
+          <div className={cn('uiverse-card-icon-bubble border-arch-border-emphasis/25', config.bg)}>
             <Icon className="w-5 h-5" />
           </div>
         </div>
@@ -180,10 +180,10 @@ export function DepartmentCard({ department, index, accessible = false }: Depart
                 <span className="flex items-center gap-1.5 shrink-0">
                   <span
                     className={cn(
-                      "w-1.5 h-1.5 rounded-full animate-pulse",
-                      department.status === "active" && "bg-accent-green",
-                      department.status === "maintenance" && "bg-accent-amber",
-                      department.status === "alert" && "bg-accent-red"
+                      'w-1.5 h-1.5 rounded-full animate-pulse',
+                      department.status === 'active' && 'bg-accent-green',
+                      department.status === 'maintenance' && 'bg-accent-amber',
+                      department.status === 'alert' && 'bg-accent-red'
                     )}
                   />
                   <span className="text-[10px] font-medium uppercase tracking-[0.05em] text-arch-text-tertiary">
@@ -217,7 +217,7 @@ export function DepartmentCard({ department, index, accessible = false }: Depart
                       <FileText className="w-2.5 h-2.5 shrink-0" />
                       <span>{action.label}</span>
                       <Ban
-                        className={cn("w-2.5 h-2.5 shrink-0", semanticIconClass("deny"))}
+                        className={cn('w-2.5 h-2.5 shrink-0', semanticIconClass('deny'))}
                         aria-hidden
                       />
                     </span>
@@ -244,5 +244,5 @@ export function DepartmentCard({ department, index, accessible = false }: Depart
         </div>
       </div>
     </div>
-  );
+  )
 }

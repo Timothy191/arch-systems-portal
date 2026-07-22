@@ -16,8 +16,8 @@
 
 /** Arguments for the repair_table RPC function */
 export interface RepairTableArgs {
-  p_table_name: string;
-  p_issue_category: string;
+  p_table_name: string
+  p_issue_category: string
 }
 
 /** Minimal structural type for the Supabase operations we need */
@@ -26,9 +26,9 @@ interface AdminSupabaseOps {
     fn: string,
     args?: Record<string, unknown>
   ) => Promise<{
-    data: unknown;
-    error: { message: string } | null;
-  }>;
+    data: unknown
+    error: { message: string } | null
+  }>
   from: (table: string) => {
     select: (columns: string) => {
       order: (
@@ -36,16 +36,16 @@ interface AdminSupabaseOps {
         opts: { ascending: boolean }
       ) => {
         limit: (n: number) => Promise<{
-          data: Record<string, unknown>[] | null;
-          error: { message: string } | null;
-        }>;
-      };
-    };
-  };
+          data: Record<string, unknown>[] | null
+          error: { message: string } | null
+        }>
+      }
+    }
+  }
 }
 
 function asAdminOps(supabase: unknown): AdminSupabaseOps {
-  return supabase as AdminSupabaseOps;
+  return supabase as AdminSupabaseOps
 }
 
 /**
@@ -56,8 +56,8 @@ export async function execAdminSql(
   supabase: unknown,
   sql: string
 ): Promise<{ data: unknown; error: { message: string } | null }> {
-  const ops = asAdminOps(supabase);
-  return ops.rpc("exec_sql", { sql });
+  const ops = asAdminOps(supabase)
+  return ops.rpc('exec_sql', { sql })
 }
 
 /**
@@ -67,8 +67,8 @@ export async function execAdminSql(
 export async function runDbAudit(
   supabase: unknown
 ): Promise<{ data: unknown; error: { message: string } | null }> {
-  const ops = asAdminOps(supabase);
-  return ops.rpc("run_db_audit");
+  const ops = asAdminOps(supabase)
+  return ops.rpc('run_db_audit')
 }
 
 /**
@@ -79,8 +79,8 @@ export async function repairTable(
   supabase: unknown,
   args: RepairTableArgs
 ): Promise<{ data: unknown; error: { message: string } | null }> {
-  const ops = asAdminOps(supabase);
-  return ops.rpc("repair_table", args as unknown as Record<string, unknown>);
+  const ops = asAdminOps(supabase)
+  return ops.rpc('repair_table', args as unknown as Record<string, unknown>)
 }
 
 /**
@@ -88,6 +88,6 @@ export async function repairTable(
  * Returns a query builder that can be further chained (.limit(), etc.)
  */
 export function queryAuditLogs(supabase: unknown) {
-  const ops = asAdminOps(supabase);
-  return ops.from("audit_logs").select("*").order("created_at", { ascending: false });
+  const ops = asAdminOps(supabase)
+  return ops.from('audit_logs').select('*').order('created_at', { ascending: false })
 }

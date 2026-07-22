@@ -1,37 +1,37 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { useSupabaseClient, useAdminData } from "@/hooks/useAdminData";
-import { GlassCard } from "@repo/ui/GlassCard";
-import { Edit2, Trash2, Plus } from "lucide-react";
-import { Button } from "@repo/ui/components/ui/button";
-import { Badge } from "@repo/ui/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@repo/ui/components/ui/dialog";
-import { Input } from "@repo/ui/components/ui/input";
-import { logError } from "@/lib/errors/error-logger";
+import { useState } from 'react'
+import { useSupabaseClient, useAdminData } from '@/hooks/useAdminData'
+import { GlassCard } from '@repo/ui/GlassCard'
+import { Edit2, Trash2, Plus } from 'lucide-react'
+import { Button } from '@repo/ui/components/ui/button'
+import { Badge } from '@repo/ui/components/ui/badge'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@repo/ui/components/ui/dialog'
+import { Input } from '@repo/ui/components/ui/input'
+import { logError } from '@/lib/errors/error-logger'
 
 interface Department {
-  id: string;
-  name: string;
-  display_name: string;
-  icon: string;
-  description: string;
-  color: string;
-  created_at: string;
+  id: string
+  name: string
+  display_name: string
+  icon: string
+  description: string
+  color: string
+  created_at: string
 }
 
-const COLORS = ["blue", "emerald", "blue", "violet", "red", "cyan", "indigo"];
+const COLORS = ['blue', 'emerald', 'blue', 'violet', 'red', 'cyan', 'indigo']
 
 const ICONS = [
-  "Drill",
-  "Factory",
-  "Shield",
-  "Wrench",
-  "Monitor",
-  "HeartPulse",
-  "GraduationCap",
-  "Satellite",
-];
+  'Drill',
+  'Factory',
+  'Shield',
+  'Wrench',
+  'Monitor',
+  'HeartPulse',
+  'GraduationCap',
+  'Satellite',
+]
 
 export function DepartmentsTab() {
   const {
@@ -39,56 +39,53 @@ export function DepartmentsTab() {
     loading,
     reload,
   } = useAdminData<Department>(async (supabase) =>
-    supabase.from("departments").select("*").order("display_name")
-  );
-  const [editingDept, setEditingDept] = useState<Department | null>(null);
-  const [showEditDialog, setShowEditDialog] = useState(false);
-  const supabase = useSupabaseClient();
+    supabase.from('departments').select('*').order('display_name')
+  )
+  const [editingDept, setEditingDept] = useState<Department | null>(null)
+  const [showEditDialog, setShowEditDialog] = useState(false)
+  const supabase = useSupabaseClient()
 
   const handleEdit = (dept: Department) => {
-    setEditingDept(dept);
-    setShowEditDialog(true);
-  };
+    setEditingDept(dept)
+    setShowEditDialog(true)
+  }
 
   const handleCreate = () => {
-    setEditingDept(null);
-    setShowEditDialog(true);
-  };
+    setEditingDept(null)
+    setShowEditDialog(true)
+  }
 
   const handleSave = async (formData: {
-    name: string;
-    display_name: string;
-    icon: string;
-    color: string;
-    description: string;
+    name: string
+    display_name: string
+    icon: string
+    color: string
+    description: string
   }) => {
     if (editingDept) {
-      const { error } = await supabase
-        .from("departments")
-        .update(formData)
-        .eq("id", editingDept.id);
+      const { error } = await supabase.from('departments').update(formData).eq('id', editingDept.id)
       if (error)
         logError(new Error(error.message), {
-          context: "departments_tab_update",
-        });
+          context: 'departments_tab_update',
+        })
     } else {
-      const { error } = await supabase.from("departments").insert(formData);
+      const { error } = await supabase.from('departments').insert(formData)
       if (error)
         logError(new Error(error.message), {
-          context: "departments_tab_create",
-        });
+          context: 'departments_tab_create',
+        })
     }
-    setShowEditDialog(false);
-    setEditingDept(null);
-    reload();
-  };
+    setShowEditDialog(false)
+    setEditingDept(null)
+    reload()
+  }
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this department?")) return;
-    const { error } = await supabase.from("departments").delete().eq("id", id);
-    if (error) logError(new Error(error.message), { context: "departments_tab_delete" });
-    reload();
-  };
+    if (!confirm('Are you sure you want to delete this department?')) return
+    const { error } = await supabase.from('departments').delete().eq('id', id)
+    if (error) logError(new Error(error.message), { context: 'departments_tab_delete' })
+    reload()
+  }
 
   return (
     <div className="space-y-6">
@@ -206,20 +203,20 @@ export function DepartmentsTab() {
       <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
         <DialogContent className="bg-arch-surface-primary border-arch-border-default">
           <DialogHeader>
-            <DialogTitle>{editingDept ? "Edit Department" : "Create Department"}</DialogTitle>
+            <DialogTitle>{editingDept ? 'Edit Department' : 'Create Department'}</DialogTitle>
           </DialogHeader>
           <DepartmentForm
             department={editingDept}
             onSubmit={handleSave}
             onCancel={() => {
-              setShowEditDialog(false);
-              setEditingDept(null);
+              setShowEditDialog(false)
+              setEditingDept(null)
             }}
           />
         </DialogContent>
       </Dialog>
     </div>
-  );
+  )
 }
 
 function DepartmentForm({
@@ -227,26 +224,26 @@ function DepartmentForm({
   onSubmit,
   onCancel,
 }: {
-  department: Department | null;
+  department: Department | null
   onSubmit: (_data: {
-    name: string;
-    display_name: string;
-    icon: string;
-    color: string;
-    description: string;
-  }) => void;
-  onCancel: () => void;
+    name: string
+    display_name: string
+    icon: string
+    color: string
+    description: string
+  }) => void
+  onCancel: () => void
 }) {
-  const [name, setName] = useState(department?.name || "");
-  const [displayName, setDisplayName] = useState(department?.display_name || "");
-  const [icon, setIcon] = useState(department?.icon || "Building2");
-  const [color, setColor] = useState(department?.color || "blue");
-  const [description, setDescription] = useState(department?.description || "");
+  const [name, setName] = useState(department?.name || '')
+  const [displayName, setDisplayName] = useState(department?.display_name || '')
+  const [icon, setIcon] = useState(department?.icon || 'Building2')
+  const [color, setColor] = useState(department?.color || 'blue')
+  const [description, setDescription] = useState(department?.description || '')
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSubmit({ name, display_name: displayName, icon, color, description });
-  };
+    e.preventDefault()
+    onSubmit({ name, display_name: displayName, icon, color, description })
+  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -273,7 +270,7 @@ function DepartmentForm({
         <Input
           id="name"
           value={name}
-          onChange={(e) => setName(e.target.value.toLowerCase().replace(/\s+/g, "-"))}
+          onChange={(e) => setName(e.target.value.toLowerCase().replace(/\s+/g, '-'))}
           className="bg-arch-surface-secondary border-arch-border-default"
           required
         />
@@ -340,9 +337,9 @@ function DepartmentForm({
           type="submit"
           className="bg-arch-accent-green hover:bg-arch-accent-green text-[var(--bg-void)]"
         >
-          {department ? "Update" : "Create"}
+          {department ? 'Update' : 'Create'}
         </Button>
       </div>
     </form>
-  );
+  )
 }

@@ -1,24 +1,24 @@
-import { GlassCard } from "@repo/ui/GlassCard";
-import { getDepartmentContext } from "@/lib/dept-context";
-import { ErrorBoundary } from "@/components/ErrorBoundary";
-import { Building2, Sparkles } from "lucide-react";
+import { GlassCard } from '@repo/ui/GlassCard'
+import { getDepartmentContext } from '@/lib/dept-context'
+import { ErrorBoundary } from '@/components/ErrorBoundary'
+import { Building2, Sparkles } from 'lucide-react'
 
 export default async function DepartmentDashboard({
   params,
 }: {
-  params: Promise<{ department: string }>;
+  params: Promise<{ department: string }>
 }) {
-  const { department: deptSlug } = await params;
+  const { department: deptSlug } = await params
   const { dept, deptId, supabase } = await getDepartmentContext({
     department: deptSlug,
-  });
+  })
 
   // Fetch personality and details directly from database to show dynamic department info
   const { data: dbDept } = await supabase
-    .from("departments")
-    .select("personality, display_name, description")
-    .eq("id", deptId)
-    .single();
+    .from('departments')
+    .select('personality, display_name, description')
+    .eq('id', deptId)
+    .single()
 
   return (
     <ErrorBoundary context={`Department Dashboard: ${deptSlug}`}>
@@ -43,7 +43,7 @@ export default async function DepartmentDashboard({
             <h3>Department Mission & Personality</h3>
           </div>
           <p className="text-arch-text-secondary leading-relaxed bg-arch-surface-secondary/50 p-4 rounded-xl border border-arch-border-subtle">
-            {dbDept?.personality || "No personality defined for this department."}
+            {dbDept?.personality || 'No personality defined for this department.'}
           </p>
         </GlassCard>
 
@@ -62,5 +62,5 @@ export default async function DepartmentDashboard({
         </GlassCard>
       </div>
     </ErrorBoundary>
-  );
+  )
 }

@@ -1,4 +1,4 @@
-import { GlassSkeleton } from "@repo/ui/components/ui/glass-skeleton";
+import { GlassSkeleton } from '@repo/ui/components/ui/glass-skeleton'
 
 export default function MachineTelemetryLoading() {
   return (
@@ -13,5 +13,5 @@ export default function MachineTelemetryLoading() {
       <GlassSkeleton className="h-96" rows={1} />
       <GlassSkeleton className="h-64" rows={1} />
     </div>
-  );
+  )
 }

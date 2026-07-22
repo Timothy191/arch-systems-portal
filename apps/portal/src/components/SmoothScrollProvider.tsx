@@ -1,6 +1,6 @@
-"use client";
+'use client'
 
-import type { ReactNode } from "react";
+import type { ReactNode } from 'react'
 
 /**
  * SmoothScrollProvider — minimal stub.
@@ -8,5 +8,5 @@ import type { ReactNode } from "react";
  * Full implementation pending with Lenis or similar library.
  */
 export function SmoothScrollProvider({ children }: { children: ReactNode }) {
-  return <>{children}</>;
+  return <>{children}</>
 }

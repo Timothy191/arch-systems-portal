@@ -1,7 +1,7 @@
-"use client";
+'use client'
 
-import { useEffect } from "react";
-import { useAdaptivePerformance } from "@/hooks/useAdaptivePerformance";
+import { useEffect } from 'react'
+import { useAdaptivePerformance } from '@/hooks/useAdaptivePerformance'
 
 /**
  * PerformanceListener
@@ -10,19 +10,19 @@ import { useAdaptivePerformance } from "@/hooks/useAdaptivePerformance";
  * `.low-perf-fallback` class to the body element if a performance budget breach occurs.
  */
 export function PerformanceListener() {
-  const lowPerf = useAdaptivePerformance();
+  const lowPerf = useAdaptivePerformance()
 
   useEffect(() => {
     if (lowPerf) {
-      document.body.classList.add("low-perf-fallback");
+      document.body.classList.add('low-perf-fallback')
     } else {
-      document.body.classList.remove("low-perf-fallback");
+      document.body.classList.remove('low-perf-fallback')
     }
 
     return () => {
-      document.body.classList.remove("low-perf-fallback");
-    };
-  }, [lowPerf]);
+      document.body.classList.remove('low-perf-fallback')
+    }
+  }, [lowPerf])
 
-  return null;
+  return null
 }

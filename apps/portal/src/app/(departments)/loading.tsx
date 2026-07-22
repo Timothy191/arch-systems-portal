@@ -1,4 +1,4 @@
-import { GlassSkeleton } from "@repo/ui/components/ui/glass-skeleton";
+import { GlassSkeleton } from '@repo/ui/components/ui/glass-skeleton'
 
 export default function DepartmentLoading() {
   return (
@@ -11,5 +11,5 @@ export default function DepartmentLoading() {
       </div>
       <GlassSkeleton className="h-64" rows={1} />
     </div>
-  );
+  )
 }

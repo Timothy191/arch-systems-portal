@@ -6,16 +6,16 @@
 
 // ── 1.0 Spring Physics ──
 export const SPRING_PHYSICS = {
-  soft: { type: "spring" as const, stiffness: 100, damping: 20 },
-  medium: { type: "spring" as const, stiffness: 200, damping: 28 },
-  stiff: { type: "spring" as const, stiffness: 300, damping: 30 },
-  snappy: { type: "spring" as const, stiffness: 500, damping: 40 },
-  overshoot: { type: "spring" as const, stiffness: 180, damping: 14 },
-  gentle: { type: "spring" as const, stiffness: 80, damping: 24 },
-} as const;
+  soft: { type: 'spring' as const, stiffness: 100, damping: 20 },
+  medium: { type: 'spring' as const, stiffness: 200, damping: 28 },
+  stiff: { type: 'spring' as const, stiffness: 300, damping: 30 },
+  snappy: { type: 'spring' as const, stiffness: 500, damping: 40 },
+  overshoot: { type: 'spring' as const, stiffness: 180, damping: 14 },
+  gentle: { type: 'spring' as const, stiffness: 80, damping: 24 },
+} as const
 
-export const SPRING_SNAPPY = SPRING_PHYSICS.snappy;
-export const SPRING_FLUID = SPRING_PHYSICS.medium;
+export const SPRING_SNAPPY = SPRING_PHYSICS.snappy
+export const SPRING_FLUID = SPRING_PHYSICS.medium
 
 // ── 2.0 Easing Curves ──
 export const EASINGS = {
@@ -26,7 +26,7 @@ export const EASINGS = {
   overshoot: [0.3, 1.2, 0.6, 1],
   decelerate: [0.12, 0.8, 0.35, 1],
   accelerate: [0.42, 0, 1, 1],
-} as const;
+} as const
 
 // ── 3.0 Transition Presets ──
 export const TRANSITIONS = {
@@ -36,7 +36,7 @@ export const TRANSITIONS = {
   slow: { duration: 0.8, ease: EASINGS.slow },
   fast: { duration: 0.1, ease: EASINGS.accelerate },
   magnetic: { duration: 0.15, ease: EASINGS.decelerate },
-} as const;
+} as const
 
 // ── 4.0 Stagger Configurations ──
 export const STAGGER = {
@@ -52,7 +52,7 @@ export const STAGGER = {
   dramatic: {
     visible: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } },
   },
-} as const;
+} as const
 
 // ── 5.0 Motion Variants ──
 export const VARIANTS = {
@@ -115,17 +115,17 @@ export const VARIANTS = {
       },
     },
   },
-} as const;
+} as const
 
 // Legacy support exports
-export const springPhysics = { ...SPRING_PHYSICS } as const;
-export const easings = { ...EASINGS } as const;
-export const transitions = { ...TRANSITIONS } as const;
-export const stagger = { ...STAGGER } as const;
-export const variants = { ...VARIANTS } as const;
-export const liquidGlassVariants = VARIANTS.liquidGlass;
-export const magneticVariants = VARIANTS.magnetic;
-export const perpetualVariants = VARIANTS.perpetual;
-export const GLASS_CARD_VARIANTS = VARIANTS.liquidGlass;
-export const FADE_IN_VARIANTS = VARIANTS.fadeIn;
-export const SLIDE_UP_VARIANTS = VARIANTS.slideUp;
+export const springPhysics = { ...SPRING_PHYSICS } as const
+export const easings = { ...EASINGS } as const
+export const transitions = { ...TRANSITIONS } as const
+export const stagger = { ...STAGGER } as const
+export const variants = { ...VARIANTS } as const
+export const liquidGlassVariants = VARIANTS.liquidGlass
+export const magneticVariants = VARIANTS.magnetic
+export const perpetualVariants = VARIANTS.perpetual
+export const GLASS_CARD_VARIANTS = VARIANTS.liquidGlass
+export const FADE_IN_VARIANTS = VARIANTS.fadeIn
+export const SLIDE_UP_VARIANTS = VARIANTS.slideUp

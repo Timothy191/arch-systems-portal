@@ -1,15 +1,15 @@
-import { Metadata } from "next";
-import Link from "next/link";
-import { CrpVisualizer } from "./components/CrpVisualizer";
-import { CrpSimulator } from "./components/CrpSimulator";
-import { CrpDiagnostics } from "./components/CrpDiagnostics";
-import { ArrowLeft, Sparkles } from "lucide-react";
+import type { Metadata } from 'next'
+import Link from 'next/link'
+import { CrpVisualizer } from './components/CrpVisualizer'
+import { CrpSimulator } from './components/CrpSimulator'
+import { CrpDiagnostics } from './components/CrpDiagnostics'
+import { ArrowLeft, Sparkles } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: "Critical Rendering Path (CRP) Visualizer & Optimizer | Systems Portal",
+  title: 'Critical Rendering Path (CRP) Visualizer & Optimizer | Systems Portal',
   description:
-    "Interactive visualizer and simulator for understanding and optimizing the Critical Rendering Path: DOM, CSSOM, Render Tree, Layout, and Paint.",
-};
+    'Interactive visualizer and simulator for understanding and optimizing the Critical Rendering Path: DOM, CSSOM, Render Tree, Layout, and Paint.',
+}
 
 export default function CrpPage() {
   return (
@@ -53,5 +53,5 @@ export default function CrpPage() {
       {/* Optimization Rules & Best Practices */}
       <CrpDiagnostics />
     </div>
-  );
+  )
 }

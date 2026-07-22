@@ -1,6 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
-import { createServerSupabaseClient } from "@repo/supabase/server";
-import { pbkdf2Sync } from "node:crypto";
+import type { NextRequest} from 'next/server';
+import { NextResponse } from 'next/server'
+import { createServerSupabaseClient } from '@repo/supabase/server'
+import { pbkdf2Sync } from 'node:crypto'
 
 /**
  * @swagger
@@ -45,46 +46,46 @@ import { pbkdf2Sync } from "node:crypto";
  */
 
 export async function POST(request: NextRequest) {
-  const supabase = await createServerSupabaseClient();
+  const supabase = await createServerSupabaseClient()
   const {
     data: { user },
-  } = await supabase.auth.getUser();
+  } = await supabase.auth.getUser()
 
   if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
   try {
-    const body = await request.json();
-    const { pin, hash } = body;
+    const body = await request.json()
+    const { pin, hash } = body
 
     if (!pin || !hash) {
-      return NextResponse.json({ valid: false });
+      return NextResponse.json({ valid: false })
     }
 
     // Support both bcrypt ($2a$/$2b$) and pbkdf2:sha512:<salt>:<hex> formats
-    let valid = false;
+    let valid = false
 
-    if (hash.startsWith("$2")) {
+    if (hash.startsWith('$2')) {
       // Legacy bcrypt hash from NestJS — compare with constant-time check
       // Note: bcryptjs not available; if DB has bcrypt hashes, add bcryptjs dep
       // For now, return false and document that PIN was hashed with bcrypt
-      valid = false;
-    } else if (hash.startsWith("pbkdf2:sha512:")) {
-      const parts = hash.split(":");
+      valid = false
+    } else if (hash.startsWith('pbkdf2:sha512:')) {
+      const parts = hash.split(':')
       if (parts.length === 4) {
-        const salt = parts[2]!;
-        const expected = parts[3]!;
-        const derived = pbkdf2Sync(pin, salt, 100_000, 64, "sha512");
-        valid = derived.toString("hex") === expected;
+        const salt = parts[2]!
+        const expected = parts[3]!
+        const derived = pbkdf2Sync(pin, salt, 100_000, 64, 'sha512')
+        valid = derived.toString('hex') === expected
       }
     }
 
-    return NextResponse.json({ valid });
+    return NextResponse.json({ valid })
   } catch (err) {
     if (err instanceof SyntaxError) {
-      return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+      return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 })
     }
-    return NextResponse.json({ valid: false });
+    return NextResponse.json({ valid: false })
   }
 }

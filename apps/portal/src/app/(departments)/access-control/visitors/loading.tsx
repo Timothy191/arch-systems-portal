@@ -1,4 +1,4 @@
-import { GlassCard } from "@repo/ui/GlassCard";
+import { GlassCard } from '@repo/ui/GlassCard'
 
 export default function VisitorsLoading() {
   return (
@@ -67,5 +67,5 @@ export default function VisitorsLoading() {
         </div>
       </div>
     </div>
-  );
+  )
 }

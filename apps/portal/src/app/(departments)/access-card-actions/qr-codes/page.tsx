@@ -1,5 +1,5 @@
-import { PageHeader } from "@repo/ui/PageHeader";
-import { GlassCard } from "@repo/ui/GlassCard";
+import { PageHeader } from '@repo/ui/PageHeader'
+import { GlassCard } from '@repo/ui/GlassCard'
 import {
   Table,
   TableBody,
@@ -7,45 +7,45 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@repo/ui/components/ui/table";
-import { QrCode, Smartphone, ShieldCheck, ShieldOff, AlertTriangle, Scan } from "lucide-react";
-import { createServerSupabaseClient } from "@repo/supabase/server";
-import { assertAccessCardActionsRole } from "../actions";
+} from '@repo/ui/components/ui/table'
+import { QrCode, Smartphone, ShieldCheck, ShieldOff, AlertTriangle, Scan } from 'lucide-react'
+import { createServerSupabaseClient } from '@repo/supabase/server'
+import { assertAccessCardActionsRole } from '../actions'
 
 /* ------------------------------------------------------------------ */
 /*  Status badge helper                                                */
 /* ------------------------------------------------------------------ */
 
 function CardStatusPill({ status }: { status: string }) {
-  if (status === "active") {
+  if (status === 'active') {
     return (
       <span className="inline-flex items-center gap-1.5 text-xs font-medium px-2 py-0.5 rounded-full border bg-accent-green/10 border-accent-green/20 text-accent-green">
         <ShieldCheck className="w-3 h-3" />
         Active
       </span>
-    );
+    )
   }
-  if (status === "revoked") {
+  if (status === 'revoked') {
     return (
       <span className="inline-flex items-center gap-1.5 text-xs font-medium px-2 py-0.5 rounded-full border bg-red-50/70 border-red-200/50 text-red-700">
         <ShieldOff className="w-3 h-3" />
         Revoked
       </span>
-    );
+    )
   }
-  if (status === "lost") {
+  if (status === 'lost') {
     return (
       <span className="inline-flex items-center gap-1.5 text-xs font-medium px-2 py-0.5 rounded-full border bg-amber-50/70 border-amber-200/50 text-amber-700">
         <AlertTriangle className="w-3 h-3" />
         Lost
       </span>
-    );
+    )
   }
   return (
     <span className="inline-flex items-center gap-1.5 text-xs font-medium px-2 py-0.5 rounded-full border bg-gray-50/70 border-gray-200/50 text-gray-700">
       {status}
     </span>
-  );
+  )
 }
 
 /* ------------------------------------------------------------------ */
@@ -53,26 +53,26 @@ function CardStatusPill({ status }: { status: string }) {
 /* ------------------------------------------------------------------ */
 
 export default async function QrCodesPage() {
-  await assertAccessCardActionsRole();
+  await assertAccessCardActionsRole()
 
-  const supabase = await createServerSupabaseClient();
+  const supabase = await createServerSupabaseClient()
 
   const { data: issuedCards } = await supabase
-    .from("issued_cards")
-    .select("*, personnel:personnel(first_name, surname)")
-    .order("issued_at", { ascending: false })
-    .limit(50);
+    .from('issued_cards')
+    .select('*, personnel:personnel(first_name, surname)')
+    .order('issued_at', { ascending: false })
+    .limit(50)
 
   const cards = (issuedCards ?? []).map((card) => {
     const person = card.personnel as {
-      first_name: string;
-      surname: string;
-    } | null;
-    const name = person ? `${person.first_name} ${person.surname}` : "Unknown";
+      first_name: string
+      surname: string
+    } | null
+    const name = person ? `${person.first_name} ${person.surname}` : 'Unknown'
     const qrTruncated =
-      card.qr_code_data.length > 16 ? `${card.qr_code_data.slice(0, 16)}…` : card.qr_code_data;
-    return { ...card, entityName: name, qrTruncated };
-  });
+      card.qr_code_data.length > 16 ? `${card.qr_code_data.slice(0, 16)}…` : card.qr_code_data
+    return { ...card, entityName: name, qrTruncated }
+  })
 
   return (
     <div className="space-y-6">
@@ -181,26 +181,26 @@ export default async function QrCodesPage() {
                   {card.qrTruncated}
                 </TableCell>
                 <TableCell className="font-mono text-sm text-arch-text-secondary">
-                  {card.rfid_uid ?? "—"}
+                  {card.rfid_uid ?? '—'}
                 </TableCell>
                 <TableCell>
                   <CardStatusPill status={card.status} />
                 </TableCell>
                 <TableCell className="text-arch-text-secondary text-sm">
-                  {new Date(card.issued_at).toLocaleDateString("en-ZA", {
-                    day: "numeric",
-                    month: "short",
-                    year: "numeric",
+                  {new Date(card.issued_at).toLocaleDateString('en-ZA', {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric',
                   })}
                 </TableCell>
                 <TableCell className="text-right text-arch-text-secondary text-sm">
                   {card.expires_at
-                    ? new Date(card.expires_at).toLocaleDateString("en-ZA", {
-                        day: "numeric",
-                        month: "short",
-                        year: "numeric",
+                    ? new Date(card.expires_at).toLocaleDateString('en-ZA', {
+                        day: 'numeric',
+                        month: 'short',
+                        year: 'numeric',
                       })
-                    : "—"}
+                    : '—'}
                 </TableCell>
               </TableRow>
             ))}
@@ -208,5 +208,5 @@ export default async function QrCodesPage() {
         </Table>
       </GlassCard>
     </div>
-  );
+  )
 }

@@ -1,5 +1,5 @@
-import { PageHeader } from "@repo/ui/PageHeader";
-import { GlassCard } from "@repo/ui/GlassCard";
+import { PageHeader } from '@repo/ui/PageHeader'
+import { GlassCard } from '@repo/ui/GlassCard'
 
 export default function AccessCardActionsLoading() {
   return (
@@ -31,5 +31,5 @@ export default function AccessCardActionsLoading() {
         </div>
       </GlassCard>
     </div>
-  );
+  )
 }

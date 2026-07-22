@@ -1,4 +1,4 @@
-"use client";
+'use client'
 
 /**
  * ThemeToggle — Light mode indicator (non-interactive).
@@ -8,7 +8,7 @@ export function ThemeToggle({ className }: { className?: string }) {
   return (
     <button
       type="button"
-      className={`glass-button h-9 w-9 rounded-full flex items-center justify-center ${className ?? ""}`}
+      className={`glass-button h-9 w-9 rounded-full flex items-center justify-center ${className ?? ''}`}
       aria-label="Light mode"
     >
       <svg
@@ -25,5 +25,5 @@ export function ThemeToggle({ className }: { className?: string }) {
         <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
       </svg>
     </button>
-  );
+  )
 }

@@ -1,23 +1,23 @@
-import React from "react";
-import { Users, Car, Wrench, ChevronRight } from "lucide-react";
+import React from 'react'
+import { Users, Car, Wrench, ChevronRight } from 'lucide-react'
 
 interface EntityRow {
-  type: string;
-  total: number;
-  active: number;
-  expiring: number;
-  expired: number;
+  type: string
+  total: number
+  active: number
+  expiring: number
+  expired: number
 }
 
 interface DashboardEntityStatusProps {
-  entityStatus: EntityRow[];
+  entityStatus: EntityRow[]
 }
 
 const typeToIcon: Record<string, React.ElementType> = {
   Employees: Users,
   Vehicles: Car,
   Equipment: Wrench,
-};
+}
 
 export default function DashboardEntityStatus({ entityStatus }: DashboardEntityStatusProps) {
   return (
@@ -28,8 +28,8 @@ export default function DashboardEntityStatus({ entityStatus }: DashboardEntityS
       </div>
       <div className="divide-y divide-border">
         {entityStatus.map((row) => {
-          const Icon = typeToIcon[row.type] ?? Wrench;
-          const coveragePct = row.total > 0 ? Math.round((row.active / row.total) * 100) : 0;
+          const Icon = typeToIcon[row.type] ?? Wrench
+          const coveragePct = row.total > 0 ? Math.round((row.active / row.total) * 100) : 0
           return (
             <div
               key={row.type}
@@ -65,29 +65,29 @@ export default function DashboardEntityStatus({ entityStatus }: DashboardEntityS
                 <span className="tabular-nums font-bold text-foreground">{coveragePct}%</span>
               </div>
             </div>
-          );
+          )
         })}
       </div>
       <div className="px-5 py-4 border-t border-border">
         <div className="grid grid-cols-3 gap-3">
           {[
             {
-              id: "sum-active",
-              label: "Total Active",
+              id: 'sum-active',
+              label: 'Total Active',
               value: entityStatus.reduce((s, r) => s + r.active, 0).toLocaleString(),
-              color: "text-success",
+              color: 'text-success',
             },
             {
-              id: "sum-expiring",
-              label: "Expiring",
+              id: 'sum-expiring',
+              label: 'Expiring',
               value: entityStatus.reduce((s, r) => s + r.expiring, 0).toLocaleString(),
-              color: "text-warning",
+              color: 'text-warning',
             },
             {
-              id: "sum-expired",
-              label: "Expired",
+              id: 'sum-expired',
+              label: 'Expired',
               value: entityStatus.reduce((s, r) => s + r.expired, 0).toLocaleString(),
-              color: "text-danger",
+              color: 'text-danger',
             },
           ].map((s) => (
             <div key={s.id} className="text-center">
@@ -98,5 +98,5 @@ export default function DashboardEntityStatus({ entityStatus }: DashboardEntityS
         </div>
       </div>
     </div>
-  );
+  )
 }

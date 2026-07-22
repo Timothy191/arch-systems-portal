@@ -1,110 +1,110 @@
-import { GlassCard } from "@repo/ui/GlassCard";
-import { BookOpen, Clock, Users, PlayCircle, Plus } from "lucide-react";
-import { SearchForm } from "../components/SearchForm";
-import { FilterTabs } from "../components/FilterTabs";
+import { GlassCard } from '@repo/ui/GlassCard'
+import { BookOpen, Clock, Users, PlayCircle, Plus } from 'lucide-react'
+import { SearchForm } from '../components/SearchForm'
+import { FilterTabs } from '../components/FilterTabs'
 
 interface Course {
-  id: number;
-  title: string;
-  category: "Safety" | "Equipment" | "Induction" | "Compliance";
-  lessons: number;
-  duration: string;
-  enrolled: number;
-  completionRate: number;
-  description: string;
-  level: "Basic" | "Intermediate" | "Advanced";
+  id: number
+  title: string
+  category: 'Safety' | 'Equipment' | 'Induction' | 'Compliance'
+  lessons: number
+  duration: string
+  enrolled: number
+  completionRate: number
+  description: string
+  level: 'Basic' | 'Intermediate' | 'Advanced'
 }
 
 const initialCourses: Course[] = [
   {
     id: 1,
-    title: "Underground Equipment Safety V2",
-    category: "Safety",
+    title: 'Underground Equipment Safety V2',
+    category: 'Safety',
     lessons: 8,
-    duration: "4h 30m",
+    duration: '4h 30m',
     enrolled: 24,
     completionRate: 88,
     description:
-      "Standard safety protocols for operating equipment in high-risk underground extraction areas.",
-    level: "Intermediate",
+      'Standard safety protocols for operating equipment in high-risk underground extraction areas.',
+    level: 'Intermediate',
   },
   {
     id: 2,
-    title: "HAZMAT & Chemical Handling",
-    category: "Safety",
+    title: 'HAZMAT & Chemical Handling',
+    category: 'Safety',
     lessons: 6,
-    duration: "3h 15m",
+    duration: '3h 15m',
     enrolled: 15,
     completionRate: 92,
     description:
-      "Regulatory compliance and emergency drills for managing site chemicals and hazardous wastes.",
-    level: "Advanced",
+      'Regulatory compliance and emergency drills for managing site chemicals and hazardous wastes.',
+    level: 'Advanced',
   },
   {
     id: 3,
-    title: "PC-2000 Operation & Maintenance",
-    category: "Equipment",
+    title: 'PC-2000 Operation & Maintenance',
+    category: 'Equipment',
     lessons: 12,
-    duration: "8h 00m",
+    duration: '8h 00m',
     enrolled: 9,
     completionRate: 75,
     description:
-      "Detailed system walk-around, hydraulic telemetry, and advanced operation methods for Komatsu PC-2000.",
-    level: "Advanced",
+      'Detailed system walk-around, hydraulic telemetry, and advanced operation methods for Komatsu PC-2000.',
+    level: 'Advanced',
   },
   {
     id: 4,
-    title: "HD-785 Haul Dumper Induction",
-    category: "Equipment",
+    title: 'HD-785 Haul Dumper Induction',
+    category: 'Equipment',
     lessons: 10,
-    duration: "6h 45m",
+    duration: '6h 45m',
     enrolled: 18,
     completionRate: 83,
     description:
-      "In-cab simulation, braking physics, loading alignment, and daily inspection checklists for HD-785 dumps.",
-    level: "Intermediate",
+      'In-cab simulation, braking physics, loading alignment, and daily inspection checklists for HD-785 dumps.',
+    level: 'Intermediate',
   },
   {
     id: 5,
-    title: "Mine Site General Induction",
-    category: "Induction",
+    title: 'Mine Site General Induction',
+    category: 'Induction',
     lessons: 5,
-    duration: "2h 00m",
+    duration: '2h 00m',
     enrolled: 32,
     completionRate: 100,
     description:
-      "Mandatory general entry induction briefing covering core policies, safety controls, and facility layouts.",
-    level: "Basic",
+      'Mandatory general entry induction briefing covering core policies, safety controls, and facility layouts.',
+    level: 'Basic',
   },
   {
     id: 6,
-    title: "High-Voltage Isolation Protocols",
-    category: "Compliance",
+    title: 'High-Voltage Isolation Protocols',
+    category: 'Compliance',
     lessons: 9,
-    duration: "5h 30m",
+    duration: '5h 30m',
     enrolled: 7,
     completionRate: 60,
     description:
-      "LOTO procedures, electrical shock risk matrices, and multi-point panel isolation operations.",
-    level: "Advanced",
+      'LOTO procedures, electrical shock risk matrices, and multi-point panel isolation operations.',
+    level: 'Advanced',
   },
-];
+]
 
 export default async function CoursesPage({
   searchParams,
 }: {
-  searchParams?: Promise<{ q?: string; category?: string }>;
+  searchParams?: Promise<{ q?: string; category?: string }>
 }) {
-  const { q, category } = (await searchParams) ?? {};
+  const { q, category } = (await searchParams) ?? {}
 
   const filteredCourses = initialCourses.filter((c) => {
     const matchesSearch =
       !q ||
       c.title.toLowerCase().includes(q.toLowerCase()) ||
-      c.description.toLowerCase().includes(q.toLowerCase());
-    const matchesCategory = !category || category === "All" || c.category === category;
-    return matchesSearch && matchesCategory;
-  });
+      c.description.toLowerCase().includes(q.toLowerCase())
+    const matchesCategory = !category || category === 'All' || c.category === category
+    return matchesSearch && matchesCategory
+  })
 
   return (
     <div className="space-y-6">
@@ -126,12 +126,12 @@ export default async function CoursesPage({
         <SearchForm
           value={q}
           placeholder="Search courses..."
-          hiddenParams={category && category !== "All" ? { category } : {}}
+          hiddenParams={category && category !== 'All' ? { category } : {}}
         />
         <FilterTabs
           paramName="category"
-          options={["All", "Safety", "Equipment", "Induction", "Compliance"]}
-          currentValue={category || "All"}
+          options={['All', 'Safety', 'Equipment', 'Induction', 'Compliance']}
+          currentValue={category || 'All'}
           hiddenParams={q ? { q } : {}}
         />
       </GlassCard>
@@ -148,13 +148,13 @@ export default async function CoursesPage({
                 <div className="flex items-start justify-between">
                   <span
                     className={`text-[10px] px-2 py-0.5 rounded-md font-semibold ${
-                      course.category === "Safety"
-                        ? "bg-red-500/10 text-red-600"
-                        : course.category === "Equipment"
-                          ? "bg-blue-500/10 text-blue-600"
-                          : course.category === "Induction"
-                            ? "bg-emerald-500/10 text-emerald-600"
-                            : "bg-violet-500/10 text-violet-600"
+                      course.category === 'Safety'
+                        ? 'bg-red-500/10 text-red-600'
+                        : course.category === 'Equipment'
+                          ? 'bg-blue-500/10 text-blue-600'
+                          : course.category === 'Induction'
+                            ? 'bg-emerald-500/10 text-emerald-600'
+                            : 'bg-violet-500/10 text-violet-600'
                     }`}
                   >
                     {course.category}
@@ -200,10 +200,10 @@ export default async function CoursesPage({
                     <div
                       className={`h-full rounded-full ${
                         course.completionRate > 85
-                          ? "bg-emerald-500"
+                          ? 'bg-emerald-500'
                           : course.completionRate > 70
-                            ? "bg-blue-500"
-                            : "bg-amber-500"
+                            ? 'bg-blue-500'
+                            : 'bg-amber-500'
                       }`}
                       style={{ width: `${course.completionRate}%` }}
                     />
@@ -224,5 +224,5 @@ export default async function CoursesPage({
         )}
       </div>
     </div>
-  );
+  )
 }

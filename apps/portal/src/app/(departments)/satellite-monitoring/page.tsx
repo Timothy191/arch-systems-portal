@@ -1,24 +1,24 @@
-import { Suspense } from "react";
-import { getDepartmentContext } from "@/lib/dept-context";
-import { GlassCard } from "@repo/ui/GlassCard";
-import { Skeleton } from "@repo/ui/components/ui/skeleton";
-import Link from "next/link";
-import type { Metadata } from "next";
-import { Satellite, Radio, Eye, Layers3, ArrowRight, Activity } from "lucide-react";
-import { getSatelliteMetrics, type SatelliteMetrics } from "./actions";
+import { Suspense } from 'react'
+import { getDepartmentContext } from '@/lib/dept-context'
+import { GlassCard } from '@repo/ui/GlassCard'
+import { Skeleton } from '@repo/ui/components/ui/skeleton'
+import Link from 'next/link'
+import type { Metadata } from 'next'
+import { Satellite, Radio, Eye, Layers3, ArrowRight, Activity } from 'lucide-react'
+import { getSatelliteMetrics, type SatelliteMetrics } from './actions'
 
 export const metadata: Metadata = {
-  title: "Satellite Monitoring | Arch OS",
-  description: "SAR/InSAR, hyperspectral and high-resolution imagery.",
-};
+  title: 'Satellite Monitoring | Arch OS',
+  description: 'SAR/InSAR, hyperspectral and high-resolution imagery.',
+}
 
 /* ------------------------------------------------------------------ */
 /*  Streaming wrappers                                                 */
 /* ------------------------------------------------------------------ */
 
 async function SatelliteMetricsSection({ deptId }: { deptId: string }) {
-  const metrics = await getSatelliteMetrics(deptId);
-  return <SatelliteOverview metrics={metrics} />;
+  const metrics = await getSatelliteMetrics(deptId)
+  return <SatelliteOverview metrics={metrics} />
 }
 
 /* ------------------------------------------------------------------ */
@@ -27,33 +27,33 @@ async function SatelliteMetricsSection({ deptId }: { deptId: string }) {
 
 const PRODUCT_SECTIONS = [
   {
-    href: "satellite-monitoring/sar",
-    label: "SAR / InSAR",
-    description: "Synthetic aperture radar, deformation & displacement mapping",
+    href: 'satellite-monitoring/sar',
+    label: 'SAR / InSAR',
+    description: 'Synthetic aperture radar, deformation & displacement mapping',
     icon: Radio,
-    color: "text-blue-400",
-    bg: "from-blue-500/10 to-blue-600/5",
-    border: "border-blue-500/20",
+    color: 'text-blue-400',
+    bg: 'from-blue-500/10 to-blue-600/5',
+    border: 'border-blue-500/20',
   },
   {
-    href: "satellite-monitoring/hyperspectral",
-    label: "Hyperspectral",
-    description: "Multi-band spectral analysis & material classification",
+    href: 'satellite-monitoring/hyperspectral',
+    label: 'Hyperspectral',
+    description: 'Multi-band spectral analysis & material classification',
     icon: Layers3,
-    color: "text-purple-400",
-    bg: "from-purple-500/10 to-purple-600/5",
-    border: "border-purple-500/20",
+    color: 'text-purple-400',
+    bg: 'from-purple-500/10 to-purple-600/5',
+    border: 'border-purple-500/20',
   },
   {
-    href: "satellite-monitoring/highres",
-    label: "High-Resolution",
-    description: "Optical sub-metre imagery for site inspection",
+    href: 'satellite-monitoring/highres',
+    label: 'High-Resolution',
+    description: 'Optical sub-metre imagery for site inspection',
     icon: Eye,
-    color: "text-cyan-400",
-    bg: "from-cyan-500/10 to-cyan-600/5",
-    border: "border-cyan-500/20",
+    color: 'text-cyan-400',
+    bg: 'from-cyan-500/10 to-cyan-600/5',
+    border: 'border-cyan-500/20',
   },
-];
+]
 
 function SatelliteOverview({ metrics }: { metrics: SatelliteMetrics }) {
   return (
@@ -113,7 +113,7 @@ function SatelliteOverview({ metrics }: { metrics: SatelliteMetrics }) {
                 Last Pass Date
               </p>
               <p className="text-sm font-semibold text-arch-text-primary mt-1">
-                {metrics.lastLogDate ?? "—"}
+                {metrics.lastLogDate ?? '—'}
               </p>
             </div>
           </div>
@@ -143,14 +143,14 @@ function SatelliteOverview({ metrics }: { metrics: SatelliteMetrics }) {
         </GlassCard>
       )}
     </div>
-  );
+  )
 }
 
 function ProductSectionCards() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       {PRODUCT_SECTIONS.map((section) => {
-        const Icon = section.icon;
+        const Icon = section.icon
         return (
           <Link key={section.href} href={`/${section.href}`}>
             <div
@@ -166,10 +166,10 @@ function ProductSectionCards() {
               <p className="text-arch-text-muted text-xs leading-relaxed">{section.description}</p>
             </div>
           </Link>
-        );
+        )
       })}
     </div>
-  );
+  )
 }
 
 /* ------------------------------------------------------------------ */
@@ -177,7 +177,7 @@ function ProductSectionCards() {
 /* ------------------------------------------------------------------ */
 
 export default async function SatelliteMonitoringPage() {
-  const { deptId } = await getDepartmentContext({ department: "satellite-monitoring" });
+  const { deptId } = await getDepartmentContext({ department: 'satellite-monitoring' })
 
   return (
     <div className="space-y-6">
@@ -200,5 +200,5 @@ export default async function SatelliteMonitoringPage() {
         <SatelliteMetricsSection deptId={deptId} />
       </Suspense>
     </div>
-  );
+  )
 }

@@ -5,11 +5,6 @@ module.exports = {
     "public/",
     "coverage/",
     "src.backup/",
-    "components/",
-    "hooks/",
-    "lib/",
-    "plugins/",
-    "assets/",
     ".eslintrc.js",
     "jest.config.js",
     "postcss.config.mjs",
@@ -20,6 +15,30 @@ module.exports = {
   parser: "@typescript-eslint/parser",
   parserOptions: {
     project: true,
+  },
+  rules: {
+    // Next.js monorepo convention: consistent type imports
+    "@typescript-eslint/consistent-type-imports": [
+      "error",
+      {
+        prefer: "type-imports",
+        disallowTypeAnnotations: false,
+      },
+    ],
+    "@typescript-eslint/no-import-type-side-effects": "error",
+    // Next.js convention: strict unused vars with underscore prefix
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      {
+        args: "all",
+        argsIgnorePattern: "^_",
+        caughtErrors: "none",
+        ignoreRestSiblings: true,
+        varsIgnorePattern: "^_",
+      },
+    ],
+    // React hooks exhaustive deps (from Next.js's react-hooks/recommended)
+    "react-hooks/exhaustive-deps": "error",
   },
   overrides: [
     {

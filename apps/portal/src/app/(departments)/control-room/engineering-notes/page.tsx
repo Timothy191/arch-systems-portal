@@ -1,10 +1,10 @@
-import { DepartmentSectionShell } from "@/components/departments/DepartmentSectionShell";
-import type { Metadata } from "next";
+import { DepartmentSectionShell } from '@/components/departments/DepartmentSectionShell'
+import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: "Engineering Notes | Arch OS",
-  description: "This section is ready for navigation.",
-};
+  title: 'Engineering Notes | Arch OS',
+  description: 'This section is ready for navigation.',
+}
 
 export default function Page() {
   return (
@@ -12,5 +12,5 @@ export default function Page() {
       title="Engineering Notes"
       description="This section is ready for navigation."
     />
-  );
+  )
 }

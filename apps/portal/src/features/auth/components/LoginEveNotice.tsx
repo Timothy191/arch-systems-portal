@@ -1,6 +1,6 @@
-import Image from "next/image";
-import Link from "next/link";
-import { EVE_BRAND } from "@/config/vercel-brands";
+import Image from 'next/image'
+import Link from 'next/link'
+import { EVE_BRAND } from '@/config/vercel-brands'
 
 /**
  * Login card notice — eve agent framework backend optimization status.
@@ -12,7 +12,7 @@ export function LoginEveNotice() {
       aria-label="eve backend optimization status"
     >
       <Link
-        href={EVE_BRAND.href ?? "https://eve.dev"}
+        href={EVE_BRAND.href ?? 'https://eve.dev'}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Visit eve - The agent framework"
@@ -24,7 +24,7 @@ export function LoginEveNotice() {
           width={48}
           height={18}
           className="h-[18px] w-auto object-contain"
-          style={{ width: "auto", height: "auto" }}
+          style={{ width: 'auto', height: 'auto' }}
           unoptimized
         />
       </Link>
@@ -44,5 +44,5 @@ export function LoginEveNotice() {
         </p>
       </div>
     </aside>
-  );
+  )
 }

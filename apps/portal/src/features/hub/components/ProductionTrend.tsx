@@ -1,4 +1,4 @@
-"use client";
+'use client'
 
 import {
   AreaChart,
@@ -8,27 +8,27 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-} from "recharts";
+} from 'recharts'
 
 export interface TrendDataPoint {
-  date: string;
-  Drilling: number;
-  Production: number;
-  Engineering: number;
+  date: string
+  Drilling: number
+  Production: number
+  Engineering: number
 }
 
 interface ProductionTrendProps {
-  data: TrendDataPoint[];
+  data: TrendDataPoint[]
 }
 
 const CATEGORIES = [
-  { key: "Drilling", color: "var(--color-blue, #3b82f6)" },
-  { key: "Production", color: "var(--color-emerald, #10b981)" },
-  { key: "Engineering", color: "var(--color-violet, #8b5cf6)" },
-] as const;
+  { key: 'Drilling', color: 'var(--color-blue, #3b82f6)' },
+  { key: 'Production', color: 'var(--color-emerald, #10b981)' },
+  { key: 'Engineering', color: 'var(--color-violet, #8b5cf6)' },
+] as const
 
 export function ProductionTrend({ data }: ProductionTrendProps) {
-  if (data.length === 0) return null;
+  if (data.length === 0) return null
 
   return (
     <div className="mt-8">
@@ -57,8 +57,8 @@ export function ProductionTrend({ data }: ProductionTrendProps) {
             contentStyle={{
               fontSize: 12,
               borderRadius: 8,
-              border: "1px solid var(--border, #e5e7eb)",
-              backgroundColor: "var(--card, #fff)",
+              border: '1px solid var(--border, #e5e7eb)',
+              backgroundColor: 'var(--card, #fff)',
             }}
           />
           {CATEGORIES.map((cat) => (
@@ -75,5 +75,5 @@ export function ProductionTrend({ data }: ProductionTrendProps) {
         </AreaChart>
       </ResponsiveContainer>
     </div>
-  );
+  )
 }

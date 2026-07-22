@@ -1,6 +1,6 @@
-"use client";
+'use client'
 
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState } from 'react'
 import {
   ReactFlow,
   Background,
@@ -13,13 +13,13 @@ import {
   type Edge,
   type Node,
   Panel,
-} from "@xyflow/react";
-import "@xyflow/react/dist/style.css";
-import { Play, Save, Loader2 } from "lucide-react";
+} from '@xyflow/react'
+import '@xyflow/react/dist/style.css'
+import { Play, Save, Loader2 } from 'lucide-react'
 
-import { PluginNode } from "./nodes/PluginNode";
-import { TriggerNode } from "./nodes/TriggerNode";
-import { FlowEdge } from "./edges/FlowEdge";
+import { PluginNode } from './nodes/PluginNode'
+import { TriggerNode } from './nodes/TriggerNode'
+import { FlowEdge } from './edges/FlowEdge'
 
 // =============================================================================
 // Node & Edge Types
@@ -28,11 +28,11 @@ import { FlowEdge } from "./edges/FlowEdge";
 const nodeTypes = {
   plugin: PluginNode,
   trigger: TriggerNode,
-};
+}
 
 const edgeTypes = {
   flow: FlowEdge,
-};
+}
 
 // =============================================================================
 // Workflow Builder Props
@@ -40,19 +40,19 @@ const edgeTypes = {
 
 export interface WorkflowBuilderProps {
   /** Initial nodes to render */
-  initialNodes?: Node[];
+  initialNodes?: Node[]
   /** Initial edges to render */
-  initialEdges?: Edge[];
+  initialEdges?: Edge[]
   /** Callback when workflow is saved */
   // eslint-disable-next-line no-unused-vars
-  onSave?: (currentNodes: Node[], currentEdges: Edge[]) => void;
+  onSave?: (currentNodes: Node[], currentEdges: Edge[]) => void
   /** Callback when workflow is executed */
   // eslint-disable-next-line no-unused-vars
-  onExecute?: (currentNodes: Node[], currentEdges: Edge[]) => Promise<void>;
+  onExecute?: (currentNodes: Node[], currentEdges: Edge[]) => Promise<void>
   /** Read-only mode */
-  readOnly?: boolean;
+  readOnly?: boolean
   /** Custom styles */
-  className?: string;
+  className?: string
 }
 
 // =============================================================================
@@ -61,31 +61,31 @@ export interface WorkflowBuilderProps {
 
 const defaultNodes: Node[] = [
   {
-    id: "trigger",
-    type: "trigger",
+    id: 'trigger',
+    type: 'trigger',
     position: { x: 100, y: 200 },
-    data: { label: "Start Workflow" },
+    data: { label: 'Start Workflow' },
   },
   {
-    id: "plugin-1",
-    type: "plugin",
+    id: 'plugin-1',
+    type: 'plugin',
     position: { x: 400, y: 200 },
     data: {
-      label: "Plugin Step",
-      pluginId: "predictive-maintenance",
+      label: 'Plugin Step',
+      pluginId: 'predictive-maintenance',
       config: {},
     },
   },
-];
+]
 
 const defaultEdges: Edge[] = [
   {
-    id: "e-trigger-plugin",
-    source: "trigger",
-    target: "plugin-1",
-    type: "flow",
+    id: 'e-trigger-plugin',
+    source: 'trigger',
+    target: 'plugin-1',
+    type: 'flow',
   },
-];
+]
 
 // =============================================================================
 // Workflow Builder Component
@@ -97,11 +97,11 @@ export function WorkflowBuilder({
   onSave,
   onExecute,
   readOnly = false,
-  className = "",
+  className = '',
 }: WorkflowBuilderProps) {
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-  const [isExecuting, setIsExecuting] = useState(false);
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes)
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges)
+  const [isExecuting, setIsExecuting] = useState(false)
 
   // Handle new connections
   const onConnect = useCallback(
@@ -109,43 +109,43 @@ export function WorkflowBuilder({
       const edge: Edge = {
         ...connection,
         id: `e-${connection.source}-${connection.target}`,
-        type: "flow",
-      };
-      setEdges((eds) => addEdge(edge, eds));
+        type: 'flow',
+      }
+      setEdges((eds) => addEdge(edge, eds))
     },
     [setEdges]
-  );
+  )
 
   // Add new plugin node
   const addPluginNode = useCallback(() => {
     const newNode: Node = {
       id: `plugin-${Date.now()}`,
-      type: "plugin",
+      type: 'plugin',
       position: { x: 400 + Math.random() * 100, y: 200 + Math.random() * 100 },
       data: {
-        label: "New Plugin Step",
-        pluginId: "",
+        label: 'New Plugin Step',
+        pluginId: '',
         config: {},
       },
-    };
-    setNodes((nds) => [...nds, newNode]);
-  }, [setNodes]);
+    }
+    setNodes((nds) => [...nds, newNode])
+  }, [setNodes])
 
   // Save workflow
   const handleSave = useCallback(() => {
-    onSave?.(nodes, edges);
-  }, [nodes, edges, onSave]);
+    onSave?.(nodes, edges)
+  }, [nodes, edges, onSave])
 
   // Execute workflow
   const handleExecute = useCallback(async () => {
-    if (!onExecute) return;
-    setIsExecuting(true);
+    if (!onExecute) return
+    setIsExecuting(true)
     try {
-      await onExecute(nodes, edges);
+      await onExecute(nodes, edges)
     } finally {
-      setIsExecuting(false);
+      setIsExecuting(false)
     }
-  }, [nodes, edges, onExecute]);
+  }, [nodes, edges, onExecute])
 
   return (
     <div
@@ -168,9 +168,9 @@ export function WorkflowBuilder({
           className="!bg-white/80 !backdrop-blur-xl !border-black/[0.08]"
           maskColor="rgba(0,0,0,0.1)"
           nodeColor={(node) => {
-            if (node.type === "trigger") return "#007aff";
-            if (node.type === "plugin") return "#34c759";
-            return "#a1a1a6";
+            if (node.type === 'trigger') return '#007aff'
+            if (node.type === 'plugin') return '#34c759'
+            return '#a1a1a6'
           }}
         />
 
@@ -206,7 +206,7 @@ export function WorkflowBuilder({
                 ) : (
                   <Play className="w-3.5 h-3.5" />
                 )}
-                {isExecuting ? "Running..." : "Execute"}
+                {isExecuting ? 'Running...' : 'Execute'}
               </button>
             )}
           </div>
@@ -223,7 +223,7 @@ export function WorkflowBuilder({
         </Panel>
       </ReactFlow>
     </div>
-  );
+  )
 }
 
-export default WorkflowBuilder;
+export default WorkflowBuilder

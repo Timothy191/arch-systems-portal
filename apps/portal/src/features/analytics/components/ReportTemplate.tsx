@@ -1,10 +1,10 @@
-import React from "react";
-import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
+import React from 'react'
+import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer'
 
 const styles = StyleSheet.create({
   page: {
     padding: 30,
-    backgroundColor: "#ffffff",
+    backgroundColor: '#ffffff',
   },
   section: {
     margin: 10,
@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     marginBottom: 10,
   },
-});
+})
 
 export function ReportTemplate({ data }: { data: Record<string, unknown> }) {
   return (
@@ -29,5 +29,5 @@ export function ReportTemplate({ data }: { data: Record<string, unknown> }) {
         </View>
       </Page>
     </Document>
-  );
+  )
 }

@@ -5,35 +5,35 @@
  * Mirrors CSS custom properties in variables.css for JS/TS usage (charts, shaders, dynamic values).
  */
 
-import { tokens } from "./generated";
+import { tokens } from './generated'
 
 // ═══════════════════════════════════════════════════════════════
 // ARCH COLOR PALETTE — macOS Ventura/Sonoma Light
 // ═══════════════════════════════════════════════════════════════
 
 /** Background range — macOS system grays (mirrors variables.css / tokens.json) */
-export const arch0 = tokens.primitives.arch0; // macOS pure white background
-export const arch1 = tokens.primitives.arch1; // elevated surface / card
-export const arch2 = tokens.primitives.arch2; // sunken / input bg
-export const arch3 = tokens.primitives.arch3; // pressed / deeply sunken
+export const arch0 = tokens.primitives.arch0 // macOS pure white background
+export const arch1 = tokens.primitives.arch1 // elevated surface / card
+export const arch2 = tokens.primitives.arch2 // sunken / input bg
+export const arch3 = tokens.primitives.arch3 // pressed / deeply sunken
 
 /** Border range — hairline to emphasis (stored as hex approximations for JS use) */
-export const arch4 = tokens.primitives.arch4; // border subtle
-export const arch5 = tokens.primitives.arch5; // border default
-export const arch6 = tokens.primitives.arch6; // border emphasis
-export const arch7 = tokens.primitives.arch7; // border strong
+export const arch4 = tokens.primitives.arch4 // border subtle
+export const arch5 = tokens.primitives.arch5 // border default
+export const arch6 = tokens.primitives.arch6 // border emphasis
+export const arch7 = tokens.primitives.arch7 // border strong
 
 /** Text range — macOS type hierarchy */
-export const arch8 = tokens.primitives.arch8; // muted / placeholder
-export const arch9 = tokens.primitives.arch9; // secondary / caption
-export const arch10 = tokens.primitives.arch10; // body
-export const arch11 = tokens.primitives.arch11; // heading / primary
+export const arch8 = tokens.primitives.arch8 // muted / placeholder
+export const arch9 = tokens.primitives.arch9 // secondary / caption
+export const arch10 = tokens.primitives.arch10 // body
+export const arch11 = tokens.primitives.arch11 // heading / primary
 
 /** Aurora Accents — semantic status (charcoal primary per brand refresh) */
-export const arch12 = tokens.primitives.arch12; // red — error / danger (WCAG 4.5:1)
-export const arch13 = tokens.primitives.arch13; // deep charcoal — accent-blue alias
-export const arch14 = tokens.primitives.arch14; // green — success
-export const arch15 = tokens.primitives.arch15; // deep charcoal — brand primary
+export const arch12 = tokens.primitives.arch12 // red — error / danger (WCAG 4.5:1)
+export const arch13 = tokens.primitives.arch13 // deep charcoal — accent-blue alias
+export const arch14 = tokens.primitives.arch14 // green — success
+export const arch15 = tokens.primitives.arch15 // deep charcoal — brand primary
 
 /** Complete palette array (for iteration) */
 export const ARCH_PALETTE = [
@@ -53,7 +53,7 @@ export const ARCH_PALETTE = [
   arch13,
   arch14,
   arch15,
-] as const;
+] as const
 
 // ═══════════════════════════════════════════════════════════════
 // SEMANTIC ALIASES
@@ -84,10 +84,10 @@ export const colors = {
     blue: arch13,
     green: arch14,
   },
-} as const;
+} as const
 
 /** @deprecated light-only — kept for backward compatibility */
-export const colorsDark = { ...colors } as const;
+export const colorsDark = { ...colors } as const
 
 // ═══════════════════════════════════════════════════════════════
 // TIER 3 — DEPRECATED ALIASES
@@ -95,50 +95,50 @@ export const colorsDark = { ...colors } as const;
 // Stylelint will emit warnings on var(--accent-cyan/indigo/violet) usage.
 // ═══════════════════════════════════════════════════════════════
 /** @deprecated → use colors.accent.charcoal (arch13) */
-export const accentCyan = arch13;
+export const accentCyan = arch13
 /** @deprecated → use colors.accent.charcoal (arch13) */
-export const accentIndigo = arch13;
+export const accentIndigo = arch13
 /** @deprecated → use colors.accent.charcoal (arch13) */
-export const accentViolet = arch13;
+export const accentViolet = arch13
 /** @deprecated → use colors.accent.red (arch12) */
-export const accentAlert = arch12;
+export const accentAlert = arch12
 /** @deprecated → use colors.accent.charcoal (arch13) */
-export const accentBlue = arch13;
+export const accentBlue = arch13
 /** @deprecated → use colors.accent.green (arch14) */
-export const accentEmerald = arch14;
+export const accentEmerald = arch14
 
 // ═══════════════════════════════════════════════════════════════
 // GLASSMORPHISM TOKENS (RGBA for runtime use)
 // ═══════════════════════════════════════════════════════════════
 
 export const glass = {
-  surface: "rgba(255, 255, 255, 0.72)",
-  surfaceHover: "rgba(255, 255, 255, 0.88)",
-  surfaceStrong: "rgba(255, 255, 255, 0.92)",
-  border: "rgba(255, 255, 255, 0.15)",
-  borderTop: "rgba(255, 255, 255, 0.25)",
-  text: "rgba(10, 10, 20, 0.92)",
-  textMuted: "rgba(10, 10, 20, 0.55)",
-  vibrancy: "rgba(246, 246, 250, 0.82)",
+  surface: 'rgba(255, 255, 255, 0.72)',
+  surfaceHover: 'rgba(255, 255, 255, 0.88)',
+  surfaceStrong: 'rgba(255, 255, 255, 0.92)',
+  border: 'rgba(255, 255, 255, 0.15)',
+  borderTop: 'rgba(255, 255, 255, 0.25)',
+  text: 'rgba(10, 10, 20, 0.92)',
+  textMuted: 'rgba(10, 10, 20, 0.55)',
+  vibrancy: 'rgba(246, 246, 250, 0.82)',
   /** @deprecated use top-level properties */
   light: {
-    surface: "rgba(255, 255, 255, 0.72)",
-    surfaceHover: "rgba(255, 255, 255, 0.88)",
-    border: "rgba(255, 255, 255, 0.15)",
-    borderTop: "rgba(255, 255, 255, 0.25)",
-    text: "rgba(10, 10, 20, 0.92)",
-    textMuted: "rgba(10, 10, 20, 0.55)",
+    surface: 'rgba(255, 255, 255, 0.72)',
+    surfaceHover: 'rgba(255, 255, 255, 0.88)',
+    border: 'rgba(255, 255, 255, 0.15)',
+    borderTop: 'rgba(255, 255, 255, 0.25)',
+    text: 'rgba(10, 10, 20, 0.92)',
+    textMuted: 'rgba(10, 10, 20, 0.55)',
   },
-} as const;
+} as const
 
 // ═══════════════════════════════════════════════════════════════
 // HSL VALUES (for shadcn/ui compatibility — auto-synced from variables.css)
 // ═══════════════════════════════════════════════════════════════
 
-export const hsl = tokens.hsl;
+export const hsl = tokens.hsl
 
 /** @deprecated light-only — kept for backward compatibility */
-export const hslDark = { ...hsl } as const;
+export const hslDark = { ...hsl } as const
 
 /** Generate a themer-compatible ColorSet for external tool export */
 export function generateThemerColorSet() {
@@ -159,5 +159,5 @@ export function generateThemerColorSet() {
     accent5: arch13,
     accent6: arch14,
     accent7: arch15,
-  };
+  }
 }

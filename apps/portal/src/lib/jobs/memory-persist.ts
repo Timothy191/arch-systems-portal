@@ -1,8 +1,8 @@
-import { InngestFunction } from "inngest";
-import { inngest, aiMemoryPersistEvent } from "@repo/utils/inngest";
-import { createServerSupabaseClient } from "@repo/supabase/server";
-import { logError } from "@/lib/errors/error-logger";
-import { recordJobExecution } from "@/lib/observability/metrics";
+import type { InngestFunction } from 'inngest'
+import { inngest, aiMemoryPersistEvent } from '@repo/utils/inngest'
+import { createServerSupabaseClient } from '@repo/supabase/server'
+import { logError } from '@/lib/errors/error-logger'
+import { recordJobExecution } from '@/lib/observability/metrics'
 /**
  * Durable fallback for saving assistant memory after a chat stream completes.
  *
@@ -20,72 +20,72 @@ import { recordJobExecution } from "@/lib/observability/metrics";
  */
 export const memoryPersistFn = inngest.createFunction(
   {
-    id: "memory-persist",
+    id: 'memory-persist',
     triggers: [{ event: aiMemoryPersistEvent }],
     concurrency: { limit: 5 },
   },
   async ({ event }) => {
-    const { sessionId, userId, assistantResponseStored } = event.data;
-    const start = performance.now();
-    let success = true;
+    const { sessionId, userId, assistantResponseStored } = event.data
+    const start = performance.now()
+    let success = true
 
     try {
       // If already stored, nothing to do
       if (assistantResponseStored) {
-        return { success: true, skipped: "already_stored" };
+        return { success: true, skipped: 'already_stored' }
       }
 
-      const supabase = await createServerSupabaseClient();
+      const supabase = await createServerSupabaseClient()
 
       // Check the last memory entries to verify state
       const { data: recentMemories, error: queryError } = await supabase
-        .from("memory_embeddings")
-        .select("id, content, memory_type, created_at")
-        .eq("session_id", sessionId)
-        .eq("user_id", userId)
-        .order("created_at", { ascending: false })
-        .limit(5);
+        .from('memory_embeddings')
+        .select('id, content, memory_type, created_at')
+        .eq('session_id', sessionId)
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false })
+        .limit(5)
 
       if (queryError) {
-        throw new Error(`Failed to query session memories: ${queryError.message}`);
+        throw new Error(`Failed to query session memories: ${queryError.message}`)
       }
 
       // The user message was already stored by loadMemoryNode.
       // The assistant response is what we're recovering.
       const assistantMemories = recentMemories?.filter(
-        (m) => m.memory_type === "episodic" && m.content.startsWith("Assistant:")
-      );
+        (m) => m.memory_type === 'episodic' && m.content.startsWith('Assistant:')
+      )
 
       if (!assistantMemories || assistantMemories.length === 0) {
         // Assistant response wasn't persisted — log a warning.
         // This is informational; the next user request will still have
         // the user message in context via loadMemoryNode.
         logError(
-          new Error("Assistant response not persisted — stream may have been terminated early"),
+          new Error('Assistant response not persisted — stream may have been terminated early'),
           {
-            context: "memory_persist_job",
+            context: 'memory_persist_job',
             sessionId,
             userId,
           }
-        );
-        return { success: true, recovered: false };
+        )
+        return { success: true, recovered: false }
       }
 
       return {
         success: true,
         recovered: true,
         count: assistantMemories.length,
-      };
+      }
     } catch (err) {
-      success = false;
+      success = false
       logError(err instanceof Error ? err : new Error(String(err)), {
-        context: "memory_persist_job",
+        context: 'memory_persist_job',
         sessionId,
         userId,
-      });
-      throw err;
+      })
+      throw err
     } finally {
-      recordJobExecution("memory-persist", performance.now() - start, success);
+      recordJobExecution('memory-persist', performance.now() - start, success)
     }
   }
-) as unknown as InngestFunction.Any;
+) as unknown as InngestFunction.Any

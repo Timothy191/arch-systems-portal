@@ -1,15 +1,15 @@
-"use client";
+'use client'
 
-import { use } from "react";
-import { useRouter } from "next/navigation";
-import { X } from "lucide-react";
+import { use } from 'react'
+import { useRouter } from 'next/navigation'
+import { X } from 'lucide-react'
 
 export default function QuickviewModal({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
-  const router = useRouter();
+  const { id } = use(params)
+  const router = useRouter()
 
   function handleClose() {
-    router.back();
+    router.back()
   }
 
   return (
@@ -54,5 +54,5 @@ export default function QuickviewModal({ params }: { params: Promise<{ id: strin
         </div>
       </div>
     </div>
-  );
+  )
 }

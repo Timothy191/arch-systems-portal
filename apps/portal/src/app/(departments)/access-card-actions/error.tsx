@@ -1,15 +1,15 @@
-"use client";
+'use client'
 
-import { GlassCard } from "@repo/ui/GlassCard";
-import { Button } from "@repo/ui/components/ui/button";
-import { AlertTriangle, RefreshCw } from "lucide-react";
+import { GlassCard } from '@repo/ui/GlassCard'
+import { Button } from '@repo/ui/components/ui/button'
+import { AlertTriangle, RefreshCw } from 'lucide-react'
 
 export default function AccessCardActionsError({
   error: _error,
   reset,
 }: {
-  error: Error & { digest?: string };
-  reset: () => void;
+  error: Error & { digest?: string }
+  reset: () => void
 }) {
   return (
     <div className="space-y-6">
@@ -31,5 +31,5 @@ export default function AccessCardActionsError({
         </GlassCard>
       </div>
     </div>
-  );
+  )
 }

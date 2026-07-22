@@ -1,5 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getMetrics } from "@/lib/observability/metrics";
+import type { NextRequest} from 'next/server';
+import { NextResponse } from 'next/server'
+import { getMetrics } from '@/lib/observability/metrics'
 
 /**
  * @swagger
@@ -34,40 +35,40 @@ import { getMetrics } from "@/lib/observability/metrics";
 export async function GET(req: NextRequest) {
   try {
     // AGENT-TRACE: Optional token validation for Prometheus scraping security
-    const scrapeToken = process.env.METRICS_SCRAPE_TOKEN;
+    const scrapeToken = process.env.METRICS_SCRAPE_TOKEN
     if (scrapeToken) {
-      const authHeader = req.headers.get("Authorization");
-      const queryToken = req.nextUrl.searchParams.get("token");
-      const token = authHeader?.startsWith("Bearer ") ? authHeader.substring(7) : queryToken;
+      const authHeader = req.headers.get('Authorization')
+      const queryToken = req.nextUrl.searchParams.get('token')
+      const token = authHeader?.startsWith('Bearer ') ? authHeader.substring(7) : queryToken
 
       if (token !== scrapeToken) {
-        return new NextResponse("Unauthorized", {
+        return new NextResponse('Unauthorized', {
           status: 401,
           headers: {
-            "Content-Type": "text/plain",
+            'Content-Type': 'text/plain',
           },
-        });
+        })
       }
     }
 
-    const metrics = await getMetrics();
+    const metrics = await getMetrics()
     const metricsText = JSON.stringify(
       metrics,
       (_key, value) => (value instanceof Map ? Object.fromEntries(value) : value),
       2
-    );
+    )
     return new NextResponse(metricsText, {
       status: 200,
       headers: {
-        "Content-Type": "text/plain",
+        'Content-Type': 'text/plain',
       },
-    });
+    })
   } catch (_error) {
-    return new NextResponse("Error generating metrics", {
+    return new NextResponse('Error generating metrics', {
       status: 500,
       headers: {
-        "Content-Type": "text/plain",
+        'Content-Type': 'text/plain',
       },
-    });
+    })
   }
 }

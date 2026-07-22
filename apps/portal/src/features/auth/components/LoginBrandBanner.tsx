@@ -1,32 +1,32 @@
-import Image from "next/image";
-import { Marquee } from "@repo/ui/Marquee";
-import { VERCEL_FAMILY_MARQUEE_BRANDS } from "@/config/vercel-brands";
+import Image from 'next/image'
+import { Marquee } from '@repo/ui/Marquee'
+import { VERCEL_FAMILY_MARQUEE_BRANDS } from '@/config/vercel-brands'
 
 interface BrandLogo {
-  src?: string;
-  name: string;
-  width: number;
-  height: number;
+  src?: string
+  name: string
+  width: number
+  height: number
 }
 
 const BRAND_LOGOS: BrandLogo[] = [
-  { src: "/logo.svg", name: "Arch", width: 72, height: 20 },
-  { src: "/archlinux-logo-black-scalable.svg", name: "Arch Linux", width: 72, height: 20 },
-  { name: "Plantcor", width: 80, height: 22 },
-  { src: "/branding/ai/anthropic.svg", name: "Anthropic", width: 20, height: 20 },
-  { src: "/branding/ai/google.svg", name: "Google", width: 20, height: 20 },
-  { src: "/branding/ai/github.svg", name: "GitHub", width: 20, height: 20 },
+  { src: '/logo.svg', name: 'Arch', width: 72, height: 20 },
+  { src: '/archlinux-logo-black-scalable.svg', name: 'Arch Linux', width: 72, height: 20 },
+  { name: 'Plantcor', width: 80, height: 22 },
+  { src: '/branding/ai/anthropic.svg', name: 'Anthropic', width: 20, height: 20 },
+  { src: '/branding/ai/google.svg', name: 'Google', width: 20, height: 20 },
+  { src: '/branding/ai/github.svg', name: 'GitHub', width: 20, height: 20 },
   ...VERCEL_FAMILY_MARQUEE_BRANDS,
-];
+]
 
 /**
  * Animated brand / AI-provider logo strip for the login card footer.
  */
 export function LoginBrandBanner() {
   const maskStyle = {
-    maskImage: "linear-gradient(to right, transparent, black 8%, black 92%, transparent)",
-    WebkitMaskImage: "linear-gradient(to right, transparent, black 8%, black 92%, transparent)",
-  };
+    maskImage: 'linear-gradient(to right, transparent, black 8%, black 92%, transparent)',
+    WebkitMaskImage: 'linear-gradient(to right, transparent, black 8%, black 92%, transparent)',
+  }
 
   return (
     <div className="w-full">
@@ -46,7 +46,7 @@ export function LoginBrandBanner() {
       >
         <Marquee pauseOnHover className="[--duration:42s] [--gap:0.75rem] p-0">
           {BRAND_LOGOS.flatMap((logo, index) => {
-            const key = logo.src ?? logo.name;
+            const key = logo.src ?? logo.name
             const item = (
               <div key={key} className="flex h-8 shrink-0 items-center gap-2" title={logo.name}>
                 {logo.src ? (
@@ -56,7 +56,7 @@ export function LoginBrandBanner() {
                     width={logo.width}
                     height={logo.height}
                     className="h-5 w-auto max-w-[5rem] object-contain"
-                    style={{ width: "auto", height: "auto" }}
+                    style={{ width: 'auto', height: 'auto' }}
                     unoptimized
                   />
                 ) : null}
@@ -64,9 +64,9 @@ export function LoginBrandBanner() {
                   {logo.name}
                 </span>
               </div>
-            );
+            )
 
-            if (index === 0) return [item];
+            if (index === 0) return [item]
 
             return [
               <span
@@ -77,10 +77,10 @@ export function LoginBrandBanner() {
                 |
               </span>,
               item,
-            ];
+            ]
           })}
         </Marquee>
       </div>
     </div>
-  );
+  )
 }

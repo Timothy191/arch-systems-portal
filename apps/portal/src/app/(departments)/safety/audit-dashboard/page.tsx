@@ -1,6 +1,6 @@
-import { createServerSupabaseClient } from "@repo/supabase/server";
-import { TriggerButton } from "./TriggerButton";
-import { GlassCard, PageHeader } from "@repo/ui";
+import { createServerSupabaseClient } from '@repo/supabase/server'
+import { TriggerButton } from './TriggerButton'
+import { GlassCard, PageHeader } from '@repo/ui'
 import {
   ShieldCheck,
   FileDown,
@@ -8,23 +8,23 @@ import {
   ClipboardCheck,
   AlertTriangle,
   Factory,
-} from "lucide-react";
-import React from "react";
+} from 'lucide-react'
+import React from 'react'
 
 export default async function AuditDashboardPage() {
-  const supabase = await createServerSupabaseClient();
+  const supabase = await createServerSupabaseClient()
 
   // Fetch past generated audit reports
   const { data: reports, error } = await supabase
-    .from("generated_reports")
-    .select("*")
-    .eq("shift_type", "daily_audit")
-    .order("report_date", { ascending: false })
-    .limit(15);
+    .from('generated_reports')
+    .select('*')
+    .eq('shift_type', 'daily_audit')
+    .order('report_date', { ascending: false })
+    .limit(15)
 
-  const latestReport = reports?.[0];
+  const latestReport = reports?.[0]
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const latestData = latestReport?.report_data as any;
+  const latestData = latestReport?.report_data as any
 
   return (
     <div className="space-y-8 max-w-6xl mx-auto py-6 px-4">
@@ -43,7 +43,7 @@ export default async function AuditDashboardPage() {
               Access Check-Ins
             </span>
             <span className="text-2xl font-bold text-slate-800 mt-2 block">
-              {latestData?.metrics?.accessControl?.checkIns ?? "N/A"}
+              {latestData?.metrics?.accessControl?.checkIns ?? 'N/A'}
             </span>
           </div>
           <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600">
@@ -57,7 +57,7 @@ export default async function AuditDashboardPage() {
               Access Denials
             </span>
             <span className="text-2xl font-bold text-slate-800 mt-2 block">
-              {latestData?.metrics?.accessControl?.denials ?? "N/A"}
+              {latestData?.metrics?.accessControl?.denials ?? 'N/A'}
             </span>
           </div>
           <div className="w-10 h-10 rounded-lg bg-amber-50 flex items-center justify-center text-amber-600">
@@ -73,7 +73,7 @@ export default async function AuditDashboardPage() {
             <span className="text-2xl font-bold text-slate-800 mt-2 block">
               {latestData?.metrics?.drilling?.totalMeters
                 ? `${latestData.metrics.drilling.totalMeters.toFixed(1)}m`
-                : "N/A"}
+                : 'N/A'}
             </span>
           </div>
           <div className="w-10 h-10 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-600">
@@ -89,7 +89,7 @@ export default async function AuditDashboardPage() {
             <span className="text-2xl font-bold text-slate-800 mt-2 block">
               {latestData?.metrics?.production?.totalCoalTonnes
                 ? `${latestData.metrics.production.totalCoalTonnes.toFixed(1)}t`
-                : "N/A"}
+                : 'N/A'}
             </span>
           </div>
           <div className="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-600">
@@ -117,7 +117,7 @@ export default async function AuditDashboardPage() {
           {reports && reports.length > 0 ? (
             reports.map((report) => {
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              const data = report.report_data as any;
+              const data = report.report_data as any
               return (
                 <GlassCard
                   key={report.id}
@@ -129,10 +129,10 @@ export default async function AuditDashboardPage() {
                         {report.report_date}
                       </span>
                       <span className="text-[11px] text-slate-400">
-                        Generated{" "}
+                        Generated{' '}
                         {new Date(report.generated_at).toLocaleTimeString([], {
-                          hour: "2-digit",
-                          minute: "2-digit",
+                          hour: '2-digit',
+                          minute: '2-digit',
                         })}
                       </span>
                     </div>
@@ -143,7 +143,7 @@ export default async function AuditDashboardPage() {
                           Access Badging
                         </span>
                         <span className="font-semibold text-slate-700">
-                          {data?.metrics?.accessControl?.checkIns || 0} In /{" "}
+                          {data?.metrics?.accessControl?.checkIns || 0} In /{' '}
                           {data?.metrics?.accessControl?.denials || 0} Denials
                         </span>
                       </div>
@@ -152,7 +152,7 @@ export default async function AuditDashboardPage() {
                           Drilling Performance
                         </span>
                         <span className="font-semibold text-slate-700">
-                          {data?.metrics?.drilling?.totalHoles || 0} holes /{" "}
+                          {data?.metrics?.drilling?.totalHoles || 0} holes /{' '}
                           {data?.metrics?.drilling?.totalMeters?.toFixed(1) || 0}m
                         </span>
                       </div>
@@ -169,7 +169,7 @@ export default async function AuditDashboardPage() {
                           Production Output
                         </span>
                         <span className="font-semibold text-slate-700">
-                          {data?.metrics?.production?.totalCoalTonnes?.toFixed(1) || 0}t Coal /{" "}
+                          {data?.metrics?.production?.totalCoalTonnes?.toFixed(1) || 0}t Coal /{' '}
                           {data?.metrics?.production?.totalWasteTonnes?.toFixed(1) || 0}t Waste
                         </span>
                       </div>
@@ -192,7 +192,7 @@ export default async function AuditDashboardPage() {
                     )}
                   </div>
                 </GlassCard>
-              );
+              )
             })
           ) : (
             <GlassCard className="p-12 text-center text-slate-400">
@@ -203,5 +203,5 @@ export default async function AuditDashboardPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }

@@ -1,34 +1,35 @@
-import React from "react";
-import { CheckCircle2, XCircle, AlertTriangle, Clock, ArrowRight } from "lucide-react";
-import Link from "next/link";
-import StatusBadge, { AccessStatus } from "@/features/access-control/components/StatusBadge";
-import { AutoAnimateList } from "@repo/ui/AnimatedList";
+import React from 'react'
+import { CheckCircle2, XCircle, AlertTriangle, Clock, ArrowRight } from 'lucide-react'
+import Link from 'next/link'
+import type { AccessStatus } from '@/features/access-control/components/StatusBadge';
+import StatusBadge from '@/features/access-control/components/StatusBadge'
+import { AutoAnimateList } from '@repo/ui/AnimatedList'
 
 interface ActivityEntry {
-  id: string;
-  entityName: string;
-  entityType: string;
-  zone: string;
-  status: string;
-  time: string;
-  qrId: string;
+  id: string
+  entityName: string
+  entityType: string
+  zone: string
+  status: string
+  time: string
+  qrId: string
 }
 
 const statusIcons: Record<string, React.ElementType> = {
   Granted: CheckCircle2,
   Denied: XCircle,
-  "Expired Credential": Clock,
-  "Tailgate Alert": AlertTriangle,
-};
+  'Expired Credential': Clock,
+  'Tailgate Alert': AlertTriangle,
+}
 
 const entityTypePill: Record<string, string> = {
-  Employee: "bg-primary/10 text-primary",
-  Vehicle: "bg-accent/10 text-accent",
-  Equipment: "bg-secondary text-secondary-foreground",
-};
+  Employee: 'bg-primary/10 text-primary',
+  Vehicle: 'bg-accent/10 text-accent',
+  Equipment: 'bg-secondary text-secondary-foreground',
+}
 
 interface DashboardActivityFeedProps {
-  activity: ActivityEntry[];
+  activity: ActivityEntry[]
 }
 
 export default function DashboardActivityFeed({ activity }: DashboardActivityFeedProps) {
@@ -50,7 +51,7 @@ export default function DashboardActivityFeed({ activity }: DashboardActivityFee
       </div>
       <AutoAnimateList className="divide-y divide-border">
         {activity.map((entry) => {
-          const StatusIcon = statusIcons[entry.status] ?? CheckCircle2;
+          const StatusIcon = statusIcons[entry.status] ?? CheckCircle2
           return (
             <div
               key={entry.id}
@@ -60,11 +61,11 @@ export default function DashboardActivityFeed({ activity }: DashboardActivityFee
                 <StatusIcon
                   size={16}
                   className={
-                    entry.status === "Granted"
-                      ? "text-success"
-                      : entry.status === "Denied" || entry.status === "Expired Credential"
-                        ? "text-danger"
-                        : "text-warning"
+                    entry.status === 'Granted'
+                      ? 'text-success'
+                      : entry.status === 'Denied' || entry.status === 'Expired Credential'
+                        ? 'text-danger'
+                        : 'text-warning'
                   }
                 />
               </div>
@@ -90,9 +91,9 @@ export default function DashboardActivityFeed({ activity }: DashboardActivityFee
                 <span className="text-[10px] font-mono text-muted-foreground">{entry.time}</span>
               </div>
             </div>
-          );
+          )
         })}
       </AutoAnimateList>
     </div>
-  );
+  )
 }

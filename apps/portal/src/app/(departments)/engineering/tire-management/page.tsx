@@ -1,11 +1,11 @@
-import { getDepartmentContext } from "@/lib/dept-context";
-import { GlassCard } from "@repo/ui/GlassCard";
-import { CircleDot, Plus, Wrench, ClipboardList } from "lucide-react";
+import { getDepartmentContext } from '@/lib/dept-context'
+import { GlassCard } from '@repo/ui/GlassCard'
+import { CircleDot, Plus, Wrench, ClipboardList } from 'lucide-react'
 
 export default async function TireManagementPage() {
   await getDepartmentContext({
-    department: "engineering",
-  });
+    department: 'engineering',
+  })
 
   return (
     <div className="space-y-6">
@@ -65,5 +65,5 @@ export default async function TireManagementPage() {
         </p>
       </GlassCard>
     </div>
-  );
+  )
 }

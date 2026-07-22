@@ -1,1 +1,1 @@
-export { Marquee } from "./components/Marquee";
+export { Marquee } from './components/Marquee'

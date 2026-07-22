@@ -1,4 +1,4 @@
-"use client";
+'use client'
 
 export default function ReloadButton() {
   return (
@@ -8,5 +8,5 @@ export default function ReloadButton() {
     >
       Try Again
     </button>
-  );
+  )
 }

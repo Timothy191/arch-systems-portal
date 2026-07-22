@@ -1,12 +1,12 @@
-import * as React from "react";
-import { clsx } from "clsx";
+import * as React from 'react'
+import { clsx } from 'clsx'
 
 export interface SecondaryButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  asChild?: boolean;
+  asChild?: boolean
   /** Accepted for call-site compatibility; not applied to the DOM. */
-  variant?: string;
+  variant?: string
   /** Accepted for call-site compatibility; not applied to the DOM. */
-  size?: string;
+  size?: string
 }
 
 export function SecondaryButton({
@@ -21,12 +21,12 @@ export function SecondaryButton({
     return React.cloneElement(children, {
       ...props,
       className: clsx(children.props.className, className),
-    } as never);
+    } as never)
   }
 
   return (
     <button type="button" className={className} {...props}>
       {children}
     </button>
-  );
+  )
 }

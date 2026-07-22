@@ -1,11 +1,11 @@
-"use client";
+'use client'
 
-import type { ReactNode } from "react";
+import type { ReactNode } from 'react'
 
 interface AdminTabsProps {
-  value: string;
-  onValueChange: (value: string) => void;
-  children: ReactNode;
+  value: string
+  onValueChange: (value: string) => void
+  children: ReactNode
 }
 
 /**
@@ -18,5 +18,5 @@ export function AdminTabs({ value, onValueChange, children }: AdminTabsProps) {
       {/* Tab navigation and content are rendered via children */}
       {children}
     </div>
-  );
+  )
 }

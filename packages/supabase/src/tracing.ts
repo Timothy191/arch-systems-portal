@@ -1,4 +1,4 @@
-import { trace, Span, SpanStatusCode } from "@opentelemetry/api";
+import { trace, Span, SpanStatusCode } from '@opentelemetry/api'
 
 /**
  * Wrap a function in an OpenTelemetry span.
@@ -15,26 +15,26 @@ export async function withSpan<T>(
   fn: () => Promise<T>,
   attributes?: Record<string, string | number | boolean>
 ): Promise<T> {
-  const tracer = trace.getTracer("arch-portal");
+  const tracer = trace.getTracer('arch-portal')
   return tracer.startActiveSpan(name, async (span: Span) => {
     if (attributes) {
       Object.entries(attributes).forEach(([key, value]) => {
-        span.setAttribute(key, value);
-      });
+        span.setAttribute(key, value)
+      })
     }
     try {
-      const result = await fn();
-      span.setStatus({ code: SpanStatusCode.OK });
-      return result;
+      const result = await fn()
+      span.setStatus({ code: SpanStatusCode.OK })
+      return result
     } catch (error) {
       span.setStatus({
         code: SpanStatusCode.ERROR,
         message: error instanceof Error ? error.message : String(error),
-      });
-      span.recordException(error as Error);
-      throw error;
+      })
+      span.recordException(error as Error)
+      throw error
     } finally {
-      span.end();
+      span.end()
     }
-  });
+  })
 }

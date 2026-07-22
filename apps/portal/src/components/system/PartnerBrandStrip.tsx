@@ -1,11 +1,11 @@
-import Image from "next/image";
-import Link from "next/link";
-import { TASKBAR_PARTNER_BRANDS, type PartnerBrand } from "@/config/vercel-brands";
+import Image from 'next/image'
+import Link from 'next/link'
+import { TASKBAR_PARTNER_BRANDS, type PartnerBrand } from '@/config/vercel-brands'
 
 interface PartnerBrandStripProps {
-  variant: "taskbar" | "inline";
-  brands?: PartnerBrand[];
-  className?: string;
+  variant: 'taskbar' | 'inline'
+  brands?: PartnerBrand[]
+  className?: string
 }
 
 function BrandIcon({ brand, compact }: { brand: PartnerBrand; compact: boolean }) {
@@ -16,15 +16,15 @@ function BrandIcon({ brand, compact }: { brand: PartnerBrand; compact: boolean }
       width={brand.width}
       height={brand.height}
       className={
-        compact ? "h-3.5 w-auto max-h-3.5 object-contain" : "h-5 w-auto max-w-[5rem] object-contain"
+        compact ? 'h-3.5 w-auto max-h-3.5 object-contain' : 'h-5 w-auto max-w-[5rem] object-contain'
       }
-      style={{ width: "auto", height: "auto" }}
+      style={{ width: 'auto', height: 'auto' }}
       unoptimized
     />
-  );
+  )
 
   if (!brand.href) {
-    return image;
+    return image
   }
 
   return (
@@ -37,7 +37,7 @@ function BrandIcon({ brand, compact }: { brand: PartnerBrand; compact: boolean }
     >
       {image}
     </Link>
-  );
+  )
 }
 
 /**
@@ -46,9 +46,9 @@ function BrandIcon({ brand, compact }: { brand: PartnerBrand; compact: boolean }
 export function PartnerBrandStrip({
   variant,
   brands = TASKBAR_PARTNER_BRANDS,
-  className = "",
+  className = '',
 }: PartnerBrandStripProps) {
-  const compact = variant === "taskbar";
+  const compact = variant === 'taskbar'
 
   if (!compact) {
     return (
@@ -60,7 +60,7 @@ export function PartnerBrandStrip({
           <BrandIcon key={brand.name} brand={brand} compact={false} />
         ))}
       </nav>
-    );
+    )
   }
 
   return (
@@ -75,5 +75,5 @@ export function PartnerBrandStrip({
         </span>
       ))}
     </nav>
-  );
+  )
 }

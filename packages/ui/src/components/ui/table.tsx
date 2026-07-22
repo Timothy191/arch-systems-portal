@@ -1,8 +1,8 @@
 interface TablePartProps {
-  children: React.ReactNode;
-  className?: string;
-  colSpan?: number;
-  key?: string | number;
+  children: React.ReactNode
+  className?: string
+  colSpan?: number
+  key?: string | number
 }
 
 export function Table({ children, className, ...rest }: TablePartProps) {
@@ -10,7 +10,7 @@ export function Table({ children, className, ...rest }: TablePartProps) {
     <table className={className} {...rest}>
       {children}
     </table>
-  );
+  )
 }
 
 export function TableHeader({ children, className, ...rest }: TablePartProps) {
@@ -18,7 +18,7 @@ export function TableHeader({ children, className, ...rest }: TablePartProps) {
     <thead className={className} {...rest}>
       {children}
     </thead>
-  );
+  )
 }
 
 export function TableBody({ children, className, ...rest }: TablePartProps) {
@@ -26,7 +26,7 @@ export function TableBody({ children, className, ...rest }: TablePartProps) {
     <tbody className={className} {...rest}>
       {children}
     </tbody>
-  );
+  )
 }
 
 export function TableFooter({ children, className, ...rest }: TablePartProps) {
@@ -34,7 +34,7 @@ export function TableFooter({ children, className, ...rest }: TablePartProps) {
     <tfoot className={className} {...rest}>
       {children}
     </tfoot>
-  );
+  )
 }
 
 export function TableRow({ children, className, ...rest }: TablePartProps) {
@@ -42,7 +42,7 @@ export function TableRow({ children, className, ...rest }: TablePartProps) {
     <tr className={className} {...rest}>
       {children}
     </tr>
-  );
+  )
 }
 
 export function TableHead({ children, className, ...rest }: TablePartProps) {
@@ -50,7 +50,7 @@ export function TableHead({ children, className, ...rest }: TablePartProps) {
     <th className={className} {...rest}>
       {children}
     </th>
-  );
+  )
 }
 
 export function TableCell({ children, className, colSpan, ...rest }: TablePartProps) {
@@ -58,7 +58,7 @@ export function TableCell({ children, className, colSpan, ...rest }: TablePartPr
     <td className={className} colSpan={colSpan} {...rest}>
       {children}
     </td>
-  );
+  )
 }
 
 export function TableCaption({ children, className, ...rest }: TablePartProps) {
@@ -66,5 +66,5 @@ export function TableCaption({ children, className, ...rest }: TablePartProps) {
     <caption className={className} {...rest}>
       {children}
     </caption>
-  );
+  )
 }

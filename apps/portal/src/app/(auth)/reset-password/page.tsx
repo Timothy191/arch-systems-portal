@@ -1,11 +1,11 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import Link from "next/link";
-import { createBrowserSupabaseClient } from "@repo/supabase/client";
-import { Input } from "@repo/ui/Input";
-import { AnimatedButton } from "@repo/ui/AnimatedButton";
-import { Lock, Check, AlertTriangle } from "lucide-react";
+import { useState } from 'react'
+import Link from 'next/link'
+import { createBrowserSupabaseClient } from '@repo/supabase/client'
+import { Input } from '@repo/ui/Input'
+import { AnimatedButton } from '@repo/ui/AnimatedButton'
+import { Lock, Check, AlertTriangle } from 'lucide-react'
 
 /**
  * Maps raw Supabase reset password errors to clear, localized user-facing validation and status messages.
@@ -15,40 +15,40 @@ import { Lock, Check, AlertTriangle } from "lucide-react";
  * @returns A user-friendly error message.
  */
 function mapResetError(raw: string): string {
-  const lower = raw.toLowerCase();
-  if (lower.includes("rate limit")) {
-    return "Too many requests. Please wait a moment.";
+  const lower = raw.toLowerCase()
+  if (lower.includes('rate limit')) {
+    return 'Too many requests. Please wait a moment.'
   }
-  if (lower.includes("email")) {
-    return "Please enter a valid email address.";
+  if (lower.includes('email')) {
+    return 'Please enter a valid email address.'
   }
-  return "Unable to send reset email. Please try again or contact IT Support.";
+  return 'Unable to send reset email. Please try again or contact IT Support.'
 }
 
 export default function ResetPasswordPage() {
-  const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [sent, setSent] = useState(false);
-  const [error, setError] = useState("");
+  const [email, setEmail] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [sent, setSent] = useState(false)
+  const [error, setError] = useState('')
 
   async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
+    e.preventDefault()
+    setError('')
+    setLoading(true)
 
-    const supabase = createBrowserSupabaseClient();
+    const supabase = createBrowserSupabaseClient()
     const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/update-password`,
-    });
+    })
 
-    setLoading(false);
+    setLoading(false)
 
     if (resetError) {
-      setError(mapResetError(resetError.message));
-      return;
+      setError(mapResetError(resetError.message))
+      return
     }
 
-    setSent(true);
+    setSent(true)
   }
 
   return (
@@ -75,7 +75,7 @@ export default function ResetPasswordPage() {
               <div className="space-y-1">
                 <h1 className="text-lg font-medium text-arch-text-primary">Check Your Email</h1>
                 <p className="text-sm text-arch-text-muted">
-                  If an account exists for{" "}
+                  If an account exists for{' '}
                   <span className="font-medium text-arch-text-secondary">{email}</span>, you will
                   receive a password reset link.
                 </p>
@@ -117,7 +117,7 @@ export default function ResetPasswordPage() {
                     className="focus:ring-0 liquid-glass-input"
                     placeholder="admin@arch.os"
                     autoComplete="username"
-                    aria-describedby={error ? "reset-error" : undefined}
+                    aria-describedby={error ? 'reset-error' : undefined}
                   />
                 </div>
 
@@ -137,7 +137,7 @@ export default function ResetPasswordPage() {
                   disabled={loading}
                   className="w-full liquid-glass-button"
                 >
-                  {loading ? "Sending..." : "Send Reset Link"}
+                  {loading ? 'Sending...' : 'Send Reset Link'}
                 </AnimatedButton>
               </form>
 
@@ -154,5 +154,5 @@ export default function ResetPasswordPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }

@@ -1,4 +1,4 @@
-import { unstable_cache } from "next/cache";
+import { unstable_cache } from 'next/cache'
 
 /**
  * Next.js unstable_cache wrapper for React Server Component reads.
@@ -13,12 +13,12 @@ export function cachedRSC<T>(
   keyParts: string[],
   fn: () => Promise<T>,
   options?: {
-    revalidate?: number;
-    tags?: string[];
+    revalidate?: number
+    tags?: string[]
   }
 ): Promise<T> {
   return unstable_cache(fn, keyParts, {
     revalidate: options?.revalidate,
     tags: options?.tags,
-  })();
+  })()
 }

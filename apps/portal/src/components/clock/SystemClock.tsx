@@ -1,89 +1,89 @@
-"use client";
+'use client'
 
-import { useEffect, useState } from "react";
-import * as Popover from "@radix-ui/react-popover";
-import { cn } from "@repo/ui/lib/utils";
+import { useEffect, useState } from 'react'
+import * as Popover from '@radix-ui/react-popover'
+import { cn } from '@repo/ui/lib/utils'
 
 export function SystemClock() {
-  const [dayStr, setDayStr] = useState<string>("");
-  const [timeStr, setTimeStr] = useState<string>("");
-  const [time, setTime] = useState<Date>(() => new Date());
-  const [calendarDate, setCalendarDate] = useState<Date>(() => new Date());
+  const [dayStr, setDayStr] = useState<string>('')
+  const [timeStr, setTimeStr] = useState<string>('')
+  const [time, setTime] = useState<Date>(() => new Date())
+  const [calendarDate, setCalendarDate] = useState<Date>(() => new Date())
 
   // Update clock time string (day + time) every 10 seconds for the header pill
   useEffect(() => {
     function updateClock() {
-      const now = new Date();
-      setTime(now);
+      const now = new Date()
+      setTime(now)
 
-      const timePart = now.toLocaleTimeString("en-GB", {
-        timeZone: "Africa/Johannesburg",
-        hour: "2-digit",
-        minute: "2-digit",
+      const timePart = now.toLocaleTimeString('en-GB', {
+        timeZone: 'Africa/Johannesburg',
+        hour: '2-digit',
+        minute: '2-digit',
         hour12: false,
-      });
+      })
 
-      const dayPart = now.toLocaleDateString("en-GB", {
-        timeZone: "Africa/Johannesburg",
-        weekday: "short",
-      });
+      const dayPart = now.toLocaleDateString('en-GB', {
+        timeZone: 'Africa/Johannesburg',
+        weekday: 'short',
+      })
 
-      setDayStr(dayPart);
-      setTimeStr(timePart);
+      setDayStr(dayPart)
+      setTimeStr(timePart)
     }
-    updateClock();
-    const interval = setInterval(updateClock, 10000);
-    return () => clearInterval(interval);
-  }, []);
+    updateClock()
+    const interval = setInterval(updateClock, 10000)
+    return () => clearInterval(interval)
+  }, [])
 
   // Update the analog clock every second (independent of the pill updates)
   useEffect(() => {
     const secondInterval = setInterval(() => {
-      setTime(new Date());
-    }, 1000);
-    return () => clearInterval(secondInterval);
-  }, []);
+      setTime(new Date())
+    }, 1000)
+    return () => clearInterval(secondInterval)
+  }, [])
 
-  if (!dayStr || !timeStr) return null;
+  if (!dayStr || !timeStr) return null
 
   // Calendar calculations
-  const viewYear = calendarDate.getFullYear();
-  const viewMonth = calendarDate.getMonth();
+  const viewYear = calendarDate.getFullYear()
+  const viewMonth = calendarDate.getMonth()
 
-  const monthLabel = calendarDate.toLocaleString("en-US", { month: "long" });
-  const firstDayIndex = new Date(viewYear, viewMonth, 1).getDay();
-  const totalDays = new Date(viewYear, viewMonth + 1, 0).getDate();
+  const monthLabel = calendarDate.toLocaleString('en-US', { month: 'long' })
+  const firstDayIndex = new Date(viewYear, viewMonth, 1).getDay()
+  const totalDays = new Date(viewYear, viewMonth + 1, 0).getDate()
 
-  const daysArray: (number | null)[] = [];
+  const daysArray: (number | null)[] = []
   for (let i = 0; i < firstDayIndex; i++) {
-    daysArray.push(null);
+    daysArray.push(null)
   }
   for (let d = 1; d <= totalDays; d++) {
-    daysArray.push(d);
+    daysArray.push(d)
   }
 
   // Navigation handlers
   const prevMonth = () => {
-    setCalendarDate(new Date(viewYear, viewMonth - 1, 1));
-  };
+    setCalendarDate(new Date(viewYear, viewMonth - 1, 1))
+  }
   const nextMonth = () => {
-    setCalendarDate(new Date(viewYear, viewMonth + 1, 1));
-  };
+    setCalendarDate(new Date(viewYear, viewMonth + 1, 1))
+  }
   const prevYear = () => {
-    setCalendarDate(new Date(viewYear - 1, viewMonth, 1));
-  };
+    setCalendarDate(new Date(viewYear - 1, viewMonth, 1))
+  }
   const nextYear = () => {
-    setCalendarDate(new Date(viewYear + 1, viewMonth, 1));
-  };
+    setCalendarDate(new Date(viewYear + 1, viewMonth, 1))
+  }
 
   // Analog clock hands rotations
-  const hours = time.getHours();
-  const minutes = time.getMinutes();
-  const seconds = time.getSeconds();
+  const hours = time.getHours()
+  const minutes = time.getMinutes()
+  const seconds = time.getSeconds()
 
-  const hourDeg = ((hours % 12) / 12) * 360 + (minutes / 60) * 30;
-  const minuteDeg = (minutes / 60) * 360 + (seconds / 60) * 6;
-  const secondDeg = (seconds / 60) * 360;
+  const hourDeg = ((hours % 12) / 12) * 360 + (minutes / 60) * 30
+  const minuteDeg = (minutes / 60) * 360 + (seconds / 60) * 6
+  const secondDeg = (seconds / 60) * 360
 
   return (
     <Popover.Root>
@@ -111,8 +111,8 @@ export function SystemClock() {
           align="end"
           sideOffset={6}
           className={cn(
-            "bg-white/95 backdrop-blur-2xl border border-black/[0.08] shadow-window rounded-xl p-4 z-[120]",
-            "flex gap-5 select-none focus:outline-none"
+            'bg-white/95 backdrop-blur-2xl border border-black/[0.08] shadow-window rounded-xl p-4 z-[120]',
+            'flex gap-5 select-none focus:outline-none'
           )}
         >
           {/* Left panel: Calendar */}
@@ -179,27 +179,27 @@ export function SystemClock() {
             <div className="grid grid-cols-7 gap-0.5">
               {daysArray.map((day, idx) => {
                 if (day === null) {
-                  return <div key={`empty-${idx}`} className="w-[24px] h-[24px]" />;
+                  return <div key={`empty-${idx}`} className="w-[24px] h-[24px]" />
                 }
-                const today = new Date();
+                const today = new Date()
                 const isToday =
                   day === today.getDate() &&
                   viewMonth === today.getMonth() &&
-                  viewYear === today.getFullYear();
+                  viewYear === today.getFullYear()
 
                 return (
                   <div
                     key={`day-${day}`}
                     className={cn(
-                      "w-[24px] h-[24px] rounded-full flex items-center justify-center text-[10.5px] font-medium transition-colors",
+                      'w-[24px] h-[24px] rounded-full flex items-center justify-center text-[10.5px] font-medium transition-colors',
                       isToday
-                        ? "bg-arch-accent-charcoal text-white font-bold shadow-card"
-                        : "text-arch-text-primary hover:bg-black/[0.04]"
+                        ? 'bg-arch-accent-charcoal text-white font-bold shadow-card'
+                        : 'text-arch-text-primary hover:bg-black/[0.04]'
                     )}
                   >
                     {day}
                   </div>
-                );
+                )
               })}
             </div>
           </div>
@@ -222,7 +222,7 @@ export function SystemClock() {
                 className="absolute bottom-1/2 left-1/2 w-[3px] h-6 rounded-full bg-black/85 origin-bottom"
                 style={{
                   transform: `translate(-50%, 0) rotate(${hourDeg}deg)`,
-                  transition: "transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+                  transition: 'transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
                 }}
               />
               {/* Minute hand */}
@@ -230,7 +230,7 @@ export function SystemClock() {
                 className="absolute bottom-1/2 left-1/2 w-[2px] h-9 rounded-full bg-black/60 origin-bottom"
                 style={{
                   transform: `translate(-50%, 0) rotate(${minuteDeg}deg)`,
-                  transition: "transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+                  transition: 'transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
                 }}
               />
               {/* Second hand */}
@@ -238,16 +238,16 @@ export function SystemClock() {
                 className="absolute bottom-1/2 left-1/2 w-[1px] h-10 rounded-full bg-arch-accent-red origin-bottom"
                 style={{
                   transform: `translate(-50%, 0) rotate(${secondDeg}deg)`,
-                  transition: secondDeg === 0 ? "none" : "transform 0.1s ease-out",
+                  transition: secondDeg === 0 ? 'none' : 'transform 0.1s ease-out',
                 }}
               />
               {/* Center Pin */}
               <div
                 className="absolute w-1.5 h-1.5 rounded-full bg-black border border-white"
                 style={{
-                  top: "50%",
-                  left: "50%",
-                  transform: "translate(-50%, -50%)",
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
                 }}
               />
             </div>
@@ -255,9 +255,9 @@ export function SystemClock() {
             {/* Digital Time text */}
             <span className="text-[11px] font-semibold text-arch-text-secondary mt-3 tabular-nums select-all">
               {time.toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-                second: "2-digit",
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
                 hour12: false,
               })}
             </span>
@@ -265,5 +265,5 @@ export function SystemClock() {
         </Popover.Content>
       </Popover.Portal>
     </Popover.Root>
-  );
+  )
 }

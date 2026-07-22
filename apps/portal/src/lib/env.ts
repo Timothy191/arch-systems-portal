@@ -12,7 +12,7 @@
  *       Server-only vars are never exposed to the client bundle.
  */
 
-import { z } from "zod";
+import { z } from 'zod'
 
 // ---------------------------------------------------------------------------
 // Schema
@@ -35,38 +35,38 @@ const baseEnvSchema = z.object({
 
   // ── Server — optional with defaults ───────────────────────────────────
   PORT: z.coerce.number().int().positive().default(3000),
-  NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
+  NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
 
   // ── Redis (optional, used only when configured) ──────────────────────
   REDIS_URL: z.string().optional(),
 
   // ── LLM / AI providers (optional) ─────────────────────────────────────
-  OLLAMA_URL: z.string().url().default("http://localhost:11434"),
+  OLLAMA_URL: z.string().url().default('http://localhost:11434'),
   OLLAMA_API_KEY: z.string().optional(),
-  OLLAMA_DEFAULT_MODEL: z.string().default("gemma4:latest"),
+  OLLAMA_DEFAULT_MODEL: z.string().default('gemma4:latest'),
   GEMINI_API_KEY: z.string().optional(),
-  GEMINI_FREE_MODEL: z.string().default("gemini-2.0-flash-exp"),
-  AI_DISPLAY_PROVIDER: z.string().default("google"),
-  AI_DISPLAY_MODEL: z.string().default("gemini-2.0-flash-exp"),
-  AI_BACKEND_STRATEGY: z.enum(["ollama", "gemini", "router", "omni"]).default("ollama"),
+  GEMINI_FREE_MODEL: z.string().default('gemini-2.0-flash-exp'),
+  AI_DISPLAY_PROVIDER: z.string().default('google'),
+  AI_DISPLAY_MODEL: z.string().default('gemini-2.0-flash-exp'),
+  AI_BACKEND_STRATEGY: z.enum(['ollama', 'gemini', 'router', 'omni']).default('ollama'),
   OPENAI_API_KEY: z.string().optional(),
   OPENAI_MODEL: z.string().optional(),
   OPENROUTER_API_KEY: z.string().optional(),
   AI_ROUTER_URL: z.string().url().optional(),
   AI_ROUTER_KEY: z.string().optional(),
-  AI_EMBEDDING_PROVIDER: z.enum(["local", "router", "ollama", "openai"]).default("local"),
+  AI_EMBEDDING_PROVIDER: z.enum(['local', 'router', 'ollama', 'openai']).default('local'),
 
   // ── Inference.net Catalyst (optional observability) ───────────────────
   INFERENCE_GATEWAY_ENABLED: z
     .string()
     .optional()
-    .transform((v) => v === "true"),
+    .transform((v) => v === 'true'),
   INFERENCE_API_KEY: z.string().optional(),
-  INFERENCE_TASK_ID: z.string().default("arch-portal"),
-  INFERENCE_ENVIRONMENT: z.string().default("development"),
+  INFERENCE_TASK_ID: z.string().default('arch-portal'),
+  INFERENCE_ENVIRONMENT: z.string().default('development'),
   CATALYST_OTLP_TOKEN: z.string().optional(),
   CATALYST_OTLP_ENDPOINT: z.string().url().optional(),
-  CATALYST_SERVICE_NAME: z.string().default("portal-ui"),
+  CATALYST_SERVICE_NAME: z.string().default('portal-ui'),
 
   // ── Sentry (optional) ─────────────────────────────────────────────────
   SENTRY_ORG: z.string().optional(),
@@ -89,19 +89,19 @@ const baseEnvSchema = z.object({
   // ── Feature flags ─────────────────────────────────────────────────────
   ENABLE_LOAD_ADAPTIVE_TEST: z
     .string()
-    .default("false")
-    .transform((v) => v === "true"),
+    .default('false')
+    .transform((v) => v === 'true'),
   DISABLE_RATE_LIMIT: z
     .string()
-    .default("false")
-    .transform((v) => v === "true"),
+    .default('false')
+    .transform((v) => v === 'true'),
 
   // ── Rate limiting ─────────────────────────────────────────────────────
   RATE_LIMIT_IP_WHITELIST: z.string().optional(),
   DISABLE_CORS: z
     .string()
-    .default("false")
-    .transform((v) => v === "true"),
+    .default('false')
+    .transform((v) => v === 'true'),
   ALLOWED_ORIGINS: z.string().optional(),
 
   // ── Inngest / Background jobs ─────────────────────────────────────────
@@ -112,66 +112,66 @@ const baseEnvSchema = z.object({
 
   // ── Observability ─────────────────────────────────────────────────────
   OTEL_EXPORTER_OTLP_ENDPOINT: z.string().url().optional(),
-  OTEL_SERVICE_NAME: z.string().default("arch-portal"),
+  OTEL_SERVICE_NAME: z.string().default('arch-portal'),
   ENABLE_DB_TRACING: z
     .string()
-    .default("false")
-    .transform((v) => v === "true"),
+    .default('false')
+    .transform((v) => v === 'true'),
   SLOW_QUERY_THRESHOLD_MS: z.coerce.number().int().positive().default(500),
 
   // ── Version ────────────────────────────────────────────────────────────
-  PORTAL_VERSION: z.string().default("1.0.0"),
+  PORTAL_VERSION: z.string().default('1.0.0'),
   VERCEL_ENV: z.string().optional(),
   CI: z
     .string()
-    .default("false")
-    .transform((v) => v === "true"),
-});
+    .default('false')
+    .transform((v) => v === 'true'),
+})
 
 // Enforce real creds: fail fast if public supabase config is missing.
 const envSchema = baseEnvSchema.superRefine((val, ctx) => {
   if (!val.NEXT_PUBLIC_SUPABASE_URL) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
-      message: "Missing NEXT_PUBLIC_SUPABASE_URL",
-      path: ["NEXT_PUBLIC_SUPABASE_URL"],
-    });
+      message: 'Missing NEXT_PUBLIC_SUPABASE_URL',
+      path: ['NEXT_PUBLIC_SUPABASE_URL'],
+    })
   }
   if (!val.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
-      message: "Missing NEXT_PUBLIC_SUPABASE_ANON_KEY",
-      path: ["NEXT_PUBLIC_SUPABASE_ANON_KEY"],
-    });
+      message: 'Missing NEXT_PUBLIC_SUPABASE_ANON_KEY',
+      path: ['NEXT_PUBLIC_SUPABASE_ANON_KEY'],
+    })
   }
 
   // Production safety constraints (explicitly disallow placeholder values).
-  if (val.NODE_ENV === "production") {
-    if (val.NEXT_PUBLIC_SUPABASE_URL === "http://127.0.0.1:54321") {
+  if (val.NODE_ENV === 'production') {
+    if (val.NEXT_PUBLIC_SUPABASE_URL === 'http://127.0.0.1:54321') {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "Production must not use localhost Supabase URL",
-        path: ["NEXT_PUBLIC_SUPABASE_URL"],
-      });
+        message: 'Production must not use localhost Supabase URL',
+        path: ['NEXT_PUBLIC_SUPABASE_URL'],
+      })
     }
-    if (val.NEXT_PUBLIC_SUPABASE_ANON_KEY === "dummy-anon-key") {
+    if (val.NEXT_PUBLIC_SUPABASE_ANON_KEY === 'dummy-anon-key') {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "Production must not use the dummy anon key",
-        path: ["NEXT_PUBLIC_SUPABASE_ANON_KEY"],
-      });
+        message: 'Production must not use the dummy anon key',
+        path: ['NEXT_PUBLIC_SUPABASE_ANON_KEY'],
+      })
     }
   }
-});
+})
 
 // ---------------------------------------------------------------------------
 // Parsed result (cached singleton)
 // ---------------------------------------------------------------------------
 
-type EnvVars = z.infer<typeof baseEnvSchema>;
+type EnvVars = z.infer<typeof baseEnvSchema>
 
-let _env: EnvVars | null = null;
-let _envError: z.ZodError | null = null;
+let _env: EnvVars | null = null
+let _envError: z.ZodError | null = null
 
 /**
  * Returns validated environment variables.
@@ -247,21 +247,21 @@ function parseEnv(): EnvVars {
     PORTAL_VERSION: process.env.PORTAL_VERSION,
     VERCEL_ENV: process.env.VERCEL_ENV,
     CI: process.env.CI,
-  };
+  }
 
-  const result = envSchema.safeParse(raw);
+  const result = envSchema.safeParse(raw)
 
   if (!result.success) {
-    _envError = result.error;
+    _envError = result.error
 
-    const messages = result.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`);
+    const messages = result.error.issues.map((i) => `${i.path.join('.')}: ${i.message}`)
 
     // Always fail fast because this file is used at module load time and the
     // portal can't operate safely with placeholder Supabase creds.
-    throw new Error("[env] Invalid environment variables:\n  " + messages.join("\n  "));
+    throw new Error('[env] Invalid environment variables:\n  ' + messages.join('\n  '))
   }
 
-  return result.data;
+  return result.data
 }
 
 /**
@@ -270,39 +270,39 @@ function parseEnv(): EnvVars {
 export const env: Readonly<EnvVars> = new Proxy<EnvVars>({} as EnvVars, {
   get(_target, prop: string | symbol) {
     if (!_env) {
-      _env = parseEnv();
+      _env = parseEnv()
     }
-    return (_env as Record<string, unknown>)[prop as string];
+    return (_env as Record<string, unknown>)[prop as string]
   },
   ownKeys() {
-    if (!_env) _env = parseEnv();
-    return Object.keys(_env);
+    if (!_env) _env = parseEnv()
+    return Object.keys(_env)
   },
   getOwnPropertyDescriptor() {
-    return { configurable: true, enumerable: true };
+    return { configurable: true, enumerable: true }
   },
-});
+})
 
 /**
  * Returns the parse errors for debugging (null if valid).
  */
 export function getEnvErrors(): z.ZodError | null {
-  if (!_env) parseEnv();
-  return _envError;
+  if (!_env) parseEnv()
+  return _envError
 }
 
 /**
  * Resets the cached env (useful in tests).
  */
 export function resetEnv(): void {
-  _env = null;
-  _envError = null;
+  _env = null
+  _envError = null
 }
 
 /** Returns the validated env singleton (lazy-parsed). */
 export function getEnv(): Readonly<EnvVars> {
   if (!_env) {
-    _env = parseEnv();
+    _env = parseEnv()
   }
-  return _env;
+  return _env
 }

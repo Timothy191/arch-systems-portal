@@ -1,13 +1,13 @@
-"use client";
+'use client'
 
-import { MacMenuBar } from "@repo/ui/MacMenuBar";
-import { ArchStartMenu } from "@/components/system/ArchStartMenu";
+import { MacMenuBar } from '@repo/ui/MacMenuBar'
+import { ArchStartMenu } from '@/components/system/ArchStartMenu'
 
 interface ArchMacMenuBarProps {
-  leftSlot?: React.ReactNode;
-  rightSlot?: React.ReactNode;
-  centerSlot?: React.ReactNode;
-  className?: string;
+  leftSlot?: React.ReactNode
+  rightSlot?: React.ReactNode
+  centerSlot?: React.ReactNode
+  className?: string
 }
 
 /**
@@ -28,5 +28,5 @@ export function ArchMacMenuBar({
       rightSlot={rightSlot}
       appMenu={({ close }) => <ArchStartMenu onClose={close} />}
     />
-  );
+  )
 }

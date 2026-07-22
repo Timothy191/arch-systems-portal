@@ -1,4 +1,4 @@
-import { GlassSkeleton } from "@repo/ui/components/ui/glass-skeleton";
+import { GlassSkeleton } from '@repo/ui/components/ui/glass-skeleton'
 
 export default function HubLoading() {
   return (
@@ -6,5 +6,5 @@ export default function HubLoading() {
       <GlassSkeleton showHeader rows={2} />
       <GlassSkeleton rows={7} />
     </div>
-  );
+  )
 }

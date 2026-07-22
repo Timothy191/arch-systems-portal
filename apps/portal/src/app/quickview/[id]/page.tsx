@@ -1,12 +1,12 @@
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import Link from 'next/link'
+import { ArrowLeft } from 'lucide-react'
 
 export default async function StandaloneQuickviewPage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ id: string }>
 }) {
-  const { id } = await params;
+  const { id } = await params
 
   return (
     <div className="max-w-3xl mx-auto py-12 px-4 space-y-6">
@@ -32,5 +32,5 @@ export default async function StandaloneQuickviewPage({
         </div>
       </div>
     </div>
-  );
+  )
 }

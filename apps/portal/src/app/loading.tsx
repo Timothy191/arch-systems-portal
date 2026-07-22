@@ -1,4 +1,4 @@
-import { GlassSkeleton } from "@repo/ui/components/ui/glass-skeleton";
+import { GlassSkeleton } from '@repo/ui/components/ui/glass-skeleton'
 
 export default function RootLoading() {
   return (
@@ -7,5 +7,5 @@ export default function RootLoading() {
         <GlassSkeleton showHeader rows={3} />
       </div>
     </div>
-  );
+  )
 }

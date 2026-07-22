@@ -1,12 +1,12 @@
-"use client";
+'use client'
 
-import dynamic from "next/dynamic";
-import "swagger-ui-react/swagger-ui.css";
+import dynamic from 'next/dynamic'
+import 'swagger-ui-react/swagger-ui.css'
 
 const SwaggerUI = dynamic(
-  () => import("swagger-ui-react").then((mod) => ({ default: mod.SwaggerUI })),
+  () => import('swagger-ui-react').then((mod) => ({ default: mod.SwaggerUI })),
   { ssr: false }
-);
+)
 
 // AGENT-TRACE: API documentation page using Swagger UI
 // This page provides an interactive interface for exploring the API
@@ -35,9 +35,9 @@ export default function ApiDocs() {
         showExtensions={true}
         showCommonExtensions={true}
         syntaxHighlight={{
-          theme: "nord",
+          theme: 'nord',
         }}
       />
     </div>
-  );
+  )
 }

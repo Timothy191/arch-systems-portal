@@ -1,13 +1,13 @@
-import type { Metadata } from "next";
-import { Suspense } from "react";
+import type { Metadata } from 'next'
+import { Suspense } from 'react'
 
 export const metadata: Metadata = {
-  title: "Signing in | Arch OS",
-  description: "Completing secure sign-in",
-};
+  title: 'Signing in | Arch OS',
+  description: 'Completing secure sign-in',
+}
 
 interface AuthCallbackLayoutProps {
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 /** Suspense boundary required for useSearchParams in the client page. */
@@ -18,5 +18,5 @@ export default function AuthCallbackLayout({ children }: AuthCallbackLayoutProps
     >
       {children}
     </Suspense>
-  );
+  )
 }

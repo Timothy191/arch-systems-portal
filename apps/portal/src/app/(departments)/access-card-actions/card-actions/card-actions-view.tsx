@@ -1,11 +1,11 @@
-"use client";
+'use client'
 
-import Image from "next/image";
-import { useState, useCallback, useEffect, useRef } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { GlassCard } from "@repo/ui/GlassCard";
-import { cn } from "@repo/ui/lib/utils";
-import { Button } from "@repo/ui/components/ui/button";
+import Image from 'next/image'
+import { useState, useCallback, useEffect, useRef } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { GlassCard } from '@repo/ui/GlassCard'
+import { cn } from '@repo/ui/lib/utils'
+import { Button } from '@repo/ui/components/ui/button'
 import {
   Search,
   User,
@@ -22,30 +22,30 @@ import {
   CheckCircle2,
   Clock,
   X,
-} from "lucide-react";
-import { toast } from "sonner";
+} from 'lucide-react'
+import { toast } from 'sonner'
 import {
   searchPersonnel,
   getPersonnelDetail,
   printCardForPersonnel,
   bulkPrintCardsForPersonnel,
   getCardTemplates,
-} from "./actions";
-import type { PersonnelSearchResult, PersonnelDetail } from "./actions";
-import { QRCodeSection } from "./qr-section";
-import { Checkbox } from "@repo/ui/components/Checkbox";
+} from './actions'
+import type { PersonnelSearchResult, PersonnelDetail } from './actions'
+import { QRCodeSection } from './qr-section'
+import { Checkbox } from '@repo/ui/components/Checkbox'
 
 function getInitials(firstName: string, surname: string): string {
-  return `${(firstName ?? "")[0] ?? ""}${(surname ?? "")[0] ?? ""}`.toUpperCase();
+  return `${(firstName ?? '')[0] ?? ''}${(surname ?? '')[0] ?? ''}`.toUpperCase()
 }
 
 function formatDate(dateStr: string | null): string {
-  if (!dateStr) return "—";
-  return new Date(dateStr).toLocaleDateString("en-ZA", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
+  if (!dateStr) return '—'
+  return new Date(dateStr).toLocaleDateString('en-ZA', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  })
 }
 
 function ExpiryPill({ date }: { date: string | null }) {
@@ -54,10 +54,10 @@ function ExpiryPill({ date }: { date: string | null }) {
       <span className="inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full border bg-gray-50/70 border-gray-200/50 text-gray-500">
         Not set
       </span>
-    );
+    )
   }
 
-  const days = Math.ceil((new Date(date).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+  const days = Math.ceil((new Date(date).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
 
   if (days < 0) {
     return (
@@ -65,7 +65,7 @@ function ExpiryPill({ date }: { date: string | null }) {
         <AlertCircle className="w-3 h-3" />
         Expired
       </span>
-    );
+    )
   }
   if (days <= 30) {
     return (
@@ -73,30 +73,30 @@ function ExpiryPill({ date }: { date: string | null }) {
         <Clock className="w-3 h-3" />
         {days}d remaining
       </span>
-    );
+    )
   }
   return (
     <span className="inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full border bg-accent-green/10 border-accent-green/20 text-accent-green">
       <CheckCircle2 className="w-3 h-3" />
       {days}d remaining
     </span>
-  );
+  )
 }
 
 function StatusPill({ status }: { status: string }) {
-  const isActive = status === "Active";
+  const isActive = status === 'Active'
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full border",
+        'inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full border',
         isActive
-          ? "bg-accent-green/10 border-accent-green/20 text-accent-green"
-          : "bg-amber-50/70 border-amber-200/50 text-amber-700"
+          ? 'bg-accent-green/10 border-accent-green/20 text-accent-green'
+          : 'bg-amber-50/70 border-amber-200/50 text-amber-700'
       )}
     >
       {status}
     </span>
-  );
+  )
 }
 
 function DetailRow({
@@ -105,10 +105,10 @@ function DetailRow({
   value,
   children,
 }: {
-  icon: React.ReactNode;
-  label: string;
-  value?: string | null;
-  children?: React.ReactNode;
+  icon: React.ReactNode
+  label: string
+  value?: string | null
+  children?: React.ReactNode
 }) {
   return (
     <div className="flex items-center gap-3 py-2.5 border-b border-arch-border-default/50 last:border-0">
@@ -117,10 +117,10 @@ function DetailRow({
       </div>
       <div className="flex-1 min-w-0">
         <p className="text-xs text-arch-text-muted font-medium uppercase tracking-wider">{label}</p>
-        {children ?? <p className="text-sm text-arch-text-primary truncate">{value ?? "—"}</p>}
+        {children ?? <p className="text-sm text-arch-text-primary truncate">{value ?? '—'}</p>}
       </div>
     </div>
-  );
+  )
 }
 
 /* ------------------------------------------------------------------ */
@@ -128,161 +128,161 @@ function DetailRow({
 /* ------------------------------------------------------------------ */
 
 interface CardActionsViewProps {
-  initialQuery: string;
-  initialSelectedId: string;
+  initialQuery: string
+  initialSelectedId: string
 }
 
 export function CardActionsView({ initialQuery, initialSelectedId }: CardActionsViewProps) {
-  const router = useRouter();
-  const searchParams = useSearchParams();
+  const router = useRouter()
+  const searchParams = useSearchParams()
 
-  const [query, setQuery] = useState(initialQuery);
-  const [results, setResults] = useState<PersonnelSearchResult[]>([]);
-  const [selectedId, setSelectedId] = useState(initialSelectedId);
-  const [detail, setDetail] = useState<PersonnelDetail | null>(null);
-  const [searching, setSearching] = useState(false);
-  const [loadingDetail, setLoadingDetail] = useState(false);
-  const [printing, setPrinting] = useState(false);
-  const [bulkPrinting, setBulkPrinting] = useState(false);
-  const [selectedForBulk, setSelectedForBulk] = useState<Set<string>>(new Set());
+  const [query, setQuery] = useState(initialQuery)
+  const [results, setResults] = useState<PersonnelSearchResult[]>([])
+  const [selectedId, setSelectedId] = useState(initialSelectedId)
+  const [detail, setDetail] = useState<PersonnelDetail | null>(null)
+  const [searching, setSearching] = useState(false)
+  const [loadingDetail, setLoadingDetail] = useState(false)
+  const [printing, setPrinting] = useState(false)
+  const [bulkPrinting, setBulkPrinting] = useState(false)
+  const [selectedForBulk, setSelectedForBulk] = useState<Set<string>>(new Set())
   const [templates, setTemplates] = useState<
     Array<{ id: string; name: string; background: string | null }>
-  >([]);
-  const [selectedTemplateId, setSelectedTemplateId] = useState<string>("");
-  const debounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  >([])
+  const [selectedTemplateId, setSelectedTemplateId] = useState<string>('')
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
 
   /* ── Search ── */
 
   const doSearch = useCallback(async (q: string) => {
     if (q.trim().length < 2) {
-      setResults([]);
-      return;
+      setResults([])
+      return
     }
-    setSearching(true);
+    setSearching(true)
     // Optional: Keep selection, or clear it if you want. Let's keep it.
     try {
-      const res = await searchPersonnel(q);
-      setResults(res);
+      const res = await searchPersonnel(q)
+      setResults(res)
     } catch {
-      setResults([]);
+      setResults([])
     } finally {
-      setSearching(false);
+      setSearching(false)
     }
-  }, []);
+  }, [])
 
   const handleQueryChange = useCallback(
     (value: string) => {
-      setQuery(value);
-      if (debounceRef.current) clearTimeout(debounceRef.current);
+      setQuery(value)
+      if (debounceRef.current) clearTimeout(debounceRef.current)
       debounceRef.current = setTimeout(() => {
-        const params = new URLSearchParams(searchParams.toString());
+        const params = new URLSearchParams(searchParams.toString())
         if (value.trim()) {
-          params.set("q", value.trim());
+          params.set('q', value.trim())
         } else {
-          params.delete("q");
+          params.delete('q')
         }
-        params.delete("selected");
-        router.replace(`?${params.toString()}`, { scroll: false });
-        doSearch(value);
-      }, 300);
+        params.delete('selected')
+        router.replace(`?${params.toString()}`, { scroll: false })
+        doSearch(value)
+      }, 300)
     },
     [router, searchParams, doSearch]
-  );
+  )
 
   /* ── Detail selection ── */
 
   const selectPersonnel = useCallback(
     async (id: string) => {
-      setSelectedId(id);
-      setLoadingDetail(true);
-      const params = new URLSearchParams(searchParams.toString());
-      params.set("selected", id);
-      router.replace(`?${params.toString()}`, { scroll: false });
+      setSelectedId(id)
+      setLoadingDetail(true)
+      const params = new URLSearchParams(searchParams.toString())
+      params.set('selected', id)
+      router.replace(`?${params.toString()}`, { scroll: false })
       try {
-        const d = await getPersonnelDetail(id);
-        setDetail(d);
+        const d = await getPersonnelDetail(id)
+        setDetail(d)
       } catch {
-        setDetail(null);
+        setDetail(null)
       } finally {
-        setLoadingDetail(false);
+        setLoadingDetail(false)
       }
     },
     [router, searchParams]
-  );
+  )
 
   /* ── Print ── */
 
   const handlePrint = useCallback(async () => {
-    if (!selectedId) return;
-    setPrinting(true);
+    if (!selectedId) return
+    setPrinting(true)
     try {
-      const result = await printCardForPersonnel(selectedId, selectedTemplateId || undefined);
+      const result = await printCardForPersonnel(selectedId, selectedTemplateId || undefined)
       if (result.printer) {
-        toast.success(`Print job queued — submitted to ${result.printer.cups_name}`);
+        toast.success(`Print job queued — submitted to ${result.printer.cups_name}`)
       } else {
-        toast.info("No printer available — job queued for later processing");
+        toast.info('No printer available — job queued for later processing')
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Print failed");
+      toast.error(err instanceof Error ? err.message : 'Print failed')
     } finally {
-      setPrinting(false);
+      setPrinting(false)
     }
-  }, [selectedId, selectedTemplateId]);
+  }, [selectedId, selectedTemplateId])
 
   const toggleBulkSelection = useCallback((id: string) => {
     setSelectedForBulk((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  }, []);
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
+  }, [])
 
   const handleBulkPrint = useCallback(async () => {
-    if (selectedForBulk.size === 0) return;
-    setBulkPrinting(true);
+    if (selectedForBulk.size === 0) return
+    setBulkPrinting(true)
     try {
       const results = await bulkPrintCardsForPersonnel(
         Array.from(selectedForBulk),
         selectedTemplateId || undefined
-      );
-      const successes = results.filter((r) => r.status === "success").length;
-      const errors = results.filter((r) => r.status === "error").length;
+      )
+      const successes = results.filter((r) => r.status === 'success').length
+      const errors = results.filter((r) => r.status === 'error').length
 
       if (successes > 0 && errors === 0) {
-        toast.success(`Successfully queued ${successes} print jobs`);
-        setSelectedForBulk(new Set()); // clear selection on success
+        toast.success(`Successfully queued ${successes} print jobs`)
+        setSelectedForBulk(new Set()) // clear selection on success
       } else if (successes > 0 && errors > 0) {
-        toast.warning(`Queued ${successes} jobs, but ${errors} failed`);
+        toast.warning(`Queued ${successes} jobs, but ${errors} failed`)
       } else {
-        toast.error(`Failed to queue any jobs (${errors} failed)`);
+        toast.error(`Failed to queue any jobs (${errors} failed)`)
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Bulk print failed");
+      toast.error(err instanceof Error ? err.message : 'Bulk print failed')
     } finally {
-      setBulkPrinting(false);
+      setBulkPrinting(false)
     }
-  }, [selectedForBulk, selectedTemplateId]);
+  }, [selectedForBulk, selectedTemplateId])
 
   /* ── Initial load ── */
 
   useEffect(() => {
     if (initialQuery.trim().length >= 2) {
-      doSearch(initialQuery);
+      doSearch(initialQuery)
     }
     if (initialSelectedId) {
-      selectPersonnel(initialSelectedId);
+      selectPersonnel(initialSelectedId)
     }
     getCardTemplates()
       .then((res) => {
-        setTemplates(res);
+        setTemplates(res)
         if (res.length > 0) {
-          setSelectedTemplateId(res[0]?.id ?? "");
+          setSelectedTemplateId(res[0]?.id ?? '')
         }
       })
-      .catch(() => {});
+      .catch(() => {})
     // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional: run once on mount
-  }, []);
+  }, [])
 
   /* ── Render ── */
 
@@ -305,12 +305,12 @@ export function CardActionsView({ initialQuery, initialSelectedId }: CardActions
               {query && (
                 <button
                   onClick={() => {
-                    setQuery("");
-                    setResults([]);
-                    const params = new URLSearchParams(searchParams.toString());
-                    params.delete("q");
-                    params.delete("selected");
-                    router.replace(`?${params.toString()}`, { scroll: false });
+                    setQuery('')
+                    setResults([])
+                    const params = new URLSearchParams(searchParams.toString())
+                    params.delete('q')
+                    params.delete('selected')
+                    router.replace(`?${params.toString()}`, { scroll: false })
                   }}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-arch-text-muted hover:text-arch-text-primary"
                   aria-label="Clear search"
@@ -378,8 +378,8 @@ export function CardActionsView({ initialQuery, initialSelectedId }: CardActions
                 <div
                   key={person.id}
                   className={cn(
-                    "flex items-center w-full px-4 transition-colors hover:bg-arch-surface-tertiary group",
-                    selectedId === person.id && "bg-arch-accent-charcoal/5"
+                    'flex items-center w-full px-4 transition-colors hover:bg-arch-surface-tertiary group',
+                    selectedId === person.id && 'bg-arch-accent-charcoal/5'
                   )}
                 >
                   <div className="py-3 pr-3" onClick={(e) => e.stopPropagation()}>
@@ -401,7 +401,7 @@ export function CardActionsView({ initialQuery, initialSelectedId }: CardActions
                         {person.first_name} {person.surname}
                       </p>
                       <p className="text-xs text-arch-text-muted truncate">
-                        {person.job_title ?? "—"}
+                        {person.job_title ?? '—'}
                         {person.area && ` · ${person.area}`}
                       </p>
                     </div>
@@ -458,7 +458,7 @@ export function CardActionsView({ initialQuery, initialSelectedId }: CardActions
                         {detail.first_name} {detail.surname}
                       </h2>
                       <p className="text-sm text-arch-text-secondary">
-                        {detail.job_title ?? "No title"}
+                        {detail.job_title ?? 'No title'}
                       </p>
                     </div>
                     <StatusPill status={detail.status} />
@@ -521,13 +521,13 @@ export function CardActionsView({ initialQuery, initialSelectedId }: CardActions
                 {detail.badge && (
                   <span
                     className={cn(
-                      "inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full border",
+                      'inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full border',
                       detail.badge.is_active
-                        ? "bg-accent-green/10 border-accent-green/20 text-accent-green"
-                        : "bg-red-50/70 border-red-200/50 text-red-700"
+                        ? 'bg-accent-green/10 border-accent-green/20 text-accent-green'
+                        : 'bg-red-50/70 border-red-200/50 text-red-700'
                     )}
                   >
-                    {detail.badge.is_active ? "Active" : "Revoked"}
+                    {detail.badge.is_active ? 'Active' : 'Revoked'}
                   </span>
                 )}
               </div>
@@ -587,12 +587,12 @@ export function CardActionsView({ initialQuery, initialSelectedId }: CardActions
                 ) : (
                   <Printer className="w-4 h-4" />
                 )}
-                {printing ? "Queuing..." : "Print Card"}
+                {printing ? 'Queuing...' : 'Print Card'}
               </Button>
             </div>
           </div>
         )}
       </div>
     </div>
-  );
+  )
 }

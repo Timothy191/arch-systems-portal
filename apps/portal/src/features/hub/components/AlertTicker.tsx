@@ -1,62 +1,62 @@
-import Link from "next/link";
-import { AlertTriangle, Wrench, Clock } from "lucide-react";
-import { cn } from "@repo/ui/lib/utils";
-import { AutoAnimateList } from "@repo/ui/AnimatedList";
+import Link from 'next/link'
+import { AlertTriangle, Wrench, Clock } from 'lucide-react'
+import { cn } from '@repo/ui/lib/utils'
+import { AutoAnimateList } from '@repo/ui/AnimatedList'
 
 export interface AlertEvent {
-  id: string;
-  type: "incident" | "breakdown" | "offline";
-  title: string;
-  description?: string;
-  timestamp: string;
-  severity: "critical" | "warning" | "info";
-  href: string;
+  id: string
+  type: 'incident' | 'breakdown' | 'offline'
+  title: string
+  description?: string
+  timestamp: string
+  severity: 'critical' | 'warning' | 'info'
+  href: string
 }
 
 interface AlertTickerProps {
-  events: AlertEvent[];
+  events: AlertEvent[]
 }
 
 function timeAgo(dateString: string): string {
   // Supabase timestamps are UTC but may lack a Z suffix — force UTC parsing
-  const hasTz = /[Zz]|[+-]\d{2}:?\d{2}$/.test(dateString);
-  const utcString = hasTz ? dateString : dateString + "Z";
-  const date = new Date(utcString);
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
+  const hasTz = /[Zz]|[+-]\d{2}:?\d{2}$/.test(dateString)
+  const utcString = hasTz ? dateString : dateString + 'Z'
+  const date = new Date(utcString)
+  const now = new Date()
+  const diffMs = now.getTime() - date.getTime()
 
-  if (diffMs < 0) return "just now";
+  if (diffMs < 0) return 'just now'
 
-  const diffMins = Math.floor(diffMs / 60000);
-  const diffHours = Math.floor(diffMs / 3600000);
-  const diffDays = Math.floor(diffMs / 86400000);
+  const diffMins = Math.floor(diffMs / 60000)
+  const diffHours = Math.floor(diffMs / 3600000)
+  const diffDays = Math.floor(diffMs / 86400000)
 
-  if (diffMins < 1) return "just now";
-  if (diffMins < 60) return `${diffMins}m ago`;
-  if (diffHours < 24) return `${diffHours}h ago`;
-  return `${diffDays}d ago`;
+  if (diffMins < 1) return 'just now'
+  if (diffMins < 60) return `${diffMins}m ago`
+  if (diffHours < 24) return `${diffHours}h ago`
+  return `${diffDays}d ago`
 }
 
 const severityConfig = {
   critical: {
-    iconBg: "bg-accent-red/10 text-accent-red",
-    border: "border-accent-red/20",
-    dot: "bg-accent-red",
-    label: "CRITICAL",
+    iconBg: 'bg-accent-red/10 text-accent-red',
+    border: 'border-accent-red/20',
+    dot: 'bg-accent-red',
+    label: 'CRITICAL',
   },
   warning: {
-    iconBg: "bg-accent-amber/10 text-accent-amber",
-    border: "border-accent-amber/20",
-    dot: "bg-accent-amber",
-    label: "WARN",
+    iconBg: 'bg-accent-amber/10 text-accent-amber',
+    border: 'border-accent-amber/20',
+    dot: 'bg-accent-amber',
+    label: 'WARN',
   },
   info: {
-    iconBg: "bg-accent-blue/10 text-accent-blue",
-    border: "border-accent-blue/20",
-    dot: "bg-accent-blue",
-    label: "INFO",
+    iconBg: 'bg-accent-blue/10 text-accent-blue',
+    border: 'border-accent-blue/20',
+    dot: 'bg-accent-blue',
+    label: 'INFO',
   },
-};
+}
 
 export function AlertTicker({ events }: AlertTickerProps) {
   if (events.length === 0) {
@@ -65,7 +65,7 @@ export function AlertTicker({ events }: AlertTickerProps) {
         <div className="w-1.5 h-1.5 rounded-full bg-accent-green animate-pulse" />
         <p className="text-xs text-accent-green font-medium">All systems operational</p>
       </div>
-    );
+    )
   }
 
   return (
@@ -82,19 +82,19 @@ export function AlertTicker({ events }: AlertTickerProps) {
 
       <AutoAnimateList className="max-h-[200px] overflow-y-auto">
         {events.map((event) => {
-          const config = severityConfig[event.severity];
-          const Icon = event.type === "breakdown" ? Wrench : AlertTriangle;
+          const config = severityConfig[event.severity]
+          const Icon = event.type === 'breakdown' ? Wrench : AlertTriangle
 
           return (
             <Link
               key={event.id}
               href={event.href}
               className={cn(
-                "flex items-start gap-3 px-4 py-3 border-b border-arch-border-subtle last:border-b-0",
-                "hover:bg-arch-surface-secondary/50 transition-colors duration-150"
+                'flex items-start gap-3 px-4 py-3 border-b border-arch-border-subtle last:border-b-0',
+                'hover:bg-arch-surface-secondary/50 transition-colors duration-150'
               )}
             >
-              <div className={cn("mt-0.5 p-1.5 rounded-lg shrink-0", config.iconBg)}>
+              <div className={cn('mt-0.5 p-1.5 rounded-lg shrink-0', config.iconBg)}>
                 <Icon className="w-3.5 h-3.5" />
               </div>
 
@@ -105,7 +105,7 @@ export function AlertTicker({ events }: AlertTickerProps) {
                   </span>
                   <span
                     className={cn(
-                      "shrink-0 px-1.5 py-0.5 rounded text-[9px] font-medium tracking-wider",
+                      'shrink-0 px-1.5 py-0.5 rounded text-[9px] font-medium tracking-wider',
                       config.iconBg
                     )}
                   >
@@ -123,9 +123,9 @@ export function AlertTicker({ events }: AlertTickerProps) {
                 </div>
               </div>
             </Link>
-          );
+          )
         })}
       </AutoAnimateList>
     </div>
-  );
+  )
 }

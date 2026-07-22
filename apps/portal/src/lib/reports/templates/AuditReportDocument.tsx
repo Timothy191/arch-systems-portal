@@ -1,28 +1,28 @@
-import React from "react";
-import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
-import type { AuditReportData } from "../audit-aggregator";
+import React from 'react'
+import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer'
+import type { AuditReportData } from '../audit-aggregator'
 
 const styles = StyleSheet.create({
   page: {
     padding: 40,
     fontSize: 10,
-    color: "#1e293b",
-    backgroundColor: "#ffffff",
+    color: '#1e293b',
+    backgroundColor: '#ffffff',
   },
   header: {
     borderBottomWidth: 2,
-    borderBottomColor: "#3b82f6", // Royal blue highlight
+    borderBottomColor: '#3b82f6', // Royal blue highlight
     paddingBottom: 15,
     marginBottom: 25,
   },
   title: {
     fontSize: 22,
-    fontWeight: "bold",
-    color: "#1e3a8a",
+    fontWeight: 'bold',
+    color: '#1e3a8a',
   },
   subtitle: {
     fontSize: 10,
-    color: "#64748b",
+    color: '#64748b',
     marginTop: 6,
   },
   section: {
@@ -30,66 +30,66 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 13,
-    fontWeight: "bold",
-    color: "#1e3a8a",
+    fontWeight: 'bold',
+    color: '#1e3a8a',
     borderBottomWidth: 1,
-    borderBottomColor: "#cbd5e1",
+    borderBottomColor: '#cbd5e1',
     paddingBottom: 6,
     marginBottom: 12,
-    textTransform: "uppercase",
+    textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
   grid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     marginHorizontal: -6,
   },
   card: {
-    width: "33.33%",
+    width: '33.33%',
     paddingHorizontal: 6,
     marginBottom: 12,
   },
   cardHalf: {
-    width: "50%",
+    width: '50%',
     paddingHorizontal: 6,
     marginBottom: 12,
   },
   cardInner: {
     borderWidth: 1,
-    borderColor: "#e2e8f0",
+    borderColor: '#e2e8f0',
     borderRadius: 6,
     padding: 12,
-    backgroundColor: "#f8fafc",
+    backgroundColor: '#f8fafc',
   },
   cardTitle: {
     fontSize: 8,
-    color: "#64748b",
-    textTransform: "uppercase",
-    fontWeight: "medium",
+    color: '#64748b',
+    textTransform: 'uppercase',
+    fontWeight: 'medium',
     letterSpacing: 0.5,
   },
   cardValue: {
     fontSize: 16,
-    fontWeight: "bold",
-    color: "#0f172a",
+    fontWeight: 'bold',
+    color: '#0f172a',
     marginTop: 6,
   },
   footer: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 30,
     left: 40,
     right: 40,
     borderTopWidth: 1,
-    borderTopColor: "#e2e8f0",
+    borderTopColor: '#e2e8f0',
     paddingTop: 12,
     fontSize: 8,
-    color: "#94a3b8",
-    textAlign: "center",
+    color: '#94a3b8',
+    textAlign: 'center',
   },
-});
+})
 
 export const AuditReportDocument = ({ data }: { data: AuditReportData }) => {
-  const { metrics, reportDate, generatedAt } = data;
+  const { metrics, reportDate, generatedAt } = data
 
   return (
     <Document>
@@ -179,5 +179,5 @@ export const AuditReportDocument = ({ data }: { data: AuditReportData }) => {
         </Text>
       </Page>
     </Document>
-  );
-};
+  )
+}

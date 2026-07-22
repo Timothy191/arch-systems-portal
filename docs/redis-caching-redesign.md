@@ -29,39 +29,39 @@
 // @repo/redis/src/cache.ts — Target API
 
 interface CacheOptions {
-  ttl?: number; // seconds — default 3600
-  tags?: string[]; // for tag-based invalidation
-  prefix?: string; // key namespace — e.g. "hub", "auth"
+  ttl?: number // seconds — default 3600
+  tags?: string[] // for tag-based invalidation
+  prefix?: string // key namespace — e.g. "hub", "auth"
 }
 
 interface CacheEntry<T> {
-  value: T;
-  cachedAt: number;
-  ttl: number;
+  value: T
+  cachedAt: number
+  ttl: number
 }
 
 export class Cache {
-  constructor(private url: string = process.env.REDIS_URL ?? "") {}
+  constructor(private url: string = process.env.REDIS_URL ?? '') {}
 
   // Typed get/set
-  async get<T>(key: string): Promise<T | null>;
-  async set<T>(key: string, value: T, opts?: CacheOptions): Promise<void>;
+  async get<T>(key: string): Promise<T | null>
+  async set<T>(key: string, value: T, opts?: CacheOptions): Promise<void>
 
   // Cache-aside with fn fallback
-  async wrap<T>(key: string, fn: () => Promise<T>, opts?: CacheOptions): Promise<T>;
+  async wrap<T>(key: string, fn: () => Promise<T>, opts?: CacheOptions): Promise<T>
 
   // Invalidation
-  async invalidateTags(tags: string[]): Promise<number>;
-  async invalidatePrefix(prefix: string): Promise<number>;
-  async clear(): Promise<void>;
+  async invalidateTags(tags: string[]): Promise<number>
+  async invalidatePrefix(prefix: string): Promise<number>
+  async clear(): Promise<void>
 
   // Observability
-  get isConnected(): boolean;
-  get stats(): CacheStats;
+  get isConnected(): boolean
+  get stats(): CacheStats
 }
 
 // Global singleton (lazy, graceful)
-export const cache = new Cache();
+export const cache = new Cache()
 ```
 
 ### Key Design Decisions
@@ -90,23 +90,23 @@ Phase 4: Remove legacy code
 **Before:**
 
 ```typescript
-import { cacheWrap, cacheGet, cacheSet, CacheCategory } from "@repo/redis";
+import { cacheWrap, cacheGet, cacheSet, CacheCategory } from '@repo/redis'
 
 // Portal hub
-const data = await cacheWrap("hub:counts", async () => fetchCounts());
+const data = await cacheWrap('hub:counts', async () => fetchCounts())
 ```
 
 **After:**
 
 ```typescript
-import { cache } from "@repo/redis";
+import { cache } from '@repo/redis'
 
 // Portal hub
-const data = await cache.wrap("hub:counts", async () => fetchCounts(), {
+const data = await cache.wrap('hub:counts', async () => fetchCounts(), {
   ttl: 300,
-  tags: ["table:safety_incidents", "table:breakdowns"],
-  prefix: "hub",
-});
+  tags: ['table:safety_incidents', 'table:breakdowns'],
+  prefix: 'hub',
+})
 ```
 
 ### Native to Server — Edge Compatibility

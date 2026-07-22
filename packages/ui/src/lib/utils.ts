@@ -2,8 +2,8 @@
  * @module ui/utils
  * Shared CSS class-name utility — merges Tailwind classes with conflict resolution.
  */
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
+import { clsx, type ClassValue } from 'clsx'
+import { twMerge } from 'tailwind-merge'
 
 /**
  * Merge CSS class names with Tailwind conflict resolution.
@@ -11,5 +11,5 @@ import { twMerge } from "tailwind-merge";
  * (Tailwind-specific class deduplication).
  */
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
+  return twMerge(clsx(inputs))
 }

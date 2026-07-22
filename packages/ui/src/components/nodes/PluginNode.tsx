@@ -1,17 +1,17 @@
-"use client";
+'use client'
 
-import React, { memo } from "react";
-import { Handle, Position, type NodeProps } from "@xyflow/react";
-import { Settings, Puzzle } from "lucide-react";
+import React, { memo } from 'react'
+import { Handle, Position, type NodeProps } from '@xyflow/react'
+import { Settings, Puzzle } from 'lucide-react'
 
 // =============================================================================
 // Plugin Node Data Type
 // =============================================================================
 
 export interface PluginNodeData extends Record<string, unknown> {
-  label: string;
-  pluginId: string;
-  config: Record<string, unknown>;
+  label: string
+  pluginId: string
+  config: Record<string, unknown>
 }
 
 // =============================================================================
@@ -19,7 +19,7 @@ export interface PluginNodeData extends Record<string, unknown> {
 // =============================================================================
 
 export const PluginNode = memo(function PluginNode({ data: rawData, selected }: NodeProps) {
-  const data = rawData as PluginNodeData;
+  const data = rawData as PluginNodeData
   return (
     <div
       className={`
@@ -27,7 +27,7 @@ export const PluginNode = memo(function PluginNode({ data: rawData, selected }: 
         bg-gradient-to-br from-[#f5f5f7] to-white
         backdrop-blur-xl shadow-card
         transition-all duration-200
-        ${selected ? "ring-2 ring-[#007aff] ring-offset-2" : ""}
+        ${selected ? 'ring-2 ring-[#007aff] ring-offset-2' : ''}
       `}
     >
       {/* Header */}
@@ -36,7 +36,7 @@ export const PluginNode = memo(function PluginNode({ data: rawData, selected }: 
           <Puzzle className="w-3.5 h-3.5 text-[#34c759]" />
         </div>
         <span className="text-xs font-medium text-[#1d1d1f] truncate">
-          {data.label || "Plugin Step"}
+          {data.label || 'Plugin Step'}
         </span>
         <button
           className="ml-auto p-1 rounded hover:bg-black/[0.04] transition-colors"
@@ -51,7 +51,7 @@ export const PluginNode = memo(function PluginNode({ data: rawData, selected }: 
         <div className="flex items-center justify-between">
           <span className="text-[10px] text-[#6e6e73] uppercase tracking-wide">Plugin ID</span>
           <span className="text-[10px] font-mono text-[#3a3a3c] truncate max-w-[100px]">
-            {data.pluginId || "not set"}
+            {data.pluginId || 'not set'}
           </span>
         </div>
 
@@ -75,7 +75,7 @@ export const PluginNode = memo(function PluginNode({ data: rawData, selected }: 
         className="!w-3 !h-3 !bg-[#007aff] !border-2 !border-white !-right-1.5"
       />
     </div>
-  );
-});
+  )
+})
 
-export default PluginNode;
+export default PluginNode

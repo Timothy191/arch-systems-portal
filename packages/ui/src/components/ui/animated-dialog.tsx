@@ -1,25 +1,25 @@
-"use client";
+'use client'
 
-import * as React from "react";
-import { useCallback, useEffect, useId, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { X } from "lucide-react";
-import { cn } from "@repo/ui/lib/utils";
+import * as React from 'react'
+import { useCallback, useEffect, useId, useRef } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { X } from 'lucide-react'
+import { cn } from '@repo/ui/lib/utils'
 
 interface AnimatedDialogProps {
-  open: boolean;
-  onClose: () => void;
-  children: React.ReactNode;
-  title?: string;
-  description?: string;
-  className?: string;
+  open: boolean
+  onClose: () => void
+  children: React.ReactNode
+  title?: string
+  description?: string
+  className?: string
 }
 
 /**
  * Focusable element selector used for focus trapping.
  */
 const FOCUSABLE_SELECTOR =
-  'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+  'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
 
 /**
  * Custom animated dialog with focus trapping, ARIA attributes, and Escape dismissal.
@@ -40,76 +40,76 @@ export function AnimatedDialog({
   description,
   className,
 }: AnimatedDialogProps) {
-  const titleId = useId();
-  const descId = useId();
-  const descriptionId = description ? descId : undefined;
-  const panelRef = useRef<HTMLDivElement>(null);
-  const triggerRef = useRef<Element | null>(null);
+  const titleId = useId()
+  const descId = useId()
+  const descriptionId = description ? descId : undefined
+  const panelRef = useRef<HTMLDivElement>(null)
+  const triggerRef = useRef<Element | null>(null)
 
   // Store the trigger element on open so we can restore focus on close
   useEffect(() => {
     if (open) {
-      triggerRef.current = document.activeElement;
+      triggerRef.current = document.activeElement
     } else if (triggerRef.current instanceof HTMLElement) {
-      triggerRef.current.focus();
-      triggerRef.current = null;
+      triggerRef.current.focus()
+      triggerRef.current = null
     }
-  }, [open]);
+  }, [open])
 
   // Focus trap: focus first focusable element on open
   useEffect(() => {
-    if (!open || !panelRef.current) return;
+    if (!open || !panelRef.current) return
 
-    const panel = panelRef.current;
-    const focusable = panel.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR);
+    const panel = panelRef.current
+    const focusable = panel.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)
 
     // Focus the first focusable element (or the panel itself if none)
-    const firstFocusable = focusable[0];
+    const firstFocusable = focusable[0]
     if (firstFocusable) {
-      firstFocusable.focus();
+      firstFocusable.focus()
     } else {
-      panel.focus();
+      panel.focus()
     }
-  }, [open]);
+  }, [open])
 
   // Tab/Shift+Tab cycle within the dialog
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
-      if (e.key === "Escape") {
-        e.stopPropagation();
-        onClose();
-        return;
+      if (e.key === 'Escape') {
+        e.stopPropagation()
+        onClose()
+        return
       }
 
-      if (e.key !== "Tab" || !panelRef.current) return;
+      if (e.key !== 'Tab' || !panelRef.current) return
 
-      const focusable = panelRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR);
+      const focusable = panelRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)
       if (focusable.length === 0) {
-        e.preventDefault();
-        return;
+        e.preventDefault()
+        return
       }
 
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
+      const first = focusable[0]
+      const last = focusable[focusable.length - 1]
       if (!first || !last) {
-        e.preventDefault();
-        return;
+        e.preventDefault()
+        return
       }
 
       if (e.shiftKey) {
         if (document.activeElement === first) {
-          e.preventDefault();
-          last.focus();
+          e.preventDefault()
+          last.focus()
         }
       } else {
         if (document.activeElement === last) {
-          e.preventDefault();
-          first.focus();
+          e.preventDefault()
+          first.focus()
         }
       }
     },
     [onClose]
-  );
+  )
 
   return (
     <AnimatePresence>
@@ -145,9 +145,9 @@ export function AnimatedDialog({
               y: 16,
               transition: { duration: 0.15, ease: [0.23, 1, 0.32, 1] },
             }}
-            transition={{ type: "spring", stiffness: 300, damping: 28 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 28 }}
             className={cn(
-              "relative z-10 w-full max-w-lg rounded-2xl border border-[var(--border-default)] bg-[var(--bg-secondary)]/90 backdrop-blur-xl p-6 outline-none",
+              'relative z-10 w-full max-w-lg rounded-2xl border border-[var(--border-default)] bg-[var(--bg-secondary)]/90 backdrop-blur-xl p-6 outline-none',
               className
             )}
           >
@@ -182,5 +182,5 @@ export function AnimatedDialog({
         </div>
       )}
     </AnimatePresence>
-  );
+  )
 }

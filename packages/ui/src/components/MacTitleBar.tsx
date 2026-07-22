@@ -1,14 +1,14 @@
-"use client";
+'use client'
 
-import { cn } from "../lib/utils";
+import { cn } from '../lib/utils'
 
 interface MacTitleBarProps {
-  title?: string;
-  className?: string;
-  onClose?: () => void;
-  onMinimize?: () => void;
-  onMaximize?: () => void;
-  rightSlot?: React.ReactNode;
+  title?: string
+  className?: string
+  onClose?: () => void
+  onMinimize?: () => void
+  onMaximize?: () => void
+  rightSlot?: React.ReactNode
 }
 
 export function MacTitleBar({
@@ -22,9 +22,9 @@ export function MacTitleBar({
   return (
     <div
       className={cn(
-        "group/titlebar flex items-center gap-3 px-4 h-11",
-        "bg-white/50 backdrop-blur-sm border-b border-black/[0.06]",
-        "select-none shrink-0",
+        'group/titlebar flex items-center gap-3 px-4 h-11',
+        'bg-white/50 backdrop-blur-sm border-b border-black/[0.06]',
+        'select-none shrink-0',
         className
       )}
     >
@@ -75,5 +75,5 @@ export function MacTitleBar({
       {/* Empty spacer to balance title centering when no rightSlot */}
       {title && !rightSlot && <div className="w-[54px] shrink-0" />}
     </div>
-  );
+  )
 }

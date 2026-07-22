@@ -36,22 +36,22 @@ When multiple concurrent requests hit `cacheWrap` for the same key that's not ye
 
 ```typescript
 // cache.ts, line ~195
-const activeFetches = new Map<string, Promise<any>>();
+const activeFetches = new Map<string, Promise<any>>()
 
 export async function cacheWrap<T>(key, fn, ttlSeconds?) {
-  const cached = await cacheGet<T>(key);
-  if (cached !== null) return cached;
+  const cached = await cacheGet<T>(key)
+  if (cached !== null) return cached
 
   if (!activeFetches.has(key)) {
     activeFetches.set(
       key,
       fn().then((r) => {
-        cacheSet(key, r, ttlSeconds ?? 3600);
-        return r;
+        cacheSet(key, r, ttlSeconds ?? 3600)
+        return r
       })
-    );
+    )
   }
-  return activeFetches.get(key)!;
+  return activeFetches.get(key)!
 }
 ```
 

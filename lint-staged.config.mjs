@@ -1,5 +1,5 @@
 /**
- * lint-staged config — skip local-only legacy shadow archives.
+ * lint-staged config — Next.js convention: Prettier first, then ESLint.
  * @param {string[]} filenames
  */
 function liveTsFiles(filenames) {
@@ -11,11 +11,14 @@ function liveTsFiles(filenames) {
 }
 
 export default {
-  "*.{ts,tsx}": (filenames) => {
+  "*.{js,jsx,mjs,ts,tsx,mts}": (filenames) => {
     const files = liveTsFiles(filenames);
     if (files.length === 0) return [];
     const quoted = files.map((f) => `"${f}"`).join(" ");
-    return [`eslint --fix ${quoted}`, `prettier --write ${quoted}`];
+    return [
+      `prettier --write ${quoted}`,
+      `eslint --fix ${quoted}`,
+    ];
   },
-  "*.{json,md}": "prettier --write",
+  "*.{json,md,css,html,yml,yaml}": "prettier --write",
 };

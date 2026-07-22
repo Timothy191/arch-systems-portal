@@ -1,44 +1,44 @@
-import { cookies } from "next/headers";
-import Link from "next/link";
-import type { Metadata } from "next";
-import { createServerSupabaseClient, getUserSafely } from "@repo/supabase/server";
-import { LoginForm } from "@/features/auth/components/LoginForm";
-import { LoginBrandBanner } from "@/features/auth/components/LoginBrandBanner";
-import { LoginEveNotice } from "@/features/auth/components/LoginEveNotice";
-import { LoginSecureBadge } from "@/features/auth/components/LoginSecureBadge";
-import { AlertTriangle } from "lucide-react";
-import { Logo } from "@repo/ui/Logo";
+import { cookies } from 'next/headers'
+import Link from 'next/link'
+import type { Metadata } from 'next'
+import { createServerSupabaseClient, getUserSafely } from '@repo/supabase/server'
+import { LoginForm } from '@/features/auth/components/LoginForm'
+import { LoginBrandBanner } from '@/features/auth/components/LoginBrandBanner'
+import { LoginEveNotice } from '@/features/auth/components/LoginEveNotice'
+import { LoginSecureBadge } from '@/features/auth/components/LoginSecureBadge'
+import { AlertTriangle } from 'lucide-react'
+import { Logo } from '@repo/ui/Logo'
 
 export const metadata: Metadata = {
-  title: "Sign In | Arch OS",
-  description: "Sign in to Arch Systems",
-};
+  title: 'Sign In | Arch OS',
+  description: 'Sign in to Arch Systems',
+}
 
 export default async function LoginPage() {
-  const cookieStore = await cookies();
+  const cookieStore = await cookies()
   const hasAuthCookie = cookieStore
     .getAll()
-    .some((c) => c.name.startsWith("sb-") && c.name.endsWith("-auth-token"));
+    .some((c) => c.name.startsWith('sb-') && c.name.endsWith('-auth-token'))
 
-  let systemUnavailable = false;
+  let systemUnavailable = false
 
   if (hasAuthCookie) {
-    const supabase = await createServerSupabaseClient();
+    const supabase = await createServerSupabaseClient()
     try {
-      await getUserSafely(supabase);
+      await getUserSafely(supabase)
     } catch (e) {
       // Only mark as unavailable for auth service failures, not transient errors
       if (
         e instanceof Error &&
-        (e.message.includes("AuthRetryableFetchError") ||
-          e.message.includes("fetch failed") ||
-          e.message.includes("network"))
+        (e.message.includes('AuthRetryableFetchError') ||
+          e.message.includes('fetch failed') ||
+          e.message.includes('network'))
       ) {
         // Transient — don't show unavailable, just serve the form
-        // eslint-disable-next-line no-console
-        console.warn("Transient auth check failure, serving login form:", e.message);
+         
+        console.warn('Transient auth check failure, serving login form:', e.message)
       } else {
-        systemUnavailable = true;
+        systemUnavailable = true
       }
     }
   }
@@ -137,5 +137,5 @@ export default async function LoginPage() {
         )}
       </div>
     </div>
-  );
+  )
 }

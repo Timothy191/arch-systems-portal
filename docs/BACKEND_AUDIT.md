@@ -96,7 +96,7 @@ private readonly jwtSecret = process.env.JWT_SECRET || "fallback-secret";
 **Code:**
 
 ```typescript
-this.opsGatewayUrl = this.configService.get<string>("OPS_GATEWAY_URL") ?? "http://ops-gateway:3100";
+this.opsGatewayUrl = this.configService.get<string>('OPS_GATEWAY_URL') ?? 'http://ops-gateway:3100'
 ```
 
 **Issue:** AGENT_TRACER.md mentions SSRF protection was added, but the code still has a default URL. The AGENT_TRACER indicates this was supposed to be fixed to return 503 when not configured.

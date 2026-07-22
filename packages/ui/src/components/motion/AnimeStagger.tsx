@@ -1,18 +1,18 @@
-"use client";
+'use client'
 
-import { useEffect, useRef } from "react";
-import { cn } from "@repo/ui/lib/utils";
+import { useEffect, useRef } from 'react'
+import { cn } from '@repo/ui/lib/utils'
 
 interface AnimeStaggerProps {
-  children: React.ReactNode;
-  className?: string;
-  childClassName?: string;
-  staggerDelay?: number;
-  delayChildren?: number;
-  duration?: number;
-  ease?: string;
-  axis?: "x" | "y";
-  distance?: number;
+  children: React.ReactNode
+  className?: string
+  childClassName?: string
+  staggerDelay?: number
+  delayChildren?: number
+  duration?: number
+  ease?: string
+  axis?: 'x' | 'y'
+  distance?: number
 }
 
 export function AnimeStagger({
@@ -22,26 +22,26 @@ export function AnimeStagger({
   staggerDelay = 60,
   delayChildren = 0,
   duration = 600,
-  ease = "outExpo",
-  axis = "y",
+  ease = 'outExpo',
+  axis = 'y',
   distance = 24,
 }: AnimeStaggerProps) {
-  const root = useRef<HTMLDivElement>(null);
-  const scope = useRef<{ revert: () => void } | null>(null);
+  const root = useRef<HTMLDivElement>(null)
+  const scope = useRef<{ revert: () => void } | null>(null)
 
   useEffect(() => {
-    if (!root.current) return;
+    if (!root.current) return
 
-    let cancelled = false;
+    let cancelled = false
 
-    import("animejs").then(({ animate, createScope, stagger }) => {
-      if (cancelled || !root.current) return;
+    import('animejs').then(({ animate, createScope, stagger }) => {
+      if (cancelled || !root.current) return
 
-      const targets = root.current.querySelectorAll("[data-anime-child]");
-      if (!targets.length) return;
+      const targets = root.current.querySelectorAll('[data-anime-child]')
+      if (!targets.length) return
 
-      const fromValue = axis === "y" ? [distance, 0] : [distance, 0];
-      const prop = axis === "y" ? "y" : "x";
+      const fromValue = axis === 'y' ? [distance, 0] : [distance, 0]
+      const prop = axis === 'y' ? 'y' : 'x'
 
       scope.current = createScope({ root }).add(() => {
         animate(targets, {
@@ -50,15 +50,15 @@ export function AnimeStagger({
           duration,
           ease,
           delay: stagger(staggerDelay, { start: delayChildren }),
-        });
-      });
-    });
+        })
+      })
+    })
 
     return () => {
-      cancelled = true;
-      scope.current?.revert();
-    };
-  }, [staggerDelay, delayChildren, duration, ease, axis, distance]);
+      cancelled = true
+      scope.current?.revert()
+    }
+  }, [staggerDelay, delayChildren, duration, ease, axis, distance])
 
   return (
     <div ref={root} className={cn(className)}>
@@ -70,5 +70,5 @@ export function AnimeStagger({
           ))
         : children}
     </div>
-  );
+  )
 }

@@ -1,19 +1,19 @@
-"use server";
+'use server'
 
-import { createServerSupabaseClient, createAdminClient } from "@repo/supabase/server";
-import { cacheTag } from "next/cache";
-import { AuthError, DatabaseError, ForbiddenError } from "@/lib/errors/error-classes";
+import { createServerSupabaseClient, createAdminClient } from '@repo/supabase/server'
+import { cacheTag } from 'next/cache'
+import { AuthError, DatabaseError, ForbiddenError } from '@/lib/errors/error-classes'
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
 /* ------------------------------------------------------------------ */
 
 export interface SatelliteMetrics {
-  totalSensors: number;
-  activeSensors: number;
-  recentLogsCount: number;
-  lastLogDate: string | null;
-  machineTypes: { type: string; count: number; active: number }[];
+  totalSensors: number
+  activeSensors: number
+  recentLogsCount: number
+  lastLogDate: string | null
+  machineTypes: { type: string; count: number; active: number }[]
 }
 
 /* ------------------------------------------------------------------ */
@@ -21,26 +21,26 @@ export interface SatelliteMetrics {
 /* ------------------------------------------------------------------ */
 
 async function assertSatelliteRole() {
-  const supabase = await createServerSupabaseClient();
+  const supabase = await createServerSupabaseClient()
   const {
     data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) throw new AuthError("Unauthorized");
+  } = await supabase.auth.getUser()
+  if (!user) throw new AuthError('Unauthorized')
 
   const { data: employee } = await supabase
-    .from("employees")
-    .select("role, department_id")
-    .eq("auth_id", user.id)
-    .single();
+    .from('employees')
+    .select('role, department_id')
+    .eq('auth_id', user.id)
+    .single()
 
-  if (!employee || !["admin", "satellite", "supervisor"].includes(employee.role)) {
-    throw new ForbiddenError("Forbidden: satellite or admin role required", {
-      resource: "satellite-monitoring",
-      action: "assert_role",
-    });
+  if (!employee || !['admin', 'satellite', 'supervisor'].includes(employee.role)) {
+    throw new ForbiddenError('Forbidden: satellite or admin role required', {
+      resource: 'satellite-monitoring',
+      action: 'assert_role',
+    })
   }
 
-  return { supabase, user, employee };
+  return { supabase, user, employee }
 }
 
 /* ------------------------------------------------------------------ */
@@ -48,51 +48,51 @@ async function assertSatelliteRole() {
 /* ------------------------------------------------------------------ */
 
 async function _getCachedSatelliteMetrics(deptId: string): Promise<SatelliteMetrics> {
-  "use cache";
+  'use cache'
   cacheTag(
     `dept:${deptId}`,
-    "table:machines",
-    "table:daily_logs",
-    "department-satellite",
-    "department-dashboard"
-  );
+    'table:machines',
+    'table:daily_logs',
+    'department-satellite',
+    'department-dashboard'
+  )
 
-  const supabase = createAdminClient();
+  const supabase = createAdminClient()
 
   const [{ data: allMachines, error: machinesError }, { data: recentLogs, error: logsError }] =
     await Promise.all([
-      supabase.from("machines").select("id, machine_type, active").eq("department_id", deptId),
+      supabase.from('machines').select('id, machine_type, active').eq('department_id', deptId),
       supabase
-        .from("daily_logs")
-        .select("id, log_date")
-        .eq("department_id", deptId)
-        .order("log_date", { ascending: false })
+        .from('daily_logs')
+        .select('id, log_date')
+        .eq('department_id', deptId)
+        .order('log_date', { ascending: false })
         .limit(30),
-    ]);
+    ])
 
   if (machinesError) {
-    throw new DatabaseError("Failed to load satellite sensors", {
-      operation: "select",
+    throw new DatabaseError('Failed to load satellite sensors', {
+      operation: 'select',
       context: { error: machinesError.message },
-    });
+    })
   }
   if (logsError) {
-    throw new DatabaseError("Failed to load satellite logs", {
-      operation: "select",
+    throw new DatabaseError('Failed to load satellite logs', {
+      operation: 'select',
       context: { error: logsError.message },
-    });
+    })
   }
 
-  const machines = allMachines ?? [];
-  const logs = recentLogs ?? [];
+  const machines = allMachines ?? []
+  const logs = recentLogs ?? []
 
   // Group by machine type
-  const typeMap = new Map<string, { count: number; active: number }>();
+  const typeMap = new Map<string, { count: number; active: number }>()
   for (const m of machines as { id: string; machine_type: string; active: boolean }[]) {
-    const entry = typeMap.get(m.machine_type) ?? { count: 0, active: 0 };
-    entry.count++;
-    if (m.active) entry.active++;
-    typeMap.set(m.machine_type, entry);
+    const entry = typeMap.get(m.machine_type) ?? { count: 0, active: 0 }
+    entry.count++
+    if (m.active) entry.active++
+    typeMap.set(m.machine_type, entry)
   }
 
   return {
@@ -104,10 +104,10 @@ async function _getCachedSatelliteMetrics(deptId: string): Promise<SatelliteMetr
       type,
       ...stats,
     })),
-  };
+  }
 }
 
 export async function getSatelliteMetrics(deptId: string): Promise<SatelliteMetrics> {
-  await assertSatelliteRole();
-  return _getCachedSatelliteMetrics(deptId);
+  await assertSatelliteRole()
+  return _getCachedSatelliteMetrics(deptId)
 }

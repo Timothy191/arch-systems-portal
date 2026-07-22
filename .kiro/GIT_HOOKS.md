@@ -15,37 +15,37 @@ The repository uses:
 ```javascript
 #!/usr/bin/env node
 
-const { execSync } = require("child_process");
-const fs = require("fs");
-const path = require("path");
+const { execSync } = require('child_process')
+const fs = require('fs')
+const path = require('path')
 
-const root = process.cwd();
+const root = process.cwd()
 
 // Get staged files
-const stagedFiles = execSync("git diff --cached --name-only --diff-filter=ACM", {
-  encoding: "utf8",
+const stagedFiles = execSync('git diff --cached --name-only --diff-filter=ACM', {
+  encoding: 'utf8',
 })
-  .split("\n")
+  .split('\n')
   .filter(Boolean)
-  .filter((file) => /\.(ts|tsx|js|jsx)$/.test(file));
+  .filter((file) => /\.(ts|tsx|js|jsx)$/.test(file))
 
 // If multi-file change, check for specs
 if (stagedFiles.length > 1) {
-  const specsDir = path.join(root, ".kiro", "specs");
+  const specsDir = path.join(root, '.kiro', 'specs')
   const specDirs = fs.existsSync(specsDir)
     ? fs.readdirSync(specsDir).filter((dir) => fs.statSync(path.join(specsDir, dir)).isDirectory())
-    : [];
+    : []
 
   if (specDirs.length === 0) {
-    console.error("\n❌ ERROR: Multi-file change requires spec-driven workflow.");
-    console.error("   Create spec directory first: .kiro/specs/{feature-slug}/");
-    console.error("   Follow AGENTS.md §1: Requirements → Design → Tasks");
-    console.error("   See .kiro/templates/ for template files");
-    process.exit(1);
+    console.error('\n❌ ERROR: Multi-file change requires spec-driven workflow.')
+    console.error('   Create spec directory first: .kiro/specs/{feature-slug}/')
+    console.error('   Follow AGENTS.md §1: Requirements → Design → Tasks')
+    console.error('   See .kiro/templates/ for template files')
+    process.exit(1)
   }
 }
 
-console.log("✅ Spec check passed (or single-file change)");
+console.log('✅ Spec check passed (or single-file change)')
 ```
 
 ### Commit Message Hook (validate-spec-reference.js)
@@ -53,26 +53,26 @@ console.log("✅ Spec check passed (or single-file change)");
 ```javascript
 #!/usr/bin/env node
 
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs')
+const path = require('path')
 
-const commitMsgFile = process.argv[2];
-const commitMsg = fs.readFileSync(commitMsgFile, "utf8");
+const commitMsgFile = process.argv[2]
+const commitMsg = fs.readFileSync(commitMsgFile, 'utf8')
 
 // Check if commit message references a spec
-const specReference = commitMsg.match(/spec:([a-z0-9-]+)/i);
+const specReference = commitMsg.match(/spec:([a-z0-9-]+)/i)
 if (specReference) {
-  const specSlug = specReference[1];
-  const specDir = path.join(process.cwd(), ".kiro", "specs", specSlug);
+  const specSlug = specReference[1]
+  const specDir = path.join(process.cwd(), '.kiro', 'specs', specSlug)
 
   if (!fs.existsSync(specDir)) {
-    console.error(`\n❌ ERROR: Commit references non-existent spec: ${specSlug}`);
-    console.error(`   Create .kiro/specs/${specSlug}/ first`);
-    process.exit(1);
+    console.error(`\n❌ ERROR: Commit references non-existent spec: ${specSlug}`)
+    console.error(`   Create .kiro/specs/${specSlug}/ first`)
+    process.exit(1)
   }
 }
 
-console.log("✅ Spec reference check passed");
+console.log('✅ Spec reference check passed')
 ```
 
 ## Commit Message Format

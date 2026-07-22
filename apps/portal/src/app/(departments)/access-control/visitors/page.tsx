@@ -1,7 +1,7 @@
-import { getDepartmentContext } from "@/lib/dept-context";
-import { GlassCard } from "@repo/ui/GlassCard";
-import { CursorPaginationControls } from "@/components/CursorPaginationControls";
-import { EmptyState } from "@repo/ui/EmptyState";
+import { getDepartmentContext } from '@/lib/dept-context'
+import { GlassCard } from '@repo/ui/GlassCard'
+import { CursorPaginationControls } from '@/components/CursorPaginationControls'
+import { EmptyState } from '@repo/ui/EmptyState'
 import {
   Table,
   TableBody,
@@ -9,30 +9,30 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@repo/ui/components/ui/table";
-import { Clock, Inbox } from "lucide-react";
-import { getVisitorsForDepartmentCursor } from "../actions";
-import { VisitorForm } from "./visitor-form";
+} from '@repo/ui/components/ui/table'
+import { Clock, Inbox } from 'lucide-react'
+import { getVisitorsForDepartmentCursor } from '../actions'
+import { VisitorForm } from './visitor-form'
 
 export default async function VisitorsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ cursor?: string; cursors?: string; limit?: string }>;
+  searchParams: Promise<{ cursor?: string; cursors?: string; limit?: string }>
 }) {
-  const params = await searchParams;
-  const limit = parseInt(params.limit || "50", 10);
-  const previousCursors = params.cursors ? params.cursors.split(",").filter(Boolean) : [];
-  const cursor = params.cursor || undefined;
+  const params = await searchParams
+  const limit = parseInt(params.limit || '50', 10)
+  const previousCursors = params.cursors ? params.cursors.split(',').filter(Boolean) : []
+  const cursor = params.cursor || undefined
 
   const { deptId } = await getDepartmentContext({
-    department: "access-control",
-  });
+    department: 'access-control',
+  })
 
   const { visitors, nextCursor, hasMore, totalCount } = await getVisitorsForDepartmentCursor(
     deptId,
     cursor,
     limit
-  );
+  )
 
   return (
     <div className="space-y-6">
@@ -93,29 +93,29 @@ export default async function VisitorsPage({
                           {visitor.first_name} {visitor.surname}
                         </TableCell>
                         <TableCell className="text-arch-text-secondary">
-                          {visitor.company || "—"}
+                          {visitor.company || '—'}
                         </TableCell>
                         <TableCell className="text-arch-text-secondary">
-                          {visitor.reason_for_entry || "—"}
+                          {visitor.reason_for_entry || '—'}
                         </TableCell>
                         <TableCell className="font-mono text-sm text-arch-text-secondary">
                           {visitor.check_in_time
-                            ? new Date(visitor.check_in_time).toLocaleTimeString("en-US", {
-                                hour: "2-digit",
-                                minute: "2-digit",
+                            ? new Date(visitor.check_in_time).toLocaleTimeString('en-US', {
+                                hour: '2-digit',
+                                minute: '2-digit',
                                 hour12: false,
                               })
-                            : "—"}
+                            : '—'}
                         </TableCell>
                         <TableCell className="text-right">
-                          {visitor.status === "Checked In" ? (
+                          {visitor.status === 'Checked In' ? (
                             <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2 py-0.5 rounded-full border bg-emerald-50/70 border-emerald-200/50 text-emerald-700">
                               <span className="badge-pulse-dot bg-emerald-500" />
                               Checked In
                             </span>
                           ) : (
                             <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2 py-0.5 rounded-full border bg-arch-surface-secondary text-arch-text-muted border-arch-border-default">
-                              {visitor.status || "—"}
+                              {visitor.status || '—'}
                             </span>
                           )}
                         </TableCell>
@@ -142,5 +142,5 @@ export default async function VisitorsPage({
         </div>
       </div>
     </div>
-  );
+  )
 }

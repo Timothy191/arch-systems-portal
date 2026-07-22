@@ -1,24 +1,24 @@
-"use client";
+'use client'
 
-import { lazy, Suspense } from "react";
+import { lazy, Suspense } from 'react'
 
 const WeatherWidget = lazy(() =>
-  import("@/components/weather/WeatherWidget").then((m) => ({
+  import('@/components/weather/WeatherWidget').then((m) => ({
     default: m.WeatherWidget,
   }))
-);
+)
 
 const SystemClock = lazy(() =>
-  import("@/components/clock/SystemClock").then((m) => ({
+  import('@/components/clock/SystemClock').then((m) => ({
     default: m.SystemClock,
   }))
-);
+)
 
 const ServicesDropdown = lazy(() =>
-  import("@/components/nav/ServicesDropdown").then((m) => ({
+  import('@/components/nav/ServicesDropdown').then((m) => ({
     default: m.ServicesDropdown,
   }))
-);
+)
 
 /**
  * HeaderWidgets
@@ -29,13 +29,13 @@ const ServicesDropdown = lazy(() =>
  *
  * Each widget renders a minimal skeleton placeholder until its code arrives.
  */
-function WidgetFallback({ width = "w-7" }: { width?: string }) {
+function WidgetFallback({ width = 'w-7' }: { width?: string }) {
   return (
     <div
       className={`${width} h-7 rounded-full bg-black/[0.03] border border-border-subtle animate-pulse`}
       aria-hidden="true"
     />
-  );
+  )
 }
 
 export function HeaderWidgets() {
@@ -53,5 +53,5 @@ export function HeaderWidgets() {
         <ServicesDropdown />
       </Suspense>
     </>
-  );
+  )
 }

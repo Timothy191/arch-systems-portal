@@ -1,55 +1,55 @@
-import { Suspense } from "react";
-import { getDepartmentContext } from "@/lib/dept-context";
-import { GlassCard } from "@repo/ui/GlassCard";
-import nextDynamic from "next/dynamic";
-import { Skeleton } from "@repo/ui/components/ui/skeleton";
+import { Suspense } from 'react'
+import { getDepartmentContext } from '@/lib/dept-context'
+import { GlassCard } from '@repo/ui/GlassCard'
+import nextDynamic from 'next/dynamic'
+import { Skeleton } from '@repo/ui/components/ui/skeleton'
 import {
   getAccessControlMetrics,
   getRecentAccessActivity,
   getEntityBadgeStatus,
   getHourlyAccessStats,
   getBadgeStatusDistribution,
-} from "./actions";
+} from './actions'
 
-const DashboardKPIGrid = nextDynamic(() => import("./components/DashboardKPIGrid"), {
+const DashboardKPIGrid = nextDynamic(() => import('./components/DashboardKPIGrid'), {
   loading: () => <Skeleton className="h-[140px] w-full" />,
-});
-const DashboardChartsRow = nextDynamic(() => import("./components/DashboardChartsRow"), {
+})
+const DashboardChartsRow = nextDynamic(() => import('./components/DashboardChartsRow'), {
   loading: () => <Skeleton className="h-[260px] w-full" />,
-});
-const DashboardActivityFeed = nextDynamic(() => import("./components/DashboardActivityFeed"), {
+})
+const DashboardActivityFeed = nextDynamic(() => import('./components/DashboardActivityFeed'), {
   loading: () => <Skeleton className="h-[360px] w-full" />,
-});
-const DashboardEntityStatus = nextDynamic(() => import("./components/DashboardEntityStatus"), {
+})
+const DashboardEntityStatus = nextDynamic(() => import('./components/DashboardEntityStatus'), {
   loading: () => <Skeleton className="h-[360px] w-full" />,
-});
+})
 
 // Server component wrappers for streaming
 async function ChartsRowSection({ deptId, today }: { deptId: string; today: string }) {
   const [hourlyStats, distribution] = await Promise.all([
     getHourlyAccessStats(deptId, today),
     getBadgeStatusDistribution(deptId),
-  ]);
-  return <DashboardChartsRow hourlyStats={hourlyStats} distribution={distribution} />;
+  ])
+  return <DashboardChartsRow hourlyStats={hourlyStats} distribution={distribution} />
 }
 
 async function ActivityFeedSection({ deptId }: { deptId: string }) {
-  const activity = await getRecentAccessActivity(deptId, 8);
-  return <DashboardActivityFeed activity={activity} />;
+  const activity = await getRecentAccessActivity(deptId, 8)
+  return <DashboardActivityFeed activity={activity} />
 }
 
 async function EntityStatusSection({ deptId }: { deptId: string }) {
-  const entityStatus = await getEntityBadgeStatus(deptId);
-  return <DashboardEntityStatus entityStatus={entityStatus} />;
+  const entityStatus = await getEntityBadgeStatus(deptId)
+  return <DashboardEntityStatus entityStatus={entityStatus} />
 }
 
 export default async function AccessControlDashboardPage() {
   const { deptId, today } = await getDepartmentContext({
-    department: "access-control",
-  });
+    department: 'access-control',
+  })
 
   // Only fetch the metrics for the top row to unblock the initial shell paint
-  const metrics = await getAccessControlMetrics(deptId);
+  const metrics = await getAccessControlMetrics(deptId)
 
   return (
     <div className="space-y-6">
@@ -120,5 +120,5 @@ export default async function AccessControlDashboardPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }

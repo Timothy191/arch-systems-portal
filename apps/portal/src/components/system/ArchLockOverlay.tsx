@@ -1,36 +1,36 @@
-"use client";
+'use client'
 
-import { useEffect, useState } from "react";
-import { Lock } from "lucide-react";
+import { useEffect, useState } from 'react'
+import { Lock } from 'lucide-react'
 
-export const ARCH_LOCK_EVENT = "arch-lock-screen";
+export const ARCH_LOCK_EVENT = 'arch-lock-screen'
 
 /**
  * Full-viewport lock overlay. Mount once in the root layout; open via
  * `window.dispatchEvent(new CustomEvent(ARCH_LOCK_EVENT))`.
  */
 export function ArchLockOverlay() {
-  const [locked, setLocked] = useState(false);
+  const [locked, setLocked] = useState(false)
 
   useEffect(() => {
-    const onLock = () => setLocked(true);
-    window.addEventListener(ARCH_LOCK_EVENT, onLock);
-    return () => window.removeEventListener(ARCH_LOCK_EVENT, onLock);
-  }, []);
+    const onLock = () => setLocked(true)
+    window.addEventListener(ARCH_LOCK_EVENT, onLock)
+    return () => window.removeEventListener(ARCH_LOCK_EVENT, onLock)
+  }, [])
 
   useEffect(() => {
-    if (!locked) return;
+    if (!locked) return
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape" || event.key === "Enter" || event.key === " ") {
-        event.preventDefault();
-        setLocked(false);
+      if (event.key === 'Escape' || event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault()
+        setLocked(false)
       }
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [locked]);
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [locked])
 
-  if (!locked) return null;
+  if (!locked) return null
 
   return (
     <div
@@ -46,5 +46,5 @@ export function ArchLockOverlay() {
       <p className="text-sm font-medium text-white">Arch locked</p>
       <p className="mt-1 text-xs text-white/60">Click anywhere to unlock</p>
     </div>
-  );
+  )
 }

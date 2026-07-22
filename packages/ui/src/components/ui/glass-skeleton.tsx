@@ -1,12 +1,12 @@
-import React from "react";
+import React from 'react'
 
 interface GlassSkeletonProps {
-  showHeader?: boolean;
-  rows?: number;
-  className?: string;
+  showHeader?: boolean
+  rows?: number
+  className?: string
 }
 
-export function GlassSkeleton({ showHeader = true, rows = 3, className = "" }: GlassSkeletonProps) {
+export function GlassSkeleton({ showHeader = true, rows = 3, className = '' }: GlassSkeletonProps) {
   return (
     <div
       className={`space-y-4 animate-pulse bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-6 ${className}`}
@@ -26,5 +26,5 @@ export function GlassSkeleton({ showHeader = true, rows = 3, className = "" }: G
         ))}
       </div>
     </div>
-  );
+  )
 }

@@ -1,12 +1,12 @@
-"use client";
+'use client'
 
-import { useState, useEffect, useRef } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { createBrowserSupabaseClient } from "@repo/supabase/client";
-import { Input } from "@repo/ui/Input";
-import { AnimatedButton } from "@repo/ui/AnimatedButton";
-import { Lock, Check, AlertTriangle, Loader2 } from "lucide-react";
+import { useState, useEffect, useRef } from 'react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { createBrowserSupabaseClient } from '@repo/supabase/client'
+import { Input } from '@repo/ui/Input'
+import { AnimatedButton } from '@repo/ui/AnimatedButton'
+import { Lock, Check, AlertTriangle, Loader2 } from 'lucide-react'
 
 /**
  * Maps raw Supabase user profile update errors to precise, readable user instructions.
@@ -16,75 +16,75 @@ import { Lock, Check, AlertTriangle, Loader2 } from "lucide-react";
  * @returns A safe, human-readable error description.
  */
 function mapUpdateError(raw: string): string {
-  const lower = raw.toLowerCase();
-  if (lower.includes("weak")) {
-    return "Password is too weak. Use at least 8 characters with a mix of letters, numbers, and symbols.";
+  const lower = raw.toLowerCase()
+  if (lower.includes('weak')) {
+    return 'Password is too weak. Use at least 8 characters with a mix of letters, numbers, and symbols.'
   }
-  if (lower.includes("same")) {
-    return "New password must be different from your current password.";
+  if (lower.includes('same')) {
+    return 'New password must be different from your current password.'
   }
-  return "Unable to update password. Please try again.";
+  return 'Unable to update password. Please try again.'
 }
 
 export default function UpdatePasswordPage() {
-  const router = useRouter();
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [checkingSession, setCheckingSession] = useState(true);
-  const [hasSession, setHasSession] = useState(false);
-  const [updated, setUpdated] = useState(false);
-  const [error, setError] = useState("");
-  const redirectTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const router = useRouter()
+  const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [checkingSession, setCheckingSession] = useState(true)
+  const [hasSession, setHasSession] = useState(false)
+  const [updated, setUpdated] = useState(false)
+  const [error, setError] = useState('')
+  const redirectTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
-    const supabase = createBrowserSupabaseClient();
+    const supabase = createBrowserSupabaseClient()
     supabase.auth.getSession().then(({ data }) => {
-      setCheckingSession(false);
-      setHasSession(!!data.session);
-    });
-  }, []);
+      setCheckingSession(false)
+      setHasSession(!!data.session)
+    })
+  }, [])
 
   useEffect(() => {
     return () => {
       if (redirectTimeoutRef.current) {
-        clearTimeout(redirectTimeoutRef.current);
+        clearTimeout(redirectTimeoutRef.current)
       }
-    };
-  }, []);
+    }
+  }, [])
 
   async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError("");
+    e.preventDefault()
+    setError('')
 
     if (password !== confirmPassword) {
-      setError("Passwords do not match.");
-      return;
+      setError('Passwords do not match.')
+      return
     }
 
     if (password.length < 8) {
-      setError("Password must be at least 8 characters.");
-      return;
+      setError('Password must be at least 8 characters.')
+      return
     }
 
-    setLoading(true);
+    setLoading(true)
 
-    const supabase = createBrowserSupabaseClient();
+    const supabase = createBrowserSupabaseClient()
     const { error: updateError } = await supabase.auth.updateUser({
       password,
-    });
+    })
 
-    setLoading(false);
+    setLoading(false)
 
     if (updateError) {
-      setError(mapUpdateError(updateError.message));
-      return;
+      setError(mapUpdateError(updateError.message))
+      return
     }
 
-    setUpdated(true);
+    setUpdated(true)
     redirectTimeoutRef.current = setTimeout(() => {
-      router.push("/login");
-    }, 3000);
+      router.push('/login')
+    }, 3000)
   }
 
   if (checkingSession) {
@@ -95,7 +95,7 @@ export default function UpdatePasswordPage() {
           <p className="text-sm text-arch-text-muted">Verifying session...</p>
         </div>
       </div>
-    );
+    )
   }
 
   if (!hasSession) {
@@ -115,7 +115,7 @@ export default function UpdatePasswordPage() {
           </Link>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -176,7 +176,7 @@ export default function UpdatePasswordPage() {
                     className="liquid-glass-input focus:ring-0"
                     placeholder="Enter new password"
                     autoComplete="new-password"
-                    aria-describedby={error ? "update-error" : undefined}
+                    aria-describedby={error ? 'update-error' : undefined}
                   />
                 </div>
 
@@ -200,7 +200,7 @@ export default function UpdatePasswordPage() {
                     className="liquid-glass-input focus:ring-0"
                     placeholder="Re-enter new password"
                     autoComplete="new-password"
-                    aria-describedby={error ? "update-error" : undefined}
+                    aria-describedby={error ? 'update-error' : undefined}
                   />
                 </div>
 
@@ -220,7 +220,7 @@ export default function UpdatePasswordPage() {
                   disabled={loading}
                   className="w-full liquid-glass-button"
                 >
-                  {loading ? "Updating..." : "Update Password"}
+                  {loading ? 'Updating...' : 'Update Password'}
                 </AnimatedButton>
               </form>
             </>
@@ -228,5 +228,5 @@ export default function UpdatePasswordPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }

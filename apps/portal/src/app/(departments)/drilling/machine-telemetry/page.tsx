@@ -1,5 +1,5 @@
-import { createServerSupabaseClient } from "@repo/supabase/server";
-import { redirect } from "next/navigation";
+import { createServerSupabaseClient } from '@repo/supabase/server'
+import { redirect } from 'next/navigation'
 import {
   Table,
   TableBody,
@@ -7,9 +7,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@repo/ui/components/ui/table";
-import { GlassCard } from "@repo/ui/GlassCard";
-import { Button } from "@repo/ui/components/ui/button";
+} from '@repo/ui/components/ui/table'
+import { GlassCard } from '@repo/ui/GlassCard'
+import { Button } from '@repo/ui/components/ui/button'
 import {
   Activity,
   Archive,
@@ -24,75 +24,75 @@ import {
   Database,
   Clock,
   BarChart3,
-} from "lucide-react";
-import Link from "next/link";
+} from 'lucide-react'
+import Link from 'next/link'
 
 interface TelemetryRecord {
-  period: string;
-  machine_id: string;
-  machine_name: string;
-  avg_engine_rpm: number | null;
-  avg_engine_temp: number | null;
-  avg_hydraulic_pressure: number | null;
-  max_bit_depth: number | null;
-  max_hole_depth: number | null;
-  avg_penetration_rate: number | null;
-  total_alerts: number;
-  record_count: number;
+  period: string
+  machine_id: string
+  machine_name: string
+  avg_engine_rpm: number | null
+  avg_engine_temp: number | null
+  avg_hydraulic_pressure: number | null
+  max_bit_depth: number | null
+  max_hole_depth: number | null
+  avg_penetration_rate: number | null
+  total_alerts: number
+  record_count: number
 }
 
 interface ArchivedMonth {
-  id: string;
-  year_month: string;
-  machine_name: string;
-  archived_at: string;
-  record_count: number;
+  id: string
+  year_month: string
+  machine_name: string
+  archived_at: string
+  record_count: number
 }
 
 interface DrillMonthlySummary {
-  machine_id: string;
-  machine_name: string;
-  scheduled_hours: number | null;
-  downtime_hours: number | null;
-  productive_hours: number | null;
-  availability_pct: number | null;
-  utilization_pct: number | null;
+  machine_id: string
+  machine_name: string
+  scheduled_hours: number | null
+  downtime_hours: number | null
+  productive_hours: number | null
+  availability_pct: number | null
+  utilization_pct: number | null
 }
 
 async function getTelemetryData(selectedMachineId?: string): Promise<{
-  currentMonth: string;
-  telemetry: TelemetryRecord[];
-  archives: ArchivedMonth[];
-  drills: { id: string; name: string }[];
-  monthlySummary: DrillMonthlySummary[];
+  currentMonth: string
+  telemetry: TelemetryRecord[]
+  archives: ArchivedMonth[]
+  drills: { id: string; name: string }[]
+  monthlySummary: DrillMonthlySummary[]
 }> {
-  const supabase = await createServerSupabaseClient();
+  const supabase = await createServerSupabaseClient()
 
   const {
     data: { user },
-  } = await supabase.auth.getUser();
+  } = await supabase.auth.getUser()
   if (!user) {
-    redirect("/login");
+    redirect('/login')
   }
 
   // Get drilling department ID
   const { data: dept } = await supabase
-    .from("departments")
-    .select("id")
-    .eq("name", "drilling")
-    .single();
+    .from('departments')
+    .select('id')
+    .eq('name', 'drilling')
+    .single()
 
   if (!dept) {
     return {
-      currentMonth: "",
+      currentMonth: '',
       telemetry: [],
       archives: [],
       drills: [],
       monthlySummary: [],
-    };
+    }
   }
 
-  const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM
+  const currentMonth = new Date().toISOString().slice(0, 7) // YYYY-MM
 
   // Parallel fetch: drill rigs, telemetry, archives, machine name map, monthly summary
   const [
@@ -103,38 +103,38 @@ async function getTelemetryData(selectedMachineId?: string): Promise<{
     { data: monthlySummary },
   ] = await Promise.all([
     supabase
-      .from("machines")
-      .select("id, name")
-      .eq("machine_type", "Drill Rig")
-      .eq("active", true)
-      .order("name"),
-    supabase.rpc("get_telemetry_summary", {
+      .from('machines')
+      .select('id, name')
+      .eq('machine_type', 'Drill Rig')
+      .eq('active', true)
+      .order('name'),
+    supabase.rpc('get_telemetry_summary', {
       p_department_id: dept.id,
       p_machine_id: selectedMachineId || null,
-      p_granularity: "day",
+      p_granularity: 'day',
     }),
     supabase
-      .from("machine_telemetry_archive")
-      .select("id, year_month, archived_at, record_count, machine_id")
-      .eq("department_id", dept.id)
-      .order("archived_at", { ascending: false })
+      .from('machine_telemetry_archive')
+      .select('id, year_month, archived_at, record_count, machine_id')
+      .eq('department_id', dept.id)
+      .order('archived_at', { ascending: false })
       .limit(12),
-    supabase.from("machines").select("id, name").eq("machine_type", "Drill Rig"),
-    supabase.rpc("get_drill_monthly_summary", {
+    supabase.from('machines').select('id, name').eq('machine_type', 'Drill Rig'),
+    supabase.rpc('get_drill_monthly_summary', {
       p_department_id: dept.id,
       p_year_month: currentMonth,
     }),
-  ]);
+  ])
 
-  const machineNameMap = new Map((allMachines || []).map((m) => [m.id, m.name]));
+  const machineNameMap = new Map((allMachines || []).map((m) => [m.id, m.name]))
 
   const transformedArchives: ArchivedMonth[] = (archives || []).map((a) => ({
     id: a.id,
     year_month: a.year_month,
-    machine_name: machineNameMap.get(a.machine_id) || "Unknown",
+    machine_name: machineNameMap.get(a.machine_id) || 'Unknown',
     archived_at: a.archived_at,
     record_count: a.record_count,
-  }));
+  }))
 
   return {
     currentMonth,
@@ -142,48 +142,48 @@ async function getTelemetryData(selectedMachineId?: string): Promise<{
     archives: transformedArchives,
     drills: drills || [],
     monthlySummary: (monthlySummary || []) as DrillMonthlySummary[],
-  };
+  }
 }
 
 function formatNumber(num: number | null | undefined, decimals: number = 1): string {
-  if (num === null || num === undefined) return "—";
-  return num.toFixed(decimals);
+  if (num === null || num === undefined) return '—'
+  return num.toFixed(decimals)
 }
 
 function formatDate(dateStr: string): string {
-  const date = new Date(dateStr);
-  return date.toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
+  const date = new Date(dateStr)
+  return date.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  })
 }
 
 function formatMonth(yearMonth: string): string {
-  const [year, month] = yearMonth.split("-");
-  if (!year || !month) return yearMonth;
-  const date = new Date(parseInt(year), parseInt(month) - 1, 1);
-  return date.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+  const [year, month] = yearMonth.split('-')
+  if (!year || !month) return yearMonth
+  const date = new Date(parseInt(year), parseInt(month) - 1, 1)
+  return date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
 }
 
 interface MachineTelemetryPageProps {
-  searchParams: Promise<{ machineId?: string }>;
+  searchParams: Promise<{ machineId?: string }>
 }
 
 export default async function MachineTelemetryPage({ searchParams }: MachineTelemetryPageProps) {
-  const { machineId } = await searchParams;
-  const selectedMachineId = machineId === "all" ? undefined : machineId;
+  const { machineId } = await searchParams
+  const selectedMachineId = machineId === 'all' ? undefined : machineId
   const { currentMonth, telemetry, archives, drills, monthlySummary } =
-    await getTelemetryData(selectedMachineId);
+    await getTelemetryData(selectedMachineId)
 
   // Calculate monthly totals
-  const totalRecords = telemetry.reduce((sum, t) => sum + (t.record_count || 0), 0);
-  const totalAlerts = telemetry.reduce((sum, t) => sum + (t.total_alerts || 0), 0);
+  const totalRecords = telemetry.reduce((sum, t) => sum + (t.record_count || 0), 0)
+  const totalAlerts = telemetry.reduce((sum, t) => sum + (t.total_alerts || 0), 0)
   const avgPenetration =
     telemetry.length > 0
       ? telemetry.reduce((sum, t) => sum + (t.avg_penetration_rate || 0), 0) / telemetry.length
-      : 0;
-  const maxBitDepth = Math.max(...telemetry.map((t) => t.max_bit_depth || 0), 0);
+      : 0
+  const maxBitDepth = Math.max(...telemetry.map((t) => t.max_bit_depth || 0), 0)
 
   return (
     <div className="space-y-6">
@@ -194,7 +194,7 @@ export default async function MachineTelemetryPage({ searchParams }: MachineTele
           <div className="flex items-center gap-2 mt-1">
             <Calendar className="w-4 h-4 text-arch-text-muted" />
             <p className="text-sm text-arch-text-muted">
-              Current Period:{" "}
+              Current Period:{' '}
               <span className="font-medium text-arch-accent-charcoal">
                 {formatMonth(currentMonth)}
               </span>
@@ -305,29 +305,29 @@ export default async function MachineTelemetryPage({ searchParams }: MachineTele
                 </TableRow>
               ) : (
                 monthlySummary.map((s) => {
-                  const scheduled = Number(s.scheduled_hours ?? 0);
-                  const productive = Number(s.productive_hours ?? 0);
-                  const downtime = Number(s.downtime_hours ?? 0);
-                  const availabilityPct = s.availability_pct;
-                  const utilizationPct = s.utilization_pct;
+                  const scheduled = Number(s.scheduled_hours ?? 0)
+                  const productive = Number(s.productive_hours ?? 0)
+                  const downtime = Number(s.downtime_hours ?? 0)
+                  const availabilityPct = s.availability_pct
+                  const utilizationPct = s.utilization_pct
 
                   const availabilityClass =
                     availabilityPct === null
-                      ? "text-arch-text-muted"
+                      ? 'text-arch-text-muted'
                       : availabilityPct >= 85
-                        ? "text-accent-green"
+                        ? 'text-accent-green'
                         : availabilityPct >= 70
-                          ? "text-accent-blue"
-                          : "text-accent-red";
+                          ? 'text-accent-blue'
+                          : 'text-accent-red'
 
                   const utilizationClass =
                     utilizationPct === null
-                      ? "text-arch-text-muted"
+                      ? 'text-arch-text-muted'
                       : utilizationPct >= 85
-                        ? "text-accent-green"
+                        ? 'text-accent-green'
                         : utilizationPct >= 70
-                          ? "text-accent-blue"
-                          : "text-accent-red";
+                          ? 'text-accent-blue'
+                          : 'text-accent-red'
 
                   return (
                     <TableRow
@@ -338,26 +338,26 @@ export default async function MachineTelemetryPage({ searchParams }: MachineTele
                         {s.machine_name}
                       </TableCell>
                       <TableCell className="text-right tabular-nums text-arch-text-secondary">
-                        {scheduled > 0 ? scheduled.toFixed(2) : "—"}
+                        {scheduled > 0 ? scheduled.toFixed(2) : '—'}
                       </TableCell>
                       <TableCell className="text-right tabular-nums text-arch-text-secondary">
-                        {productive > 0 ? productive.toFixed(2) : "—"}
+                        {productive > 0 ? productive.toFixed(2) : '—'}
                       </TableCell>
                       <TableCell className="text-right tabular-nums text-arch-text-secondary">
-                        {downtime > 0 ? downtime.toFixed(2) : "—"}
+                        {downtime > 0 ? downtime.toFixed(2) : '—'}
                       </TableCell>
                       <TableCell
                         className={`text-right tabular-nums font-semibold ${availabilityClass}`}
                       >
-                        {availabilityPct === null ? "—" : `${availabilityPct.toFixed(1)}%`}
+                        {availabilityPct === null ? '—' : `${availabilityPct.toFixed(1)}%`}
                       </TableCell>
                       <TableCell
                         className={`text-right tabular-nums font-semibold ${utilizationClass}`}
                       >
-                        {utilizationPct === null ? "—" : `${utilizationPct.toFixed(1)}%`}
+                        {utilizationPct === null ? '—' : `${utilizationPct.toFixed(1)}%`}
                       </TableCell>
                     </TableRow>
-                  );
+                  )
                 })
               )}
             </TableBody>
@@ -389,7 +389,7 @@ export default async function MachineTelemetryPage({ searchParams }: MachineTele
               <select
                 id="machineId"
                 name="machineId"
-                defaultValue={machineId || "all"}
+                defaultValue={machineId || 'all'}
                 className="bg-arch-surface-secondary border border-arch-border-subtle text-arch-text-primary text-sm rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-arch-accent-charcoal"
               >
                 <option value="all">All Drill Rigs</option>
@@ -410,7 +410,7 @@ export default async function MachineTelemetryPage({ searchParams }: MachineTele
             <div className="flex items-center gap-2 border-l border-arch-border-subtle pl-4">
               <TrendingUp className="w-5 h-5 text-accent-green" />
               <span className="text-sm text-arch-text-secondary">
-                Max Depth:{" "}
+                Max Depth:{' '}
                 <span className="font-semibold text-accent-green">
                   {formatNumber(maxBitDepth, 1)}m
                 </span>
@@ -478,12 +478,12 @@ export default async function MachineTelemetryPage({ searchParams }: MachineTele
                 </TableRow>
               ) : (
                 telemetry.map((record) => {
-                  const isHighRPM = record.avg_engine_rpm && record.avg_engine_rpm > 2100;
-                  const isOverheating = record.avg_engine_temp && record.avg_engine_temp > 95;
+                  const isHighRPM = record.avg_engine_rpm && record.avg_engine_rpm > 2100
+                  const isOverheating = record.avg_engine_temp && record.avg_engine_temp > 95
                   const isWarm =
                     record.avg_engine_temp &&
                     record.avg_engine_temp > 85 &&
-                    record.avg_engine_temp <= 95;
+                    record.avg_engine_temp <= 95
 
                   return (
                     <TableRow
@@ -497,12 +497,12 @@ export default async function MachineTelemetryPage({ searchParams }: MachineTele
                         {record.machine_name}
                       </TableCell>
                       <TableCell
-                        className={`text-right font-medium ${isHighRPM ? "text-accent-blue" : "text-arch-text-secondary"}`}
+                        className={`text-right font-medium ${isHighRPM ? 'text-accent-blue' : 'text-arch-text-secondary'}`}
                       >
                         {formatNumber(record.avg_engine_rpm, 0)} rpm
                       </TableCell>
                       <TableCell
-                        className={`text-right font-semibold ${isOverheating ? "text-accent-red" : isWarm ? "text-accent-blue" : "text-arch-text-secondary"}`}
+                        className={`text-right font-semibold ${isOverheating ? 'text-accent-red' : isWarm ? 'text-accent-blue' : 'text-arch-text-secondary'}`}
                       >
                         {formatNumber(record.avg_engine_temp, 1)}°C
                       </TableCell>
@@ -533,7 +533,7 @@ export default async function MachineTelemetryPage({ searchParams }: MachineTele
                         {record.record_count}
                       </TableCell>
                     </TableRow>
-                  );
+                  )
                 })
               )}
             </TableBody>
@@ -665,5 +665,5 @@ export default async function MachineTelemetryPage({ searchParams }: MachineTele
         </GlassCard>
       </div>
     </div>
-  );
+  )
 }

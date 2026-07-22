@@ -1,9 +1,9 @@
-import { Suspense } from "react";
-import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
-import { cacheLife, cacheTag } from "next/cache";
-import { createServerSupabaseClient, getUserSafely } from "@repo/supabase/server";
-import { createReadReplicaClient } from "@repo/supabase/read-replica";
+import { Suspense } from 'react'
+import { redirect } from 'next/navigation'
+import { cookies } from 'next/headers'
+import { cacheLife, cacheTag } from 'next/cache'
+import { createServerSupabaseClient, getUserSafely } from '@repo/supabase/server'
+import { createReadReplicaClient } from '@repo/supabase/read-replica'
 import {
   AlertTicker,
   ProductionTrendWrapper as ProductionTrend,
@@ -13,11 +13,11 @@ import {
   ToolBanner,
   DepartmentReviews,
   DepartmentCard,
-} from "@/features/hub";
-import type { AlertEvent } from "@/features/hub";
-import type { TrendDataPoint } from "@/features/hub";
-import { getTools } from "@/lib/tools";
-import { departmentsForHub, resolveAccessibleDepartmentNames } from "@/lib/accessible-departments";
+} from '@/features/hub'
+import type { AlertEvent } from '@/features/hub'
+import type { TrendDataPoint } from '@/features/hub'
+import { getTools } from '@/lib/tools'
+import { departmentsForHub, resolveAccessibleDepartmentNames } from '@/lib/accessible-departments'
 import {
   Shield,
   Activity,
@@ -26,191 +26,191 @@ import {
   AlertTriangle,
   Wrench,
   Power,
-} from "lucide-react";
+} from 'lucide-react'
 
-const PORTAL_VERSION = process.env.PORTAL_VERSION ?? "2.4.1";
+const PORTAL_VERSION = process.env.PORTAL_VERSION ?? '2.4.1'
 
 async function getDashboardCounts(
   today: string,
   cookieList: Array<{ name: string; value: string }>
 ) {
-  "use cache";
-  cacheLife("minutes");
-  cacheTag("table:safety_incidents", "table:breakdowns", "table:machines", `hub-counts-${today}`);
-  const db = await createReadReplicaClient(cookieList);
+  'use cache'
+  cacheLife('minutes')
+  cacheTag('table:safety_incidents', 'table:breakdowns', 'table:machines', `hub-counts-${today}`)
+  const db = await createReadReplicaClient(cookieList)
   const [incidents, breakdowns, machines] = await Promise.all([
     db
-      .from("safety_incidents")
-      .select("id", { count: "exact", head: true })
-      .eq("incident_date", today)
-      .eq("status", "open"),
+      .from('safety_incidents')
+      .select('id', { count: 'exact', head: true })
+      .eq('incident_date', today)
+      .eq('status', 'open'),
     db
-      .from("breakdowns")
-      .select("id", { count: "exact", head: true })
-      .eq("status", "active")
-      .is("deleted_at", null),
-    db.from("machines").select("id", { count: "exact", head: true }).eq("active", false),
-  ]);
+      .from('breakdowns')
+      .select('id', { count: 'exact', head: true })
+      .eq('status', 'active')
+      .is('deleted_at', null),
+    db.from('machines').select('id', { count: 'exact', head: true }).eq('active', false),
+  ])
   return {
     incidentCount: incidents.count ?? 0,
     breakdownCount: breakdowns.count ?? 0,
     offlineMachineCount: machines.count ?? 0,
-  };
+  }
 }
 
 const FALLBACK_TREND_DATA: TrendDataPoint[] = [
-  { date: "08:00", Drilling: 2890, Production: 2338, Engineering: 1200 },
-  { date: "09:00", Drilling: 2756, Production: 2103, Engineering: 1400 },
-  { date: "10:00", Drilling: 3322, Production: 2194, Engineering: 1100 },
-  { date: "11:00", Drilling: 3470, Production: 2108, Engineering: 1600 },
-  { date: "12:00", Drilling: 3475, Production: 1812, Engineering: 1300 },
-  { date: "13:00", Drilling: 3129, Production: 1726, Engineering: 1500 },
-];
+  { date: '08:00', Drilling: 2890, Production: 2338, Engineering: 1200 },
+  { date: '09:00', Drilling: 2756, Production: 2103, Engineering: 1400 },
+  { date: '10:00', Drilling: 3322, Production: 2194, Engineering: 1100 },
+  { date: '11:00', Drilling: 3470, Production: 2108, Engineering: 1600 },
+  { date: '12:00', Drilling: 3475, Production: 1812, Engineering: 1300 },
+  { date: '13:00', Drilling: 3129, Production: 1726, Engineering: 1500 },
+]
 
 async function getProductionTrendData(
   cookieList: Array<{ name: string; value: string }>
 ): Promise<TrendDataPoint[]> {
-  "use cache";
-  cacheLife("minutes");
-  cacheTag("table:hourly_loads", "table:machines", "hub-production-trend");
-  const db = await createReadReplicaClient(cookieList);
-  const { data: trendData, error } = await db.rpc("get_production_trend", {
+  'use cache'
+  cacheLife('minutes')
+  cacheTag('table:hourly_loads', 'table:machines', 'hub-production-trend')
+  const db = await createReadReplicaClient(cookieList)
+  const { data: trendData, error } = await db.rpc('get_production_trend', {
     p_hours_back: 24,
-  });
+  })
 
   if (error || !trendData || trendData.length === 0) {
-    return FALLBACK_TREND_DATA;
+    return FALLBACK_TREND_DATA
   }
 
   // Format RPC response into TrendDataPoint[]
-  const hourlyMap = new Map<string, TrendDataPoint>();
+  const hourlyMap = new Map<string, TrendDataPoint>()
 
   for (const row of trendData) {
-    const hour = row.hour_label;
+    const hour = row.hour_label
     if (!hourlyMap.has(hour)) {
       hourlyMap.set(hour, {
         date: hour,
         Drilling: 0,
         Production: 0,
         Engineering: 0,
-      });
+      })
     }
-    const point = hourlyMap.get(hour)!;
+    const point = hourlyMap.get(hour)!
     // Map department name to the specific key in TrendDataPoint
     // If department name is not one of the keys, we skip or handle accordingly
-    const deptKey = row.department_name as keyof Omit<TrendDataPoint, "date">;
-    if (deptKey === "Drilling" || deptKey === "Production" || deptKey === "Engineering") {
-      point[deptKey] = Number(row.tonnes);
+    const deptKey = row.department_name as keyof Omit<TrendDataPoint, 'date'>
+    if (deptKey === 'Drilling' || deptKey === 'Production' || deptKey === 'Engineering') {
+      point[deptKey] = Number(row.tonnes)
     }
   }
 
-  const formatted = Array.from(hourlyMap.values());
-  return formatted.length > 0 ? formatted : FALLBACK_TREND_DATA;
+  const formatted = Array.from(hourlyMap.values())
+  return formatted.length > 0 ? formatted : FALLBACK_TREND_DATA
 }
 
 async function getRecentAlertEvents(
   today: string,
   cookieList: Array<{ name: string; value: string }>
 ): Promise<AlertEvent[]> {
-  "use cache";
-  cacheLife("minutes");
-  cacheTag("table:safety_incidents", "table:breakdowns", `hub-alerts-${today}`);
-  const db = await createReadReplicaClient(cookieList);
-  const events: AlertEvent[] = [];
+  'use cache'
+  cacheLife('minutes')
+  cacheTag('table:safety_incidents', 'table:breakdowns', `hub-alerts-${today}`)
+  const db = await createReadReplicaClient(cookieList)
+  const events: AlertEvent[] = []
 
   // Fetch recent open safety incidents with actual severity levels
   const { data: incidents } = await db
-    .from("safety_incidents")
-    .select("id, description, created_at, severity_id, location, severity:safety_severities(level)")
-    .eq("incident_date", today)
-    .eq("status", "open")
-    .order("created_at", { ascending: false })
-    .limit(5);
+    .from('safety_incidents')
+    .select('id, description, created_at, severity_id, location, severity:safety_severities(level)')
+    .eq('incident_date', today)
+    .eq('status', 'open')
+    .order('created_at', { ascending: false })
+    .limit(5)
 
-  function mapSeverityLevel(level?: string): AlertEvent["severity"] {
-    if (!level) return "warning";
-    const lower = level.toLowerCase();
-    if (lower.includes("critical") || lower.includes("high") || lower.includes("severe")) {
-      return "critical";
+  function mapSeverityLevel(level?: string): AlertEvent['severity'] {
+    if (!level) return 'warning'
+    const lower = level.toLowerCase()
+    if (lower.includes('critical') || lower.includes('high') || lower.includes('severe')) {
+      return 'critical'
     }
-    if (lower.includes("warning") || lower.includes("medium") || lower.includes("moderate")) {
-      return "warning";
+    if (lower.includes('warning') || lower.includes('medium') || lower.includes('moderate')) {
+      return 'warning'
     }
-    return "info";
+    return 'info'
   }
 
   if (incidents) {
     for (const incident of incidents) {
       const sev = incident.severity as unknown as {
-        level: string;
-      } | null;
+        level: string
+      } | null
       events.push({
         id: `incident-${incident.id}`,
-        type: "incident",
-        title: incident.location ? `${incident.location}: Incident` : "Safety Incident",
+        type: 'incident',
+        title: incident.location ? `${incident.location}: Incident` : 'Safety Incident',
         description: incident.description,
         timestamp: incident.created_at,
         severity: mapSeverityLevel(sev?.level),
-        href: "/safety/daily-log",
-      });
+        href: '/safety/daily-log',
+      })
     }
   }
 
   // Fetch recent active breakdowns
   const { data: breakdownsData } = await db
-    .from("breakdowns")
-    .select("id, machine_name, machine_type, reason, created_at, date_in")
-    .eq("status", "active")
-    .is("deleted_at", null)
-    .order("created_at", { ascending: false })
-    .limit(5);
+    .from('breakdowns')
+    .select('id, machine_name, machine_type, reason, created_at, date_in')
+    .eq('status', 'active')
+    .is('deleted_at', null)
+    .order('created_at', { ascending: false })
+    .limit(5)
 
   if (breakdownsData) {
     for (const b of breakdownsData) {
       events.push({
         id: `breakdown-${b.id}`,
-        type: "breakdown",
+        type: 'breakdown',
         title: b.machine_name ? `${b.machine_name} Breakdown` : `${b.machine_type} Breakdown`,
         description: b.reason,
         timestamp: b.created_at,
-        severity: "warning",
-        href: "/engineering/breakdowns",
-      });
+        severity: 'warning',
+        href: '/engineering/breakdowns',
+      })
     }
   }
 
   // Sort by timestamp descending and limit to 8 total
   return events
     .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
-    .slice(0, 8);
+    .slice(0, 8)
 }
 
 async function getEmployeeDepartments(userId: string) {
-  "use cache";
-  cacheLife("hours");
-  cacheTag(`auth:${userId}`, "table:employees", "table:departments");
-  return resolveAccessibleDepartmentNames(userId);
+  'use cache'
+  cacheLife('hours')
+  cacheTag(`auth:${userId}`, 'table:employees', 'table:departments')
+  return resolveAccessibleDepartmentNames(userId)
 }
 
 export default async function HubPage({
   searchParams,
 }: {
-  searchParams?: Promise<{ error?: string }>;
+  searchParams?: Promise<{ error?: string }>
 }) {
-  const supabase = await createServerSupabaseClient();
-  const user = await getUserSafely(supabase);
+  const supabase = await createServerSupabaseClient()
+  const user = await getUserSafely(supabase)
 
   if (!user || !user.id) {
-    redirect("/login");
+    redirect('/login')
   }
 
-  const accessError = searchParams ? (await searchParams).error : undefined;
+  const accessError = searchParams ? (await searchParams).error : undefined
 
-  const userId = user.id as string;
-  const today = new Date().toISOString().split("T")[0] as string;
+  const userId = user.id as string
+  const today = new Date().toISOString().split('T')[0] as string
 
-  const cookieStore = await cookies();
-  const cookieList = cookieStore.getAll();
+  const cookieStore = await cookies()
+  const cookieList = cookieStore.getAll()
 
   // GAP-3: only fetch the fast, above-the-fold data in the main page so the
   // shell streams immediately. The slow ProductionTrend fetch is hoisted into
@@ -222,10 +222,10 @@ export default async function HubPage({
       getEmployeeDepartments(userId),
       getTools(),
       getRecentAlertEvents(today, cookieList),
-    ]);
+    ])
 
-  const accessibleNames = access.names;
-  const departments = departmentsForHub(accessibleNames, access.role);
+  const accessibleNames = access.names
+  const departments = departmentsForHub(accessibleNames, access.role)
 
   return (
     <div className="space-y-6 sm:space-y-12">
@@ -234,19 +234,19 @@ export default async function HubPage({
           role="alert"
           className="os-shell rounded-[var(--os-shell-radius-lg)] px-4 py-3 text-sm login-muted-text"
         >
-          {accessError === "unauthorized_department"
-            ? "You do not have access to that department."
-            : accessError === "unknown_department"
-              ? "That department is not available."
-              : "Unable to open that department."}
+          {accessError === 'unauthorized_department'
+            ? 'You do not have access to that department.'
+            : accessError === 'unknown_department'
+              ? 'That department is not available.'
+              : 'Unable to open that department.'}
         </div>
       ) : null}
       {/* Light-theme glass hero section — os-shell parity with login */}
       <section
         className="relative overflow-hidden rounded-xl pt-1 pb-0 sm:pt-2 sm:pb-0 md:pt-3 md:pb-0 lg:pt-4 lg:pb-0 px-4 sm:px-6 md:px-10 motion-reduce:animate-none animate-fade-up"
         style={{
-          animationDelay: "0s",
-          animationFillMode: "both",
+          animationDelay: '0s',
+          animationFillMode: 'both',
         }}
       >
         <HeroBackground />
@@ -297,24 +297,24 @@ export default async function HubPage({
               defaultTitle="Central Operations Portal"
               defaultDescription="Centralized monitoring and control system for Arch Systems industrial complexes. Access Modbus diagnostics, machine breakdowns, shifts, and live telemetry."
               primaryHref={
-                departments.some((d) => d.name === "control-room" && d.accessible)
-                  ? "/control-room"
+                departments.some((d) => d.name === 'control-room' && d.accessible)
+                  ? '/control-room'
                   : (() => {
-                      const open = departments.find((d) => d.accessible);
-                      return open ? `/${open.name}` : "/hub";
+                      const open = departments.find((d) => d.accessible)
+                      return open ? `/${open.name}` : '/hub'
                     })()
               }
               primaryLabel={
-                departments.some((d) => d.name === "control-room" && d.accessible)
-                  ? "Launch Monitor"
-                  : "Go to Department"
+                departments.some((d) => d.name === 'control-room' && d.accessible)
+                  ? 'Launch Monitor'
+                  : 'Go to Department'
               }
               secondaryHref={
-                departments.some((d) => d.name === "training" && d.accessible)
-                  ? "/training"
+                departments.some((d) => d.name === 'training' && d.accessible)
+                  ? '/training'
                   : (() => {
-                      const open = departments.find((d) => d.accessible);
-                      return open ? `/${open.name}` : "/hub";
+                      const open = departments.find((d) => d.accessible)
+                      return open ? `/${open.name}` : '/hub'
                     })()
               }
               secondaryLabel="System Guidelines"
@@ -333,7 +333,7 @@ export default async function HubPage({
       {/* Operational Urgencies & Alerts */}
       <div
         className="space-y-4 animate-fade-up group/row"
-        style={{ animationDelay: "0.1s", animationFillMode: "both" }}
+        style={{ animationDelay: '0.1s', animationFillMode: 'both' }}
       >
         <div className="flex items-center justify-between pb-2 border-b border-arch-border-subtle">
           <h2 className="text-[17px] font-medium login-text-emphasis flex items-center gap-2">
@@ -347,7 +347,7 @@ export default async function HubPage({
       {/* Core Operational Modules - Responsive Grid */}
       <section
         className="space-y-4 animate-fade-up group/row relative rounded-lg"
-        style={{ animationDelay: "0.2s", animationFillMode: "both" }}
+        style={{ animationDelay: '0.2s', animationFillMode: 'both' }}
       >
         <div className="flex items-center justify-between pb-2 border-b border-arch-border-subtle">
           <h2 className="text-[17px] font-medium login-text-emphasis flex items-center gap-2">
@@ -376,7 +376,7 @@ export default async function HubPage({
       {tools.length > 0 && (
         <section
           className="space-y-4 animate-fade-up group/row"
-          style={{ animationDelay: "0.3s", animationFillMode: "both" }}
+          style={{ animationDelay: '0.3s', animationFillMode: 'both' }}
         >
           <div className="flex items-center justify-between pb-2 border-b border-arch-border-subtle">
             <h2 className="text-[17px] font-medium login-text-emphasis flex items-center gap-2">
@@ -396,7 +396,7 @@ export default async function HubPage({
       {/* Industrial Insights & Production Trends */}
       <section
         className="space-y-4 animate-fade-up group/row"
-        style={{ animationDelay: "0.4s", animationFillMode: "both" }}
+        style={{ animationDelay: '0.4s', animationFillMode: 'both' }}
       >
         <div className="flex items-center justify-between pb-2 border-b border-arch-border-subtle">
           <h2 className="text-[17px] font-medium login-text-emphasis flex items-center gap-2">
@@ -413,7 +413,7 @@ export default async function HubPage({
         </div>
       </section>
     </div>
-  );
+  )
 }
 
 /**
@@ -421,8 +421,8 @@ export default async function HubPage({
  * (GAP-3) so the production trend streams after the shell paints.
  */
 async function ProductionTrendSection() {
-  const cookieStore = await cookies();
-  const cookieList = cookieStore.getAll();
-  const productionTrendData = await getProductionTrendData(cookieList);
-  return <ProductionTrend data={productionTrendData} />;
+  const cookieStore = await cookies()
+  const cookieList = cookieStore.getAll()
+  const productionTrendData = await getProductionTrendData(cookieList)
+  return <ProductionTrend data={productionTrendData} />
 }

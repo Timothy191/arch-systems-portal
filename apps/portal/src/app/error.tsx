@@ -1,35 +1,35 @@
-"use client";
+'use client'
 
-import { useEffect } from "react";
-import Image from "next/image";
-import { SecondaryButton } from "@repo/ui/SecondaryButton";
+import { useEffect } from 'react'
+import Image from 'next/image'
+import { SecondaryButton } from '@repo/ui/SecondaryButton'
 import {
   isAppError,
   isValidationError,
   isAuthError,
   isNotFoundError,
   type AppError,
-} from "@/lib/errors/error-classes";
-import { logError } from "@/lib/errors/error-logger";
+} from '@/lib/errors/error-classes'
+import { logError } from '@/lib/errors/error-logger'
 
 interface RootErrorProps {
-  error: Error & { digest?: string };
-  reset: () => void;
-  unstable_retry?: () => void;
+  error: Error & { digest?: string }
+  reset: () => void
+  unstable_retry?: () => void
 }
 
 /**
  * Get user-friendly error title based on error type
  */
 function getErrorTitle(error: Error): string {
-  if (isNotFoundError(error)) return "Page not found";
-  if (isAuthError(error)) return "Access denied";
-  if (isValidationError(error)) return "Invalid input";
+  if (isNotFoundError(error)) return 'Page not found'
+  if (isAuthError(error)) return 'Access denied'
+  if (isValidationError(error)) return 'Invalid input'
   if (isAppError(error)) {
     // Use the error name for other AppErrors
-    return error.name.replace(/([A-Z])/g, " $1").trim();
+    return error.name.replace(/([A-Z])/g, ' $1').trim()
   }
-  return "Something went wrong";
+  return 'Something went wrong'
 }
 
 /**
@@ -38,10 +38,10 @@ function getErrorTitle(error: Error): string {
 function getErrorMessage(error: Error): string {
   if (isAppError(error)) {
     // AppError has user-friendly messages
-    return error.message;
+    return error.message
   }
   // Fallback for generic errors
-  return error.message || "An unexpected error occurred. Please try again.";
+  return error.message || 'An unexpected error occurred. Please try again.'
 }
 
 /**
@@ -49,21 +49,21 @@ function getErrorMessage(error: Error): string {
  */
 function getErrorContext(error: Error): Record<string, unknown> | null {
   if (isAppError(error) && error.context) {
-    return error.context;
+    return error.context
   }
-  return null;
+  return null
 }
 
 export default function RootError({ error, reset, unstable_retry }: RootErrorProps) {
   useEffect(() => {
-    logError(error);
-  }, [error]);
+    logError(error)
+  }, [error])
 
-  const title = getErrorTitle(error);
-  const message = getErrorMessage(error);
-  const context = getErrorContext(error);
-  const isDev = process.env.NODE_ENV === "development";
-  const appError = isAppError(error) ? (error as AppError) : null;
+  const title = getErrorTitle(error)
+  const message = getErrorMessage(error)
+  const context = getErrorContext(error)
+  const isDev = process.env.NODE_ENV === 'development'
+  const appError = isAppError(error) ? (error as AppError) : null
 
   return (
     <div className="fixed inset-0 z-50 bg-arch-surface-primary flex items-center justify-center p-4">
@@ -106,5 +106,5 @@ export default function RootError({ error, reset, unstable_retry }: RootErrorPro
         <SecondaryButton onClick={unstable_retry ?? reset}>Try again</SecondaryButton>
       </div>
     </div>
-  );
+  )
 }

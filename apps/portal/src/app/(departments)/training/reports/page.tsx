@@ -1,73 +1,73 @@
-import { GlassCard } from "@repo/ui/GlassCard";
-import { FileText, TrendingUp, ShieldAlert, CheckCircle, BarChart3 } from "lucide-react";
-import { ExportButton } from "../components/ExportButton";
+import { GlassCard } from '@repo/ui/GlassCard'
+import { FileText, TrendingUp, ShieldAlert, CheckCircle, BarChart3 } from 'lucide-react'
+import { ExportButton } from '../components/ExportButton'
 
 interface Report {
-  id: string;
-  name: string;
-  type: string;
-  generatedDate: string;
-  author: string;
-  size: string;
+  id: string
+  name: string
+  type: string
+  generatedDate: string
+  author: string
+  size: string
 }
 
 const initialReports: Report[] = [
   {
-    id: "REP-0102",
-    name: "Q2 Core Equipment Licensing Compliance Audit",
-    type: "PDF Audit",
-    generatedDate: "2026-05-30",
-    author: "Sarah Jenkins",
-    size: "2.4 MB",
+    id: 'REP-0102',
+    name: 'Q2 Core Equipment Licensing Compliance Audit',
+    type: 'PDF Audit',
+    generatedDate: '2026-05-30',
+    author: 'Sarah Jenkins',
+    size: '2.4 MB',
   },
   {
-    id: "REP-0099",
-    name: "Weekly Expiry Hazard Warning Report (June)",
-    type: "CSV Export",
-    generatedDate: "2026-05-29",
-    author: "System Automated",
-    size: "112 KB",
+    id: 'REP-0099',
+    name: 'Weekly Expiry Hazard Warning Report (June)',
+    type: 'CSV Export',
+    generatedDate: '2026-05-29',
+    author: 'System Automated',
+    size: '112 KB',
   },
   {
-    id: "REP-0094",
-    name: "LMS Progression & Backlog Summary (May 2026)",
-    type: "Excel Sheet",
-    generatedDate: "2026-05-25",
-    author: "Sarah Jenkins",
-    size: "1.8 MB",
+    id: 'REP-0094',
+    name: 'LMS Progression & Backlog Summary (May 2026)',
+    type: 'Excel Sheet',
+    generatedDate: '2026-05-25',
+    author: 'Sarah Jenkins',
+    size: '1.8 MB',
   },
   {
-    id: "REP-0087",
-    name: "Underground Safety Ticket Re-certification Roster",
-    type: "PDF List",
-    generatedDate: "2026-05-18",
-    author: "David Vance",
-    size: "840 KB",
+    id: 'REP-0087',
+    name: 'Underground Safety Ticket Re-certification Roster',
+    type: 'PDF List',
+    generatedDate: '2026-05-18',
+    author: 'David Vance',
+    size: '840 KB',
   },
-];
+]
 
 const complianceRates = [
-  { name: "Drilling Department", rate: 98, trainees: 24, status: "Optimal" },
-  { name: "Production Department", rate: 91, trainees: 64, status: "Good" },
+  { name: 'Drilling Department', rate: 98, trainees: 24, status: 'Optimal' },
+  { name: 'Production Department', rate: 91, trainees: 64, status: 'Good' },
   {
-    name: "Engineering Department",
+    name: 'Engineering Department',
     rate: 94,
     trainees: 38,
-    status: "Optimal",
+    status: 'Optimal',
   },
   {
-    name: "Access Control / Security",
+    name: 'Access Control / Security',
     rate: 100,
     trainees: 12,
-    status: "Optimal",
+    status: 'Optimal',
   },
   {
-    name: "Administration & Safety Staff",
+    name: 'Administration & Safety Staff',
     rate: 88,
     trainees: 15,
-    status: "Caution",
+    status: 'Caution',
   },
-];
+]
 
 export default function ReportsPage() {
   return (
@@ -110,10 +110,10 @@ export default function ReportsPage() {
                       <span
                         className={`font-semibold ${
                           dept.rate >= 95
-                            ? "text-emerald-600"
+                            ? 'text-emerald-600'
                             : dept.rate >= 90
-                              ? "text-blue-600"
-                              : "text-amber-600 font-bold"
+                              ? 'text-blue-600'
+                              : 'text-amber-600 font-bold'
                         }`}
                       >
                         {dept.rate}%
@@ -124,10 +124,10 @@ export default function ReportsPage() {
                     <div
                       className={`h-full rounded-full ${
                         dept.rate >= 95
-                          ? "bg-emerald-500"
+                          ? 'bg-emerald-500'
                           : dept.rate >= 90
-                            ? "bg-blue-500"
-                            : "bg-amber-500"
+                            ? 'bg-blue-500'
+                            : 'bg-amber-500'
                       }`}
                       style={{ width: `${dept.rate}%` }}
                     />
@@ -232,5 +232,5 @@ export default function ReportsPage() {
         </div>
       </GlassCard>
     </div>
-  );
+  )
 }

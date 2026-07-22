@@ -1,25 +1,25 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { useAdminData, useSupabaseClient } from "@/hooks/useAdminData";
-import { GlassCard } from "@repo/ui/GlassCard";
-import { Search, UserPlus, Edit2, Trash2 } from "lucide-react";
-import { Button } from "@repo/ui/components/ui/button";
-import { Badge } from "@repo/ui/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@repo/ui/components/ui/dialog";
-import { Input } from "@repo/ui/components/ui/input";
-import { logError } from "@/lib/errors/error-logger";
+import { useState } from 'react'
+import { useAdminData, useSupabaseClient } from '@/hooks/useAdminData'
+import { GlassCard } from '@repo/ui/GlassCard'
+import { Search, UserPlus, Edit2, Trash2 } from 'lucide-react'
+import { Button } from '@repo/ui/components/ui/button'
+import { Badge } from '@repo/ui/components/ui/badge'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@repo/ui/components/ui/dialog'
+import { Input } from '@repo/ui/components/ui/input'
+import { logError } from '@/lib/errors/error-logger'
 
 interface Employee {
-  id: string;
-  full_name: string;
-  role: string;
-  department_id: string | null;
-  accessible_departments: string[] | null;
-  created_at: string;
+  id: string
+  full_name: string
+  role: string
+  department_id: string | null
+  accessible_departments: string[] | null
+  created_at: string
   departments?: {
-    display_name: string;
-  };
+    display_name: string
+  }
 }
 
 export function UsersTab() {
@@ -29,64 +29,64 @@ export function UsersTab() {
     reload: reloadEmployees,
   } = useAdminData<Employee>(async (supabase) =>
     supabase
-      .from("employees")
-      .select("*, departments(display_name)")
-      .order("created_at", { ascending: false })
-  );
+      .from('employees')
+      .select('*, departments(display_name)')
+      .order('created_at', { ascending: false })
+  )
 
   const {
     data: departments,
     loading: deptsLoading,
     reload: reloadDepartments,
   } = useAdminData<{ id: string; display_name: string }>(async (supabase) =>
-    supabase.from("departments").select("id, display_name")
-  );
+    supabase.from('departments').select('id, display_name')
+  )
 
-  const loading = empsLoading || deptsLoading;
-  const supabase = useSupabaseClient();
-  const [searchTerm, setSearchTerm] = useState("");
-  const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
-  const [showEditDialog, setShowEditDialog] = useState(false);
+  const loading = empsLoading || deptsLoading
+  const supabase = useSupabaseClient()
+  const [searchTerm, setSearchTerm] = useState('')
+  const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null)
+  const [showEditDialog, setShowEditDialog] = useState(false)
 
   const handleEdit = (employee: Employee) => {
-    setEditingEmployee(employee);
-    setShowEditDialog(true);
-  };
+    setEditingEmployee(employee)
+    setShowEditDialog(true)
+  }
 
   const handleUpdate = async (formData: {
-    role: string;
-    department_id: string | null;
-    accessible_departments: string[];
+    role: string
+    department_id: string | null
+    accessible_departments: string[]
   }) => {
-    if (!editingEmployee) return;
+    if (!editingEmployee) return
 
     const { error } = await supabase
-      .from("employees")
+      .from('employees')
       .update({
         role: formData.role,
         department_id: formData.department_id,
         accessible_departments: formData.accessible_departments,
       })
-      .eq("id", editingEmployee.id);
+      .eq('id', editingEmployee.id)
 
     if (error) {
       logError(new Error(error.message), {
-        context: "users_tab_update_employee",
-      });
-      return;
+        context: 'users_tab_update_employee',
+      })
+      return
     }
 
-    setShowEditDialog(false);
-    setEditingEmployee(null);
-    reloadEmployees();
-    reloadDepartments();
-  };
+    setShowEditDialog(false)
+    setEditingEmployee(null)
+    reloadEmployees()
+    reloadDepartments()
+  }
 
   const filteredEmployees = employees.filter((emp) =>
     emp.full_name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  )
 
-  const deptMap = new Map(departments.map((d) => [d.id, d.display_name]));
+  const deptMap = new Map(departments.map((d) => [d.id, d.display_name]))
 
   return (
     <div className="space-y-6">
@@ -172,18 +172,18 @@ export function UsersTab() {
                       <Badge
                         variant="outline"
                         className={
-                          emp.role === "admin"
-                            ? "bg-violet-500/10 text-violet-400 border-violet-500/20"
-                            : emp.role === "supervisor"
-                              ? "bg-accent-blue/10 text-accent-blue border-accent-blue/20"
-                              : ""
+                          emp.role === 'admin'
+                            ? 'bg-violet-500/10 text-violet-400 border-violet-500/20'
+                            : emp.role === 'supervisor'
+                              ? 'bg-accent-blue/10 text-accent-blue border-accent-blue/20'
+                              : ''
                         }
                       >
                         {emp.role}
                       </Badge>
                     </td>
                     <td className="px-6 py-4 text-arch-text-muted text-sm">
-                      {emp.department_id ? deptMap.get(emp.department_id) : "Unassigned"}
+                      {emp.department_id ? deptMap.get(emp.department_id) : 'Unassigned'}
                     </td>
                     <td className="px-6 py-4 text-arch-text-muted text-sm">
                       {emp.accessible_departments?.length || 0} departments
@@ -223,14 +223,14 @@ export function UsersTab() {
             departments={departments}
             onSubmit={handleUpdate}
             onCancel={() => {
-              setShowEditDialog(false);
-              setEditingEmployee(null);
+              setShowEditDialog(false)
+              setEditingEmployee(null)
             }}
           />
         </DialogContent>
       </Dialog>
     </div>
-  );
+  )
 }
 
 function EditEmployeeForm({
@@ -239,35 +239,35 @@ function EditEmployeeForm({
   onSubmit,
   onCancel,
 }: {
-  employee: Employee | null;
-  departments: { id: string; display_name: string }[];
+  employee: Employee | null
+  departments: { id: string; display_name: string }[]
   onSubmit: (_data: {
-    role: string;
-    department_id: string | null;
-    accessible_departments: string[];
-  }) => void;
-  onCancel: () => void;
+    role: string
+    department_id: string | null
+    accessible_departments: string[]
+  }) => void
+  onCancel: () => void
 }) {
-  const [role, setRole] = useState(employee?.role || "operator");
-  const [departmentId, setDepartmentId] = useState(employee?.department_id || "");
+  const [role, setRole] = useState(employee?.role || 'operator')
+  const [departmentId, setDepartmentId] = useState(employee?.department_id || '')
   const [accessibleDepts, setAccessibleDepts] = useState<string[]>(
     employee?.accessible_departments || []
-  );
+  )
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
     onSubmit({
       role,
       department_id: departmentId || null,
       accessible_departments: accessibleDepts,
-    });
-  };
+    })
+  }
 
   const toggleAccessibleDept = (deptId: string) => {
     setAccessibleDepts((prev) =>
       prev.includes(deptId) ? prev.filter((d) => d !== deptId) : [...prev, deptId]
-    );
-  };
+    )
+  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -322,8 +322,8 @@ function EditEmployeeForm({
               onClick={() => toggleAccessibleDept(dept.id)}
               className={`text-left px-3 py-2 rounded border text-sm ${
                 accessibleDepts.includes(dept.id)
-                  ? "bg-arch-accent-green border-arch-accent-green text-[var(--bg-void)]"
-                  : "bg-arch-surface-secondary border-arch-border-default text-arch-text-secondary"
+                  ? 'bg-arch-accent-green border-arch-accent-green text-[var(--bg-void)]'
+                  : 'bg-arch-surface-secondary border-arch-border-default text-arch-text-secondary'
               }`}
             >
               {dept.display_name}
@@ -344,5 +344,5 @@ function EditEmployeeForm({
         </Button>
       </div>
     </form>
-  );
+  )
 }

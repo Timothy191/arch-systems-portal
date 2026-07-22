@@ -37,6 +37,20 @@ Single source of truth for cross-agent codebase knowledge: `.agents/knowledge/`.
 - `pnpm build`: Full project build (Turborepo).
 - `pnpm quality`: Pre-commit check (lint + type-check + test + prettier).
 
+#### Fast Local Development (Next.js convention)
+For iterative development on the portal app, use watch mode:
+
+1. **Start watch build** (auto-rebuilds on file changes):
+   ```bash
+   cd apps/portal && pnpm dev
+   ```
+
+2. **Run focused tests** — see testing section below for mode-specific commands.
+
+3. **For type errors only** — use `pnpm --filter=portal type-check` instead of full build.
+
+4. **Always run `pnpm quality` before marking a task as done** — this runs lint, type-check, test, and format in sequence.
+
 ### Agentic AI
 - `pnpm ai`: AI system health check.
 - `pnpm ai check`: Validate AI surfaces drift/compliance.
@@ -67,6 +81,42 @@ Single source of truth for cross-agent codebase knowledge: `.agents/knowledge/`.
 - **Quality Gate**: `pnpm quality` must pass before marking tasks as "done".
 - **Coverage**: Expected for all permanent feature changes and API modifications.
 
+### Testing Patterns (from Next.js conventions)
+
+**Running focused tests:**
+```bash
+# Test a specific file
+pnpm --filter=portal test -- path/to/file.test.ts
+
+# Test with a name pattern
+pnpm --filter=portal test -- -t "should render dashboard"
+```
+
+**Test conventions:**
+- Place tests alongside source files: `component.tsx` → `component.test.tsx`
+- Integration tests go in `__tests__/` directories under the relevant feature folder
+- Use `@testing-library/react` for component tests
+- Mock external services at the boundary (Supabase, Inngest, Redis)
+- Never use `any` in test files (override in eslint config allows in test/match config)
+
+### Code Style Guidelines (from Next.js conventions)
+
+**Imports:**
+- Use `import type { X }` for type-only imports (enforced by `consistent-type-imports`)
+- Group: built-in → external → internal → relative
+- `@repo/*` aliases preferred over relative imports for cross-package references
+
+**Error handling:**
+- Throw typed `AppError` subclasses from `@repo/errors` — never raw `Error`
+- Catch at the boundary (route handler, server action boundary)
+- Use `neverthrow` Result patterns for expected failure cases
+
+**Commit conventions:**
+- Conventional commits: `type(scope): message`
+- Valid types: `feat`, `fix`, `chore`, `refactor`, `docs`, `test`, `style`, `perf`
+- Scope matches the package/app name (e.g., `portal`, `ops-gateway`, `repo/supabase`)
+- Breaking changes: `feat!:` or `fix!:` with `BREAKING CHANGE:` in body
+
 ---
 
 ## Next.js 16 Caching & Data Fetching
@@ -77,3 +127,12 @@ When applying the native `"use cache"` directive to Server Components or data-fe
 
 ---
 *For canonical rulebook, see AGENTS.md in project root.*
+
+### Common Gotchas & Debugging (from Next.js conventions)
+
+- **Snapshot tests and env flags**: Tests with inline snapshots can produce different output depending on env flags. When updating snapshots, run with the exact flags CI uses.
+- **`app-page.ts` is a build template**: Any `require()` in template files is traced by the bundler at build time. You cannot require internal modules with relative paths — export helpers from `entry-base.ts` instead.
+- **Stale `.next` cache**: If the portal produces unexpected errors after switching branches, delete `apps/portal/.next/` and retry.
+- **`"use cache"` rule**: Never read `cookies()` or `headers()` inside a `"use cache"` scope. Decouple auth from caching — verify auth in an outer function, then call an inner cached function using `createAdminClient()`. See [Next.js 16 Caching](#nextjs-16-caching--data-fetching) for details.
+- **Source maps**: `findSourceMap()` needs `--enable-source-maps` flag. Source map paths vary between bundlers — try multiple formats.
+- **Console output in tests**: `console.log` output may be captured by Jest. Use `--verbose` or `--debug` flags to see full output when debugging tests.

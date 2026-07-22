@@ -1,81 +1,81 @@
-"use client";
+'use client'
 
-import { useEffect, useState, useCallback } from "react";
-import { Download, X } from "lucide-react";
+import { useEffect, useState, useCallback } from 'react'
+import { Download, X } from 'lucide-react'
 
 type BeforeInstallPromptEvent = Event & {
-  prompt: () => Promise<void>;
-  userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
-};
+  prompt: () => Promise<void>
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>
+}
 
 export function PWAInstallButton() {
-  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
-  const [showInstallPrompt, setShowInstallPrompt] = useState(false);
-  const [isInstalled, setIsInstalled] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null)
+  const [showInstallPrompt, setShowInstallPrompt] = useState(false)
+  const [isInstalled, setIsInstalled] = useState(false)
 
   useEffect(() => {
     // Check if already installed
-    if (window.matchMedia("(display-mode: standalone)").matches) {
-      setIsInstalled(true);
-      return;
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      setIsInstalled(true)
+      return
     }
 
     // Listen for beforeinstallprompt event
     const handleBeforeInstallPrompt = (e: Event) => {
       // Prevent Chrome 67 and earlier from automatically showing the prompt
-      e.preventDefault();
+      e.preventDefault()
       // Stash the event so it can be triggered later
-      setDeferredPrompt(e as BeforeInstallPromptEvent);
-      setShowInstallPrompt(true);
-    };
+      setDeferredPrompt(e as BeforeInstallPromptEvent)
+      setShowInstallPrompt(true)
+    }
 
     // Listen for app installed event
     const handleAppInstalled = () => {
-      setIsInstalled(true);
-      setShowInstallPrompt(false);
-      setDeferredPrompt(null);
-    };
+      setIsInstalled(true)
+      setShowInstallPrompt(false)
+      setDeferredPrompt(null)
+    }
 
-    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
-    window.addEventListener("appinstalled", handleAppInstalled);
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+    window.addEventListener('appinstalled', handleAppInstalled)
 
     return () => {
-      window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
-      window.removeEventListener("appinstalled", handleAppInstalled);
-    };
-  }, []);
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+      window.removeEventListener('appinstalled', handleAppInstalled)
+    }
+  }, [])
 
   const handleInstallClick = useCallback(async () => {
     if (!deferredPrompt) {
-      return;
+      return
     }
 
     // Show the install prompt
-    deferredPrompt.prompt();
+    deferredPrompt.prompt()
 
     // Wait for the user to respond to the prompt
-    const { outcome } = await deferredPrompt.userChoice;
+    const { outcome } = await deferredPrompt.userChoice
 
-    if (outcome === "accepted") {
-      // eslint-disable-next-line no-console
-      console.warn("[pwa] User accepted the install prompt");
+    if (outcome === 'accepted') {
+       
+      console.warn('[pwa] User accepted the install prompt')
     } else {
-      // eslint-disable-next-line no-console
-      console.warn("[pwa] User dismissed the install prompt");
+       
+      console.warn('[pwa] User dismissed the install prompt')
     }
 
     // Clear the deferred prompt
-    setDeferredPrompt(null);
-    setShowInstallPrompt(false);
-  }, [deferredPrompt]);
+    setDeferredPrompt(null)
+    setShowInstallPrompt(false)
+  }, [deferredPrompt])
 
   const handleDismiss = useCallback(() => {
-    setShowInstallPrompt(false);
+    setShowInstallPrompt(false)
     // Don't clear deferredPrompt - user can trigger install via other means
-  }, []);
+  }, [])
 
   if (isInstalled || !showInstallPrompt) {
-    return null;
+    return null
   }
 
   return (
@@ -102,5 +102,5 @@ export function PWAInstallButton() {
         <X className="h-4 w-4" />
       </button>
     </div>
-  );
+  )
 }

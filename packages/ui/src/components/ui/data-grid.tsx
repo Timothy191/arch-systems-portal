@@ -1,26 +1,26 @@
-"use client";
+'use client'
 
-import * as React from "react";
-import { RevoGrid } from "@revolist/react-datagrid";
-import type { SortingConfig, ColumnFilterConfig } from "@revolist/revogrid";
-import { cn } from "@repo/ui/lib/utils";
-import { GlassCard } from "../GlassCard";
+import * as React from 'react'
+import { RevoGrid } from '@revolist/react-datagrid'
+import type { SortingConfig, ColumnFilterConfig } from '@revolist/revogrid'
+import { cn } from '@repo/ui/lib/utils'
+import { GlassCard } from '../GlassCard'
 
-type RevoColumn = React.ComponentProps<typeof RevoGrid>["columns"];
-type RevoSource = React.ComponentProps<typeof RevoGrid>["source"];
+type RevoColumn = React.ComponentProps<typeof RevoGrid>['columns']
+type RevoSource = React.ComponentProps<typeof RevoGrid>['source']
 
 export interface DataGridProps {
-  columns: RevoColumn;
-  source: RevoSource;
-  className?: string;
-  height?: string;
-  resize?: boolean;
-  filter?: boolean | ColumnFilterConfig;
-  sorting?: boolean | SortingConfig;
-  canFocus?: boolean;
+  columns: RevoColumn
+  source: RevoSource
+  className?: string
+  height?: string
+  resize?: boolean
+  filter?: boolean | ColumnFilterConfig
+  sorting?: boolean | SortingConfig
+  canFocus?: boolean
   // eslint-disable-next-line no-unused-vars
-  onAfterEdit?: (_event: any) => void;
-  stretch?: boolean | string;
+  onAfterEdit?: (_event: any) => void
+  stretch?: boolean | string
 }
 
 /**
@@ -35,7 +35,7 @@ export function DataGrid({
   columns,
   source,
   className,
-  height = "600px",
+  height = '600px',
   resize = true,
   filter = false,
   sorting = false,
@@ -43,13 +43,13 @@ export function DataGrid({
   onAfterEdit,
   stretch,
 }: DataGridProps) {
-  const gridRef = React.useRef<any>(null);
+  const gridRef = React.useRef<any>(null)
 
   const sortingProp =
-    typeof sorting === "boolean" ? (sorting ? { additive: false } : undefined) : sorting;
+    typeof sorting === 'boolean' ? (sorting ? { additive: false } : undefined) : sorting
 
   return (
-    <GlassCard className={cn("overflow-hidden p-0", className)}>
+    <GlassCard className={cn('overflow-hidden p-0', className)}>
       <div
         className="w-full"
         style={{
@@ -72,5 +72,5 @@ export function DataGrid({
         />
       </div>
     </GlassCard>
-  );
+  )
 }

@@ -1,15 +1,15 @@
-"use client";
+'use client'
 
-import { useState, useEffect, useMemo } from "react";
-import { logout } from "@/app/actions";
+import { useState, useEffect, useMemo } from 'react'
+import { logout } from '@/app/actions'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@repo/ui/components/ui/dropdown-menu";
-import { cn } from "@repo/ui/lib/utils";
+} from '@repo/ui/components/ui/dropdown-menu'
+import { cn } from '@repo/ui/lib/utils'
 import {
   LogOut,
   RotateCcw,
@@ -24,72 +24,72 @@ import {
   ShieldAlert,
   Phone,
   ClipboardList,
-} from "lucide-react";
-import { fetchWeather, getWindDirection, type WeatherData } from "@/lib/weather-api";
+} from 'lucide-react'
+import { fetchWeather, getWindDirection, type WeatherData } from '@/lib/weather-api'
 
 /* ------------------------------------------------------------------ */
 //  Shift helpers
 /* ------------------------------------------------------------------ */
 interface ShiftInfo {
-  label: string;
-  hoursRemaining: number;
-  isDay: boolean;
+  label: string
+  hoursRemaining: number
+  isDay: boolean
 }
 
 function getShiftInfo(): ShiftInfo {
-  const now = new Date();
-  const hour = now.getHours();
-  const isDay = hour >= 6 && hour < 18;
-  const hoursRemaining = isDay ? 18 - hour : hour >= 18 ? 30 - hour : 6 - hour;
+  const now = new Date()
+  const hour = now.getHours()
+  const isDay = hour >= 6 && hour < 18
+  const hoursRemaining = isDay ? 18 - hour : hour >= 18 ? 30 - hour : 6 - hour
   return {
-    label: isDay ? "Day Shift" : "Night Shift",
+    label: isDay ? 'Day Shift' : 'Night Shift',
     hoursRemaining,
     isDay,
-  };
+  }
 }
 
 /* ------------------------------------------------------------------ */
 //  Safety alerts (localStorage-backed mock for demo)
 /* ------------------------------------------------------------------ */
 interface SafetyAlert {
-  id: string;
-  severity: "critical" | "warning" | "info";
-  message: string;
-  timestamp: number;
+  id: string
+  severity: 'critical' | 'warning' | 'info'
+  message: string
+  timestamp: number
 }
 
 function useSafetyAlerts() {
   const [alerts, _setAlerts] = useState<SafetyAlert[]>(() => {
-    if (typeof window === "undefined") return [];
+    if (typeof window === 'undefined') return []
     try {
-      const raw = window.localStorage.getItem("arch-safety-alerts");
-      if (raw) return JSON.parse(raw);
+      const raw = window.localStorage.getItem('arch-safety-alerts')
+      if (raw) return JSON.parse(raw)
     } catch {
       /* ignore */
     }
     // Seed realistic mining alerts on first load
     const seed: SafetyAlert[] = [
       {
-        id: "sa-1",
-        severity: "warning",
-        message: "High dust levels — Pit B",
+        id: 'sa-1',
+        severity: 'warning',
+        message: 'High dust levels — Pit B',
         timestamp: Date.now() - 3600000,
       },
       {
-        id: "sa-2",
-        severity: "info",
-        message: "Blasting hold lifted — Sector 4",
+        id: 'sa-2',
+        severity: 'info',
+        message: 'Blasting hold lifted — Sector 4',
         timestamp: Date.now() - 7200000,
       },
-    ];
-    window.localStorage.setItem("arch-safety-alerts", JSON.stringify(seed));
-    return seed;
-  });
+    ]
+    window.localStorage.setItem('arch-safety-alerts', JSON.stringify(seed))
+    return seed
+  })
 
-  const criticalCount = alerts.filter((a) => a.severity === "critical").length;
-  const warningCount = alerts.filter((a) => a.severity === "warning").length;
+  const criticalCount = alerts.filter((a) => a.severity === 'critical').length
+  const warningCount = alerts.filter((a) => a.severity === 'warning').length
 
-  return { alerts, criticalCount, warningCount, total: alerts.length };
+  return { alerts, criticalCount, warningCount, total: alerts.length }
 }
 
 /**
@@ -98,44 +98,44 @@ function useSafetyAlerts() {
  * and quick emergency actions.
  */
 export function ServicesDropdown() {
-  const [open, setOpen] = useState(false);
-  const [locked, setLocked] = useState(false);
-  const [sleeping, setSleeping] = useState(false);
-  const [shutDown, setShutDown] = useState(false);
+  const [open, setOpen] = useState(false)
+  const [locked, setLocked] = useState(false)
+  const [sleeping, setSleeping] = useState(false)
+  const [shutDown, setShutDown] = useState(false)
 
-  const [weather, setWeather] = useState<WeatherData | null>(null);
-  const [weatherLoading, setWeatherLoading] = useState(true);
+  const [weather, setWeather] = useState<WeatherData | null>(null)
+  const [weatherLoading, setWeatherLoading] = useState(true)
 
-  const shift = useMemo(() => getShiftInfo(), [open]);
-  const safety = useSafetyAlerts();
+  const shift = useMemo(() => getShiftInfo(), [])
+  const safety = useSafetyAlerts()
 
   useEffect(() => {
-    let cancelled = false;
-    fetchWeather(-26.35914, 28.79267, "Delmas, Mpumalanga")
+    let cancelled = false
+    fetchWeather(-26.35914, 28.79267, 'Delmas, Mpumalanga')
       .then((data) => {
         if (!cancelled) {
-          setWeather(data);
-          setWeatherLoading(false);
+          setWeather(data)
+          setWeatherLoading(false)
         }
       })
       .catch(() => {
-        if (!cancelled) setWeatherLoading(false);
-      });
+        if (!cancelled) setWeatherLoading(false)
+      })
     return () => {
-      cancelled = true;
-    };
-  }, []);
+      cancelled = true
+    }
+  }, [])
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.altKey && e.key.toLowerCase() === "s") {
-        e.preventDefault();
-        setOpen((prev) => !prev);
+      if (e.altKey && e.key.toLowerCase() === 's') {
+        e.preventDefault()
+        setOpen((prev) => !prev)
       }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [])
 
   return (
     <>
@@ -147,20 +147,20 @@ export function ServicesDropdown() {
             aria-expanded={open}
             title="System Tray (Alt+S)"
             className={cn(
-              "relative flex items-center justify-center w-7 h-7 rounded-full",
-              "bg-black/[0.03] hover:bg-black/[0.06] border border-border-subtle",
-              "text-arch-text-secondary",
-              "active:scale-[0.97]",
-              "transition-all duration-150 ease-in-out",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-arch-accent-charcoal/50",
-              "cursor-default select-none",
-              open && "bg-black/[0.06]"
+              'relative flex items-center justify-center w-7 h-7 rounded-full',
+              'bg-black/[0.03] hover:bg-black/[0.06] border border-border-subtle',
+              'text-arch-text-secondary',
+              'active:scale-[0.97]',
+              'transition-all duration-150 ease-in-out',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-arch-accent-charcoal/50',
+              'cursor-default select-none',
+              open && 'bg-black/[0.06]'
             )}
           >
             <ChevronDown
               className={cn(
-                "w-3.5 h-3.5 transition-transform duration-200 ease-out",
-                open && "rotate-180"
+                'w-3.5 h-3.5 transition-transform duration-200 ease-out',
+                open && 'rotate-180'
               )}
             />
           </button>
@@ -242,18 +242,18 @@ export function ServicesDropdown() {
               <div className="flex items-center gap-2">
                 <ShieldAlert
                   className={cn(
-                    "w-4 h-4 shrink-0",
+                    'w-4 h-4 shrink-0',
                     safety.criticalCount > 0
-                      ? "text-arch-accent-red"
+                      ? 'text-arch-accent-red'
                       : safety.warningCount > 0
-                        ? "text-[var(--accent-orange)]"
-                        : "text-arch-accent-green"
+                        ? 'text-[var(--accent-orange)]'
+                        : 'text-arch-accent-green'
                   )}
                 />
                 <span className="text-[12px] text-arch-text-primary flex-1">
                   {safety.total === 0
-                    ? "No active alerts"
-                    : `${safety.total} active alert${safety.total === 1 ? "" : "s"}`}
+                    ? 'No active alerts'
+                    : `${safety.total} active alert${safety.total === 1 ? '' : 's'}`}
                 </span>
                 {safety.criticalCount > 0 && (
                   <span className="text-[10px] font-bold text-white bg-arch-accent-red px-1.5 py-0.5 rounded-full">
@@ -286,9 +286,9 @@ export function ServicesDropdown() {
               className="flex items-center gap-2 px-2.5 py-2 rounded-md bg-black/[0.02] border border-black/[0.05] text-left hover:bg-black/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-arch-accent-charcoal/50"
               onSelect={() => {
                 if (!document.fullscreenElement) {
-                  document.documentElement.requestFullscreen().catch(() => {});
+                  document.documentElement.requestFullscreen().catch(() => {})
                 } else if (document.exitFullscreen) {
-                  document.exitFullscreen().catch(() => {});
+                  document.exitFullscreen().catch(() => {})
                 }
               }}
             >
@@ -300,7 +300,7 @@ export function ServicesDropdown() {
             <DropdownMenuItem
               className="flex items-center gap-2 px-2.5 py-2 rounded-md bg-black/[0.02] border border-black/[0.05] text-left hover:bg-black/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-arch-accent-charcoal/50"
               onSelect={() => {
-                window.location.href = "/safety/daily-log";
+                window.location.href = '/safety/daily-log'
               }}
             >
               <ClipboardList className="h-3.5 w-3.5 text-arch-text-secondary shrink-0" />
@@ -312,7 +312,7 @@ export function ServicesDropdown() {
             <DropdownMenuItem
               className="flex items-center gap-2 px-2.5 py-2 rounded-md bg-black/[0.02] border border-black/[0.05] text-left hover:bg-black/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-arch-accent-charcoal/50"
               onSelect={() => {
-                window.location.href = "/safety";
+                window.location.href = '/safety'
               }}
             >
               <ShieldAlert className="h-3.5 w-3.5 text-arch-text-secondary shrink-0" />
@@ -323,7 +323,7 @@ export function ServicesDropdown() {
 
             <DropdownMenuItem
               className="col-span-2 flex items-center gap-2 px-2.5 py-2 rounded-md bg-arch-accent-red/[0.06] border border-arch-accent-red/20 text-left hover:bg-arch-accent-red/[0.12] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-arch-accent-red/50"
-              onSelect={() => window.open("tel:+27170000000", "_self")}
+              onSelect={() => window.open('tel:+27170000000', '_self')}
             >
               <Phone className="h-3.5 w-3.5 text-arch-accent-red shrink-0" />
               <span className="text-[12px] font-semibold text-arch-accent-red">Emergency Line</span>
@@ -431,5 +431,5 @@ export function ServicesDropdown() {
         </div>
       )}
     </>
-  );
+  )
 }

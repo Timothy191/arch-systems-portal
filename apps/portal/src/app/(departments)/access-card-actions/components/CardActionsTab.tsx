@@ -1,58 +1,58 @@
-"use client";
+'use client'
 
-import Image from "next/image";
-import { useState } from "react";
-import { GlassCard } from "@repo/ui/GlassCard";
-import { Button } from "@repo/ui/components/ui/button";
-import { Input } from "@repo/ui/components/ui/input";
-import { Printer, AlertCircle, Info, User } from "lucide-react";
-import { cn } from "@repo/ui/lib/utils";
-import { submitPrintJob } from "../printing";
-import { EmployeeSearch } from "./EmployeeSearch";
-import { ActionConfirmDialog } from "@repo/ui/components/ui/action-confirm-dialog";
-import { QRCodeSection } from "../card-actions/qr-section";
-import type { searchEmployees } from "../actions";
+import Image from 'next/image'
+import { useState } from 'react'
+import { GlassCard } from '@repo/ui/GlassCard'
+import { Button } from '@repo/ui/components/ui/button'
+import { Input } from '@repo/ui/components/ui/input'
+import { Printer, AlertCircle, Info, User } from 'lucide-react'
+import { cn } from '@repo/ui/lib/utils'
+import { submitPrintJob } from '../printing'
+import { EmployeeSearch } from './EmployeeSearch'
+import { ActionConfirmDialog } from '@repo/ui/components/ui/action-confirm-dialog'
+import { QRCodeSection } from '../card-actions/qr-section'
+import type { searchEmployees } from '../actions'
 
-type Employee = Awaited<ReturnType<typeof searchEmployees>>["employees"][0];
+type Employee = Awaited<ReturnType<typeof searchEmployees>>['employees'][0]
 
 export function CardActionsTab() {
-  const [employee, setEmployee] = useState<Employee | null>(null);
-  const [magStripeData, setMagStripeData] = useState("");
-  const [holokoteDesign, setHolokoteDesign] = useState("standard");
-  const [isPrinting, setIsPrinting] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
-  const [printerStatus, setPrinterStatus] = useState<"idle" | "printing" | "error">("idle");
-  const [cleaningReminder] = useState(true);
+  const [employee, setEmployee] = useState<Employee | null>(null)
+  const [magStripeData, setMagStripeData] = useState('')
+  const [holokoteDesign, setHolokoteDesign] = useState('standard')
+  const [isPrinting, setIsPrinting] = useState(false)
+  const [showConfirm, setShowConfirm] = useState(false)
+  const [printerStatus, setPrinterStatus] = useState<'idle' | 'printing' | 'error'>('idle')
+  const [cleaningReminder] = useState(true)
 
   const initiatePrint = () => {
-    if (!employee) return;
-    setShowConfirm(true);
-  };
+    if (!employee) return
+    setShowConfirm(true)
+  }
 
   const handlePrint = async () => {
-    if (!employee) return;
-    setShowConfirm(false);
-    setIsPrinting(true);
-    setPrinterStatus("printing");
+    if (!employee) return
+    setShowConfirm(false)
+    setIsPrinting(true)
+    setPrinterStatus('printing')
 
     const result = await submitPrintJob({
       employeeId: employee.id,
-      firstName: employee.first_name || "",
-      lastName: employee.last_name || "",
-      nationalId: employee.national_id || "",
-      jobTitle: employee.job_title || "",
-      qrCodeData: employee.qr_code_data || "",
+      firstName: employee.first_name || '',
+      lastName: employee.last_name || '',
+      nationalId: employee.national_id || '',
+      jobTitle: employee.job_title || '',
+      qrCodeData: employee.qr_code_data || '',
       magStripeData,
       holokoteDesign,
-    });
+    })
 
-    setIsPrinting(false);
+    setIsPrinting(false)
     if (result.success) {
-      setPrinterStatus("idle");
+      setPrinterStatus('idle')
     } else {
-      setPrinterStatus("error");
+      setPrinterStatus('error')
     }
-  };
+  }
 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
@@ -95,22 +95,22 @@ export function CardActionsTab() {
 
                 <div className="text-arch-text-muted">Areas</div>
                 <div className="font-medium text-arch-text-primary">
-                  {(employee.areas || []).join(", ")}
+                  {(employee.areas || []).join(', ')}
                 </div>
 
                 <div className="text-arch-text-muted">Medical Expiry</div>
                 <div className="font-medium text-arch-text-primary">
-                  {employee.medical_expiry_date || "N/A"}
+                  {employee.medical_expiry_date || 'N/A'}
                 </div>
 
                 <div className="text-arch-text-muted">Induction Expiry</div>
                 <div className="font-medium text-arch-text-primary">
-                  {employee.induction_expiry_date || "N/A"}
+                  {employee.induction_expiry_date || 'N/A'}
                 </div>
 
                 <div className="text-arch-text-muted">QR Code Data</div>
-                <div className="font-mono text-xs truncate" title={employee.qr_code_data || ""}>
-                  {employee.qr_code_data || "N/A"}
+                <div className="font-mono text-xs truncate" title={employee.qr_code_data || ''}>
+                  {employee.qr_code_data || 'N/A'}
                 </div>
               </div>
             </div>
@@ -165,20 +165,20 @@ export function CardActionsTab() {
                 <div className="flex items-center gap-2">
                   <Printer
                     className={cn(
-                      "w-5 h-5",
-                      printerStatus === "printing"
-                        ? "text-blue-500 animate-pulse"
-                        : printerStatus === "error"
-                          ? "text-red-500"
-                          : "text-green-500"
+                      'w-5 h-5',
+                      printerStatus === 'printing'
+                        ? 'text-blue-500 animate-pulse'
+                        : printerStatus === 'error'
+                          ? 'text-red-500'
+                          : 'text-green-500'
                     )}
                   />
                   <span className="text-sm font-medium">
-                    {printerStatus === "printing"
-                      ? "Printing..."
-                      : printerStatus === "error"
-                        ? "Error: Ribbon Empty"
-                        : "Ready"}
+                    {printerStatus === 'printing'
+                      ? 'Printing...'
+                      : printerStatus === 'error'
+                        ? 'Error: Ribbon Empty'
+                        : 'Ready'}
                   </span>
                 </div>
               </div>
@@ -197,9 +197,9 @@ export function CardActionsTab() {
             <Button
               className="w-full mt-4"
               onClick={initiatePrint}
-              disabled={isPrinting || printerStatus === "error" || !employee}
+              disabled={isPrinting || printerStatus === 'error' || !employee}
             >
-              {isPrinting ? "Initiating Print..." : "Initiate Card Print"}
+              {isPrinting ? 'Initiating Print...' : 'Initiate Card Print'}
             </Button>
           </div>
         </GlassCard>
@@ -228,10 +228,10 @@ export function CardActionsTab() {
                 </div>
                 <div className="text-right">
                   <div className="font-bold text-gray-800 text-sm leading-tight">
-                    {employee?.first_name || "FIRST"}
+                    {employee?.first_name || 'FIRST'}
                   </div>
                   <div className="font-bold text-gray-800 text-sm leading-tight uppercase">
-                    {employee?.last_name || "LAST"}
+                    {employee?.last_name || 'LAST'}
                   </div>
                 </div>
               </div>
@@ -239,12 +239,12 @@ export function CardActionsTab() {
               <div className="mt-4 flex-1">
                 <div className="text-[10px] text-gray-500 font-semibold">JOB TITLE</div>
                 <div className="text-xs font-bold text-gray-800 leading-tight">
-                  {employee?.job_title || "JOB TITLE"}
+                  {employee?.job_title || 'JOB TITLE'}
                 </div>
 
                 <div className="text-[10px] text-gray-500 font-semibold mt-2">ID NUMBER</div>
                 <div className="text-xs font-bold text-gray-800 leading-tight">
-                  {employee?.national_id || "ID NUMBER"}
+                  {employee?.national_id || 'ID NUMBER'}
                 </div>
               </div>
 
@@ -252,7 +252,7 @@ export function CardActionsTab() {
                 <div>
                   <div className="text-[8px] text-gray-500">AREAS</div>
                   <div className="text-[10px] font-bold text-gray-800 leading-tight max-w-[80px] truncate">
-                    {(employee?.areas || []).join(", ") || "AREAS"}
+                    {(employee?.areas || []).join(', ') || 'AREAS'}
                   </div>
                 </div>
                 <div className="w-16 h-16 bg-white flex items-center justify-center -mb-1 -mr-1">
@@ -266,7 +266,7 @@ export function CardActionsTab() {
             </div>
 
             {/* HoloKote overlay mock */}
-            {holokoteDesign !== "standard" && (
+            {holokoteDesign !== 'standard' && (
               <div
                 className="absolute inset-0 pointer-events-none opacity-20 mix-blend-overlay"
                 style={{
@@ -293,5 +293,5 @@ export function CardActionsTab() {
         variant="default"
       />
     </div>
-  );
+  )
 }

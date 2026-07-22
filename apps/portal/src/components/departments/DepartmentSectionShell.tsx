@@ -1,9 +1,9 @@
-import { GlassCard } from "@repo/ui/GlassCard";
-import { LayoutTemplate } from "lucide-react";
+import { GlassCard } from '@repo/ui/GlassCard'
+import { LayoutTemplate } from 'lucide-react'
 
 interface DepartmentSectionShellProps {
-  title: string;
-  description?: string;
+  title: string
+  description?: string
 }
 
 /**
@@ -19,7 +19,7 @@ export function DepartmentSectionShell({ title, description }: DepartmentSection
         <div>
           <h2 className="text-2xl font-bold text-arch-text-primary">{title}</h2>
           <p className="text-arch-text-muted text-sm">
-            {description ?? "This section is ready for navigation. Feature content will land here."}
+            {description ?? 'This section is ready for navigation. Feature content will land here.'}
           </p>
         </div>
       </div>
@@ -29,5 +29,5 @@ export function DepartmentSectionShell({ title, description }: DepartmentSection
         </p>
       </GlassCard>
     </div>
-  );
+  )
 }

@@ -16,53 +16,53 @@
  *       Track: https://github.com/your-org/Arch-Mk2/issues/[issue-number]
  */
 
-import Image from "next/image";
-import { Building2, Cpu, ShieldCheck, type LucideIcon } from "lucide-react";
-import { Logo } from "@repo/ui/Logo";
-import { cn } from "@repo/ui/lib/utils";
-import { semanticIconClass } from "@/lib/semantic-icon";
-import { HERO_ARCH_PILL } from "@/features/hub/constants/hero-pill";
+import Image from 'next/image'
+import { Building2, Cpu, ShieldCheck, type LucideIcon } from 'lucide-react'
+import { Logo } from '@repo/ui/Logo'
+import { cn } from '@repo/ui/lib/utils'
+import { semanticIconClass } from '@/lib/semantic-icon'
+import { HERO_ARCH_PILL } from '@/features/hub/constants/hero-pill'
 
 interface TrustLogo {
-  src: string;
-  alt: string;
+  src: string
+  alt: string
 }
 
 interface TrustLogosProps {
-  logos?: TrustLogo[];
+  logos?: TrustLogo[]
 }
 
 interface TrustPlaceholder {
-  label: string;
-  icon: LucideIcon | "arch-logo";
+  label: string
+  icon: LucideIcon | 'arch-logo'
 }
 
-const Sparkles = Building2;
-const Database = Cpu;
+const Sparkles = Building2
+const Database = Cpu
 
 const PLACEHOLDERS: TrustPlaceholder[] = [
-  { label: "Arch Systems", icon: "arch-logo" },
-  { label: "Caterpillar", icon: Sparkles },
-  { label: "Komatsu", icon: ShieldCheck },
-  { label: "Deere", icon: Cpu },
-  { label: "Hitachi", icon: Database },
-];
+  { label: 'Arch Systems', icon: 'arch-logo' },
+  { label: 'Caterpillar', icon: Sparkles },
+  { label: 'Komatsu', icon: ShieldCheck },
+  { label: 'Deere', icon: Cpu },
+  { label: 'Hitachi', icon: Database },
+]
 
 const TRUST_BADGE_CLASS =
-  "inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-medium border border-arch-border-primary bg-arch-surface-secondary/40 text-arch-text-secondary select-none";
+  'inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-medium border border-arch-border-primary bg-arch-surface-secondary/40 text-arch-text-secondary select-none'
 
-function TrustBadgeIcon({ icon }: { icon: TrustPlaceholder["icon"] }) {
-  if (icon === "arch-logo") {
-    return <Logo className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />;
+function TrustBadgeIcon({ icon }: { icon: TrustPlaceholder['icon'] }) {
+  if (icon === 'arch-logo') {
+    return <Logo className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
   }
-  const Icon = icon;
+  const Icon = icon
   return (
-    <Icon className={cn("w-3.5 h-3.5 shrink-0", semanticIconClass("neutral"))} aria-hidden="true" />
-  );
+    <Icon className={cn('w-3.5 h-3.5 shrink-0', semanticIconClass('neutral'))} aria-hidden="true" />
+  )
 }
 
 export function TrustLogos({ logos }: TrustLogosProps) {
-  const hasLogos = logos && logos.length > 0;
+  const hasLogos = logos && logos.length > 0
 
   return (
     <div className="pt-6 border-t border-arch-border-subtle">
@@ -94,5 +94,5 @@ export function TrustLogos({ logos }: TrustLogosProps) {
         </div>
       )}
     </div>
-  );
+  )
 }

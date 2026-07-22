@@ -1,7 +1,7 @@
-import { getDepartmentContext } from "@/lib/dept-context";
-import { GlassCard } from "@repo/ui/GlassCard";
-import { Button } from "@repo/ui/components/ui/button";
-import { CursorPaginationControls } from "@/components/CursorPaginationControls";
+import { getDepartmentContext } from '@/lib/dept-context'
+import { GlassCard } from '@repo/ui/GlassCard'
+import { Button } from '@repo/ui/components/ui/button'
+import { CursorPaginationControls } from '@/components/CursorPaginationControls'
 import {
   Table,
   TableBody,
@@ -9,57 +9,57 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@repo/ui/components/ui/table";
-import { QrCode, Plus, UserCheck, ShieldOff } from "lucide-react";
-import { getBadgesForDepartmentCursor } from "../actions";
+} from '@repo/ui/components/ui/table'
+import { QrCode, Plus, UserCheck, ShieldOff } from 'lucide-react'
+import { getBadgesForDepartmentCursor } from '../actions'
 
 interface BadgeWithRelations {
-  id: string;
-  qr_code: string;
-  entity_type: string;
-  is_active: boolean | null;
-  issued_at: string | null;
-  expires_at: string | null;
-  personnel: { first_name: string; surname: string } | null;
-  visitor: { first_name: string; surname: string } | null;
-  fleet: { fleet_code: string; vehicle_type: string } | null;
-  equipment: { equip_code: string; equipment_type: string } | null;
+  id: string
+  qr_code: string
+  entity_type: string
+  is_active: boolean | null
+  issued_at: string | null
+  expires_at: string | null
+  personnel: { first_name: string; surname: string } | null
+  visitor: { first_name: string; surname: string } | null
+  fleet: { fleet_code: string; vehicle_type: string } | null
+  equipment: { equip_code: string; equipment_type: string } | null
 }
 
 export default async function BadgesPage({
   searchParams,
 }: {
-  searchParams: Promise<{ cursor?: string; cursors?: string; limit?: string }>;
+  searchParams: Promise<{ cursor?: string; cursors?: string; limit?: string }>
 }) {
-  const params = await searchParams;
-  const limit = parseInt(params.limit || "50", 10);
-  const previousCursors = params.cursors ? params.cursors.split(",").filter(Boolean) : [];
-  const cursor = params.cursor || undefined;
+  const params = await searchParams
+  const limit = parseInt(params.limit || '50', 10)
+  const previousCursors = params.cursors ? params.cursors.split(',').filter(Boolean) : []
+  const cursor = params.cursor || undefined
 
   const { deptId } = await getDepartmentContext({
-    department: "access-control",
-  });
+    department: 'access-control',
+  })
 
   const { badges, nextCursor, hasMore, totalCount } = await getBadgesForDepartmentCursor(
     deptId,
     cursor,
     limit
-  );
+  )
 
   // Resolve entity names from nested relation data
   const resolvedBadges = (badges as unknown as BadgeWithRelations[]).map((b) => {
-    let entityName = "Unknown";
+    let entityName = 'Unknown'
     if (b.personnel) {
-      entityName = `${b.personnel.first_name} ${b.personnel.surname}`;
+      entityName = `${b.personnel.first_name} ${b.personnel.surname}`
     } else if (b.visitor) {
-      entityName = `${b.visitor.first_name} ${b.visitor.surname}`;
+      entityName = `${b.visitor.first_name} ${b.visitor.surname}`
     } else if (b.fleet) {
-      entityName = `${b.fleet.fleet_code} (${b.fleet.vehicle_type})`;
+      entityName = `${b.fleet.fleet_code} (${b.fleet.vehicle_type})`
     } else if (b.equipment) {
-      entityName = `${b.equipment.equip_code} (${b.equipment.equipment_type})`;
+      entityName = `${b.equipment.equip_code} (${b.equipment.equipment_type})`
     }
-    return { ...b, entity_name: entityName };
-  });
+    return { ...b, entity_name: entityName }
+  })
 
   return (
     <div className="space-y-6">
@@ -195,5 +195,5 @@ export default async function BadgesPage({
         </div>
       </div>
     </div>
-  );
+  )
 }

@@ -1,6 +1,6 @@
-"use client";
+'use client'
 
-import React from "react";
+import React from 'react'
 import {
   AreaChart,
   Area,
@@ -9,20 +9,20 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-} from "recharts";
+} from 'recharts'
 
 interface HourlyAccessChartProps {
-  data: Array<{ hour: string; granted: number; denied: number }>;
+  data: Array<{ hour: string; granted: number; denied: number }>
 }
 
 interface CustomTooltipProps {
-  active?: boolean;
-  payload?: Array<{ name: string; value: number; color: string }>;
-  label?: string;
+  active?: boolean
+  payload?: Array<{ name: string; value: number; color: string }>
+  label?: string
 }
 
 function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
-  if (!active || !payload?.length) return null;
+  if (!active || !payload?.length) return null
   return (
     <div className="bg-card border border-border rounded-lg shadow-card px-3 py-2 text-xs">
       <p className="font-semibold text-foreground mb-1.5">{label}</p>
@@ -34,7 +34,7 @@ function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
         </div>
       ))}
     </div>
-  );
+  )
 }
 
 export default function HourlyAccessChart({ data }: HourlyAccessChartProps) {
@@ -54,13 +54,13 @@ export default function HourlyAccessChart({ data }: HourlyAccessChartProps) {
         <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" vertical={false} />
         <XAxis
           dataKey="hour"
-          tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }}
+          tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }}
           tickLine={false}
           axisLine={false}
           interval={3}
         />
         <YAxis
-          tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }}
+          tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }}
           tickLine={false}
           axisLine={false}
         />
@@ -87,5 +87,5 @@ export default function HourlyAccessChart({ data }: HourlyAccessChartProps) {
         />
       </AreaChart>
     </ResponsiveContainer>
-  );
+  )
 }

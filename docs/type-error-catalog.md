@@ -22,10 +22,10 @@ TypeScript `moduleResolution: "bundler"` allows extensionless imports.
 
 ```typescript
 // ❌ Wrong (breaks Turbopack):
-export { cacheInvalidateTags } from "./invalidation.js";
+export { cacheInvalidateTags } from './invalidation.js'
 
 // ✅ Correct (works with both Turbopack and tsc):
-export { cacheInvalidateTags } from "./invalidation";
+export { cacheInvalidateTags } from './invalidation'
 ```
 
 **Files fixed**: `packages/redis/src/index.ts`
@@ -41,13 +41,13 @@ which means all property access returns `Property does not exist on type '{}'`.
 
 ```typescript
 // ❌ Wrong (infers as `{}`):
-export const updateWebhookSchema = z.object({});
+export const updateWebhookSchema = z.object({})
 
 // ✅ Correct (infers proper type):
 export const updateWebhookSchema = z.object({
   url: z.string().url().optional(),
   description: z.string().optional(),
-});
+})
 ```
 
 **Files fixed**:
@@ -111,10 +111,10 @@ Calling it with 3 params is a type error.
 
 ```typescript
 // ❌ Wrong:
-await cacheWrap("key", fn, 60);
+await cacheWrap('key', fn, 60)
 
 // ✅ Correct:
-await cacheWrap("key", fn);
+await cacheWrap('key', fn)
 ```
 
 **Files fixed**: `apps/portal/src/app/api/tools/status/route.ts`
@@ -129,12 +129,12 @@ await cacheWrap("key", fn);
 
 ```typescript
 // ❌ Wrong:
-import { Test, TestingModule } from "@nestjs/testing";
-import { Injectable, Inject } from "@nestjs/common";
+import { Test, TestingModule } from '@nestjs/testing'
+import { Injectable, Inject } from '@nestjs/common'
 
 // ✅ Correct:
-import { Test } from "@nestjs/testing";
-import { Injectable } from "@nestjs/common";
+import { Test } from '@nestjs/testing'
+import { Injectable } from '@nestjs/common'
 ```
 
 **Files fixed**:
@@ -210,10 +210,10 @@ export function clearObservabilityMetrics(): void { ... }
 
 ```typescript
 // ❌ Wrong:
-redisConnected = redis.isOpen ?? false;
+redisConnected = redis.isOpen ?? false
 
 // ✅ Correct:
-redisConnected = (redis as Record<string, boolean>).isOpen ?? false;
+redisConnected = (redis as Record<string, boolean>).isOpen ?? false
 ```
 
 **Files fixed**: `apps/portal/src/app/api/health/cache/route.ts`

@@ -1,6 +1,6 @@
-import Link from "next/link";
-import Image from "next/image";
-import { SecondaryButton } from "@repo/ui/SecondaryButton";
+import Link from 'next/link'
+import Image from 'next/image'
+import { SecondaryButton } from '@repo/ui/SecondaryButton'
 
 export default function NotFound() {
   return (
@@ -27,5 +27,5 @@ export default function NotFound() {
         </SecondaryButton>
       </div>
     </div>
-  );
+  )
 }

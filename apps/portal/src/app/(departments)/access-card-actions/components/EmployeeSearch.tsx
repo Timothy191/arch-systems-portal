@@ -1,45 +1,45 @@
-"use client";
+'use client'
 
-import { useState, useEffect } from "react";
-import { Input } from "@repo/ui/components/ui/input";
-import { searchEmployees } from "../actions";
-import { Search, Loader2 } from "lucide-react";
+import { useState, useEffect } from 'react'
+import { Input } from '@repo/ui/components/ui/input'
+import { searchEmployees } from '../actions'
+import { Search, Loader2 } from 'lucide-react'
 
-type Employee = Awaited<ReturnType<typeof searchEmployees>>["employees"][0];
+type Employee = Awaited<ReturnType<typeof searchEmployees>>['employees'][0]
 
 interface EmployeeSearchProps {
-  onSelect: (_employee: Employee | null) => void;
+  onSelect: (_employee: Employee | null) => void
 }
 
 export function EmployeeSearch({ onSelect }: EmployeeSearchProps) {
-  const [query, setQuery] = useState("");
-  const [results, setResults] = useState<Employee[]>([]);
-  const [isSearching, setIsSearching] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
+  const [query, setQuery] = useState('')
+  const [results, setResults] = useState<Employee[]>([])
+  const [isSearching, setIsSearching] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
 
   useEffect(() => {
     if (query.length < 2) {
-      setResults([]);
-      setIsOpen(false);
-      if (query.length === 0) onSelect(null);
-      return;
+      setResults([])
+      setIsOpen(false)
+      if (query.length === 0) onSelect(null)
+      return
     }
 
     const timer = setTimeout(async () => {
-      setIsSearching(true);
+      setIsSearching(true)
       try {
-        const { employees } = await searchEmployees(query);
-        setResults(employees);
-        setIsOpen(true);
+        const { employees } = await searchEmployees(query)
+        setResults(employees)
+        setIsOpen(true)
       } catch {
         // Suppress errors during search
       } finally {
-        setIsSearching(false);
+        setIsSearching(false)
       }
-    }, 300);
+    }, 300)
 
-    return () => clearTimeout(timer);
-  }, [query, onSelect]);
+    return () => clearTimeout(timer)
+  }, [query, onSelect])
 
   return (
     <div className="relative">
@@ -63,9 +63,9 @@ export function EmployeeSearch({ onSelect }: EmployeeSearchProps) {
             <button
               key={emp.id}
               onClick={() => {
-                setQuery(`${emp.first_name} ${emp.last_name}`);
-                setIsOpen(false);
-                onSelect(emp);
+                setQuery(`${emp.first_name} ${emp.last_name}`)
+                setIsOpen(false)
+                onSelect(emp)
               }}
               className="w-full text-left px-4 py-2 hover:bg-arch-surface-secondary focus:bg-arch-surface-secondary border-b border-arch-border-default last:border-0"
             >
@@ -80,5 +80,5 @@ export function EmployeeSearch({ onSelect }: EmployeeSearchProps) {
         </div>
       )}
     </div>
-  );
+  )
 }

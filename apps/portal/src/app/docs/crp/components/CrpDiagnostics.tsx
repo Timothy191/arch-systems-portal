@@ -1,43 +1,43 @@
-"use client";
+'use client'
 
-import React from "react";
-import { CheckCircle2, XCircle, Lightbulb, Flame, ShieldCheck, ArrowUpRight } from "lucide-react";
+import React from 'react'
+import { CheckCircle2, XCircle, Lightbulb, Flame, ShieldCheck, ArrowUpRight } from 'lucide-react'
 
 export function CrpDiagnostics() {
   const optimizationRules = [
     {
-      title: "Minimize Critical Resources",
-      impact: "High",
+      title: 'Minimize Critical Resources',
+      impact: 'High',
       recommendation:
-        "Defer non-critical scripts with async/defer, inline critical CSS, and eliminate unnecessary head scripts.",
+        'Defer non-critical scripts with async/defer, inline critical CSS, and eliminate unnecessary head scripts.',
       beforeCode: `<script src="analytics.js"></script>\n<link rel="stylesheet" href="print.css">`,
       afterCode: `<script src="analytics.js" defer></script>\n<link rel="stylesheet" href="print.css" media="print">`,
     },
     {
-      title: "Optimize Critical Path Length",
-      impact: "High",
+      title: 'Optimize Critical Path Length',
+      impact: 'High',
       recommendation:
-        "Prioritize loading essential CSS and JS to reduce required HTTP roundtrips before First Contentful Paint.",
+        'Prioritize loading essential CSS and JS to reduce required HTTP roundtrips before First Contentful Paint.',
       beforeCode: `HTML -> CSS File (100KB) -> JS File (200KB) -> Render`,
       afterCode: `HTML (with Critical Inline CSS) -> Parallel JS Defer -> First Paint`,
     },
     {
-      title: "Reduce DOM Node Count",
-      impact: "Medium",
+      title: 'Reduce DOM Node Count',
+      impact: 'Medium',
       recommendation:
-        "Keep DOM trees under 1,500 total nodes and under 32 levels deep to prevent memory overhead and reflow delays.",
+        'Keep DOM trees under 1,500 total nodes and under 32 levels deep to prevent memory overhead and reflow delays.',
       beforeCode: `<div><div><div><div><span>Deeply nested markup</span></div></div></div></div>`,
       afterCode: `<span class="flex-item">Flattened modern layout structure</span>`,
     },
     {
-      title: "Simplify CSS Selector Specificity",
-      impact: "Medium",
+      title: 'Simplify CSS Selector Specificity',
+      impact: 'Medium',
       recommendation:
-        "Prefer simple single-class selectors over deep multi-level ancestor selectors to minimize matching cost.",
+        'Prefer simple single-class selectors over deep multi-level ancestor selectors to minimize matching cost.',
       beforeCode: `body #app .sidebar .nav-list li.active a.link { ... }`,
       afterCode: `.nav-link-active { ... }`,
     },
-  ];
+  ]
 
   return (
     <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl space-y-6">
@@ -85,5 +85,5 @@ export function CrpDiagnostics() {
         ))}
       </div>
     </div>
-  );
+  )
 }

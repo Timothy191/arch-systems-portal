@@ -254,8 +254,8 @@ packages/
 `@repo/contract/index.ts` has several schemas that are **empty stubs**:
 
 ```typescript
-export const riskAssessmentSchema = z.object({}); // Empty — no fields
-export const complianceResultSchema = z.object({}); // Empty — no fields
+export const riskAssessmentSchema = z.object({}) // Empty — no fields
+export const complianceResultSchema = z.object({}) // Empty — no fields
 ```
 
 These are declared in `@repo/contract` and available for use, but **have zero validation logic**. Any code that uses these schemas will pass validation for any input.

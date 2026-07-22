@@ -1,47 +1,47 @@
-"use client";
+'use client'
 
-import { useEffect } from "react";
-import Link from "next/link";
-import { SecondaryButton } from "@repo/ui/SecondaryButton";
-import { isAppError, isNotFoundError, isAuthError } from "@/lib/errors/error-classes";
-import { logError } from "@/lib/errors/error-logger";
+import { useEffect } from 'react'
+import Link from 'next/link'
+import { SecondaryButton } from '@repo/ui/SecondaryButton'
+import { isAppError, isNotFoundError, isAuthError } from '@/lib/errors/error-classes'
+import { logError } from '@/lib/errors/error-logger'
 
 interface DepartmentErrorProps {
-  error: Error & { digest?: string };
-  reset: () => void;
+  error: Error & { digest?: string }
+  reset: () => void
 }
 
 function getErrorTitle(error: Error): string {
-  if (isNotFoundError(error)) return "Department not found";
-  if (isAuthError(error)) return "Access denied";
-  if (isAppError(error)) return error.name.replace(/([A-Z])/g, " $1").trim();
-  return "Department Error";
+  if (isNotFoundError(error)) return 'Department not found'
+  if (isAuthError(error)) return 'Access denied'
+  if (isAppError(error)) return error.name.replace(/([A-Z])/g, ' $1').trim()
+  return 'Department Error'
 }
 
 function getErrorMessage(error: Error): string {
-  if (isAppError(error)) return error.message;
-  return error.message || "Failed to load department data.";
+  if (isAppError(error)) return error.message
+  return error.message || 'Failed to load department data.'
 }
 
 function getActionLink(error: Error): { href: string; label: string } {
   if (isNotFoundError(error)) {
-    return { href: "/", label: "Back to Hub" };
+    return { href: '/', label: 'Back to Hub' }
   }
   if (isAuthError(error)) {
-    return { href: "/login", label: "Sign in" };
+    return { href: '/login', label: 'Sign in' }
   }
-  return { href: "/", label: "Back to Hub" };
+  return { href: '/', label: 'Back to Hub' }
 }
 
 export default function DepartmentError({ error, reset }: DepartmentErrorProps) {
   useEffect(() => {
-    logError(error);
-  }, [error]);
+    logError(error)
+  }, [error])
 
-  const title = getErrorTitle(error);
-  const message = getErrorMessage(error);
-  const action = getActionLink(error);
-  const appError = isAppError(error) ? error : null;
+  const title = getErrorTitle(error)
+  const message = getErrorMessage(error)
+  const action = getActionLink(error)
+  const appError = isAppError(error) ? error : null
 
   return (
     <div className="space-y-6">
@@ -66,5 +66,5 @@ export default function DepartmentError({ error, reset }: DepartmentErrorProps) 
         </Link>
       </div>
     </div>
-  );
+  )
 }

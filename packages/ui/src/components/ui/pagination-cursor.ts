@@ -8,7 +8,7 @@
  * Cursor payload: { s: sortValue, i: id } — composite for stable ordering.
  */
 export function encodeCursor(sortValue: string, id: string): string {
-  return btoa(JSON.stringify({ s: sortValue, i: id }));
+  return btoa(JSON.stringify({ s: sortValue, i: id }))
 }
 
 /**
@@ -17,11 +17,11 @@ export function encodeCursor(sortValue: string, id: string): string {
  */
 export function decodeCursor(cursor: string): { s: string; i: string } | null {
   try {
-    const parsed = JSON.parse(atob(cursor)) as { s?: unknown; i?: unknown };
-    if (typeof parsed.s !== "string" || typeof parsed.i !== "string") return null;
-    return { s: parsed.s, i: parsed.i };
+    const parsed = JSON.parse(atob(cursor)) as { s?: unknown; i?: unknown }
+    if (typeof parsed.s !== 'string' || typeof parsed.i !== 'string') return null
+    return { s: parsed.s, i: parsed.i }
   } catch {
-    return null;
+    return null
   }
 }
 
@@ -31,8 +31,8 @@ export function decodeCursor(cursor: string): { s: string; i: string } | null {
  * `cursors` param is a comma-separated list of base64 cursors.
  */
 export function parseCursorStack(cursorsParam?: string): string[] {
-  if (!cursorsParam) return [];
-  return cursorsParam.split(",").filter(Boolean);
+  if (!cursorsParam) return []
+  return cursorsParam.split(',').filter(Boolean)
 }
 
 /**
@@ -40,5 +40,5 @@ export function parseCursorStack(cursorsParam?: string): string[] {
  * Serialize a cursor stack to a URL search param string.
  */
 export function serializeCursorStack(cursors: string[]): string {
-  return cursors.join(",");
+  return cursors.join(',')
 }

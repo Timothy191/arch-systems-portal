@@ -1,11 +1,11 @@
-import React from "react";
-import type { Metadata } from "next";
-import { Shield } from "lucide-react";
+import React from 'react'
+import type { Metadata } from 'next'
+import { Shield } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | Arch OS",
-  description: "Privacy policy and data compliance for the Arch Portal.",
-};
+  title: 'Privacy Policy | Arch OS',
+  description: 'Privacy policy and data compliance for the Arch Portal.',
+}
 
 export default function PrivacyPage(): React.JSX.Element {
   return (
@@ -79,5 +79,5 @@ export default function PrivacyPage(): React.JSX.Element {
         </section>
       </div>
     </div>
-  );
+  )
 }

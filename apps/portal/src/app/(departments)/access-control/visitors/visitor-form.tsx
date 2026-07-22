@@ -1,16 +1,16 @@
-"use client";
+'use client'
 
-import { useFormStatus } from "react-dom";
-import { registerVisitor } from "../actions";
-import { Button } from "@repo/ui/components/ui/button";
-import { Input } from "@repo/ui/components/ui/input";
-import { Users, Plus, Loader2 } from "lucide-react";
-import { GlassCard } from "@repo/ui/GlassCard";
-import { useRef, useState } from "react";
-import { toast } from "sonner";
+import { useFormStatus } from 'react-dom'
+import { registerVisitor } from '../actions'
+import { Button } from '@repo/ui/components/ui/button'
+import { Input } from '@repo/ui/components/ui/input'
+import { Users, Plus, Loader2 } from 'lucide-react'
+import { GlassCard } from '@repo/ui/GlassCard'
+import { useRef, useState } from 'react'
+import { toast } from 'sonner'
 
 function SubmitButton() {
-  const { pending, method } = useFormStatus();
+  const { pending, method } = useFormStatus()
 
   return (
     <Button
@@ -21,7 +21,7 @@ function SubmitButton() {
       {pending ? (
         <>
           <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-          {method === "POST" ? "Registering..." : "Submitting..."}
+          {method === 'POST' ? 'Registering...' : 'Submitting...'}
         </>
       ) : (
         <>
@@ -30,32 +30,32 @@ function SubmitButton() {
         </>
       )}
     </Button>
-  );
+  )
 }
 
 export function VisitorForm() {
-  const formRef = useRef<HTMLFormElement>(null);
-  const [error, setError] = useState<string | null>(null);
+  const formRef = useRef<HTMLFormElement>(null)
+  const [error, setError] = useState<string | null>(null)
 
   async function clientAction(formData: FormData) {
-    setError(null);
+    setError(null)
     try {
-      const result = await registerVisitor(formData);
+      const result = await registerVisitor(formData)
       if (result.success) {
-        toast.success("Visitor registered successfully", {
-          description: `${formData.get("first_name")} ${formData.get("surname")} has been checked in.`,
-        });
-        formRef.current?.reset();
+        toast.success('Visitor registered successfully', {
+          description: `${formData.get('first_name')} ${formData.get('surname')} has been checked in.`,
+        })
+        formRef.current?.reset()
       } else {
-        setError("Failed to register visitor. Please try again.");
-        toast.error("Registration failed");
+        setError('Failed to register visitor. Please try again.')
+        toast.error('Registration failed')
       }
     } catch (err) {
-      const message = err instanceof Error ? err.message : "An unexpected error occurred";
-      setError(message);
-      toast.error("An error occurred", {
+      const message = err instanceof Error ? err.message : 'An unexpected error occurred'
+      setError(message)
+      toast.error('An error occurred', {
         description: message,
-      });
+      })
     }
   }
 
@@ -138,5 +138,5 @@ export function VisitorForm() {
         </div>
       </form>
     </GlassCard>
-  );
+  )
 }

@@ -1,112 +1,112 @@
-import { GlassCard } from "@repo/ui/GlassCard";
-import { Calendar, Clock, MapPin, User, Plus } from "lucide-react";
-import { SearchForm } from "../components/SearchForm";
-import { FilterTabs } from "../components/FilterTabs";
+import { GlassCard } from '@repo/ui/GlassCard'
+import { Calendar, Clock, MapPin, User, Plus } from 'lucide-react'
+import { SearchForm } from '../components/SearchForm'
+import { FilterTabs } from '../components/FilterTabs'
 
 interface Schedule {
-  id: number;
-  course: string;
-  location: string;
-  date: string;
-  time: string;
-  instructor: string;
-  capacity: string;
-  filled: number;
-  type: "Mandatory" | "Refresher" | "Voluntary";
-  status: "Confirmed" | "Tentative";
+  id: number
+  course: string
+  location: string
+  date: string
+  time: string
+  instructor: string
+  capacity: string
+  filled: number
+  type: 'Mandatory' | 'Refresher' | 'Voluntary'
+  status: 'Confirmed' | 'Tentative'
 }
 
 const initialSchedules: Schedule[] = [
   {
     id: 1,
-    course: "Underground Equipment Safety V2",
-    location: "South Pit Simulator & Training Suite B",
-    date: "2026-06-01",
-    time: "08:00 - 12:00",
-    instructor: "Sarah Jenkins",
-    capacity: "15",
+    course: 'Underground Equipment Safety V2',
+    location: 'South Pit Simulator & Training Suite B',
+    date: '2026-06-01',
+    time: '08:00 - 12:00',
+    instructor: 'Sarah Jenkins',
+    capacity: '15',
     filled: 14,
-    type: "Mandatory",
-    status: "Confirmed",
+    type: 'Mandatory',
+    status: 'Confirmed',
   },
   {
     id: 2,
-    course: "HAZMAT & Chemical Handling",
-    location: "Main Boardroom (Admin Block)",
-    date: "2026-06-01",
-    time: "10:30 - 13:00",
-    instructor: "David Vance",
-    capacity: "10",
+    course: 'HAZMAT & Chemical Handling',
+    location: 'Main Boardroom (Admin Block)',
+    date: '2026-06-01',
+    time: '10:30 - 13:00',
+    instructor: 'David Vance',
+    capacity: '10',
     filled: 8,
-    type: "Mandatory",
-    status: "Confirmed",
+    type: 'Mandatory',
+    status: 'Confirmed',
   },
   {
     id: 3,
-    course: "Refresher: Excavator Ops",
-    location: "North Quarry Excavation Field",
-    date: "2026-06-01",
-    time: "14:00 - 16:30",
-    instructor: "Marcus Stone",
-    capacity: "6",
+    course: 'Refresher: Excavator Ops',
+    location: 'North Quarry Excavation Field',
+    date: '2026-06-01',
+    time: '14:00 - 16:30',
+    instructor: 'Marcus Stone',
+    capacity: '6',
     filled: 5,
-    type: "Refresher",
-    status: "Confirmed",
+    type: 'Refresher',
+    status: 'Confirmed',
   },
   {
     id: 4,
-    course: "First Aid Level 1 Certification",
-    location: "Emergency Response Hub - Training Lab",
-    date: "2026-06-03",
-    time: "09:00 - 17:00",
-    instructor: "Dr. Amanda Ross",
-    capacity: "12",
+    course: 'First Aid Level 1 Certification',
+    location: 'Emergency Response Hub - Training Lab',
+    date: '2026-06-03',
+    time: '09:00 - 17:00',
+    instructor: 'Dr. Amanda Ross',
+    capacity: '12',
     filled: 12,
-    type: "Mandatory",
-    status: "Confirmed",
+    type: 'Mandatory',
+    status: 'Confirmed',
   },
   {
     id: 5,
-    course: "HD-785 Mechanical Induction",
-    location: "Workshop Bay 4 Training Deck",
-    date: "2026-06-04",
-    time: "13:00 - 16:00",
-    instructor: "Toby Miller",
-    capacity: "8",
+    course: 'HD-785 Mechanical Induction',
+    location: 'Workshop Bay 4 Training Deck',
+    date: '2026-06-04',
+    time: '13:00 - 16:00',
+    instructor: 'Toby Miller',
+    capacity: '8',
     filled: 3,
-    type: "Refresher",
-    status: "Tentative",
+    type: 'Refresher',
+    status: 'Tentative',
   },
   {
     id: 6,
-    course: "Advanced Drill Telemetry (LMS Walkthrough)",
-    location: "Training Room A (E-Learning Wing)",
-    date: "2026-06-08",
-    time: "10:00 - 11:30",
-    instructor: "Jared Leto",
-    capacity: "20",
+    course: 'Advanced Drill Telemetry (LMS Walkthrough)',
+    location: 'Training Room A (E-Learning Wing)',
+    date: '2026-06-08',
+    time: '10:00 - 11:30',
+    instructor: 'Jared Leto',
+    capacity: '20',
     filled: 16,
-    type: "Voluntary",
-    status: "Confirmed",
+    type: 'Voluntary',
+    status: 'Confirmed',
   },
-];
+]
 
 export default async function SchedulesPage({
   searchParams,
 }: {
-  searchParams?: Promise<{ q?: string; type?: string }>;
+  searchParams?: Promise<{ q?: string; type?: string }>
 }) {
-  const { q, type } = (await searchParams) ?? {};
+  const { q, type } = (await searchParams) ?? {}
 
   const filteredSchedules = initialSchedules.filter((s) => {
     const matchesSearch =
       !q ||
       s.course.toLowerCase().includes(q.toLowerCase()) ||
       s.instructor.toLowerCase().includes(q.toLowerCase()) ||
-      s.location.toLowerCase().includes(q.toLowerCase());
-    const matchesType = !type || type === "All" || s.type === type;
-    return matchesSearch && matchesType;
-  });
+      s.location.toLowerCase().includes(q.toLowerCase())
+    const matchesType = !type || type === 'All' || s.type === type
+    return matchesSearch && matchesType
+  })
 
   return (
     <div className="space-y-6">
@@ -129,12 +129,12 @@ export default async function SchedulesPage({
         <SearchForm
           value={q}
           placeholder="Search sessions..."
-          hiddenParams={type && type !== "All" ? { type } : {}}
+          hiddenParams={type && type !== 'All' ? { type } : {}}
         />
         <FilterTabs
           paramName="type"
-          options={["All", "Mandatory", "Refresher", "Voluntary"]}
-          currentValue={type || "All"}
+          options={['All', 'Mandatory', 'Refresher', 'Voluntary']}
+          currentValue={type || 'All'}
           hiddenParams={q ? { q } : {}}
         />
       </GlassCard>
@@ -151,11 +151,11 @@ export default async function SchedulesPage({
                 <div className="flex flex-wrap items-center gap-2">
                   <span
                     className={`text-[10px] px-2.5 py-0.5 rounded-full font-semibold ${
-                      session.type === "Mandatory"
-                        ? "bg-red-500/10 text-red-600 font-bold"
-                        : session.type === "Refresher"
-                          ? "bg-amber-500/10 text-amber-600"
-                          : "bg-blue-500/10 text-blue-600"
+                      session.type === 'Mandatory'
+                        ? 'bg-red-500/10 text-red-600 font-bold'
+                        : session.type === 'Refresher'
+                          ? 'bg-amber-500/10 text-amber-600'
+                          : 'bg-blue-500/10 text-blue-600'
                     }`}
                   >
                     {session.type}
@@ -185,7 +185,7 @@ export default async function SchedulesPage({
                   <div className="flex items-center gap-1">
                     <User className="w-3.5 h-3.5" />
                     <span>
-                      Trainer:{" "}
+                      Trainer:{' '}
                       <strong className="font-medium text-arch-text-secondary">
                         {session.instructor}
                       </strong>
@@ -223,5 +223,5 @@ export default async function SchedulesPage({
         )}
       </div>
     </div>
-  );
+  )
 }

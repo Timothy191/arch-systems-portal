@@ -1,21 +1,21 @@
-"use client";
+'use client'
 
-import * as React from "react";
-import { cn } from "@repo/ui/lib/utils";
+import * as React from 'react'
+import { cn } from '@repo/ui/lib/utils'
 
 interface RevealLoaderProps {
-  className?: string;
-  rows?: number;
-  columns?: number;
-  gap?: number;
+  className?: string
+  rows?: number
+  columns?: number
+  gap?: number
 }
 
 export function RevealLoader({ className, rows = 3, columns = 1, gap = 12 }: RevealLoaderProps) {
   return (
     <div
-      className={cn("w-full", className)}
+      className={cn('w-full', className)}
       style={{
-        display: "grid",
+        display: 'grid',
         gap,
         gridTemplateColumns: `repeat(${columns}, 1fr)`,
       }}
@@ -24,9 +24,9 @@ export function RevealLoader({ className, rows = 3, columns = 1, gap = 12 }: Rev
         <div
           key={i}
           className={cn(
-            "relative overflow-hidden rounded-xl",
-            "bg-[var(--bg-tertiary)]/50 border border-[var(--border-default)]/30",
-            "h-24"
+            'relative overflow-hidden rounded-xl',
+            'bg-[var(--bg-tertiary)]/50 border border-[var(--border-default)]/30',
+            'h-24'
           )}
         >
           {/* Shimmer sweep */}
@@ -34,7 +34,7 @@ export function RevealLoader({ className, rows = 3, columns = 1, gap = 12 }: Rev
             className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite]"
             style={{
               background:
-                "linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent)",
+                'linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent)',
             }}
           />
 
@@ -45,7 +45,7 @@ export function RevealLoader({ className, rows = 3, columns = 1, gap = 12 }: Rev
                 className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite]"
                 style={{
                   background:
-                    "linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent)",
+                    'linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent)',
                 }}
               />
             </div>
@@ -54,7 +54,7 @@ export function RevealLoader({ className, rows = 3, columns = 1, gap = 12 }: Rev
                 className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite]"
                 style={{
                   background:
-                    "linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent)",
+                    'linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent)',
                 }}
               />
             </div>
@@ -62,5 +62,5 @@ export function RevealLoader({ className, rows = 3, columns = 1, gap = 12 }: Rev
         </div>
       ))}
     </div>
-  );
+  )
 }

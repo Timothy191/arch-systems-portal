@@ -1,6 +1,6 @@
-import { PageHeader } from "@repo/ui/PageHeader";
-import { GlassCard } from "@repo/ui/GlassCard";
-import { KPICard, KPIGrid } from "@repo/ui/KPI";
+import { PageHeader } from '@repo/ui/PageHeader'
+import { GlassCard } from '@repo/ui/GlassCard'
+import { KPICard, KPIGrid } from '@repo/ui/KPI'
 import {
   Table,
   TableBody,
@@ -8,7 +8,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@repo/ui/components/ui/table";
+} from '@repo/ui/components/ui/table'
 import {
   FileText,
   Download,
@@ -20,51 +20,51 @@ import {
   XCircle,
   Trash2,
   CheckCircle,
-} from "lucide-react";
-import { getPrintJobs } from "../actions";
+} from 'lucide-react'
+import { getPrintJobs } from '../actions'
 
 /* ------------------------------------------------------------------ */
 /*  Status badge helpers                                               */
 /* ------------------------------------------------------------------ */
 
 function ActivityPill({ status }: { status: string }) {
-  if (status === "completed") {
+  if (status === 'completed') {
     return (
       <span className="inline-flex items-center gap-1.5 text-xs font-medium px-2 py-0.5 rounded-full border bg-accent-green/10 border-accent-green/20 text-accent-green">
         <CheckCircle className="w-3 h-3" />
         Completed
       </span>
-    );
+    )
   }
-  if (status === "failed") {
+  if (status === 'failed') {
     return (
       <span className="inline-flex items-center gap-1.5 text-xs font-medium px-2 py-0.5 rounded-full border bg-red-50/70 border-red-200/50 text-red-700">
         <XCircle className="w-3 h-3" />
         Failed
       </span>
-    );
+    )
   }
-  if (status === "cancelled") {
+  if (status === 'cancelled') {
     return (
       <span className="inline-flex items-center gap-1.5 text-xs font-medium px-2 py-0.5 rounded-full border bg-amber-50/70 border-amber-200/50 text-amber-700">
         <Trash2 className="w-3 h-3" />
         Cancelled
       </span>
-    );
+    )
   }
-  if (status === "queued") {
+  if (status === 'queued') {
     return (
       <span className="inline-flex items-center gap-1.5 text-xs font-medium px-2 py-0.5 rounded-full border bg-blue-50/70 border-blue-200/50 text-blue-700">
         <Printer className="w-3 h-3" />
         Queued
       </span>
-    );
+    )
   }
   return (
     <span className="inline-flex items-center gap-1.5 text-xs font-medium px-2 py-0.5 rounded-full border bg-gray-50/70 border-gray-200/50 text-gray-700">
       {status}
     </span>
-  );
+  )
 }
 
 /* ------------------------------------------------------------------ */
@@ -72,20 +72,20 @@ function ActivityPill({ status }: { status: string }) {
 /* ------------------------------------------------------------------ */
 
 export default async function ReportsPage() {
-  const { jobs } = await getPrintJobs(undefined).catch(() => ({ jobs: [] }));
+  const { jobs } = await getPrintJobs(undefined).catch(() => ({ jobs: [] }))
 
   // Compute summary stats
-  const totalIssued = jobs.length;
-  const completed = jobs.filter((j) => j.status === "completed").length;
-  const failed = jobs.filter((j) => j.status === "failed").length;
-  const cancelled = jobs.filter((j) => j.status === "cancelled").length;
-  const successRate = totalIssued > 0 ? `${Math.round((completed / totalIssued) * 100)}%` : "—";
+  const totalIssued = jobs.length
+  const completed = jobs.filter((j) => j.status === 'completed').length
+  const failed = jobs.filter((j) => j.status === 'failed').length
+  const cancelled = jobs.filter((j) => j.status === 'cancelled').length
+  const successRate = totalIssued > 0 ? `${Math.round((completed / totalIssued) * 100)}%` : '—'
 
-  const activeCardCount = 0; // Will be wired to dedicated endpoint
-  const revokedLostCount = 0; // Will be wired to dedicated endpoint
+  const activeCardCount = 0 // Will be wired to dedicated endpoint
+  const revokedLostCount = 0 // Will be wired to dedicated endpoint
 
   // Show only terminal statuses for activity log
-  const terminalJobs = jobs.filter((j) => ["completed", "failed", "cancelled"].includes(j.status));
+  const terminalJobs = jobs.filter((j) => ['completed', 'failed', 'cancelled'].includes(j.status))
 
   return (
     <div className="space-y-6">
@@ -108,25 +108,25 @@ export default async function ReportsPage() {
         <KPICard
           label="Revoked / Lost"
           value={revokedLostCount}
-          color={revokedLostCount > 0 ? "red" : "default"}
+          color={revokedLostCount > 0 ? 'red' : 'default'}
           icon={<ShieldOff className="w-8 h-8" />}
         />
         <KPICard
           label="Print Success Rate"
           value={successRate}
           color={
-            successRate !== "—"
+            successRate !== '—'
               ? Number.parseInt(successRate) >= 80
-                ? "green"
+                ? 'green'
                 : Number.parseInt(successRate) >= 50
-                  ? "default"
-                  : "red"
-              : "default"
+                  ? 'default'
+                  : 'red'
+              : 'default'
           }
           sub={
             totalIssued > 0
               ? `${completed} completed · ${failed} failed · ${cancelled} cancelled`
-              : "No data"
+              : 'No data'
           }
           icon={<TrendingUp className="w-8 h-8" />}
         />
@@ -167,25 +167,25 @@ export default async function ReportsPage() {
               >
                 <TableCell className="text-arch-text-primary">{job.employee_name}</TableCell>
                 <TableCell className="text-arch-text-secondary text-sm">
-                  {job.department_name ?? "—"}
+                  {job.department_name ?? '—'}
                 </TableCell>
                 <TableCell>
                   <ActivityPill status={job.status} />
                 </TableCell>
                 <TableCell className="text-arch-text-secondary text-sm">
-                  {new Date(job.queued_at).toLocaleDateString("en-ZA", {
-                    day: "numeric",
-                    month: "short",
-                    year: "numeric",
-                    hour: "2-digit",
-                    minute: "2-digit",
+                  {new Date(job.queued_at).toLocaleDateString('en-ZA', {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
                   })}
                 </TableCell>
                 <TableCell className="text-arch-text-secondary text-sm">
-                  {job.printer?.name ?? "—"}
+                  {job.printer?.name ?? '—'}
                 </TableCell>
                 <TableCell className="text-right text-arch-text-secondary text-sm">
-                  {job.template?.name ?? "—"}
+                  {job.template?.name ?? '—'}
                 </TableCell>
               </TableRow>
             ))}
@@ -225,5 +225,5 @@ export default async function ReportsPage() {
         </p>
       </GlassCard>
     </div>
-  );
+  )
 }

@@ -1,33 +1,33 @@
-import { Suspense } from "react";
-import { getDepartmentContext } from "@/lib/dept-context";
-import { GlassCard } from "@repo/ui/GlassCard";
-import { Skeleton } from "@repo/ui/components/ui/skeleton";
-import type { Metadata } from "next";
-import { AlertTriangle, CheckCircle2, Clock, ShieldAlert, Eye, Activity } from "lucide-react";
+import { Suspense } from 'react'
+import { getDepartmentContext } from '@/lib/dept-context'
+import { GlassCard } from '@repo/ui/GlassCard'
+import { Skeleton } from '@repo/ui/components/ui/skeleton'
+import type { Metadata } from 'next'
+import { AlertTriangle, CheckCircle2, Clock, ShieldAlert, Eye, Activity } from 'lucide-react'
 import {
   getSafetyMetrics,
   getRecentSafetyIncidents,
   type SafetyMetrics,
   type RecentSafetyIncident,
-} from "./actions";
+} from './actions'
 
 export const metadata: Metadata = {
-  title: "Safety | Arch OS",
-  description: "Incident logs, compliance and inspections.",
-};
+  title: 'Safety | Arch OS',
+  description: 'Incident logs, compliance and inspections.',
+}
 
 /* ------------------------------------------------------------------ */
 /*  Server component wrappers for streaming                            */
 /* ------------------------------------------------------------------ */
 
 async function SafetyMetricsSection({ deptId }: { deptId: string }) {
-  const metrics = await getSafetyMetrics(deptId);
-  return <SafetyKPIGrid metrics={metrics} />;
+  const metrics = await getSafetyMetrics(deptId)
+  return <SafetyKPIGrid metrics={metrics} />
 }
 
 async function SafetyIncidentsSection({ deptId }: { deptId: string }) {
-  const incidents = await getRecentSafetyIncidents(deptId, 8);
-  return <SafetyIncidentsTable incidents={incidents} />;
+  const incidents = await getRecentSafetyIncidents(deptId, 8)
+  return <SafetyIncidentsTable incidents={incidents} />
 }
 
 /* ------------------------------------------------------------------ */
@@ -37,53 +37,53 @@ async function SafetyIncidentsSection({ deptId }: { deptId: string }) {
 function SafetyKPIGrid({ metrics }: { metrics: SafetyMetrics }) {
   const kpis = [
     {
-      label: "Open Incidents",
+      label: 'Open Incidents',
       value: metrics.openIncidents,
       icon: AlertTriangle,
-      color: "text-red-400",
-      bg: "bg-red-400/10",
+      color: 'text-red-400',
+      bg: 'bg-red-400/10',
     },
     {
-      label: "Resolved This Month",
+      label: 'Resolved This Month',
       value: metrics.resolvedThisMonth,
       icon: CheckCircle2,
-      color: "text-accent-green",
-      bg: "bg-accent-green/10",
+      color: 'text-accent-green',
+      bg: 'bg-accent-green/10',
     },
     {
-      label: "Under Investigation",
+      label: 'Under Investigation',
       value: metrics.underInvestigation,
       icon: Eye,
-      color: "text-yellow-400",
-      bg: "bg-yellow-400/10",
+      color: 'text-yellow-400',
+      bg: 'bg-yellow-400/10',
     },
     {
-      label: "Lost-Time Incidents",
+      label: 'Lost-Time Incidents',
       value: metrics.lostTimeIncidents,
       icon: Clock,
-      color: "text-orange-400",
-      bg: "bg-orange-400/10",
+      color: 'text-orange-400',
+      bg: 'bg-orange-400/10',
     },
     {
-      label: "Near-Miss Reports",
+      label: 'Near-Miss Reports',
       value: metrics.nearMissCount,
       icon: ShieldAlert,
-      color: "text-blue-400",
-      bg: "bg-blue-400/10",
+      color: 'text-blue-400',
+      bg: 'bg-blue-400/10',
     },
     {
-      label: "Incidents Today",
+      label: 'Incidents Today',
       value: metrics.incidentsTodayCount,
       icon: Activity,
-      color: "text-purple-400",
-      bg: "bg-purple-400/10",
+      color: 'text-purple-400',
+      bg: 'bg-purple-400/10',
     },
-  ];
+  ]
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
       {kpis.map((kpi) => {
-        const Icon = kpi.icon;
+        const Icon = kpi.icon
         return (
           <GlassCard key={kpi.label}>
             <div className="flex items-center gap-3">
@@ -96,9 +96,9 @@ function SafetyKPIGrid({ metrics }: { metrics: SafetyMetrics }) {
                 </p>
                 <p
                   className={`text-2xl font-bold mt-0.5 ${
-                    kpi.label === "Open Incidents" && kpi.value > 0
-                      ? "text-red-400"
-                      : "text-arch-text-primary"
+                    kpi.label === 'Open Incidents' && kpi.value > 0
+                      ? 'text-red-400'
+                      : 'text-arch-text-primary'
                   }`}
                 >
                   {kpi.value}
@@ -106,25 +106,25 @@ function SafetyKPIGrid({ metrics }: { metrics: SafetyMetrics }) {
               </div>
             </div>
           </GlassCard>
-        );
+        )
       })}
     </div>
-  );
+  )
 }
 
 const INCIDENT_TYPE_LABELS: Record<string, string> = {
-  "near-miss": "Near Miss",
-  incident: "Incident",
-  "lost-time": "Lost Time",
-  "equipment-damage": "Equipment",
-};
+  'near-miss': 'Near Miss',
+  incident: 'Incident',
+  'lost-time': 'Lost Time',
+  'equipment-damage': 'Equipment',
+}
 
 const STATUS_STYLES: Record<string, string> = {
-  open: "bg-red-400/20 text-red-400",
-  "under-investigation": "bg-yellow-400/20 text-yellow-400",
-  resolved: "bg-accent-green/20 text-accent-green",
-  closed: "bg-white/10 text-arch-text-muted",
-};
+  open: 'bg-red-400/20 text-red-400',
+  'under-investigation': 'bg-yellow-400/20 text-yellow-400',
+  resolved: 'bg-accent-green/20 text-accent-green',
+  closed: 'bg-white/10 text-arch-text-muted',
+}
 
 function SafetyIncidentsTable({ incidents }: { incidents: RecentSafetyIncident[] }) {
   return (
@@ -151,9 +151,9 @@ function SafetyIncidentsTable({ incidents }: { incidents: RecentSafetyIncident[]
                   </span>
                   <span
                     className={`text-xs px-1.5 py-0.5 rounded font-medium ${
-                      incident.shiftType === "day"
-                        ? "bg-yellow-400/20 text-yellow-400"
-                        : "bg-blue-400/20 text-blue-400"
+                      incident.shiftType === 'day'
+                        ? 'bg-yellow-400/20 text-yellow-400'
+                        : 'bg-blue-400/20 text-blue-400'
                     }`}
                   >
                     {incident.shiftType}
@@ -170,7 +170,7 @@ function SafetyIncidentsTable({ incidents }: { incidents: RecentSafetyIncident[]
               <div className="flex flex-col items-end gap-1 flex-shrink-0">
                 <span
                   className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                    STATUS_STYLES[incident.status] ?? "bg-white/10 text-arch-text-muted"
+                    STATUS_STYLES[incident.status] ?? 'bg-white/10 text-arch-text-muted'
                   }`}
                 >
                   {incident.status}
@@ -186,7 +186,7 @@ function SafetyIncidentsTable({ incidents }: { incidents: RecentSafetyIncident[]
         </div>
       )}
     </GlassCard>
-  );
+  )
 }
 
 /* ------------------------------------------------------------------ */
@@ -194,7 +194,7 @@ function SafetyIncidentsTable({ incidents }: { incidents: RecentSafetyIncident[]
 /* ------------------------------------------------------------------ */
 
 export default async function SafetyPage() {
-  const { deptId } = await getDepartmentContext({ department: "safety" });
+  const { deptId } = await getDepartmentContext({ department: 'safety' })
 
   return (
     <div className="space-y-6">
@@ -216,5 +216,5 @@ export default async function SafetyPage() {
         <SafetyIncidentsSection deptId={deptId} />
       </Suspense>
     </div>
-  );
+  )
 }

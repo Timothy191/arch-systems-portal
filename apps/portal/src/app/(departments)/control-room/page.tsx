@@ -1,33 +1,33 @@
-import { Suspense } from "react";
-import { getDepartmentContext } from "@/lib/dept-context";
-import { GlassCard } from "@repo/ui/GlassCard";
-import { Skeleton } from "@repo/ui/components/ui/skeleton";
-import type { Metadata } from "next";
-import { MonitorDot, Shovel, AlertOctagon, StickyNote, Weight, Cpu } from "lucide-react";
+import { Suspense } from 'react'
+import { getDepartmentContext } from '@/lib/dept-context'
+import { GlassCard } from '@repo/ui/GlassCard'
+import { Skeleton } from '@repo/ui/components/ui/skeleton'
+import type { Metadata } from 'next'
+import { MonitorDot, Shovel, AlertOctagon, StickyNote, Weight, Cpu } from 'lucide-react'
 import {
   getControlRoomMetrics,
   getRecentMachineOperations,
   type ControlRoomMetrics,
   type RecentMachineOperation,
-} from "./actions";
+} from './actions'
 
 export const metadata: Metadata = {
-  title: "Control Room | Arch OS",
-  description: "SCADA systems and real-time monitoring.",
-};
+  title: 'Control Room | Arch OS',
+  description: 'SCADA systems and real-time monitoring.',
+}
 
 /* ------------------------------------------------------------------ */
 /*  Server component wrappers for streaming                            */
 /* ------------------------------------------------------------------ */
 
 async function ControlRoomMetricsSection({ deptId }: { deptId: string }) {
-  const metrics = await getControlRoomMetrics(deptId);
-  return <ControlRoomKPIGrid metrics={metrics} />;
+  const metrics = await getControlRoomMetrics(deptId)
+  return <ControlRoomKPIGrid metrics={metrics} />
 }
 
 async function MachineOpsSection({ deptId }: { deptId: string }) {
-  const ops = await getRecentMachineOperations(deptId, 8);
-  return <MachineOpsTable ops={ops} />;
+  const ops = await getRecentMachineOperations(deptId, 8)
+  return <MachineOpsTable ops={ops} />
 }
 
 /* ------------------------------------------------------------------ */
@@ -37,53 +37,53 @@ async function MachineOpsSection({ deptId }: { deptId: string }) {
 function ControlRoomKPIGrid({ metrics }: { metrics: ControlRoomMetrics }) {
   const kpis = [
     {
-      label: "Active Operations",
+      label: 'Active Operations',
       value: metrics.activeMachineOps,
       icon: MonitorDot,
-      color: "text-accent-green",
-      bg: "bg-accent-green/10",
+      color: 'text-accent-green',
+      bg: 'bg-accent-green/10',
     },
     {
-      label: "Machines In Ops",
+      label: 'Machines In Ops',
       value: metrics.totalMachinesInOps,
       icon: Cpu,
-      color: "text-cyan-400",
-      bg: "bg-cyan-400/10",
+      color: 'text-cyan-400',
+      bg: 'bg-cyan-400/10',
     },
     {
-      label: "Excavators Active",
+      label: 'Excavators Active',
       value: metrics.excavatorsActive,
       icon: Shovel,
-      color: "text-yellow-400",
-      bg: "bg-yellow-400/10",
+      color: 'text-yellow-400',
+      bg: 'bg-yellow-400/10',
     },
     {
-      label: "Delays Today",
+      label: 'Delays Today',
       value: metrics.delaysToday,
       icon: AlertOctagon,
-      color: metrics.delaysToday > 0 ? "text-red-400" : "text-arch-text-muted",
-      bg: metrics.delaysToday > 0 ? "bg-red-400/10" : "bg-white/5",
+      color: metrics.delaysToday > 0 ? 'text-red-400' : 'text-arch-text-muted',
+      bg: metrics.delaysToday > 0 ? 'bg-red-400/10' : 'bg-white/5',
     },
     {
-      label: "Shift Notes Today",
+      label: 'Shift Notes Today',
       value: metrics.shiftNotesToday,
       icon: StickyNote,
-      color: "text-blue-400",
-      bg: "bg-blue-400/10",
+      color: 'text-blue-400',
+      bg: 'bg-blue-400/10',
     },
     {
-      label: "Total Load Today (t)",
+      label: 'Total Load Today (t)',
       value: metrics.totalTonnageToday.toLocaleString(),
       icon: Weight,
-      color: "text-orange-400",
-      bg: "bg-orange-400/10",
+      color: 'text-orange-400',
+      bg: 'bg-orange-400/10',
     },
-  ];
+  ]
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
       {kpis.map((kpi) => {
-        const Icon = kpi.icon;
+        const Icon = kpi.icon
         return (
           <GlassCard key={kpi.label}>
             <div className="flex items-center gap-3">
@@ -98,10 +98,10 @@ function ControlRoomKPIGrid({ metrics }: { metrics: ControlRoomMetrics }) {
               </div>
             </div>
           </GlassCard>
-        );
+        )
       })}
     </div>
-  );
+  )
 }
 
 function MachineOpsTable({ ops }: { ops: RecentMachineOperation[] }) {
@@ -140,9 +140,9 @@ function MachineOpsTable({ ops }: { ops: RecentMachineOperation[] }) {
                   <td className="py-2">
                     <span
                       className={`text-xs px-1.5 py-0.5 rounded font-medium ${
-                        op.shiftType === "day"
-                          ? "bg-yellow-400/20 text-yellow-400"
-                          : "bg-blue-400/20 text-blue-400"
+                        op.shiftType === 'day'
+                          ? 'bg-yellow-400/20 text-yellow-400'
+                          : 'bg-blue-400/20 text-blue-400'
                       }`}
                     >
                       {op.shiftType}
@@ -155,7 +155,7 @@ function MachineOpsTable({ ops }: { ops: RecentMachineOperation[] }) {
                       <span className="text-accent-green text-xs">In Progress</span>
                     )}
                   </td>
-                  <td className="py-2 text-arch-text-muted text-xs">{op.siteName ?? "—"}</td>
+                  <td className="py-2 text-arch-text-muted text-xs">{op.siteName ?? '—'}</td>
                 </tr>
               ))}
             </tbody>
@@ -163,7 +163,7 @@ function MachineOpsTable({ ops }: { ops: RecentMachineOperation[] }) {
         </div>
       )}
     </GlassCard>
-  );
+  )
 }
 
 /* ------------------------------------------------------------------ */
@@ -171,7 +171,7 @@ function MachineOpsTable({ ops }: { ops: RecentMachineOperation[] }) {
 /* ------------------------------------------------------------------ */
 
 export default async function ControlRoomPage() {
-  const { deptId } = await getDepartmentContext({ department: "control-room" });
+  const { deptId } = await getDepartmentContext({ department: 'control-room' })
 
   return (
     <div className="space-y-6">
@@ -193,5 +193,5 @@ export default async function ControlRoomPage() {
         <MachineOpsSection deptId={deptId} />
       </Suspense>
     </div>
-  );
+  )
 }

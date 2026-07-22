@@ -1,16 +1,16 @@
-"use client";
+'use client'
 
-import { Search } from "lucide-react";
+import { Search } from 'lucide-react'
 
 interface SearchFormProps {
-  value?: string;
-  placeholder?: string;
-  hiddenParams?: Record<string, string>;
+  value?: string
+  placeholder?: string
+  hiddenParams?: Record<string, string>
 }
 
 export function SearchForm({
-  value = "",
-  placeholder = "Search...",
+  value = '',
+  placeholder = 'Search...',
   hiddenParams = {},
 }: SearchFormProps) {
   return (
@@ -28,5 +28,5 @@ export function SearchForm({
         <input key={key} type="hidden" name={key} value={val} />
       ))}
     </form>
-  );
+  )
 }

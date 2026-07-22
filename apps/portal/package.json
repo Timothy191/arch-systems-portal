@@ -8,7 +8,7 @@
     "build": "node scripts/generate-openapi-spec.js && next build",
     "build:analyze": "ANALYZE=true next build",
     "start": "next start",
-    "lint": "eslint . --cache --cache-location node_modules/.cache/.eslintcache --max-warnings 0",
+    "lint": "eslint . --cache --cache-location node_modules/.cache/.eslintcache --report-unused-disable-directives --max-warnings 0",
     "type-check": "tsc --noEmit",
     "test": "jest --passWithNoTests --maxWorkers=50%",
     "generate-openapi-spec": "node scripts/generate-openapi-spec.js"

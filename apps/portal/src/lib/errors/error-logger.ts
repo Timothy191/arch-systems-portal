@@ -5,40 +5,40 @@
  * and generic errors. Integrates with monitoring systems.
  */
 
-import * as Sentry from "@sentry/nextjs";
-import { serverLogger } from "@repo/logger";
+import * as Sentry from '@sentry/nextjs'
+import { serverLogger } from '@repo/logger'
 
 /**
  * Error severity levels
  */
-type ErrorSeverity = "debug" | "info" | "warn" | "error" | "fatal";
+type ErrorSeverity = 'debug' | 'info' | 'warn' | 'error' | 'fatal'
 
 /**
  * Structured error log entry
  */
 interface ErrorLogEntry {
-  timestamp: string;
-  severity: ErrorSeverity;
-  code?: string;
-  statusCode?: number;
-  message: string;
-  context?: Record<string, unknown>;
-  cause?: unknown;
-  stack?: string;
-  url?: string;
-  method?: string;
-  userId?: string;
-  sessionId?: string;
+  timestamp: string
+  severity: ErrorSeverity
+  code?: string
+  statusCode?: number
+  message: string
+  context?: Record<string, unknown>
+  cause?: unknown
+  stack?: string
+  url?: string
+  method?: string
+  userId?: string
+  sessionId?: string
 }
 
 /**
  * Determine error severity based on status code and error type
  */
 function getSeverity(error: Error, statusCode?: number): ErrorSeverity {
-  if (!statusCode) return "error";
-  if (statusCode >= 500) return "error";
-  if (statusCode >= 400) return "warn";
-  return "info";
+  if (!statusCode) return 'error'
+  if (statusCode >= 500) return 'error'
+  if (statusCode >= 400) return 'warn'
+  return 'info'
 }
 
 /**
@@ -47,26 +47,26 @@ function getSeverity(error: Error, statusCode?: number): ErrorSeverity {
 function createErrorLog(
   error: Error,
   context?: {
-    url?: string;
-    method?: string;
-    userId?: string;
-    sessionId?: string;
-    [key: string]: unknown;
+    url?: string
+    method?: string
+    userId?: string
+    sessionId?: string
+    [key: string]: unknown
   }
 ): ErrorLogEntry {
-  const timestamp = new Date().toISOString();
+  const timestamp = new Date().toISOString()
 
   // Check if error has AppError-like properties
   const hasAppErrorProps =
-    "code" in error && "statusCode" in error && "context" in error && "cause" in error;
+    'code' in error && 'statusCode' in error && 'context' in error && 'cause' in error
 
   if (hasAppErrorProps) {
     const appError = error as Error & {
-      code?: string;
-      statusCode?: number;
-      context?: Record<string, unknown>;
-      cause?: unknown;
-    };
+      code?: string
+      statusCode?: number
+      context?: Record<string, unknown>
+      cause?: unknown
+    }
     return {
       timestamp,
       severity: getSeverity(error, appError.statusCode),
@@ -80,20 +80,20 @@ function createErrorLog(
       method: context?.method,
       userId: context?.userId,
       sessionId: context?.sessionId,
-    };
+    }
   }
 
   // Generic error handling
   return {
     timestamp,
-    severity: "error",
+    severity: 'error',
     message: error.message,
     stack: error.stack,
     url: context?.url,
     method: context?.method,
     userId: context?.userId,
     sessionId: context?.sessionId,
-  };
+  }
 }
 
 /**
@@ -102,9 +102,9 @@ function createErrorLog(
  * Sends structured error to console (dev) and Sentry (via global init).
  */
 async function sendToMonitoring(entry: ErrorLogEntry): Promise<void> {
-  const error = new Error(entry.message);
+  const error = new Error(entry.message)
   if (entry.stack) {
-    error.stack = entry.stack;
+    error.stack = entry.stack
   }
 
   // Forward to structured logger
@@ -114,16 +114,16 @@ async function sendToMonitoring(entry: ErrorLogEntry): Promise<void> {
     context: entry.context,
     url: entry.url,
     method: entry.method,
-  };
+  }
 
-  if (entry.severity === "error" || entry.severity === "fatal") {
-    serverLogger().error(`[${entry.code || "UNKNOWN"}] ${entry.message}`, logEntry);
+  if (entry.severity === 'error' || entry.severity === 'fatal') {
+    serverLogger().error(`[${entry.code || 'UNKNOWN'}] ${entry.message}`, logEntry)
   } else {
-    serverLogger().warn(`[${entry.code || "UNKNOWN"}] ${entry.message}`, logEntry);
+    serverLogger().warn(`[${entry.code || 'UNKNOWN'}] ${entry.message}`, logEntry)
   }
 
   // Forward server-side errors to Sentry — warn/info are expected control-flow (4xx) and not captured
-  if (entry.severity === "error" || entry.severity === "fatal") {
+  if (entry.severity === 'error' || entry.severity === 'fatal') {
     Sentry.captureException(error, {
       extra: {
         code: entry.code,
@@ -134,7 +134,7 @@ async function sendToMonitoring(entry: ErrorLogEntry): Promise<void> {
         userId: entry.userId,
         sessionId: entry.sessionId,
       },
-    });
+    })
   }
 }
 
@@ -153,16 +153,16 @@ async function sendToMonitoring(entry: ErrorLogEntry): Promise<void> {
 export async function logError(
   error: Error,
   context?: {
-    url?: string;
-    method?: string;
-    userId?: string;
-    sessionId?: string;
-    [key: string]: unknown;
+    url?: string
+    method?: string
+    userId?: string
+    sessionId?: string
+    [key: string]: unknown
   }
 ): Promise<void> {
   try {
-    const entry = createErrorLog(error, context);
-    await sendToMonitoring(entry);
+    const entry = createErrorLog(error, context)
+    await sendToMonitoring(entry)
   } catch {
     // logError must never throw - monitoring failures should not crash the app
   }
@@ -186,12 +186,12 @@ export async function withErrorLogging<T>(
   req: Request,
   handler: () => Promise<T>,
   options?: {
-    userId?: string;
-    sessionId?: string;
+    userId?: string
+    sessionId?: string
   }
 ): Promise<T> {
   try {
-    return await handler();
+    return await handler()
   } catch (error) {
     if (error instanceof Error) {
       await logError(error, {
@@ -199,9 +199,9 @@ export async function withErrorLogging<T>(
         method: req.method,
         userId: options?.userId,
         sessionId: options?.sessionId,
-      });
+      })
     }
-    throw error; // Re-throw for error boundaries
+    throw error // Re-throw for error boundaries
   }
 }
 
@@ -224,13 +224,13 @@ export async function withServerActionLogging<T>(
   actionName: string
 ): Promise<T> {
   try {
-    return await handler();
+    return await handler()
   } catch (error) {
     if (error instanceof Error) {
       await logError(error, {
         action: actionName,
-      });
+      })
     }
-    throw error;
+    throw error
   }
 }

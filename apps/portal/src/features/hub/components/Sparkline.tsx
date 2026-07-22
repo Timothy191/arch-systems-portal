@@ -1,14 +1,14 @@
-"use client";
+'use client'
 
-import * as React from "react";
-import { cn } from "@repo/ui/lib/utils";
+import * as React from 'react'
+import { cn } from '@repo/ui/lib/utils'
 
 interface SparklineProps {
-  data: number[];
-  width?: number;
-  height?: number;
-  strokeWidth?: number;
-  className?: string;
+  data: number[]
+  width?: number
+  height?: number
+  strokeWidth?: number
+  className?: string
 }
 
 export function Sparkline({
@@ -18,42 +18,42 @@ export function Sparkline({
   strokeWidth = 1.5,
   className,
 }: SparklineProps) {
-  const id = React.useId();
+  const id = React.useId()
 
-  if (data.length < 2) return null;
+  if (data.length < 2) return null
 
-  const lineGradId = `sparkLineGrad-${id}`;
-  const areaGradId = `sparkAreaGrad-${id}`;
-  const glowId = `sparkGlow-${id}`;
+  const lineGradId = `sparkLineGrad-${id}`
+  const areaGradId = `sparkAreaGrad-${id}`
+  const glowId = `sparkGlow-${id}`
 
-  const min = Math.min(...data);
-  const max = Math.max(...data);
-  const range = max - min || 1;
+  const min = Math.min(...data)
+  const max = Math.max(...data)
+  const range = max - min || 1
 
   const points = data.map((value, i) => {
-    const x = (i / (data.length - 1)) * width;
-    const y = height - ((value - min) / range) * (height - 4) - 2;
-    return `${x},${y}`;
-  });
+    const x = (i / (data.length - 1)) * width
+    const y = height - ((value - min) / range) * (height - 4) - 2
+    return `${x},${y}`
+  })
 
-  const pathD = `M${points.join(" L")}`;
-  const trend = data[data.length - 1]! - data[0]!;
+  const pathD = `M${points.join(' L')}`
+  const trend = data[data.length - 1]! - data[0]!
 
   // Light-theme accents (login/hub parity) — mint up, coral down
-  const strokeColor = trend >= 0 ? "var(--accent-green, #10b981)" : "var(--accent-red, #ef4444)";
+  const strokeColor = trend >= 0 ? 'var(--accent-green, #10b981)' : 'var(--accent-red, #ef4444)'
 
-  const endX = points[points.length - 1]?.split(",")[0] ?? "0";
-  const endY = points[points.length - 1]?.split(",")[1] ?? "0";
+  const endX = points[points.length - 1]?.split(',')[0] ?? '0'
+  const endY = points[points.length - 1]?.split(',')[1] ?? '0'
 
   // Create an area path closed at the bottom of the svg
-  const areaPathD = `${pathD} L${endX},${height} L0,${height} Z`;
+  const areaPathD = `${pathD} L${endX},${height} L0,${height} Z`
 
   return (
     <svg
       width={width}
       height={height}
       viewBox={`0 0 ${width} ${height}`}
-      className={cn("shrink-0 overflow-visible", className)}
+      className={cn('shrink-0 overflow-visible', className)}
       aria-hidden="true"
     >
       <defs>
@@ -167,5 +167,5 @@ export function Sparkline({
         />
       </g>
     </svg>
-  );
+  )
 }

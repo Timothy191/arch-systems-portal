@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod'
 
 /**
  * Wraps a request handler with Zod schema validation.
@@ -17,20 +17,20 @@ export function withValidation<T extends z.ZodTypeAny>(
 ) {
   return async (req: Request, _context?: unknown): Promise<Response> => {
     try {
-      const body = await req.clone().json();
-      const result = schema.safeParse(body);
+      const body = await req.clone().json()
+      const result = schema.safeParse(body)
       if (!result.success) {
         return new Response(
-          JSON.stringify({ error: "Request body validation failed", details: result.error.issues }),
-          { status: 400, headers: { "Content-Type": "application/json" } }
-        );
+          JSON.stringify({ error: 'Request body validation failed', details: result.error.issues }),
+          { status: 400, headers: { 'Content-Type': 'application/json' } }
+        )
       }
-      return handler(req, result.data);
+      return handler(req, result.data)
     } catch {
-      return new Response(JSON.stringify({ error: "Request body validation failed" }), {
+      return new Response(JSON.stringify({ error: 'Request body validation failed' }), {
         status: 400,
-        headers: { "Content-Type": "application/json" },
-      });
+        headers: { 'Content-Type': 'application/json' },
+      })
     }
-  };
+  }
 }
