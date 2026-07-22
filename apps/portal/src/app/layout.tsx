@@ -98,7 +98,13 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }): React.JSX.Element {
+export default function RootLayout({
+  children,
+  modal,
+}: {
+  children: React.ReactNode;
+  modal?: React.ReactNode;
+}): React.JSX.Element {
   return (
     <html
       lang="en"
@@ -199,9 +205,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }):
             <ViewportBoundaries />
             <CookieConsent />
             <Toaster />
-
-            {/* Footer landmark - if exists, otherwise contentinfo on body or create footer */}
-            {/* We'll add a proper footer or ensure contentinfo is on appropriate element */}
+            {modal}
           </ClientProviders>
         </ArchThemeProvider>
       </body>

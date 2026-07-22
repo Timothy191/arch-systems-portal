@@ -1,3 +1,4 @@
+import type { Instrumentation } from "next";
 import { registerOTel } from "@vercel/otel";
 
 export async function register() {
@@ -19,3 +20,19 @@ export async function register() {
     }
   }
 }
+
+export const onRequestError: Instrumentation.onRequestError = async (err, request, context) => {
+  const message = err instanceof Error ? err.message : String(err);
+  const digest =
+    typeof err === "object" && err !== null && "digest" in err
+      ? String((err as { digest?: string }).digest)
+      : undefined;
+
+  if (process.env.NODE_ENV === "development") {
+    // eslint-disable-next-line no-console
+    console.error(
+      `[Server Error] Path: ${request.path} | Method: ${request.method} | Message: ${message}`,
+      { digest, context }
+    );
+  }
+};

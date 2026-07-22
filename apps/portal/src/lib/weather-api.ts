@@ -69,7 +69,7 @@ export async function fetchWeather(
   try {
     const res = await fetch(
       `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,wind_direction_10m&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto`,
-      { next: { revalidate: 600, tags: ['weather'] } }
+      { next: { revalidate: 600, tags: ["weather"] } }
     );
     if (!res.ok)
       throw new ExternalServiceError("Weather API request failed", {

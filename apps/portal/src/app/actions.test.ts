@@ -1,7 +1,12 @@
 /**
  * @jest-environment node
  */
-import { logout, speculativeEmbedShiftLog, generateMonthlyReport, updateCacheTags } from "./actions";
+import {
+  logout,
+  speculativeEmbedShiftLog,
+  generateMonthlyReport,
+  updateCacheTags,
+} from "./actions";
 
 jest.mock("@repo/supabase/server", () => ({
   createServerSupabaseClient: jest.fn(),

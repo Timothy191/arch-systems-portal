@@ -25,7 +25,7 @@ function SubmitButton() {
       disabled={pending}
       className="text-xs font-medium"
     >
-      {pending ? (method === 'POST' ? "Registering…" : "Processing…") : "Register"}
+      {pending ? (method === "POST" ? "Registering…" : "Processing…") : "Register"}
     </Button>
   );
 }
