@@ -33,8 +33,6 @@ import { RegisterPrinterForm } from "./register-form";
 import { StatusFilter } from "./status-filter";
 import { cn } from "@repo/ui/lib/utils";
 
-export const dynamic = "force-dynamic";
-
 /* ------------------------------------------------------------------ */
 /*  Wrapper server actions for form actions                             */
 /*  Discard return values so they satisfy Promise<void>                 */

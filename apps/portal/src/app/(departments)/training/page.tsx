@@ -1,7 +1,9 @@
 import { GlassCard } from "@repo/ui/GlassCard";
 import { GraduationCap, Award, Calendar, Clock } from "lucide-react";
+import { getDepartmentContext } from "@/lib/dept-context";
 
 export default async function TrainingDashboardPage() {
+  await getDepartmentContext({ department: "training" });
   const stats = [
     {
       label: "LMS Compliance",

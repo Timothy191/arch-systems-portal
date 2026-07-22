@@ -1,7 +1,7 @@
 /**
  * @jest-environment node
  */
-import { logout, speculativeEmbedShiftLog, generateMonthlyReport } from "./actions";
+import { logout, speculativeEmbedShiftLog, generateMonthlyReport, updateCacheTags } from "./actions";
 
 jest.mock("@repo/supabase/server", () => ({
   createServerSupabaseClient: jest.fn(),
@@ -32,6 +32,11 @@ jest.mock("next/navigation", () => ({
   redirect: jest.fn().mockImplementation(() => {
     throw new Error("NEXT_REDIRECT");
   }),
+}));
+
+jest.mock("next/cache", () => ({
+  revalidateTag: jest.fn(),
+  updateTag: jest.fn(),
 }));
 
 jest.mock("@repo/utils/inngest", () => ({
@@ -170,6 +175,31 @@ describe("actions", () => {
       expect(res.url).toBe("http://signed-url");
       expect(mockUpload).toHaveBeenCalled();
       expect(mockCreateSignedUrl).toHaveBeenCalled();
+    });
+  });
+
+  describe("updateCacheTags", () => {
+    it("throws error if user is not authenticated", async () => {
+      createServerSupabaseClient.mockResolvedValue({
+        auth: {
+          getUser: jest.fn().mockResolvedValue({ data: { user: null } }),
+        },
+      });
+
+      await expect(updateCacheTags(["tag-1"])).rejects.toThrow("Unauthorized");
+    });
+
+    it("updates tags when user is authenticated", async () => {
+      createServerSupabaseClient.mockResolvedValue({
+        auth: {
+          getUser: jest.fn().mockResolvedValue({
+            data: { user: { id: "user-123" } },
+          }),
+        },
+      });
+
+      const res = await updateCacheTags(["tag-1", "tag-2"]);
+      expect(res.success).toBe(true);
     });
   });
 });

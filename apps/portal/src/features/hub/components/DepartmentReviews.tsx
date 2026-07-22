@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Marquee } from "@repo/ui/Marquee";
 import { GlassCard } from "@repo/ui/GlassCard";
 import React from "react";
@@ -84,10 +85,10 @@ function ReviewCard({ img, name, username, body }: ReviewCardProps) {
       <GlassCard className="h-full bg-arch-surface-tertiary/40 border border-arch-border-primary hover:border-white/40 transition-all duration-300">
         <div className="p-4 flex flex-col justify-between h-full select-none">
           <div className="flex flex-row items-center gap-3">
-            <img
+            <Image
               className="rounded-full w-8 h-8 object-cover bg-arch-surface-tertiary border border-arch-border-primary"
-              width="32"
-              height="32"
+              width={32}
+              height={32}
               alt={name}
               src={img}
             />

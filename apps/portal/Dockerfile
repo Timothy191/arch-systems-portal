@@ -7,7 +7,8 @@ COPY package.json pnpm-workspace.yaml ./
 COPY apps/portal/package.json ./apps/portal/
 COPY packages/ ./packages/
 
-RUN pnpm install --frozen-lockfile
+RUN --mount=type=cache,id=pnpm,target=/root/.local/share/pnpm/store \
+    pnpm install --frozen-lockfile
 
 # ── Stage 2: builder ──────────────────────────────────────
 FROM node:22-alpine AS builder
@@ -19,7 +20,8 @@ COPY --from=deps /app/apps/portal/node_modules ./apps/portal/node_modules
 COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED=1
-RUN pnpm --filter portal build
+RUN --mount=type=cache,target=/app/apps/portal/.next/cache \
+    pnpm --filter portal build
 
 # ── Stage 3: runner ───────────────────────────────────────
 FROM node:22-alpine AS runner

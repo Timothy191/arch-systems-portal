@@ -110,6 +110,7 @@ import { validateBody } from "@/lib/api/response";
 import { applyCors } from "@/lib/api/cors";
 import { withBodyLimit } from "@/lib/api/body-limit";
 import { createWebhookSchema } from "@repo/contract";
+import { validateWebhookUrl } from "@/lib/api/ssrf-guard";
 
 type WebhookEventType =
   | "daily_log.created"
@@ -137,8 +138,6 @@ interface _WebhookEndpoint {
   created_at: string;
   updated_at: string | null;
 }
-
-export const dynamic = "force-dynamic";
 
 async function handleGetWebhooks(_request: NextRequest): Promise<NextResponse> {
   const supabase = await createServerSupabaseClient();
@@ -198,6 +197,16 @@ async function handleCreateWebhook(request: NextRequest): Promise<NextResponse> 
   const parsed = await validateBody(request, createWebhookSchema);
   if (parsed instanceof NextResponse) return parsed;
   const { url, description, event_types, department_id } = parsed.data;
+
+  // SSRF protection: validate webhook URL against private IP ranges
+  try {
+    validateWebhookUrl(url);
+  } catch (ssrfError) {
+    return NextResponse.json(
+      { error: ssrfError instanceof Error ? ssrfError.message : "Invalid webhook URL" },
+      { status: 400 }
+    );
+  }
 
   // Get user's department and role
   const { data: employee } = await supabase

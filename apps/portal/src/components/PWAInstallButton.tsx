@@ -58,10 +58,10 @@ export function PWAInstallButton() {
 
     if (outcome === "accepted") {
       // eslint-disable-next-line no-console
-      console.log("User accepted the install prompt");
+      console.warn("[pwa] User accepted the install prompt");
     } else {
       // eslint-disable-next-line no-console
-      console.log("User dismissed the install prompt");
+      console.warn("[pwa] User dismissed the install prompt");
     }
 
     // Clear the deferred prompt

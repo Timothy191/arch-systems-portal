@@ -16,6 +16,7 @@
  *       Track: https://github.com/your-org/Arch-Mk2/issues/[issue-number]
  */
 
+import Image from "next/image";
 import { Building2, Cpu, ShieldCheck, type LucideIcon } from "lucide-react";
 import { Logo } from "@repo/ui/Logo";
 import { cn } from "@repo/ui/lib/utils";
@@ -36,17 +37,19 @@ interface TrustPlaceholder {
   icon: LucideIcon | "arch-logo";
 }
 
+const Sparkles = Building2;
+const Database = Cpu;
+
 const PLACEHOLDERS: TrustPlaceholder[] = [
-  { label: "Arch Mining", icon: "arch-logo" },
-  { label: "Sector-01", icon: Building2 },
-  { label: "Modbus Ready", icon: Cpu },
-  { label: "ISO 27001", icon: ShieldCheck },
+  { label: "Arch Systems", icon: "arch-logo" },
+  { label: "Caterpillar", icon: Sparkles },
+  { label: "Komatsu", icon: ShieldCheck },
+  { label: "Deere", icon: Cpu },
+  { label: "Hitachi", icon: Database },
 ];
 
-const TRUST_BADGE_CLASS = cn(
-  HERO_ARCH_PILL,
-  "inline-flex items-center justify-center gap-1.5 h-7 px-3 text-sm font-medium"
-);
+const TRUST_BADGE_CLASS =
+  "inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-medium border border-arch-border-primary bg-arch-surface-secondary/40 text-arch-text-secondary select-none";
 
 function TrustBadgeIcon({ icon }: { icon: TrustPlaceholder["icon"] }) {
   if (icon === "arch-logo") {
@@ -70,12 +73,11 @@ export function TrustLogos({ logos }: TrustLogosProps) {
       {hasLogos ? (
         <div className="flex flex-wrap items-center gap-4 opacity-70 grayscale hover:grayscale-0 transition-all duration-500">
           {logos.map((logo) => (
-            <img
+            <Image
               key={logo.src}
               src={logo.src}
               alt={logo.alt}
               className="h-6 w-auto object-contain"
-              loading="lazy"
               width={96}
               height={24}
             />

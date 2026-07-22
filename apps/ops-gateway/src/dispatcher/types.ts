@@ -1,7 +1,7 @@
 // ── eve agent types ─────────────────────────────────────────
-// eve = TUI agent (opencode/kilo/agy) dispatched for investigation & repair
+// eve = TUI agent dispatched for investigation & repair
 
-export type eveId = "opencode" | "kilo" | "agy";
+export type eveId = "opencode";
 
 export interface eveConfig {
   id: eveId;
@@ -45,20 +45,6 @@ export const DEFAULT_EVE_CONFIGS: eveConfig[] = [
   {
     id: "opencode",
     cliPath: "opencode",
-    enabled: true,
-    autoApprove: false,
-    timeoutMs: 120_000,
-  },
-  {
-    id: "kilo",
-    cliPath: "kilo",
-    enabled: true,
-    autoApprove: false,
-    timeoutMs: 120_000,
-  },
-  {
-    id: "agy",
-    cliPath: "agy",
     enabled: true,
     autoApprove: false,
     timeoutMs: 120_000,

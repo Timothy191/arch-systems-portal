@@ -7,6 +7,7 @@ import { memoryPersistFn } from "@/lib/jobs/memory-persist";
 import { shiftCompletenessCheckFn } from "@/lib/jobs/shift-completeness-check";
 import { orphanedRecordDetectionFn } from "@/lib/jobs/orphaned-record-detection";
 import { shiftIntegrityReportFn } from "@/lib/reports/shift-integrity";
+import { automatedAuditFn } from "@/lib/jobs/automated-audit";
 
 export const { GET, POST, PUT } = serve({
   client: inngest,
@@ -18,5 +19,6 @@ export const { GET, POST, PUT } = serve({
     shiftCompletenessCheckFn,
     orphanedRecordDetectionFn,
     shiftIntegrityReportFn,
+    automatedAuditFn,
   ],
 });

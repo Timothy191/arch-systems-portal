@@ -1,7 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import { requireAdmin } from "@/lib/api/auth";
+import { repairTable } from "@/lib/api/admin-db";
+import { DatabaseError } from "@/lib/errors/error-classes";
 
-export const dynamic = "force-dynamic";
+const repairTableSchema = z.object({
+  tableName: z.string().min(1).max(100),
+  issueCategory: z.string().min(1).max(100),
+});
 
 /* ── POST /api/ops/db/repair ────────────────────────────────── */
 export async function POST(request: NextRequest) {
@@ -10,27 +16,32 @@ export async function POST(request: NextRequest) {
   const { supabase } = auth;
 
   try {
-    const { tableName, issueCategory } = await request.json();
-    if (!tableName || !issueCategory) {
+    const body = await request.json();
+    const parsed = repairTableSchema.safeParse(body);
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: "tableName and issueCategory are required" },
+        { error: "Invalid request", details: parsed.error.issues },
         { status: 400 }
       );
     }
 
-    // Execute repair via Supabase RPC (safe — only predefined repair SQL)
-    const { data, error } = await supabase.rpc("repair_table" as never, {
+    const { tableName, issueCategory } = parsed.data;
+
+    const { data, error } = await repairTable(supabase, {
       p_table_name: tableName,
       p_issue_category: issueCategory,
     });
 
-    if (error) throw new Error(error.message);
+    if (error) throw new DatabaseError(error.message);
 
     return NextResponse.json({
       success: true,
       data: data ?? { affectedRows: 0 },
     });
   } catch (err) {
+    if (err instanceof DatabaseError) {
+      return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+    }
     const message = err instanceof Error ? err.message : "Unknown error";
     return NextResponse.json({ success: false, error: message }, { status: 500 });
   }

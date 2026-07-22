@@ -2,6 +2,8 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+> **Canonical policy:** the monorepo root `AGENTS.md` is the source of truth. **Shared knowledge base:** read and update `.agents/knowledge/` (repowiki) — start at `.agents/knowledge/index.md`; see `.agents/knowledge/README.md` for the read/write protocol.
+
 ## Next.js agent rules
 
 <!-- BEGIN:nextjs-agent-rules -->

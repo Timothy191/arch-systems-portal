@@ -10,7 +10,7 @@ import { useRef, useState } from "react";
 import { toast } from "sonner";
 
 function SubmitButton() {
-  const { pending } = useFormStatus();
+  const { pending, method } = useFormStatus();
 
   return (
     <Button
@@ -21,7 +21,7 @@ function SubmitButton() {
       {pending ? (
         <>
           <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-          Registering...
+          {method === 'POST' ? 'Registering...' : 'Submitting...'}
         </>
       ) : (
         <>

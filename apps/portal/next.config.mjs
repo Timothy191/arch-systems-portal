@@ -18,6 +18,13 @@ const enableHeavyPlugins = isCI || process.env.ENABLE_HEAVY_PLUGINS === "true";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  cacheComponents: true,
+  // AGENT-TRACE: Redis-backed distributed cache handler for multi-pod deployments.
+  // Implements the Next.js 16 CacheHandler interface using @repo/redis L2 layer.
+  // Gracefully degrades to no-op if REDIS_URL is not configured.
+  cacheHandlers: {
+    default: new URL("./src/lib/next-cache-handler.ts", import.meta.url).pathname,
+  },
   turbopack: {
     // AGENT-TRACE: Root must include workspaceRoot to allow dependencies from packages/ to be compiled
     root: workspaceRoot,
@@ -41,14 +48,8 @@ const nextConfig = {
     "@repo/rate-limiter",
     "@repo/logger",
     "@repo/contract",
-    "@repo/auth/ui",
-    "@repo/auth/data-access",
-    "@repo/auth/utils",
-    "@repo/shared/data-access",
-    "@repo/shared/utils",
-    "@repo/shared/hooks",
     "@repo/departments/ui",
-    "@repo/hub/ui",
+    "@repo/monitor",
   ],
   images: {
     formats: ["image/avif", "image/webp"],
@@ -56,6 +57,9 @@ const nextConfig = {
     remotePatterns: [
       { protocol: "https", hostname: "*.supabase.co" },
       { protocol: "https", hostname: "*.supabase.in" },
+      { protocol: "https", hostname: "avatar.vercel.sh" },
+      { protocol: "http", hostname: "127.0.0.1" },
+      { protocol: "http", hostname: "localhost" },
     ],
   },
   compiler: {
@@ -106,19 +110,25 @@ const nextConfig = {
             key: "Permissions-Policy",
             value: "camera=(), microphone=(), geolocation=()",
           },
+          {
+            // GAP-STREAM: Disable nginx response buffering so Suspense/PPR
+            // streaming chunks are delivered to the client incrementally.
+            key: "X-Accel-Buffering",
+            value: "no",
+          },
           ...(isProduction
             ? [
                 {
                   key: "Content-Security-Policy",
                   value:
-                    "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://*.supabase.co https://*.supabase.in; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.supabase.in wss://*.supabase.in; frame-src 'self' http://localhost:* https://*.ngrok-free.app; frame-ancestors 'none';",
+                    "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://*.supabase.co https://*.supabase.in; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.supabase.in wss://*.supabase.in https://api.open-meteo.com; frame-src 'self' http://localhost:* https://*.ngrok-free.app; frame-ancestors 'none';",
                 },
               ]
             : [
                 {
                   key: "Content-Security-Policy-Report-Only",
                   value:
-                    "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://*.supabase.co https://*.supabase.in; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.supabase.in wss://*.supabase.in; frame-src 'self' http://localhost:* https://*.ngrok-free.app; frame-ancestors 'none'; report-uri /api/csp-violations;",
+                    "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://*.supabase.co https://*.supabase.in; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.supabase.in wss://*.supabase.in https://api.open-meteo.com; frame-src 'self' http://localhost:* https://*.ngrok-free.app; frame-ancestors 'none'; report-uri /api/csp-violations;",
                 },
               ]),
         ],
@@ -127,15 +137,6 @@ const nextConfig = {
       // traffic. Per-user and per-session routes explicitly opt out.
       ...(isProduction
         ? [
-            {
-              source: "/_next/static/:path*",
-              headers: [
-                {
-                  key: "Cache-Control",
-                  value: "public, max-age=31536000, immutable",
-                },
-              ],
-            },
             {
               source: "/manifest.webmanifest",
               headers: [

@@ -157,6 +157,7 @@ open_monitors() {
   bash "$REPO_ROOT/scripts/open-monitoring-terminals.sh" || true
 }
 
+
 cleanup() {
   # Only stop a portal this script started (avoid killing an external/already-running PID)
   if [ "${STARTED_PORTAL:-false}" != "true" ]; then
@@ -555,6 +556,12 @@ if [ "$RUN_QUALITY" = "true" ]; then
     exit 1
   fi
 fi
+
+# ── Phase 6: Daemons ──────────────────────────────────────────────────────────
+phase 6 "Daemons"
+bash "$REPO_ROOT/scripts/lsp-router.sh" start &
+bash "$REPO_ROOT/scripts/mcp-manager.sh" start &
+bash "$REPO_ROOT/scripts/heal-daemon.sh" &
 
 # ── Done ──────────────────────────────────────────────────────────────────────
 show_results

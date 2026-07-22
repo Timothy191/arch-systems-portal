@@ -103,8 +103,7 @@ import { withRateLimit } from "@/lib/api/rate-limit-middleware";
 import { validateBody } from "@/lib/api/response";
 import { applyCors } from "@/lib/api/cors";
 import { updateWebhookSchema } from "@repo/contract";
-
-export const dynamic = "force-dynamic";
+import { validateWebhookUrl } from "@/lib/api/ssrf-guard";
 
 async function handlePutWebhook(
   request: NextRequest,
@@ -123,6 +122,18 @@ async function handlePutWebhook(
   const parsed = await validateBody(request, updateWebhookSchema);
   if (parsed instanceof NextResponse) return parsed;
   const { url, description, event_types, active } = parsed.data;
+
+  // SSRF protection: validate webhook URL if being updated
+  if (url !== undefined) {
+    try {
+      validateWebhookUrl(url);
+    } catch (ssrfError) {
+      return NextResponse.json(
+        { error: ssrfError instanceof Error ? ssrfError.message : "Invalid webhook URL" },
+        { status: 400 }
+      );
+    }
+  }
 
   // Get user's department and role
   const { data: employee } = await supabase

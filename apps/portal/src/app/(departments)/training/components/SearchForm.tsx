@@ -19,6 +19,7 @@ export function SearchForm({
       <input
         type="text"
         name="q"
+        aria-label={placeholder}
         placeholder={placeholder}
         defaultValue={value}
         className="pl-9 w-full h-9 bg-arch-surface-chrome border border-arch-border-default rounded-lg text-sm text-arch-text-primary focus:outline-none focus:border-arch-accent-charcoal"

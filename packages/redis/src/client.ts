@@ -3,9 +3,11 @@ import Redis from "ioredis";
 type RedisClient = import("ioredis").Redis;
 
 const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
+const COOLDOWN_MS = 10000; // 10 seconds cooldown after connection failure
 
 let client: RedisClient | null = null;
 let connecting: Promise<RedisClient> | null = null;
+let lastFailure = 0;
 
 /**
  * Returns the Redis client if it is currently open, otherwise null.
@@ -21,6 +23,10 @@ export function getClientIfOpen(): RedisClient | null {
 export async function getRedisClient(): Promise<RedisClient> {
   if (client?.status === "ready") return client;
   if (connecting) return connecting;
+
+  if (Date.now() - lastFailure < COOLDOWN_MS) {
+    throw new Error("Redis connection in cooldown after recent failure");
+  }
 
   connecting = (async () => {
     const next = new Redis(REDIS_URL, {
@@ -47,6 +53,9 @@ export async function getRedisClient(): Promise<RedisClient> {
       await next.connect();
       client = next;
       return client;
+    } catch (err) {
+      lastFailure = Date.now();
+      throw err;
     } finally {
       connecting = null;
     }

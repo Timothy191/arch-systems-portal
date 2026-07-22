@@ -8433,6 +8433,15 @@ export type Database = {
         }[];
       };
       user_department_id: { Args: never; Returns: string };
+      exec_sql: {
+        Args: { sql: string };
+        Returns: Json;
+      };
+      run_db_audit: { Args: never; Returns: Json };
+      repair_table: {
+        Args: { p_table_name: string; p_issue_category: string };
+        Returns: Json;
+      };
     };
     Enums: {
       incident_type: "near-miss" | "incident" | "lost-time" | "equipment-damage";

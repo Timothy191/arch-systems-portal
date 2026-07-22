@@ -27,3 +27,6 @@ AGENTS.md
 CLAUDE.md
 SOUL.md
 .cursorrules
+
+# Generated files
+packages/contract/openapi.generated.json

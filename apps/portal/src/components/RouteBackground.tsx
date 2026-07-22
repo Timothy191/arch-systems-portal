@@ -19,7 +19,15 @@ interface RouteBackgroundVideoProps {
 function RouteBackgroundVideo({ className, videoRef }: RouteBackgroundVideoProps) {
   return (
     <video
-      ref={videoRef}
+      ref={(node) => {
+        if (node) {
+          node.defaultMuted = true;
+          node.muted = true;
+        }
+        if (videoRef) {
+          (videoRef as React.MutableRefObject<HTMLVideoElement | null>).current = node;
+        }
+      }}
       className={className}
       src={BACKGROUND_VIDEO_SRC}
       poster={BACKGROUND_POSTER_SRC}

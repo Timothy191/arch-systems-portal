@@ -1,14 +1,15 @@
 ---
 name: agents-memory-updater
 description: >-
-  Update AGENTS.md with high-signal recurring user corrections and durable workspace
-  facts from processed transcripts. Anti-trigger: do not use for real-time decisions;
-  do not store secrets or one-off details; do not replace ai-docs-sync.
+  Update AGENTS.md and the shared knowledge base (.agents/knowledge/) with high-signal
+  recurring user corrections and durable workspace facts from processed transcripts.
+  Anti-trigger: do not use for real-time decisions; do not store secrets or one-off
+  details; do not replace ai-docs-sync.
 ---
 
 # Agents Memory Updater
 
-**AGENTS.md memory integration.** Writes durable patterns from transcript analysis to project policy.
+**Shared-memory integration.** Writes durable patterns from transcript analysis to project policy (`AGENTS.md`) and to the shared knowledge base (`.agents/knowledge/`).
 
 ## Gold Standard Contract
 
@@ -20,7 +21,15 @@ See: [`.cursor/standards/agent-skills/STANDARD.md`](../standards/agent-skills/ST
 
 ## Mandate
 
-Update AGENTS.md only with high-signal, recurring patterns that improve future agent decisions.
+Capture high-signal, recurring patterns that improve future agent decisions. Route policy to
+`AGENTS.md` and durable codebase knowledge to the shared knowledge base.
+
+## Where knowledge goes
+
+- **Policy** (recurring behavioral rules) -> `AGENTS.md` (minimal diff; add to existing sections).
+- **Durable codebase knowledge** (architecture facts, decisions, reusable patterns) -> the shared
+  knowledge base `.agents/knowledge/` (`architecture/`, `decisions/`, `patterns/`). Update
+  `.agents/knowledge/index.md` and follow `.agents/knowledge/README.md` (dated, evidence-cited).
 
 ## Workflow
 
@@ -28,8 +37,8 @@ Update AGENTS.md only with high-signal, recurring patterns that improve future a
 2. Filter per [`references/privacy-rules.md`](references/privacy-rules.md) — no secrets, no one-offs
 3. Validate signals meet recurrence threshold (3+ similar patterns)
 4. Draft AGENTS.md updates per [`references/update-patterns.md`](references/update-patterns.md)
-5. Apply updates with minimal diff — prefer adding to existing sections
-6. Refresh index via [`scripts/refresh-index.sh`](scripts/refresh-index.sh)
+5. Apply updates with minimal diff — policy to `AGENTS.md`, durable knowledge to `.agents/knowledge/`
+6. Update `.agents/knowledge/index.md` when adding KB entries; refresh index via [`scripts/refresh-index.sh`](scripts/refresh-index.sh)
 
 ## Output
 

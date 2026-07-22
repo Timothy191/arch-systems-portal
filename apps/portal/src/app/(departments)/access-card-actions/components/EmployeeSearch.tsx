@@ -46,6 +46,7 @@ export function EmployeeSearch({ onSelect }: EmployeeSearchProps) {
       <div className="relative">
         <Search className="absolute left-2 top-2.5 h-4 w-4 text-arch-text-muted" />
         <Input
+          aria-label="Search by name or ID"
           placeholder="Search by name or ID..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}

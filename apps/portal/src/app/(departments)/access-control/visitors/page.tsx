@@ -14,8 +14,6 @@ import { Clock, Inbox } from "lucide-react";
 import { getVisitorsForDepartmentCursor } from "../actions";
 import { VisitorForm } from "./visitor-form";
 
-export const dynamic = "force-dynamic";
-
 export default async function VisitorsPage({
   searchParams,
 }: {

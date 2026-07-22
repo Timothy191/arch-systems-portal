@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Validate Agent Skills standard compliance for skills + agents (3-pass capable).
 set -euo pipefail
-ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../.." && pwd)"
 cd "$ROOT"
 
 PASS="${1:-1}"
@@ -78,13 +78,13 @@ echo "Pass $PASS complete: $ERR error(s), $WARN warning(s)"
 # Agent layout (hybrid .md + collateral folders)
 if [[ -x .cursor/standards/agent-layout/scripts/validate-agents.sh ]]; then
   echo ""
-  .cursor/standards/agent-layout/scripts/validate-agents.sh || ERR=$((ERR + 1))
+  bash .cursor/standards/agent-layout/scripts/validate-agents.sh || ERR=$((ERR + 1))
 fi
 
 # Claude Code native surfaces
 if [[ -x .cursor/standards/claude-code/scripts/validate-claude-code.sh ]]; then
   echo ""
-  .cursor/standards/claude-code/scripts/validate-claude-code.sh || ERR=$((ERR + 1))
+  bash .cursor/standards/claude-code/scripts/validate-claude-code.sh || ERR=$((ERR + 1))
 fi
 
 [[ $ERR -eq 0 ]]

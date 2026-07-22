@@ -2,8 +2,8 @@
 # ══════════════════════════════════════════════════════════════════════════════
 # Arch-Systems — Production Deployment Script
 #
-# Deploys the production stack with proper validation, health checks, and monitoring.
-# Usage: bash deploy-production.sh [--force] [--skip-build] [--skip-validation]
+# Phase-based deployment with checklist, auto-browser, and monitoring.
+# Usage: bash deploy-production.sh [--force] [--skip-build] [--skip-validation] [--no-browser] [--no-monitors]
 #
 # ══════════════════════════════════════════════════════════════════════════════
 
@@ -44,6 +44,8 @@ banner() {
 SKIP_VALIDATION=false
 SKIP_BUILD=false
 FORCE=false
+OPEN_BROWSER=true
+OPEN_MONITORS=true
 
 while [[ $# -gt 0 ]]; do
   case $1 in
@@ -59,6 +61,14 @@ while [[ $# -gt 0 ]]; do
       FORCE=true
       shift
       ;;
+    --no-browser)
+      OPEN_BROWSER=false
+      shift
+      ;;
+    --no-monitors)
+      OPEN_MONITORS=false
+      shift
+      ;;
     --help|-h)
       echo "Usage: $0 [OPTIONS]"
       echo
@@ -66,6 +76,8 @@ while [[ $# -gt 0 ]]; do
       echo "  --skip-validation    Skip environment validation (dangerous)"
       echo "  --skip-build        Skip Docker image rebuild"
       echo "  --force             Force deployment without confirmation"
+      echo "  --no-browser        Don't auto-open browser after deployment"
+      echo "  --no-monitors       Don't open monitoring terminals"
       echo "  --help, -h          Show this help message"
       exit 0
       ;;
@@ -75,84 +87,104 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
+# ── Checklist Tracking ────────────────────────────────────────────────────────
+
+CHECKLIST_PASSED=0
+CHECKLIST_FAILED=0
+
+checklist_pass() {
+  local label="$1"
+  echo -e "  ${OK} ${BOLD}$label${NC}"
+  CHECKLIST_PASSED=$((CHECKLIST_PASSED + 1))
+}
+
+checklist_fail() {
+  local label="$1" detail="${2:-}"
+  echo -e "  ${ERR} ${BOLD}$label${NC}${RED}${detail:+  $detail}${NC}"
+  CHECKLIST_FAILED=$((CHECKLIST_FAILED + 1))
+}
+
+checklist_warn() {
+  local label="$1" detail="${2:-}"
+  echo -e "  ${WARN} ${BOLD}$label${NC}${YELLOW}${detail:+  $detail}${NC}"
+}
+
 # ── Deployment Functions ────────────────────────────────────────────────────
 
 check_docker() {
-  step "Checking Docker availability"
+  step "Phase 1: Checking Docker availability"
   if ! command -v docker >/dev/null 2>&1; then
+    checklist_fail "Docker installed"
     die "Docker is not installed or not in PATH"
   fi
   if ! command -v docker compose >/dev/null 2>&1; then
+    checklist_fail "Docker Compose installed"
     die "Docker Compose is not installed or not in PATH"
   fi
-  ok "Docker and Docker Compose available"
+  checklist_pass "Docker and Docker Compose available"
 }
 
 validate_environment() {
-  step "Validating production environment"
+  step "Phase 2: Validating production environment"
   
   if [[ "$SKIP_VALIDATION" == true ]]; then
-    warn "Skipping environment validation (not recommended)"
+    checklist_warn "Environment validation skipped" "--skip-validation used"
     return 0
   fi
   
   # Run the environment validation script
   if ! bash "$SCRIPT_DIR/scripts/validate-env.sh" --production; then
+    checklist_fail "Environment validation"
     die "Environment validation failed. Please fix the issues above."
   fi
-  ok "Production environment validated"
+  checklist_pass "Production environment validated"
 }
 
 build_images() {
-  step "Building production Docker images"
+  step "Phase 3: Building production Docker images"
   
   if [[ "$SKIP_BUILD" == true ]]; then
-    warn "Skipping Docker image rebuild"
+    checklist_warn "Docker build skipped" "--skip-build used"
     return 0
   fi
   
   info "Building Next.js portal image..."
   if ! docker compose -f docker-compose.production.yml build --no-cache portal; then
+    checklist_fail "Portal image build"
     die "Failed to build portal image"
   fi
-  ok "Portal image built successfully"
-  
-  # Uncomment if building Redis/PostgreSQL images
-  # info "Building infrastructure images..."
-  # if ! docker compose -f docker-compose.production.yml build redis postgres; then
-  #   die "Failed to build infrastructure images"
-  # fi
-  # ok "Infrastructure images built successfully"
+  checklist_pass "Portal image built successfully"
 }
 
 stop_existing_services() {
-  step "Stopping existing production services"
+  step "Phase 4: Stopping existing production services"
   
   # Check if services are running
   if docker compose -f docker-compose.production.yml ps --services --status running | grep -q .; then
     info "Stopping running production services..."
     if ! docker compose -f docker-compose.production.yml down; then
-      warn "Failed to stop existing services, continuing anyway"
+      checklist_warn "Failed to stop existing services" "continuing anyway"
     else
-      ok "Existing services stopped"
+      checklist_pass "Existing services stopped"
     fi
   else
-    ok "No production services running"
+    checklist_pass "No production services running"
   fi
 }
 
 start_services() {
-  step "Starting production services"
+  step "Phase 5: Starting production services"
   
   info "Starting services in detached mode..."
   if ! docker compose -f docker-compose.production.yml up -d; then
+    checklist_fail "Services started"
     die "Failed to start production services"
   fi
-  ok "Production services started"
+  checklist_pass "Production services started"
 }
 
 wait_for_health() {
-  step "Waiting for services to become healthy"
+  step "Phase 6: Waiting for services to become healthy"
   
   local max_attempts=30
   local attempt=1
@@ -161,12 +193,12 @@ wait_for_health() {
   
   while [[ $attempt -le $max_attempts ]]; do
     if curl -s -f http://localhost:3000/api/health >/dev/null 2>&1; then
-      ok "Portal is healthy (attempt $attempt/$max_attempts)"
+      checklist_pass "Portal healthy" "attempt $attempt/$max_attempts"
       return 0
     fi
     
     if [[ $attempt -eq $max_attempts ]]; then
-      err "Portal health check failed after $max_attempts attempts"
+      checklist_fail "Portal health" "failed after $max_attempts attempts"
       info "Checking container logs..."
       docker compose -f docker-compose.production.yml logs portal --tail=20
       return 1
@@ -181,26 +213,28 @@ wait_for_health() {
 }
 
 verify_deployment() {
-  step "Verifying deployment"
+  step "Phase 7: Verifying deployment"
   
   info "Checking service status..."
   if ! docker compose -f docker-compose.production.yml ps; then
-    warn "Failed to get service status"
+    checklist_warn "Service status check" "failed to get status"
+  else
+    checklist_pass "Service status retrieved"
   fi
   
   info "Testing frontend accessibility..."
   if ! curl -s -f http://localhost:3000 >/dev/null 2>&1; then
-    warn "Frontend not accessible at http://localhost:3000"
+    checklist_fail "Frontend accessible" "http://localhost:3000"
   else
-    ok "Frontend accessible at http://localhost:3000"
+    checklist_pass "Frontend accessible" "http://localhost:3000"
   fi
   
   info "Testing health endpoint..."
   if ! curl -s -f http://localhost:3000/api/health | grep -q '"status":"healthy"'; then
-    warn "Health endpoint returned non-healthy status"
+    checklist_warn "Health endpoint" "returned non-healthy status"
     curl -s http://localhost:3000/api/health | jq . 2>/dev/null || curl -s http://localhost:3000/api/health
   else
-    ok "Health endpoint reports healthy status"
+    checklist_pass "Health endpoint reports healthy"
   fi
 }
 
@@ -218,6 +252,8 @@ confirm_deployment() {
   echo "    • Build new Docker images"
   echo "    • Start all services"
   echo "    • Configure production networking"
+  echo "    • Open browser to login page"
+  echo "    • Open monitoring terminals"
   echo
   echo -e "  Target: ${BOLD}Port 3000${NC}"
   echo
@@ -228,6 +264,108 @@ confirm_deployment() {
     err "Deployment cancelled"
     exit 0
   fi
+}
+
+open_browser_login() {
+  if [[ "$OPEN_BROWSER" != true ]]; then
+    return 0
+  fi
+  
+  step "Phase 8: Opening browser to login page"
+  
+  local url="http://localhost:3000/login"
+  local opened_with=""
+  
+  # Try common browsers
+  for cmd in chromium chromium-browser google-chrome google-chrome-stable brave brave-browser firefox xdg-open open; do
+    if command -v "$cmd" >/dev/null 2>&1; then
+      case "$cmd" in
+        chromium|chromium-browser|google-chrome|google-chrome-stable|brave|brave-browser|firefox)
+          nohup "$cmd" --new-window "$url" >/dev/null 2>&1 &
+          ;;
+        *)
+          nohup "$cmd" "$url" >/dev/null 2>&1 &
+          ;;
+      esac
+      opened_with="$cmd"
+      break
+    fi
+  done
+  
+  if [[ -n "$opened_with" ]]; then
+    checklist_pass "Browser opened" "via $opened_with → $url"
+  else
+    checklist_warn "No browser found" "open manually: $url"
+  fi
+}
+
+open_monitoring_terminals() {
+  if [[ "$OPEN_MONITORS" != true ]]; then
+    return 0
+  fi
+  
+  step "Phase 9: Opening monitoring terminals"
+  
+  local portal_log="${REPO_ROOT}/portal.log"
+  local opened=0
+  
+  # Function to open terminal
+  open_term() {
+    local title="$1"
+    local cmd="$2"
+    
+    if command -v kitty >/dev/null 2>&1; then
+      kitty --title "$title" -e bash -lc "$cmd" >/dev/null 2>&1 &
+      return 0
+    fi
+    if command -v gnome-terminal >/dev/null 2>&1; then
+      gnome-terminal --title="$title" -- bash -lc "$cmd; exec bash" >/dev/null 2>&1 &
+      return 0
+    fi
+    if command -v konsole >/dev/null 2>&1; then
+      konsole -p tabtitle="$title" -e bash -lc "$cmd; exec bash" >/dev/null 2>&1 &
+      return 0
+    fi
+    if command -v x-terminal-emulator >/dev/null 2>&1; then
+      x-terminal-emulator -T "$title" -e bash -lc "$cmd; exec bash" >/dev/null 2>&1 &
+      return 0
+    fi
+    return 1
+  }
+  
+  # Open monitoring terminals
+  if open_term "Arch portal.log" "tail -F '${portal_log}'"; then
+    opened=$((opened + 1))
+  fi
+  if open_term "Arch Redis" "docker logs -f arch-redis"; then
+    opened=$((opened + 1))
+  fi
+  if open_term "Arch Supabase Kong" "docker logs -f supabase_kong_supabase"; then
+    opened=$((opened + 1))
+  fi
+  
+  if [[ $opened -gt 0 ]]; then
+    checklist_pass "Monitoring terminals opened" "$opened terminal(s)"
+  else
+    checklist_warn "No terminal emulator found" "monitoring URLs printed below"
+    echo
+    echo -e "  ${BOLD}Monitoring URLs:${NC}"
+    echo -e "    ${CYAN}Portal log:${NC}  tail -F ${portal_log}"
+    echo -e "    ${CYAN}Redis:${NC}       docker logs -f arch-redis"
+    echo -e "    ${CYAN}Supabase:${NC}    docker logs -f supabase_kong_supabase"
+  fi
+}
+
+show_checklist_summary() {
+  echo
+  echo -e "${BOLD}─────────────────────────────────────────────────────────────${NC}"
+  echo
+  echo -e "  ${BOLD}Deployment Checklist Summary${NC}"
+  echo
+  echo -e "    ${GREEN}${BOLD}✓${NC} Passed: ${BOLD}${CHECKLIST_PASSED}${NC}"
+  echo -e "    ${YELLOW}${BOLD}⚠${NC} Warnings: ${BOLD}$((CHECKLIST_FAILED))${NC}"
+  echo -e "    ${RED}${BOLD}✗${NC} Failed: ${BOLD}${CHECKLIST_FAILED}${NC}"
+  echo
 }
 
 # ── Main Deployment Flow ──────────────────────────────────────────────────────
@@ -259,13 +397,23 @@ main() {
   if ! wait_for_health; then
     err "Services did not become healthy in time"
     info "Check logs with: docker compose -f docker-compose.production.yml logs"
+    show_checklist_summary
     exit 1
   fi
   
   # 8. Verify deployment
   verify_deployment
   
-  # 9. Success
+  # 9. Open browser to login
+  open_browser_login
+  
+  # 10. Open monitoring terminals
+  open_monitoring_terminals
+  
+  # 11. Show checklist summary
+  show_checklist_summary
+  
+  # 12. Success
   echo
   echo -e "${BOLD}─────────────────────────────────────────────────────────────${NC}"
   echo
@@ -273,19 +421,18 @@ main() {
   echo
   echo "  Services:"
   echo "    • Frontend: http://localhost:3000"
+  echo "    • Login:    http://localhost:3000/login"
   echo "    • Health:   http://localhost:3000/api/health"
   echo
   echo "  Useful commands:"
   echo "    • View logs:    docker compose -f docker-compose.production.yml logs -f"
   echo "    • Stop:        docker compose -f docker-compose.production.yml down"
   echo "    • Status:      docker compose -f docker-compose.production.yml ps"
+  echo "    • Restart:     docker compose -f docker-compose.production.yml restart"
   echo
   echo "  Next steps:"
   echo "    • Verify login functionality"
   echo "    • Test all application pages"
-  echo "    • Monitor service health"
+  echo "    • Monitor service health in opened terminals"
   echo
 }
-
-# Run main function
-main "$@"

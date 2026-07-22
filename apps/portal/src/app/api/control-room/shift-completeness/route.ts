@@ -89,8 +89,7 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const completeness = await getShiftCompleteness(supabase as any, deptId, deptSlug, date, shift);
+  const completeness = await getShiftCompleteness(supabase, deptId, deptSlug, date, shift);
 
   return NextResponse.json(completeness);
 }

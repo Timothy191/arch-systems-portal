@@ -3,7 +3,6 @@
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",
     "saoudrizwan.claude-dev",
-    "roocode.roo-cline",
-    "repowise-dev.repowise"
+    "roocode.roo-cline"
   ]
 }

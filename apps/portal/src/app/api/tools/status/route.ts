@@ -54,8 +54,6 @@ import { cacheWrap } from "@repo/redis";
  *                   type: string
  */
 
-export const dynamic = "force-dynamic";
-
 interface ToolStatus {
   name: string;
   displayName: string;

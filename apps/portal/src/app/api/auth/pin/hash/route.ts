@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabaseClient } from "@repo/supabase/server";
 import { randomBytes, pbkdf2Sync } from "node:crypto";
 
-export const dynamic = "force-dynamic";
-
 /**
  * @swagger
  * /api/auth/pin/hash:

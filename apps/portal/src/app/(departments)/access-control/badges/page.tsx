@@ -26,8 +26,6 @@ interface BadgeWithRelations {
   equipment: { equip_code: string; equipment_type: string } | null;
 }
 
-export const dynamic = "force-dynamic";
-
 export default async function BadgesPage({
   searchParams,
 }: {

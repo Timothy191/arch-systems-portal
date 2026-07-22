@@ -125,9 +125,16 @@ function isIpWhitelisted(ip: string): boolean {
 
 function getClientIp(request: Request | NextRequest): string {
   const forwarded = request.headers.get("x-forwarded-for");
-  const realIp =
-    forwarded?.split(",")[0]?.trim() || ("ip" in request ? (request as any).ip : undefined);
-  return realIp || "unknown";
+  const ip = forwarded?.split(",")[0]?.trim();
+  if (ip) return ip;
+
+  // NextRequest exposes .ip when behind a proxy (Vercel, etc.)
+  if (request instanceof NextRequest) {
+    const nextIp = (request as unknown as { ip?: string }).ip;
+    if (nextIp) return nextIp;
+  }
+
+  return "unknown";
 }
 
 function isSystemUnderHighLoad(): boolean {
@@ -152,7 +159,7 @@ const tokenBucketStrategy = new TokenBucketStrategy();
 /**
  * Check rate limit for a given identifier and configuration
  */
-async function checkRateLimit(
+export async function checkRateLimit(
   identifier: string,
   config: { windowMs: number; maxRequests: number },
   path: string

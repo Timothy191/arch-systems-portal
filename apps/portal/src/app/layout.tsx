@@ -2,13 +2,13 @@ import "@repo/ui/globals.css";
 import { ArchThemeProvider } from "@repo/theme/react";
 import type { Metadata, Viewport } from "next";
 import { Inter, Roboto_Mono, Outfit } from "next/font/google";
+
 import localFont from "next/font/local";
 import dynamic from "next/dynamic";
+import { Suspense } from "react";
 import ClientProviders from "./ClientProviders";
-import { OfflineBanner } from "@/components/OfflineBanner";
 import { PerformanceListener } from "@/components/PerformanceListener";
 import { RouteAnnouncer } from "@/components/RouteAnnouncer";
-import { AIAssistantWrapper } from "@/components/ai/AIAssistantWrapper";
 import { PWAInstallButton } from "@/components/PWAInstallButton";
 import { SystemTrayPill } from "@/components/system/SystemTray";
 import { WebVitalsReporter } from "@/components/WebVitalsReporter";
@@ -161,17 +161,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }):
         </a>
 
         {/* Announce SPA route changes to screen readers (WCAG 4.1.3) */}
-        <RouteAnnouncer />
+        <Suspense fallback={null}>
+          <RouteAnnouncer />
+        </Suspense>
 
         <ArchThemeProvider>
           <ClientProviders>
-            <RouteBackground />
+            <Suspense fallback={null}>
+              <RouteBackground />
+            </Suspense>
             <PerformanceListener />
             <WebVitalsReporter />
-            <OfflineBanner />
             <PWAInstallButton />
-            <AIAssistantWrapper />
-
             {/* Global Navigation Header with proper landmark */}
             <header role="banner" className="flex items-center gap-3">
               <ArchMacMenuBar

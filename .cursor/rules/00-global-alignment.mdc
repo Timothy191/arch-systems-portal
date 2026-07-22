@@ -15,14 +15,19 @@ alwaysApply: true
 |---|---|
 | `AGENTS.md` | Canonical policy |
 | `.cursor/rules/` | Cursor always-on enforcement |
+| `.cursor/rules/01-real-world-logic.mdc` | Evidence-based reasoning, no speculation-as-fact |
+| `.cursor/rules/02-agent-scoring.mdc` | Alignment scoring gate (≥ 80 per AGENTS.md) |
+| `.cursor/rules/03-stack-hard-gates.mdc` | Hard technology/monorepo gates (pnpm, AppError, Zod) |
 | `.cursor/rules/04-subagent-auto-routing.mdc` | Mandatory Task/subagent delegation |
 | `.cursor/rules/05-portal-dev-keepalive.mdc` | Portal `:3000` up after task batches; restart / fix-retry |
 | `.cursor/rules/06-ai-maintenance-background.mdc` | Background `ai-maintenance-checker` + `pnpm ai` |
 | `.cursor/rules/07-adaptive-skill-loop.mdc` | Hermes-style distill/patch + progressive disclosure |
+| `.cursor/rules/08-agent-communication-delegation.mdc` | Agent communication, context sharing, asset handling |
 | `.cursor/rules/09-ai-surface-layout.mdc` | Skills/agents/hooks Anthropic layout enforcement |
 | `.cursor/rules/10-orchestrator-patterns.mdc` | Orchestrator patterns for multi-agent workflows |
 | `.cursor/rules/11-permanent-fixes.mdc` | Permanent & complete fixes verified on real-world data |
 | `.cursor/rules/12-skill-evolution-notifications.mdc` | Self-learning skill evolution reporting protocol |
+| `.cursor/rules/harness.mdc` | Optional data-intensive harness sidecar (AGENTS.md wins) |
 | `.cursor/agents/` | Project specialists (auto-routed) |
 | `.qoder/rules/` | Qoder mirror |
 | `.kiro/agents/default.json` | Machine-readable gates |
@@ -41,3 +46,8 @@ alwaysApply: true
 2. Count files likely touched. If >1 → require/create specs.
 3. Name the AGENTS.md sections that apply (§1–§19).
 4. Plan verification evidence (`pnpm quality`, `pnpm ai check` when AI surfaces change, tests, runtime check) before coding.
+
+## Mandatory Reflection Phase
+
+- Before marking any non-trivial task as done, you MUST invoke `pnpm agent:delegate reflection <context>`.
+- Log any identified mistakes in `gap-ledger.md` and trigger `skill-self-improve` if the gap is repeatable.

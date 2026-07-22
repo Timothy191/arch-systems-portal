@@ -34,5 +34,13 @@
         ]
       }
     ]
+  },
+  "enabledPlugins": {
+    "starops@qoder-marketplace": true,
+    "superpowers@qoder-marketplace": true,
+    "qmind@qoder-marketplace": true,
+    "architecture-visualization@qoder-marketplace": true,
+    "sourcegraph@qoder-marketplace": true,
+    "design-review@qoder-marketplace": true
   }
 }

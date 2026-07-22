@@ -51,6 +51,10 @@ const baseEnvSchema = z.object({
   AI_BACKEND_STRATEGY: z.enum(["ollama", "gemini", "router", "omni"]).default("ollama"),
   OPENAI_API_KEY: z.string().optional(),
   OPENAI_MODEL: z.string().optional(),
+  OPENROUTER_API_KEY: z.string().optional(),
+  AI_ROUTER_URL: z.string().url().optional(),
+  AI_ROUTER_KEY: z.string().optional(),
+  AI_EMBEDDING_PROVIDER: z.enum(["local", "router", "ollama", "openai"]).default("local"),
 
   // ── Inference.net Catalyst (optional observability) ───────────────────
   INFERENCE_GATEWAY_ENABLED: z
@@ -198,6 +202,10 @@ function parseEnv(): EnvVars {
     AI_BACKEND_STRATEGY: process.env.AI_BACKEND_STRATEGY,
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
     OPENAI_MODEL: process.env.OPENAI_MODEL,
+    OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY,
+    AI_ROUTER_URL: process.env.AI_ROUTER_URL,
+    AI_ROUTER_KEY: process.env.AI_ROUTER_KEY,
+    AI_EMBEDDING_PROVIDER: process.env.AI_EMBEDDING_PROVIDER,
 
     INFERENCE_GATEWAY_ENABLED: process.env.INFERENCE_GATEWAY_ENABLED,
     INFERENCE_API_KEY: process.env.INFERENCE_API_KEY,

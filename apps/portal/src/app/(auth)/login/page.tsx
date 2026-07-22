@@ -9,8 +9,6 @@ import { LoginSecureBadge } from "@/features/auth/components/LoginSecureBadge";
 import { AlertTriangle } from "lucide-react";
 import { Logo } from "@repo/ui/Logo";
 
-export const dynamic = "force-dynamic";
-
 export const metadata: Metadata = {
   title: "Sign In | Arch OS",
   description: "Sign in to Arch Systems",

@@ -17,7 +17,9 @@ export default function ClientProviders({ children }: { children: ReactNode }) {
           Promise.all(registrations.map((r) => r.unregister())).then((results) => {
             if (results.some(Boolean)) {
               // eslint-disable-next-line no-console
-              console.log("Unregistered stale service worker(s) in development mode. Reloading...");
+              console.warn(
+                "[sw] Unregistered stale service worker(s) in development mode. Reloading..."
+              );
               window.location.reload();
             }
           });

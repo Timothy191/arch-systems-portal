@@ -307,6 +307,16 @@ export const TRAINING_TABS = [
   { name: "reports", label: "Reports", icon: "FileText" },
 ] as const;
 
+export const SAFETY_TABS = [
+  { name: "dashboard", label: "Dashboard", icon: "BarChart2" },
+  { name: "daily-log", label: "Daily Log", icon: "ClipboardList" },
+  { name: "audit-dashboard", label: "Audit Logs", icon: "ShieldCheck" },
+  { name: "machines", label: "Machines", icon: "Cpu" },
+  { name: "history", label: "History", icon: "History" },
+  { name: "reports", label: "Reports", icon: "FileText" },
+  { name: "tools", label: "Tools", icon: "Wrench" },
+] as const;
+
 /** Admin is not a department shell; tabs match hub actions + /admin root. */
 export const ADMIN_TABS = [
   { name: "dashboard", label: "Dashboard", icon: "BarChart2" },
@@ -339,6 +349,9 @@ export function getDepartmentTabs(departmentName: string) {
   }
   if (departmentName === "training") {
     return TRAINING_TABS;
+  }
+  if (departmentName === "safety") {
+    return SAFETY_TABS;
   }
   if (departmentName === "admin") {
     return ADMIN_TABS;

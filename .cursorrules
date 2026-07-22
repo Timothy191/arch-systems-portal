@@ -2,6 +2,8 @@
 
 **Canonical agent policy:** `AGENTS.md` (source of truth). Cursor always-on mirrors live in `.cursor/rules/`.
 
+**Shared knowledge base:** `.agents/knowledge/` (repowiki, symlinked at `.cursor/knowledge`). Read before non-trivial work; write durable learnings. See `AGENTS.md` -> Shared Knowledge Base.
+
 Do **not** replace or overwrite `AGENTS.md` with harness boilerplate.
 
 Optional harness collateral (sidecar only, not policy):

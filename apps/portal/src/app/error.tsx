@@ -15,6 +15,7 @@ import { logError } from "@/lib/errors/error-logger";
 interface RootErrorProps {
   error: Error & { digest?: string };
   reset: () => void;
+  unstable_retry?: () => void;
 }
 
 /**
@@ -53,7 +54,7 @@ function getErrorContext(error: Error): Record<string, unknown> | null {
   return null;
 }
 
-export default function RootError({ error, reset }: RootErrorProps) {
+export default function RootError({ error, reset, unstable_retry }: RootErrorProps) {
   useEffect(() => {
     logError(error);
   }, [error]);
@@ -102,7 +103,7 @@ export default function RootError({ error, reset }: RootErrorProps) {
           </details>
         )}
 
-        <SecondaryButton onClick={reset}>Try again</SecondaryButton>
+        <SecondaryButton onClick={unstable_retry ?? reset}>Try again</SecondaryButton>
       </div>
     </div>
   );

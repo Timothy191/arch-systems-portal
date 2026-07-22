@@ -2,6 +2,8 @@
 
 This directory contains workspace-level configurations to align the development environment for both human developers and AI agents.
 
+> **Canonical shared knowledge:** the present, git-tracked source of truth for cross-agent codebase knowledge is `.agents/knowledge/` (repowiki), registered in the root `AGENTS.md`. The `.aistack/`-based MCP servers documented below are optional add-ons and may not be provisioned in every checkout; treat `.agents/knowledge/` as the authoritative store.
+
 ## VS Code & LSP Configuration
 
 - **`settings.json`**: Configures editor integration for TypeScript, ESLint, and Prettier. It guarantees that workspace TypeScript SDK is used and enforces auto-formatting and lint fixing on save.
@@ -33,9 +35,8 @@ We have preconfigured the following Model Context Protocol (MCP) servers in `cli
 
 ### 4. `repowise-mcp` (Codebase Intelligence & Health)
 
-- **Command**: `uv run --project .aistack/tools/repowise repowise mcp .`
-- **Purpose**: Provides deep structural dependency graphs, git history analytics (hotspots, ownership), and deterministic code health scores.
-- **Initialization**: Run `uv run --project .aistack/tools/repowise repowise init` to initialize or update the repository's index.
+- **Status**: Not provisioned by default. Structured cross-agent codebase knowledge is maintained in the git-tracked knowledge base at `.agents/knowledge/` (see the root `AGENTS.md` → Shared Knowledge Base).
+- **If enabled**: `.aistack/tools/repowise` can provide dependency graphs, git history analytics, and code health scores as an optional add-on; it does not replace `.agents/knowledge/`.
 
 ### 5. `sense-mcp` (Go-based Codebase Navigation)
 
@@ -82,9 +83,8 @@ We have preconfigured the following Model Context Protocol (MCP) servers in `cli
 
 ### 11. `agentic-tools-mcp` (Project Memory & Tasks)
 
-- **Command**: `node .aistack/packages/agentic-tools-mcp/src/server.js`
-- **Purpose**: Local MCP server exposing the project's `.agentic-tools-mcp/` memory and task store.
-- **Tools**: `agentic_list_memories`, `agentic_read_memory`, `agentic_search_memories`, `agentic_create_memory`, `agentic_update_memory`, `agentic_list_tasks`, `agentic_create_task`, `agentic_update_task`, `agentic_delete_task`.
+- **Status**: Superseded for shared knowledge by the git-tracked knowledge base at `.agents/knowledge/` (repowiki). The legacy `.agentic-tools-mcp/` memory store is not present in this repo.
+- **Purpose (if enabled)**: an optional local MCP server for task tracking only; durable cross-agent knowledge belongs in `.agents/knowledge/` per the root `AGENTS.md`.
 
 ---
 
@@ -138,7 +138,7 @@ Add these servers to Claude Code's global configuration by running the following
 # Add Preflight MCP
 claude mcp add preflight-mcp node tools/preflight-mcp/index.js
 
-# Add Repowise MCP
+# Add Repowise MCP (optional add-on; shared knowledge lives in .agents/knowledge/)
 claude mcp add repowise-mcp uv --project .aistack/tools/repowise repowise mcp .
 
 # Add Sense MCP

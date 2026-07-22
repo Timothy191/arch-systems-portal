@@ -11,3 +11,7 @@ declare module "@storybook/react" {
     args?: Record<string, any>;
   };
 }
+
+declare module "@inference/tracing" {
+  export function setup(config: { autoInstrument: boolean }): Promise<void>;
+}

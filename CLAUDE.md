@@ -8,14 +8,17 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 > **Canonical agent policy:** `AGENTS.md` (including §20 Alignment Score). Cursor rules in `.cursor/rules/` always apply. Do not drift.
 
-**Two Layers:** Product (`apps/`, `packages/`, product scripts) must build/run/test without AI content. Agentic surfaces (`.cursor/`, `AGENTS.md`, `pnpm ai`) are CLI-agents only. Contract: [`.cursor/standards/layer-boundary/STANDARD.md`](.cursor/standards/layer-boundary/STANDARD.md).
+**Two Layers:** Product (`Server/apps/`, `Server/packages/`, product scripts) must build/run/test without AI content. Agentic surfaces (`.cursor/`, `AGENTS.md`, `pnpm ai`) are CLI-agents only. Contract: [`.cursor/standards/layer-boundary/STANDARD.md`](.cursor/standards/layer-boundary/STANDARD.md).
 
 **Reasoning contract:** `SOUL.md` — evidence-based decisions, test-driven delivery, adversarial review before committing.
+
+**Shared knowledge base:** `.agents/knowledge/` (repowiki) — read `index.md` before non-trivial work; write durable, evidence-cited learnings there. Protocol: `.agents/knowledge/README.md`.
 
 ## Essential Commands
 
 ```bash
-# Product (standalone)
+# Product (standalone, run from Server/ directory)
+cd Server
 pnpm dev              # Full stack: Redis → Supabase → Next.js (Turbopack HMR on :3000)
 pnpm dev --quick      # Portal + DB (skip Redis, start Supabase)
 pnpm dev --no-infra   # Assume Redis + Supabase already up
@@ -30,7 +33,7 @@ pnpm format:check     # Prettier check only
 pnpm clean            # Remove .next and dist dirs
 pnpm --filter portal <cmd>  # Run a command for just the portal app
 
-# Supabase (local dev)
+# Supabase (local dev, run from Server/ directory)
 pnpm supabase:start   # Start local Supabase (--workdir packages)
 pnpm supabase:stop    # Stop local Supabase
 pnpm supabase:status  # Check Supabase status
@@ -38,7 +41,7 @@ pnpm supabase:status  # Check Supabase status
 # RLS & policy
 pnpm audit:rls        # Verify RLS after migration changes
 
-# Agentic (optional)
+# Agentic (optional, run from Server/ directory)
 pnpm ai               # AI system health (guardrails, layouts, sync, dedupe, drift)
 pnpm ai check         # Validate AI surfaces only
 pnpm ai fix           # Safe repair + validate
@@ -51,24 +54,26 @@ pnpm ai onboard       # Onboarding checklist for humans + agents
 ### Monorepo Layout
 
 ```
-apps/
-  portal/                 # Next.js 16 (App Router) — primary deployable UI
-  ops-gateway/            # Control-plane / MCP ops bridge (not product UI)
-packages/
-  contract/               # @repo/contract — shared Zod schemas
-  database/               # @repo/database — SQL migrations source of truth
-  departments/            # @repo/departments (+ ui/)
-  errors/                 # @repo/errors — typed AppError classes
-  eslint-config/          # @repo/eslint-config
-  logger/                 # @repo/logger — structured logging
-  rate-limiter/           # @repo/rate-limiter — Redis-backed
-  redis/                  # @repo/redis — shared ioredis singleton
-  supabase/               # @repo/supabase — server + browser clients
-  theme/                  # @repo/theme — Tailwind preset & design tokens (+ ArchThemeProvider at @repo/theme/react)
-  typescript-config/      # @repo/typescript-config
-  ui/                     # @repo/ui — shared React components (styled: GlassCard, Toaster, Pagination, etc.)
-  utils/                  # @repo/utils — pure utility helpers
-scripts/                  # dev.sh, shutdown.sh, ai.sh, agency-*, delegate-agent.sh
+Server/
+  apps/
+    portal/                 # Next.js 16 (App Router) — primary deployable UI
+    ops-gateway/            # Control-plane / MCP ops bridge (not product UI)
+  packages/
+    contract/               # @repo/contract — shared Zod schemas
+    database/               # @repo/database — SQL migrations source of truth
+    departments/            # @repo/departments (+ ui/)
+    errors/                 # @repo/errors — typed AppError classes
+    eslint-config/          # @repo/eslint-config
+    logger/                 # @repo/logger — structured logging
+    rate-limiter/           # @repo/rate-limiter — Redis-backed
+    redis/                  # @repo/redis — shared ioredis singleton
+    supabase/               # @repo/supabase — server + browser clients
+    theme/                  # @repo/theme — Tailwind preset & design tokens (+ ArchThemeProvider at @repo/theme/react)
+    typescript-config/      # @repo/typescript-config
+    ui/                     # @repo/ui — shared React components (styled: GlassCard, Toaster, Pagination, etc.)
+    utils/                  # @repo/utils — pure utility helpers
+  scripts/                  # dev.sh, shutdown.sh, ai.sh, agency-*, delegate-agent.sh
+```
 ```
 
 ### Portal src/ Layout
@@ -265,6 +270,7 @@ Hybrid layout: entry `<name>.md` + folder `<name>/`. Auto-routing: [`.cursor/rul
 | `root-cause-healer`      | Verify hypothesis → fix → harden             |
 | `import-auditor`         | Import/path connectivity audit               |
 | `ai-system-optimizer`    | AI surface bloat prune, layout compliance    |
+| `reflection`            | Post-task critique, gap logging, self-improve |
 
 ### Claude Code (Anthropic)
 

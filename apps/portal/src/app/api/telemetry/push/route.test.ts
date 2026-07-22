@@ -4,6 +4,12 @@
 
 import { POST, clearTelemetryCache } from "./route";
 
+const TEST_API_SECRET = "test-secret-for-jest";
+
+jest.mock("@/lib/env", () => ({
+  getEnv: () => ({ NEXT_PUBLIC_FUXA_URL: "http://localhost:1881" }),
+}));
+
 jest.mock("@repo/redis", () => ({
   getRedisClient: jest.fn().mockRejectedValue(new Error("Redis disabled in tests")),
 }));
@@ -22,6 +28,7 @@ describe("POST /api/telemetry/push", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     clearTelemetryCache();
+    process.env.INTERNAL_API_SECRET = TEST_API_SECRET;
   });
 
   function createRequest(body: unknown) {
@@ -29,6 +36,7 @@ describe("POST /api/telemetry/push", () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "x-internal-secret": TEST_API_SECRET,
       },
       body: JSON.stringify(body),
     });

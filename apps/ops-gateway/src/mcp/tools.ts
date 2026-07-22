@@ -370,7 +370,7 @@ export function defineTools(): ToolDefinition[] {
     {
       name: "eve-dispatch",
       description:
-        "Manually dispatch a task to a TUI agent (opencode/kilo/agy) for investigation or repair. " +
+        "Manually dispatch a task to a TUI agent (opencode) for investigation or repair. " +
         "Use when an incident requires deeper analysis or code changes. The eve agent receives the task " +
         "prompt and works autonomously. Check dispatch-status for results.",
       inputSchema: {
@@ -387,7 +387,7 @@ export function defineTools(): ToolDefinition[] {
           },
           eve: {
             type: "string",
-            enum: ["opencode", "kilo", "agy"],
+            enum: ["opencode"],
             description: "Preferred eve agent (auto-selected if omitted)",
           },
         },
@@ -400,8 +400,8 @@ export function defineTools(): ToolDefinition[] {
         if (!prompt) throw new Error("prompt is required");
         const preferredeve = args["eve"];
         const eveId =
-          typeof preferredeve === "string" && ["opencode", "kilo", "agy"].includes(preferredeve)
-            ? (preferredeve as "opencode" | "kilo" | "agy")
+          typeof preferredeve === "string" && ["opencode"].includes(preferredeve)
+            ? (preferredeve as "opencode")
             : undefined;
 
         const eves = getConfiguredeves();

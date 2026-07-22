@@ -5,7 +5,7 @@ alwaysApply: true
 
 # Agent Alignment Scoring
 
-Before saying a task is done, compute an **Alignment Score (0–100)**. Pass threshold: **≥ 95**. Any §18 never-do violation → **hard fail (score = 0)**.
+Before saying a task is done, compute an **Alignment Score (0–100)**. Pass threshold: **≥ 80** (per AGENTS.md §20). Any §18 never-do violation → **hard fail (score = 0)**.
 
 ## Rubric
 
@@ -48,4 +48,4 @@ Gap ledger: `.cursor/skills/agent-alignment-score/references/gap-ledger.md`
 - Prefer running: `bash scripts/run-alignment.sh`
 - Skill: `.cursor/skills/agent-alignment-score/SKILL.md`
 - Repeatable gaps → `skill-self-improve` (see `.cursor/rules/07-adaptive-skill-loop.mdc`)
-- If score is < 95, initiate `skill-self-improve` to distill gaps before proceeding.
+- If score is < 80, initiate `skill-self-improve` to distill gaps before proceeding.

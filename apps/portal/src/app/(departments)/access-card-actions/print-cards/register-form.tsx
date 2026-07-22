@@ -16,7 +16,7 @@ interface RegisterFormProps {
 }
 
 function SubmitButton() {
-  const { pending } = useFormStatus();
+  const { pending, method } = useFormStatus();
   return (
     <Button
       type="submit"
@@ -25,7 +25,7 @@ function SubmitButton() {
       disabled={pending}
       className="text-xs font-medium"
     >
-      {pending ? "Registering…" : "Register"}
+      {pending ? (method === 'POST' ? "Registering…" : "Processing…") : "Register"}
     </Button>
   );
 }

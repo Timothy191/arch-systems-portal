@@ -284,3 +284,49 @@ export function isAuthError(error: unknown): error is AuthError {
 export function isNotFoundError(error: unknown): error is NotFoundError {
   return error instanceof NotFoundError;
 }
+
+export class AIProviderError extends AppError {
+  constructor(
+    message: string,
+    options?: {
+      cause?: unknown;
+      context?: Record<string, unknown>;
+      [key: string]: unknown;
+    }
+  ) {
+    super(message, {
+      code: "AI_PROVIDER_ERROR",
+      statusCode: 502,
+      cause: options?.cause,
+      context: options?.context,
+    });
+    const { cause: _cause, context: _context, ...rest } = options ?? {};
+    const merged = mergeExtra(this.context, (rest as Record<string, unknown>) ?? {});
+    if (Object.keys(merged).length > 0) {
+      this.context = merged;
+    }
+  }
+}
+
+export class ExternalServiceError extends AppError {
+  constructor(
+    message: string,
+    options?: {
+      cause?: unknown;
+      context?: Record<string, unknown>;
+      [key: string]: unknown;
+    }
+  ) {
+    super(message, {
+      code: "EXTERNAL_SERVICE_ERROR",
+      statusCode: 502,
+      cause: options?.cause,
+      context: options?.context,
+    });
+    const { cause: _cause, context: _context, ...rest } = options ?? {};
+    const merged = mergeExtra(this.context, (rest as Record<string, unknown>) ?? {});
+    if (Object.keys(merged).length > 0) {
+      this.context = merged;
+    }
+  }
+}

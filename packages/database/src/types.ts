@@ -1,9 +1,16 @@
-// packages/database/src/types.ts
-// Type-safe database schema for PostgreSQL native migration
+/**
+ * @module database/types
+ * Type-safe database schema definitions for the PostgreSQL native migration.
+ *
+ * Each interface maps 1-to-1 to a database table column set.
+ * The top-level {@link Database} interface is consumed by Kysely to
+ * provide compile-time query validation.
+ */
 
+/** Arbitrary JSON value storable in `jsonb` columns. */
 export type Json = Record<string, unknown> | unknown[];
 
-// Auth users table (for PostgreSQL native auth)
+/** Authenticated user row from the `auth.users` table. */
 export interface AuthUsers {
   id: string;
   email: string;
@@ -23,7 +30,7 @@ export interface AuthUsers {
   raw_app_meta_data: Json | null;
 }
 
-// Departments
+/** Department definition — maps to the `departments` table. */
 export interface Departments {
   id: string;
   name: string;
@@ -34,7 +41,7 @@ export interface Departments {
   created_at: Date;
 }
 
-// Employees
+/** Employee record linked to an auth user — maps to the `employees` table. */
 export interface Employees {
   id: string;
   auth_id: string;
@@ -45,7 +52,7 @@ export interface Employees {
   created_at: Date;
 }
 
-// Machines
+/** Machine / equipment record — maps to the `machines` table. */
 export interface Machines {
   id: string;
   department_id: string;
@@ -57,7 +64,7 @@ export interface Machines {
   report_exempt?: boolean;
 }
 
-// Daily logs
+/** Daily shift log entry — maps to the `daily_logs` table. */
 export interface DailyLogs {
   id: string;
   department_id: string;
@@ -67,7 +74,7 @@ export interface DailyLogs {
   created_at: Date;
 }
 
-// Machine hours
+/** Hours worked by a machine within a daily log — maps to `machine_hours`. */
 export interface MachineHours {
   id: string;
   daily_log_id: string;
@@ -76,7 +83,7 @@ export interface MachineHours {
   created_at: Date;
 }
 
-// Webhook endpoints
+/** Webhook endpoint configuration — maps to `webhook_endpoints`. */
 export interface WebhookEndpoints {
   id?: string;
   url: string;
@@ -89,7 +96,7 @@ export interface WebhookEndpoints {
   updated_at: Date | null;
 }
 
-// Webhook delivery logs
+/** Webhook delivery attempt log — maps to `webhook_delivery_logs`. */
 export interface WebhookDeliveryLogs {
   id: string;
   webhook_endpoint_id: string;
@@ -100,7 +107,7 @@ export interface WebhookDeliveryLogs {
   error_message: string | null;
 }
 
-// Audit logs
+/** Audit trail entry — maps to `audit_logs`. */
 export interface AuditLogs {
   id?: string;
   action: string;
@@ -112,7 +119,7 @@ export interface AuditLogs {
   created_at?: Date;
 }
 
-// Access logs
+/** Site access log entry — maps to `access_logs`. */
 export interface AccessLogs {
   id?: string;
   badge_id: string | null;
@@ -125,7 +132,7 @@ export interface AccessLogs {
   department_id?: string | null;
 }
 
-// Control room shifts
+/** Control room shift record — maps to `control_room_shifts`. */
 export interface ControlRoomShifts {
   id: string;
   department_id: string;
@@ -136,7 +143,7 @@ export interface ControlRoomShifts {
   created_at: Date;
 }
 
-// Control room activities
+/** Activity recorded during a control room shift — maps to `control_room_activities`. */
 export interface ControlRoomActivities {
   id: string;
   shift_id: string;
@@ -146,7 +153,9 @@ export interface ControlRoomActivities {
   created_at: Date;
 }
 
-// Minimal interfaces for tables used in services
+/** Minimal interfaces for tables used in services */
+
+/** Security badge (QR / RFID) — maps to `badges`. */
 export interface Badges {
   id?: string;
   qr_code: string;
@@ -158,6 +167,7 @@ export interface Badges {
   revoked_at?: Date | null;
 }
 
+/** Site personnel record — maps to `personnel`. */
 export interface Personnel {
   id: string;
   first_name: string;
@@ -167,6 +177,7 @@ export interface Personnel {
   created_at: Date;
 }
 
+/** Visitor record — maps to `visitors`. */
 export interface Visitors {
   id: string;
   name: string;
@@ -175,6 +186,7 @@ export interface Visitors {
   created_at: Date;
 }
 
+/** Machine operation summary — maps to `machine_operations`. */
 export interface MachineOperations {
   id: string;
   machine_id: string;
@@ -185,6 +197,7 @@ export interface MachineOperations {
   created_at: Date;
 }
 
+/** Excavator activity record — maps to `excavator_activity`. */
 export interface ExcavatorActivity {
   id: string;
   excavator_id: string;
@@ -195,6 +208,7 @@ export interface ExcavatorActivity {
   created_at: Date;
 }
 
+/** Dozer roll count — maps to `dozer_rolls`. */
 export interface DozerRolls {
   id: string;
   dozer_id: string;
@@ -204,7 +218,9 @@ export interface DozerRolls {
   created_at: Date;
 }
 
-// Additional table interfaces (minimal)
+// ── Additional table interfaces ─────────────────────────────────────────────
+
+/** AI model usage tracking — maps to `ai_usage_logs`. */
 export interface AiUsageLogs {
   id: string;
   model: string;
@@ -212,6 +228,7 @@ export interface AiUsageLogs {
   created_at: Date;
 }
 
+/** Machine breakdown record — maps to `breakdowns`. */
 export interface Breakdowns {
   id: string;
   machine_id: string;
@@ -220,6 +237,7 @@ export interface Breakdowns {
   created_at: Date;
 }
 
+/** Cache anomaly detection record — maps to `cache_anomalies`. */
 export interface CacheAnomalies {
   id: string;
   cache_key: string;
@@ -227,6 +245,7 @@ export interface CacheAnomalies {
   created_at: Date;
 }
 
+/** Cache event log — maps to `cache_events`. */
 export interface CacheEvents {
   id: string;
   event_type: string;
@@ -234,6 +253,7 @@ export interface CacheEvents {
   created_at: Date;
 }
 
+/** Delay category lookup — maps to `delay_categories`. */
 export interface DelayCategories {
   id: string;
   name: string;
@@ -241,6 +261,7 @@ export interface DelayCategories {
   created_at: Date;
 }
 
+/** Document record — maps to `documents`. */
 export interface Documents {
   id: string;
   title: string;
@@ -248,6 +269,7 @@ export interface Documents {
   created_at: Date;
 }
 
+/** Document version history — maps to `document_versions`. */
 export interface DocumentVersions {
   id: string;
   document_id: string;
@@ -256,6 +278,7 @@ export interface DocumentVersions {
   created_at: Date;
 }
 
+/** Archived dozer rolls — maps to `dozer_rolls_archive`. */
 export interface DozerRollsArchive {
   id: string;
   dozer_id: string;
@@ -265,6 +288,7 @@ export interface DozerRollsArchive {
   created_at: Date;
 }
 
+/** Drill operation record — maps to `drill_operations`. */
 export interface DrillOperations {
   id: string;
   machine_id: string;
@@ -274,6 +298,7 @@ export interface DrillOperations {
   created_at: Date;
 }
 
+/** Archived drill operations — maps to `drill_operations_archive`. */
 export interface DrillOperationsArchive {
   id: string;
   machine_id: string;
@@ -283,6 +308,7 @@ export interface DrillOperationsArchive {
   created_at: Date;
 }
 
+/** Embedding cache entry — maps to `embedding_cache`. */
 export interface EmbeddingCache {
   id: string;
   model: string;
@@ -291,6 +317,7 @@ export interface EmbeddingCache {
   created_at: Date;
 }
 
+/** Engineering note — maps to `engineering_notes`. */
 export interface EngineeringNotes {
   id: string;
   title: string;
@@ -298,6 +325,7 @@ export interface EngineeringNotes {
   created_at: Date;
 }
 
+/** Archived engineering note — maps to `engineering_notes_archive`. */
 export interface EngineeringNotesArchive {
   id: string;
   title: string;
@@ -305,6 +333,7 @@ export interface EngineeringNotesArchive {
   created_at: Date;
 }
 
+/** Equipment record — maps to `equipment`. */
 export interface Equipment {
   id: string;
   name: string;
@@ -313,6 +342,7 @@ export interface Equipment {
   created_at: Date;
 }
 
+/** Excavator-to-dumper assignment — maps to `excavator_dumper_assignments`. */
 export interface ExcavatorDumperAssignments {
   id: string;
   excavator_id: string;
@@ -322,6 +352,7 @@ export interface ExcavatorDumperAssignments {
   created_at: Date;
 }
 
+/** Archived excavator-dumper assignment — maps to `excavator_dumper_assignments_archive`. */
 export interface ExcavatorDumperAssignmentsArchive {
   id: string;
   excavator_id: string;
@@ -331,6 +362,7 @@ export interface ExcavatorDumperAssignmentsArchive {
   created_at: Date;
 }
 
+/** Fleet vehicle record — maps to `fleet`. */
 export interface Fleet {
   id: string;
   name: string;
@@ -338,6 +370,7 @@ export interface Fleet {
   created_at: Date;
 }
 
+/** Fuel consumption log — maps to `fuel_logs`. */
 export interface FuelLogs {
   id: string;
   machine_id: string;
@@ -345,6 +378,7 @@ export interface FuelLogs {
   created_at: Date;
 }
 
+/** Generated report record — maps to `generated_reports`. */
 export interface GeneratedReports {
   id: string;
   template_id: string;
@@ -353,6 +387,7 @@ export interface GeneratedReports {
   created_at: Date;
 }
 
+/** Hourly load counts per machine — maps to `hourly_loads`. */
 export interface HourlyLoads {
   id: string;
   department_id: string;
@@ -378,6 +413,7 @@ export interface HourlyLoads {
   updated_by?: string | null;
 }
 
+/** Machine configuration key-value — maps to `machine_configurations`. */
 export interface MachineConfigurations {
   id: string;
   machine_id: string;
@@ -386,6 +422,7 @@ export interface MachineConfigurations {
   created_at: Date;
 }
 
+/** Archived machine operations — maps to `machine_operations_archive`. */
 export interface MachineOperationsArchive {
   id: string;
   machine_id: string;
@@ -396,6 +433,7 @@ export interface MachineOperationsArchive {
   created_at: Date;
 }
 
+/** Machine telemetry data point — maps to `machine_telemetry`. */
 export interface MachineTelemetry {
   id: string;
   machine_id: string;
@@ -404,6 +442,7 @@ export interface MachineTelemetry {
   created_at: Date;
 }
 
+/** Archived machine telemetry — maps to `machine_telemetry_archive`. */
 export interface MachineTelemetryArchive {
   id: string;
   machine_id: string;
@@ -412,6 +451,7 @@ export interface MachineTelemetryArchive {
   created_at: Date;
 }
 
+/** Materialized view refresh audit log — maps to `materialized_view_refresh_log`. */
 export interface MaterializedViewRefreshLog {
   id: string;
   view_name: string;
@@ -420,6 +460,7 @@ export interface MaterializedViewRefreshLog {
   created_at: Date;
 }
 
+/** AI memory embedding record — maps to `memory_embeddings`. */
 export interface MemoryEmbeddings {
   id: string;
   content_hash: string;
@@ -427,6 +468,7 @@ export interface MemoryEmbeddings {
   created_at: Date;
 }
 
+/** Mine block / section — maps to `mine_blocks`. */
 export interface MineBlocks {
   id: string;
   name: string;
@@ -434,6 +476,7 @@ export interface MineBlocks {
   created_at: Date;
 }
 
+/** Operational delay entry — maps to `operational_delays`. */
 export interface OperationalDelays {
   id: string;
   machine_id: string;
@@ -442,6 +485,7 @@ export interface OperationalDelays {
   created_at: Date;
 }
 
+/** Archived operational delay — maps to `operational_delays_archive`. */
 export interface OperationalDelaysArchive {
   id: string;
   machine_id: string;
@@ -450,6 +494,7 @@ export interface OperationalDelaysArchive {
   created_at: Date;
 }
 
+/** Machine operator record — maps to `operators`. */
 export interface Operators {
   id: string;
   name: string;
@@ -457,6 +502,7 @@ export interface Operators {
   created_at: Date;
 }
 
+/** Production log entry — maps to `production_logs`. */
 export interface ProductionLogs {
   id: string;
   machine_id: string;
@@ -466,6 +512,7 @@ export interface ProductionLogs {
   created_at: Date;
 }
 
+/** Report template definition — maps to `report_templates`. */
 export interface ReportTemplates {
   id: string;
   name: string;
@@ -473,6 +520,7 @@ export interface ReportTemplates {
   created_at: Date;
 }
 
+/** Safety incident category lookup — maps to `safety_incident_categories`. */
 export interface SafetyIncidentCategories {
   id: string;
   name: string;
@@ -480,6 +528,7 @@ export interface SafetyIncidentCategories {
   created_at: Date;
 }
 
+/** Safety incident record — maps to `safety_incidents`. */
 export interface SafetyIncidents {
   id: string;
   category_id: string;
@@ -489,6 +538,7 @@ export interface SafetyIncidents {
   created_at: Date;
 }
 
+/** Safety severity level lookup — maps to `safety_severities`. */
 export interface SafetySeverities {
   id: string;
   name: string;
@@ -496,6 +546,7 @@ export interface SafetySeverities {
   created_at: Date;
 }
 
+/** Shift handover note — maps to `shift_notes`. */
 export interface ShiftNotes {
   id: string;
   shift_id: string;
@@ -504,6 +555,7 @@ export interface ShiftNotes {
   created_at: Date;
 }
 
+/** Shift status tracking — maps to `shift_status`. */
 export interface ShiftStatus {
   id: string;
   shift_id: string;
@@ -511,6 +563,7 @@ export interface ShiftStatus {
   updated_at: Date;
 }
 
+/** Mine site record — maps to `sites`. */
 export interface Sites {
   id: string;
   name: string;
@@ -518,6 +571,7 @@ export interface Sites {
   created_at: Date;
 }
 
+/** Table sync watermark — maps to `sync_watermarks`. */
 export interface SyncWatermarks {
   id: string;
   table_name: string;
@@ -525,6 +579,7 @@ export interface SyncWatermarks {
   created_at: Date;
 }
 
+/** Vector search result cache — maps to `vector_search_cache`. */
 export interface VectorSearchCache {
   id: string;
   query_hash: string;
@@ -532,6 +587,7 @@ export interface VectorSearchCache {
   created_at: Date;
 }
 
+/** Vector search performance log — maps to `vector_search_performance`. */
 export interface VectorSearchPerformance {
   id: string;
   query: string;
@@ -539,14 +595,17 @@ export interface VectorSearchPerformance {
   created_at: Date;
 }
 
-// Row type aliases for query-builder
+/** Row type aliases consumed by the query-builder repository objects. */
 export type DepartmentRow = Departments;
 export type EmployeeRow = Employees;
 export type MachineRow = Machines;
 export type DailyLogRow = DailyLogs;
 export type MachineHoursRow = MachineHours;
 
-// Main database interface
+/**
+ * Master database interface — maps every table name to its row type.
+ * Consumed by Kysely `<Database>` generic for compile-time query safety.
+ */
 export interface Database {
   access_logs: AccessLogs;
   access_logs_archive: AccessLogs;

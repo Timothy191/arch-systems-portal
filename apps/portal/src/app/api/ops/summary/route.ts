@@ -2,8 +2,6 @@ import { NextResponse } from "next/server";
 import { getRedis } from "@repo/redis";
 import { requireAdmin } from "@/lib/api/auth";
 
-export const dynamic = "force-dynamic";
-
 /* ── GET /api/ops/summary ───────────────────────────────────── */
 export async function GET() {
   const auth = await requireAdmin();

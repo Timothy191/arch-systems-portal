@@ -18,6 +18,7 @@ function BrandIcon({ brand, compact }: { brand: PartnerBrand; compact: boolean }
       className={
         compact ? "h-3.5 w-auto max-h-3.5 object-contain" : "h-5 w-auto max-w-[5rem] object-contain"
       }
+      style={{ width: "auto", height: "auto" }}
       unoptimized
     />
   );
@@ -31,7 +32,7 @@ function BrandIcon({ brand, compact }: { brand: PartnerBrand; compact: boolean }
       href={brand.href}
       target="_blank"
       rel="noopener noreferrer"
-      title={brand.name}
+      aria-label={`Visit ${brand.name}`}
       className="rounded-sm outline-none transition-opacity hover:opacity-100 focus-visible:ring-2 focus-visible:ring-arch-accent-charcoal/50"
     >
       {image}
@@ -51,22 +52,20 @@ export function PartnerBrandStrip({
 
   if (!compact) {
     return (
-      <div
-        role="img"
-        aria-label="Platform partners: Vercel, Turborepo, and v0"
+      <nav
+        aria-label="Platform partners"
         className={`flex items-center gap-2.5 ${className}`.trim()}
       >
         {brands.map((brand) => (
           <BrandIcon key={brand.name} brand={brand} compact={false} />
         ))}
-      </div>
+      </nav>
     );
   }
 
   return (
-    <div
-      role="img"
-      aria-label="Platform partners: Vercel, Turborepo, and v0"
+    <nav
+      aria-label="Platform partners"
       className={`taskbar-partner-logos flex h-[22px] items-center gap-2 rounded-full border border-border-subtle bg-black/[0.03] px-2 ${className}`.trim()}
     >
       {brands.map((brand, index) => (
@@ -75,6 +74,6 @@ export function PartnerBrandStrip({
           <BrandIcon brand={brand} compact={compact} />
         </span>
       ))}
-    </div>
+    </nav>
   );
 }

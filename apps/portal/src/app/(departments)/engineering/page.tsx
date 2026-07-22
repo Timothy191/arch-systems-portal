@@ -11,8 +11,6 @@ import {
   ArrowRight,
 } from "lucide-react";
 
-export const dynamic = "force-dynamic";
-
 async function getEngineeringHubData(deptId: string) {
   const db = await createReadReplicaClient();
 

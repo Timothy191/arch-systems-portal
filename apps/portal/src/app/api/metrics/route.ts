@@ -18,8 +18,6 @@
 import { getCacheStats } from "@repo/redis";
 import { getObservabilityMetrics } from "@/lib/observability/metrics";
 
-export const dynamic = "force-dynamic";
-
 export async function GET() {
   const cacheStats = await getCacheStats();
   const { jobMetrics, dbMetrics } = await getObservabilityMetrics();

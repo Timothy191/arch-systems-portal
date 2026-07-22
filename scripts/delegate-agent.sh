@@ -119,14 +119,6 @@ run_omp() {
   omp -p "${context}\n\n${prompt}" --no-session --approval-mode write 2>&1
 }
 
-run_kilo() {
-  local prompt="$1"
-  local context; context="$(build_full_context)"
-  echo "🧠 kilo v7.4.11 — ACP server agent" >&2
-  echo "" >&2
-  kilo run "${context}\n\n${prompt}" 2>&1
-}
-
 run_opencode() {
   local prompt="$1"
   local context; context="$(build_full_context)"
@@ -135,37 +127,12 @@ run_opencode() {
   opencode run "${context}\n\n${prompt}" 2>&1
 }
 
-run_agy() {
-  local prompt="$1"
-  local context; context="$(build_full_context)"
-  echo "🧠 agy v1.1.4 — Go lightweight agent" >&2
-  echo "" >&2
-  agy --print "${context}\n\n${prompt}" 2>&1
-}
-
 run_devin() {
   local prompt="$1"
   local context; context="$(build_full_context)"
   echo "🧠 devin v3000 — cloud agent with sandbox" >&2
   echo "" >&2
   devin -- "${context}\n\n${prompt}" 2>&1
-}
-
-run_hermes() {
-  local prompt="$1"
-  local context; context="$(build_full_context)"
-  local first_or_key; first_or_key=$(echo "${OPENROUTER_KEY_POOL:-}" | cut -d',' -f1)
-  echo "🧠 hermes v0.18.2 — Python agent with plugins" >&2
-  echo "" >&2
-  OPENROUTER_API_KEY="$first_or_key" OPENAI_API_KEY="${OPENAI_API_KEY:-}" hermes -z "${context}\n\n${prompt}" 2>&1
-}
-
-run_qwen() {
-  local prompt="$1"
-  local context; context="$(build_full_context)"
-  echo "🧠 qwen v0.19.9 — Qwen Code CLI" >&2
-  echo "" >&2
-  qwen -p "${context}\n\n${prompt}" 2>&1
 }
 
 # ── Auth/status check per agent ──
@@ -185,29 +152,11 @@ check_agent_status() {
         available="❌"; auth="not installed"
       fi
       ;;
-    kilo)
-      version="$(kilo --version 2>/dev/null | head -1 || echo "not found")"
-      if [[ "$version" != "not found" ]]; then
-        available="✅"
-        auth="🔑 OAuth + Vercel GW + env"
-      else
-        available="❌"; auth="not installed"
-      fi
-      ;;
     opencode)
       version="$(opencode --version 2>/dev/null | head -1 || echo "not found")"
       if [[ "$version" != "not found" ]]; then
         available="✅"
         auth="🔑 env vars (OPENCODE_API_KEY, GEMINI)"
-      else
-        available="❌"; auth="not installed"
-      fi
-      ;;
-    agy)
-      version="1.1.4"
-      if command -v agy &>/dev/null; then
-        available="✅"
-        auth="🔑 env vars (GEMINI_API_KEY)"
       else
         available="❌"; auth="not installed"
       fi
@@ -225,32 +174,7 @@ check_agent_status() {
         available="❌"; auth="not installed"
       fi
       ;;
-    hermes)
-      version="$(hermes --version 2>/dev/null | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' | head -1 | sed 's/^v//' || echo "not found")"
-      if [[ "$version" != "not found" ]]; then
-        available="✅"
-        local first_or_key; first_or_key=$(echo "${OPENROUTER_KEY_POOL:-}" | cut -d',' -f1)
-        local has_openrouter; has_openrouter="$(OPENROUTER_API_KEY="$first_or_key" hermes status 2>/dev/null | grep "OpenRouter" | grep -c "✓" || true)"
-        local has_openai; has_openai="$(OPENAI_API_KEY="${OPENAI_API_KEY:-}" hermes status 2>/dev/null | grep "OpenAI" | grep -c "✓" || true)"
-        if [[ "$has_openrouter" -gt 0 ]] || [[ "$has_openai" -gt 0 ]]; then
-          auth="🔑 Has API keys"
-        else
-          auth="⚠️  Missing keys (OpenRouter, OpenAI)"
-        fi
-      else
-        available="❌"; auth="not installed"
-      fi
-      ;;
-    qwen)
-      version="$(qwen --version 2>/dev/null | head -1 || echo "not found")"
-      if [[ "$version" != "not found" ]]; then
-        available="✅"
-        auth="🔑 env vars + --model flag"
-      else
-        available="❌"; auth="not installed"
-      fi
-      ;;
-  esac
+    esac
 
   echo "$available v$version — $auth"
 }
@@ -339,7 +263,7 @@ cmd_list() {
   echo ""
   printf "  %-12s %s\n" "Agent" "Status"
   printf "  %-12s %s\n" "────" "──────"
-  for agent in omp kilo opencode agy devin hermes qwen; do
+  for agent in omp opencode devin; do
     local status; status="$(check_agent_status "$agent")"
     printf "  %-12s %s\n" "$agent" "$status"
   done
@@ -370,7 +294,7 @@ cmd_run() {
     echo "  or:  pnpm agent:delegate --quiet <name> <prompt>"
     echo "  or:  pnpm agent:delegate --output-schema schema.json <name> <prompt>"
     echo ""
-    echo "Available agents: omp, kilo, opencode, agy, devin, hermes, qwen"
+    echo "Available agents: omp, opencode, devin"
     echo ""
     echo "Output modes:"
     echo "  (default)  — Stream plain text to stdout"
@@ -410,15 +334,11 @@ cmd_run() {
 
   case "$name" in
     omp)        run_with_output_mode "$name" run_omp "$prompt" ;;
-    kilo)       run_with_output_mode "$name" run_kilo "$prompt" ;;
     opencode)   run_with_output_mode "$name" run_opencode "$prompt" ;;
-    agy)        run_with_output_mode "$name" run_agy "$prompt" ;;
     devin)      run_with_output_mode "$name" run_devin "$prompt" ;;
-    hermes)     run_with_output_mode "$name" run_hermes "$prompt" ;;
-    qwen)       run_with_output_mode "$name" run_qwen "$prompt" ;;
     *)
       echo "Unknown agent: $name"
-      echo "Available: omp, kilo, opencode, agy, devin, hermes, qwen"
+      echo "Available: omp, opencode, devin"
       exit 1
       ;;
   esac
@@ -473,7 +393,7 @@ case "${1:-}" in
     shift
     cmd_run "$@"
     ;;
-  omp|kilo|opencode|agy|devin|hermes|qwen)
+  omp|opencode|devin)
     # Bare agent name — treat as "run <name>"
     cmd_run "$@"
     ;;

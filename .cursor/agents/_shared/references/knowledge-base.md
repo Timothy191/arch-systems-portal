@@ -43,3 +43,11 @@ This file is a shared knowledge base where agents, subagents, and automated loop
 ## 6. Detected Errors & Gotchas (Auto-Logged)
 
 - 2026-07-20: [TypeScript Error] Redis client connection failed on ioredis.connect
+
+## 5. Detected Errors & Gotchas (Auto-Logged)
+- 2026-07-21: ops-gateway:type-check: src/mcp/tools.ts(415,11): error TS2322: Type '"opencode" | "kilo" | "agy" | undefined' is not assignable to type '"opencode" |
+- 2026-07-21: portal:type-check: src/app/api/control-room/shift-completeness/route.ts(92,51): error TS2345: Argument of type 'SupabaseClient<any, "public", any, any
+- 2026-07-21: portal:type-check: src/lib/api/rate-limit-middleware.ts(130,47): error TS2339: Property 'ip' does not exist on type 'NextRequest'.
+- 2026-07-21: portal:type-check: src/lib/api/api-guard.ts(11,45): error TS2554: Expected 1 arguments, but got 2.portal:type-check: src/lib/api/api-guard.ts(17,60): 
+- 2026-07-21: portal:type-check: src/lib/jobs/automated-audit.ts(42,55): error TS2345: Argument of type 'import("/home/timothy/Projects/node_modules/.pnpm/@supabase
+- 2026-07-21: portal:type-check: ../../packages/ui/src/components/ui/bento-grid.tsx(71,11): error TS2322: Type '"link"' is not assignable to type 'Variant | undefin

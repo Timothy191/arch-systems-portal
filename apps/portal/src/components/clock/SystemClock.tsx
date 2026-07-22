@@ -124,6 +124,7 @@ export function SystemClock() {
                   type="button"
                   onClick={prevYear}
                   title="Previous Year"
+                  aria-label="Previous Year"
                   className="w-5 h-5 flex items-center justify-center rounded hover:bg-black/[0.05] text-[12px] font-bold text-arch-text-secondary"
                 >
                   &laquo;
@@ -132,6 +133,7 @@ export function SystemClock() {
                   type="button"
                   onClick={prevMonth}
                   title="Previous Month"
+                  aria-label="Previous Month"
                   className="w-5 h-5 flex items-center justify-center rounded hover:bg-black/[0.05] text-[12px] font-bold text-arch-text-secondary"
                 >
                   &lsaquo;
@@ -145,6 +147,7 @@ export function SystemClock() {
                   type="button"
                   onClick={nextMonth}
                   title="Next Month"
+                  aria-label="Next Month"
                   className="w-5 h-5 flex items-center justify-center rounded hover:bg-black/[0.05] text-[12px] font-bold text-arch-text-secondary"
                 >
                   &rsaquo;
@@ -153,6 +156,7 @@ export function SystemClock() {
                   type="button"
                   onClick={nextYear}
                   title="Next Year"
+                  aria-label="Next Year"
                   className="w-5 h-5 flex items-center justify-center rounded hover:bg-black/[0.05] text-[12px] font-bold text-arch-text-secondary"
                 >
                   &raquo;

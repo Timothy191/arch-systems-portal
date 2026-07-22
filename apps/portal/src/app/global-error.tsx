@@ -6,9 +6,11 @@ import RootError from "./error";
 export default function GlobalError({
   error,
   reset,
+  unstable_retry,
 }: {
   error: Error & { digest?: string };
   reset: () => void;
+  unstable_retry?: () => void;
 }) {
   useEffect(() => {
     // Log to console in development; Sentry is initialized via instrumentation.ts
@@ -21,7 +23,7 @@ export default function GlobalError({
   return (
     <html lang="en">
       <body>
-        <RootError error={error} reset={reset} />
+        <RootError error={error} reset={reset} unstable_retry={unstable_retry} />
       </body>
     </html>
   );

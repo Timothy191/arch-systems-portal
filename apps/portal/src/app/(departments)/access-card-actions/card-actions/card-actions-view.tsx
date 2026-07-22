@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState, useCallback, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { GlassCard } from "@repo/ui/GlassCard";
@@ -436,13 +437,13 @@ export function CardActionsView({ initialQuery, initialSelectedId }: CardActions
             {/* Photo + Name Header */}
             <GlassCard>
               <div className="flex items-start gap-5">
-                <div className="w-20 h-20 rounded-xl bg-arch-surface-tertiary overflow-hidden shrink-0 flex items-center justify-center">
+                <div className="w-20 h-20 rounded-xl bg-arch-surface-tertiary overflow-hidden shrink-0 flex items-center justify-center relative">
                   {detail.photo_signed_url ? (
-                    // eslint-disable-next-line @next/next/no-img-element -- signed URL from Supabase storage
-                    <img
+                    <Image
                       src={detail.photo_signed_url}
                       alt={`${detail.first_name} ${detail.surname}`}
-                      className="w-full h-full object-cover"
+                      fill
+                      className="object-cover"
                     />
                   ) : (
                     <span className="text-2xl font-bold text-arch-text-muted">

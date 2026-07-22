@@ -1,5 +1,14 @@
+/**
+ * @module redis/stats
+ * Cache statistics tracking — records hits, misses, latencies, and Redis errors.
+ *
+ * Stats are stored both in-process (for low-latency reads) and in Redis
+ * (for cross-pod aggregation under `stats:cache` and `stats:latencies`).
+ */
+
 import { getRedisClient, getClientIfOpen } from "@repo/redis/client";
 
+/** Point-in-time snapshot of cache performance counters. */
 interface CacheStatsSnapshot {
   hits: number;
   misses: number;
@@ -53,6 +62,7 @@ function buildSnapshot(): CacheStatsSnapshot {
   };
 }
 
+/** Record a cache hit from the specified layer with its latency. */
 export function recordCacheHit(source: "l1" | "l2", latencyMs: number): void {
   // 1. Local update
   stats.hits++;
@@ -74,6 +84,7 @@ export function recordCacheHit(source: "l1" | "l2", latencyMs: number): void {
   }
 }
 
+/** Record a cache miss with its latency. */
 export function recordCacheMiss(latencyMs: number): void {
   // 1. Local update
   stats.misses++;
@@ -92,6 +103,7 @@ export function recordCacheMiss(latencyMs: number): void {
   }
 }
 
+/** Increment the Redis error counter (local + remote). */
 export function recordRedisError(): void {
   // 1. Local update
   stats.redisErrors++;
@@ -103,6 +115,10 @@ export function recordRedisError(): void {
   }
 }
 
+/**
+ * Retrieve the aggregated cache statistics snapshot.
+ * Prefers Redis-backed data; falls back to the in-process counters on failure.
+ */
 export async function getCacheStats(): Promise<CacheStatsSnapshot> {
   try {
     const redis = await getRedisClient();
@@ -135,6 +151,7 @@ export async function getCacheStats(): Promise<CacheStatsSnapshot> {
   return buildSnapshot();
 }
 
+/** Reset all local and Redis-backed cache statistics. */
 export function resetCacheStats(): void {
   stats.hits = 0;
   stats.misses = 0;

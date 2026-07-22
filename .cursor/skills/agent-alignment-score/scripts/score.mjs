@@ -162,7 +162,8 @@ function compute(scores, hardFail) {
     return { total: 0, pass: false, hardFail: true, scores };
   }
   const total = Object.values(scores).reduce((a, b) => a + (b ?? 0), 0);
-  return { total, pass: total >= PASS, hardFail: false, scores };
+  const level = Math.ceil(total / 10);
+  return { total, level, pass: total >= PASS, hardFail: false, scores };
 }
 
 function formatReport(result, reasons, meta) {
@@ -171,19 +172,19 @@ function formatReport(result, reasons, meta) {
   const tok = tokensSaved(meta.catalog, meta.activated);
   const cq = meta.codeQuality ?? 8;
   const cqNote = meta.codeQualityNote || "see change";
-  const actions = [...meta.actions];
+  const actions = [...(meta.actions || [])];
   while (actions.length < 3) actions.push("(none)");
   const adaptive = meta.adaptive || "observe — none";
 
-  const lines = [
-    `Alignment: ${result.total}/100 [${label}]`,
-    `- Spec: ${result.scores.spec}/${MAX.spec}`,
-    `- Stack: ${result.scores.stack}/${MAX.stack}`,
-    `- Boundaries: ${result.scores.boundaries}/${MAX.boundaries}`,
-    `- Security: ${result.scores.security}/${MAX.security}`,
-    `- Quality: ${result.scores.quality}/${MAX.quality}`,
-    `- Verify: ${result.scores.verify}/${MAX.verify}`,
-    `Hard fails: ${result.hardFail ? reasons.join("; ") || "§18 violation" : "none"}`,
+  return [
+    `Alignment: ${result.total}/100 (Level ${result.level}) [${label}]`,
+    `- Spec: ${result.scores.spec}/${MAX.spec} — ${reasons.spec || "N/A"}`,
+    `- Stack: ${result.scores.stack}/${MAX.stack} — ${reasons.stack || "N/A"}`,
+    `- Boundaries: ${result.scores.boundaries}/${MAX.boundaries} — ${reasons.boundaries || "N/A"}`,
+    `- Security: ${result.scores.security}/${MAX.security} — ${reasons.security || "N/A"}`,
+    `- Quality: ${result.scores.quality}/${MAX.quality} — ${reasons.quality || "N/A"}`,
+    `- Verify: ${result.scores.verify}/${MAX.verify} — ${reasons.verify || "N/A"}`,
+    `Hard fails: ${result.hardFail ? (reasons.hardFail || "§18 violation") : "none"}`,
     `Code quality: ${cq}/${CODE_QUALITY_MAX} — ${cqNote}`,
     `Pro bar: ${pb.pct}% — ${pb.band}`,
     `Tokens saved: ~${tok.saved} (~${tok.pct}%) — progressive disclosure catalog=${tok.catalog} activated=${tok.activated}`,
@@ -192,8 +193,7 @@ function formatReport(result, reasons, meta) {
     `2. ${actions[1]}`,
     `3. ${actions[2]}`,
     `Adaptive next: ${adaptive}`,
-  ];
-  return lines.join("\n");
+  ].join("\n");
 }
 
 async function main() {

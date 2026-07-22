@@ -16,6 +16,7 @@ function getEnv(key: string): string {
   return val;
 }
 
+/** Result of creating a middleware client — the Supabase instance and a mutable response carrying refreshed cookies. */
 export interface MiddlewareClientResult {
   supabase: ReturnType<typeof createServerClient>;
   response: NextResponse;

@@ -26,7 +26,7 @@
     "test": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$"],
-      "outputs": ["coverage/**"],
+      "outputs": [],
       "cache": true
     },
     "clean": {

@@ -208,7 +208,9 @@ export async function parseExcel(file: File): Promise<any[]> {
             headers = (row.values as string[]).slice(1); // 1-indexed
           } else {
             const rowData: Record<string, any> = {};
-            const values = (row.values as any[]).slice(1);
+            const values = (
+              row.values as (string | number | boolean | Date | null | undefined)[]
+            ).slice(1);
             headers.forEach((h, i) => {
               rowData[h] = values[i];
             });

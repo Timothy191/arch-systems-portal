@@ -3,8 +3,6 @@ import { getDepartmentContext } from "@/lib/dept-context";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { Building2, Sparkles } from "lucide-react";
 
-export const dynamic = "force-dynamic";
-
 export default async function DepartmentDashboard({
   params,
 }: {

@@ -1,17 +1,16 @@
 const N8N_URL =
-  (typeof process !== "undefined" && (process as any).env?.NEXT_PUBLIC_N8N_URL) ||
-  (typeof process !== "undefined" && (process as any).env?.N8N_URL) ||
+  (typeof process !== "undefined" && process.env?.NEXT_PUBLIC_N8N_URL) ||
+  (typeof process !== "undefined" && process.env?.N8N_URL) ||
   "http://localhost:5678";
 
 /** Reads n8n credentials from environment — never hardcoded in source. */
 function getN8nAuth(): { user: string; password: string } | null {
   if (typeof process === "undefined") return null;
-  const env = process as any;
-  const user = env.N8N_USER;
-  const password = env.N8N_PASSWORD;
+  const user = process.env.N8N_USER;
+  const password = process.env.N8N_PASSWORD;
   if (user && password) return { user, password };
   // Fall back to defaults only in dev with a warning
-  if (env.NODE_ENV !== "production") {
+  if (process.env.NODE_ENV !== "production") {
     console.warn(
       "[n8n] N8N_USER/N8N_PASSWORD not set — using insecure defaults. Set these in production."
     );

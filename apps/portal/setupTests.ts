@@ -10,9 +10,58 @@ if (typeof globalThis.structuredClone === "undefined") {
   globalThis.structuredClone = <T>(obj: T): T => JSON.parse(JSON.stringify(obj));
 }
 
+// Mock HTMLCanvasElement.prototype.getContext
+if (typeof window !== "undefined" && typeof window.HTMLCanvasElement !== "undefined") {
+  window.HTMLCanvasElement.prototype.getContext = jest.fn((contextId: string) => {
+    if (contextId === "2d") {
+      return {
+        fillRect: jest.fn(),
+        clearRect: jest.fn(),
+        getImageData: jest.fn(),
+        putImageData: jest.fn(),
+        createImageData: jest.fn(),
+        setTransform: jest.fn(),
+        drawImage: jest.fn(),
+        save: jest.fn(),
+        restore: jest.fn(),
+        scale: jest.fn(),
+        rotate: jest.fn(),
+        translate: jest.fn(),
+        transform: jest.fn(),
+        beginPath: jest.fn(),
+        moveTo: jest.fn(),
+        lineTo: jest.fn(),
+        fill: jest.fn(),
+        stroke: jest.fn(),
+        clip: jest.fn(),
+        quadraticCurveTo: jest.fn(),
+        bezierCurveTo: jest.fn(),
+        arc: jest.fn(),
+        rect: jest.fn(),
+        fillText: jest.fn(),
+        measureText: jest.fn(),
+        strokeText: jest.fn(),
+        createLinearGradient: jest.fn(),
+        createRadialGradient: jest.fn(),
+        createPattern: jest.fn(),
+      } as unknown as CanvasRenderingContext2D;
+    }
+    return null;
+  }) as HTMLCanvasElement["getContext"];
+}
+
 // Override environment variables to prevent local development .env from polluting tests
 process.env.DISABLE_RATE_LIMIT = "false";
 process.env.NEXT_PUBLIC_FUXA_URL = "http://localhost:1881";
+process.env.NEXT_PUBLIC_SUPABASE_URL =
+  process.env.NEXT_PUBLIC_SUPABASE_URL || "https://test.supabase.co";
+process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY =
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.test-anon-key";
+process.env.SUPABASE_URL = process.env.SUPABASE_URL || "https://test.supabase.co";
+process.env.SUPABASE_ANON_KEY =
+  process.env.SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.test-anon-key";
+process.env.SUPABASE_SERVICE_KEY =
+  process.env.SUPABASE_SERVICE_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.test-service-key";
 
 // Jest setup file — provide Web API globals that Next.js server modules expect
 

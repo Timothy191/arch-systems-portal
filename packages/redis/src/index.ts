@@ -38,6 +38,8 @@ function createClient(): Redis {
 /**
  * Returns the shared Redis singleton.
  * Initialises lazily on first access.
+ *
+ * @throws {Error} if `REDIS_URL` is not set.
  */
 export function getRedis(): Redis {
   if (!_client) {
@@ -55,11 +57,15 @@ export const redis = new Proxy({} as Redis, {
 
 export type { Redis };
 
-// Legacy exports for compatibility
+/** Legacy alias for {@link getRedis}. */
 export function getRedisClient(): Redis {
   return getRedis();
 }
 
+/**
+ * Well-known cache category constants.
+ * Used with {@link buildCacheKey} to construct namespaced Redis keys.
+ */
 export const CacheCategory = {
   ACCESS_CONTROL: "access_control",
   AUTH: "auth",

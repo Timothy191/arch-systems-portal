@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
-cd "$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../.." && pwd)"
+cd "$SCRIPT_DIR"
 ERR=0
 fail() { echo "  FAIL: $1"; ERR=$((ERR + 1)); }
 ok() { echo "  OK: $1"; }

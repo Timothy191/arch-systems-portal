@@ -15,6 +15,7 @@ All skills, agents, hooks, and Claude Code mirrors **must** follow project layou
 | **Agents** | `.cursor/standards/agent-layout/STANDARD.md` | entry `.md` ≤ **65 lines** |
 | **Claude Code** | `.cursor/standards/claude-code/STANDARD.md` | lean `CLAUDE.md`; detail in `rules/` |
 | **Hooks** | `.cursor/hooks.json` + `.cursor/hooks/` | one concern per hook script |
+| **Knowledge base** | `.agents/knowledge/` (repowiki) + root `AGENTS.md` | entries lean; detail in subfolders |
 
 ## Required folder layout
 
@@ -39,6 +40,19 @@ All skills, agents, hooks, and Claude Code mirrors **must** follow project layou
 ```
 
 **Never** nest entry files in subfolders — Cursor loads flat `.cursor/agents/<name>.md` only.
+
+### Shared knowledge base (`.agents/knowledge/`)
+
+```
+.agents/knowledge/
+  README.md          # read/write protocol (frontmatter, evidence, supersede-never-delete)
+  index.md           # table of contents — update on every add
+  architecture/  decisions/  patterns/   glossary.md
+```
+
+Single source of truth for cross-agent knowledge; tool paths `.claude/knowledge`,
+`.cursor/knowledge`, `.qoder/repowiki` are symlinks to it (via `.claude/scripts/sync-surfaces.sh`).
+Enforced by `pnpm ai check`.
 
 ## Authoring rules (every create/update)
 

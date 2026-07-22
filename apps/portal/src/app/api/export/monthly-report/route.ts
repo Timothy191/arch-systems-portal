@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabaseClient } from "@repo/supabase/server";
-
-export const dynamic = "force-dynamic";
+import { DatabaseError } from "@/lib/errors/error-classes";
 
 /* ── POST /api/export/monthly-report ─────────────────────────── */
 export async function POST(request: NextRequest) {
@@ -34,7 +33,7 @@ export async function POST(request: NextRequest) {
     }
 
     const { data: logs, error } = await query;
-    if (error) throw new Error(error.message);
+    if (error) throw new DatabaseError(error.message);
 
     const report = {
       period: { month: Number(month), year: Number(year), startDate, endDate },

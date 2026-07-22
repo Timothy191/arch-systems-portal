@@ -5,18 +5,17 @@ export async function register() {
     serviceName: process.env.CATALYST_SERVICE_NAME ?? process.env.OTEL_SERVICE_NAME ?? "portal-ui",
   });
 
-  // Catalyst tracing — only when token is present (does not throw if package missing at build)
-  if (process.env.CATALYST_OTLP_TOKEN) {
+  // Catalyst tracing — only in Node.js runtime when token is present (optional dependency)
+  if (process.env.NEXT_RUNTIME === "nodejs" && process.env.CATALYST_OTLP_TOKEN) {
     try {
-      const { setup } = await import("@inference/tracing");
+      // Dynamic path prevents Turbopack/Webpack from statically resolving (and warning about) the optional dep
+      const tracingModule = ["@inference/tracing"].join("");
+      const { setup } = await import(/* webpackIgnore: true */ tracingModule);
       await setup({
         autoInstrument: true,
       });
-    } catch (error) {
-      console.warn(
-        "[catalyst] tracing setup skipped:",
-        error instanceof Error ? error.message : "unknown error"
-      );
+    } catch (_error) {
+      // Module not installed or failed to load — silently skip (expected in local dev)
     }
   }
 }

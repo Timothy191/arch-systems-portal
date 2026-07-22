@@ -126,28 +126,12 @@ function buildeveArgs(eve: eveConfig, prompt: string, cwd: string): string[] {
   switch (eve.id) {
     case "opencode":
       return buildOpencodeArgs(prompt, cwd, eve.autoApprove);
-    case "kilo":
-      return buildKiloArgs(prompt, cwd, eve.autoApprove);
-    case "agy":
-      return buildAgyArgs(prompt, cwd, eve.autoApprove);
   }
 }
 
 function buildOpencodeArgs(prompt: string, cwd: string, autoApprove: boolean): string[] {
   const args = ["run", prompt, "--dir", cwd];
   if (autoApprove) args.push("--auto");
-  return args;
-}
-
-function buildKiloArgs(prompt: string, cwd: string, autoApprove: boolean): string[] {
-  const args = ["run", prompt, "--dir", cwd];
-  if (autoApprove) args.push("--auto");
-  return args;
-}
-
-function buildAgyArgs(prompt: string, cwd: string, autoApprove: boolean): string[] {
-  const args = ["--print", prompt, "--add-dir", cwd];
-  if (autoApprove) args.push("--dangerously-skip-permissions");
   return args;
 }
 

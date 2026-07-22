@@ -56,6 +56,7 @@ export function LoginBrandBanner() {
                     width={logo.width}
                     height={logo.height}
                     className="h-5 w-auto max-w-[5rem] object-contain"
+                    style={{ width: "auto", height: "auto" }}
                     unoptimized
                   />
                 ) : null}

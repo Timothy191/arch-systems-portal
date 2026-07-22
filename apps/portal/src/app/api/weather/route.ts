@@ -42,8 +42,6 @@ import { NextResponse } from "next/server";
  *               nullable: true
  */
 
-export const dynamic = "force-dynamic";
-
 export async function GET() {
   try {
     const weather = await fetchWeather();

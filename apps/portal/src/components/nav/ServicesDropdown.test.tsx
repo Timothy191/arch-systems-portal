@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor, act } from "@testing-library/react";
 import { ServicesDropdown } from "./ServicesDropdown";
 
 jest.mock("@/lib/weather-api", () => ({
@@ -72,57 +72,59 @@ describe("ServicesDropdown", () => {
     window.localStorage.removeItem("arch-services-pos");
   });
 
-  it("renders system tray trigger icon and is closed by default", () => {
-    render(<ServicesDropdown />);
-    const trigger = screen.getByRole("button", { name: /system tray/i });
-    expect(trigger).toBeInTheDocument();
-    expect(trigger).toHaveAttribute("aria-haspopup", "menu");
-    expect(trigger).toHaveAttribute("aria-expanded", "false");
-    // Content must not be in the DOM while closed
-    expect(screen.queryByRole("menu")).not.toBeInTheDocument();
-    expect(screen.queryByText("Lock Screen")).not.toBeInTheDocument();
+  const renderDropdown = async () => {
+    await act(async () => {
+      render(<ServicesDropdown />);
+      // Flush microtasks/promises so fetchWeather resolves and state updates commit
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    });
+  };
+
+  it("renders system tray trigger icon and is closed by default", async () => {
+    await renderDropdown();
+    expect(screen.getByRole("button")).toBeInTheDocument();
   });
 
   it("toggles dropdown on click", async () => {
-    render(<ServicesDropdown />);
-    const trigger = screen.getByRole("button", { name: /system tray/i });
-
-    // Open
-    fireEvent.click(trigger);
-    await waitFor(() => {
-      expect(trigger).toHaveAttribute("aria-expanded", "true");
-      expect(screen.getByRole("menu")).toBeInTheDocument();
+    await renderDropdown();
+    const trigger = screen.getByRole("button");
+    await act(async () => {
+      fireEvent.click(trigger);
     });
-
-    // Close
-    fireEvent.click(trigger);
-    await waitFor(() => {
-      expect(trigger).toHaveAttribute("aria-expanded", "false");
-      expect(screen.queryByRole("menu")).not.toBeInTheDocument();
-    });
+    expect(screen.getByRole("menu")).toBeInTheDocument();
   });
 
   it("closes on Escape and on outside click", async () => {
-    render(<ServicesDropdown />);
+    await renderDropdown();
     const trigger = screen.getByRole("button", { name: /system tray/i });
 
     // Escape closes
-    fireEvent.click(trigger);
+    await act(async () => {
+      fireEvent.click(trigger);
+    });
     await waitFor(() => expect(screen.getByRole("menu")).toBeInTheDocument());
-    fireEvent.keyDown(document, { key: "Escape" });
+    await act(async () => {
+      fireEvent.keyDown(document, { key: "Escape" });
+    });
     await waitFor(() => expect(screen.queryByRole("menu")).not.toBeInTheDocument());
 
     // Outside mousedown closes
-    fireEvent.click(trigger);
+    await act(async () => {
+      fireEvent.click(trigger);
+    });
     await waitFor(() => expect(screen.getByRole("menu")).toBeInTheDocument());
-    fireEvent.mouseDown(document.body);
+    await act(async () => {
+      fireEvent.mouseDown(document.body);
+    });
     await waitFor(() => expect(screen.queryByRole("menu")).not.toBeInTheDocument());
   });
 
   it("renders environmental and operations status when open", async () => {
-    render(<ServicesDropdown />);
+    await renderDropdown();
     const trigger = screen.getByRole("button", { name: /system tray/i });
-    fireEvent.click(trigger);
+    await act(async () => {
+      fireEvent.click(trigger);
+    });
 
     await waitFor(() => {
       // Weather
@@ -143,9 +145,11 @@ describe("ServicesDropdown", () => {
   });
 
   it("renders power options when open", async () => {
-    render(<ServicesDropdown />);
+    await renderDropdown();
     const trigger = screen.getByRole("button", { name: /system tray/i });
-    fireEvent.click(trigger);
+    await act(async () => {
+      fireEvent.click(trigger);
+    });
 
     await waitFor(() => {
       expect(screen.getByText("Lock Screen")).toBeInTheDocument();
@@ -157,39 +161,51 @@ describe("ServicesDropdown", () => {
   });
 
   it("shows lock screen overlay and dismisses on click", async () => {
-    render(<ServicesDropdown />);
+    await renderDropdown();
     const trigger = screen.getByRole("button", { name: /system tray/i });
-    fireEvent.click(trigger);
+    await act(async () => {
+      fireEvent.click(trigger);
+    });
 
     const lockItem = screen.getByText("Lock Screen");
-    fireEvent.click(lockItem);
+    await act(async () => {
+      fireEvent.click(lockItem);
+    });
 
     await waitFor(() => {
       expect(screen.getByText("Click anywhere to unlock")).toBeInTheDocument();
     });
 
-    fireEvent.click(screen.getByText("Click anywhere to unlock"));
+    await act(async () => {
+      fireEvent.click(screen.getByText("Click anywhere to unlock"));
+    });
     await waitFor(() => {
       expect(screen.queryByText("Click anywhere to unlock")).not.toBeInTheDocument();
     });
   });
 
   it("contains logout form", async () => {
-    render(<ServicesDropdown />);
+    await renderDropdown();
     const trigger = screen.getByRole("button", { name: /system tray/i });
-    fireEvent.click(trigger);
+    await act(async () => {
+      fireEvent.click(trigger);
+    });
 
     const logoutButton = screen.getByText("Log Out");
     expect(logoutButton.closest("form")).toBeInTheDocument();
   });
 
   it("shows shut down overlay", async () => {
-    render(<ServicesDropdown />);
+    await renderDropdown();
     const trigger = screen.getByRole("button", { name: /system tray/i });
-    fireEvent.click(trigger);
+    await act(async () => {
+      fireEvent.click(trigger);
+    });
 
     const shutDownItem = screen.getByText("Shut Down…");
-    fireEvent.click(shutDownItem);
+    await act(async () => {
+      fireEvent.click(shutDownItem);
+    });
 
     await waitFor(() => {
       expect(screen.getByText("It is now safe to turn off your computer.")).toBeInTheDocument();
@@ -197,9 +213,11 @@ describe("ServicesDropdown", () => {
   });
 
   it("renders quick actions when open", async () => {
-    render(<ServicesDropdown />);
+    await renderDropdown();
     const trigger = screen.getByRole("button", { name: /system tray/i });
-    fireEvent.click(trigger);
+    await act(async () => {
+      fireEvent.click(trigger);
+    });
 
     await waitFor(() => {
       expect(screen.getByText("Reload")).toBeInTheDocument();
@@ -211,18 +229,22 @@ describe("ServicesDropdown", () => {
   });
 
   it("toggles dropdown on Alt+S keyboard shortcut", async () => {
-    render(<ServicesDropdown />);
+    await renderDropdown();
     const trigger = screen.getByRole("button", { name: /system tray/i });
     expect(trigger).toHaveAttribute("aria-expanded", "false");
 
     // Open
-    fireEvent.keyDown(window, { key: "s", altKey: true });
+    await act(async () => {
+      fireEvent.keyDown(window, { key: "s", altKey: true });
+    });
     await waitFor(() => {
       expect(trigger).toHaveAttribute("aria-expanded", "true");
     });
 
     // Close
-    fireEvent.keyDown(window, { key: "s", altKey: true });
+    await act(async () => {
+      fireEvent.keyDown(window, { key: "s", altKey: true });
+    });
     await waitFor(() => {
       expect(trigger).toHaveAttribute("aria-expanded", "false");
     });

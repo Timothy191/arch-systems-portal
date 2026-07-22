@@ -11,7 +11,7 @@
 #
 set -euo pipefail
 
-ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
 
 MODE="${1:-status}"
@@ -63,6 +63,8 @@ run_guardrails() {
     .cursor/hooks.json
     .cursor/hooks/alignment-gate.mjs
     .cursor/hooks/block-forbidden.mjs
+    .agents/knowledge/README.md
+    .agents/knowledge/index.md
   )
   for f in "${required[@]}"; do
     [[ -f "$f" ]] && ok "$f" || fail "missing guardrail: $f"
@@ -84,6 +86,12 @@ run_guardrails() {
     ok "SOUL.md evidence contract"
   else
     warn "SOUL.md missing evidence language"
+  fi
+
+  if rg -q 'Shared Knowledge Base|\.agents/knowledge' AGENTS.md 2>/dev/null; then
+    ok "knowledge base registered in AGENTS.md"
+  else
+    fail "AGENTS.md missing Shared Knowledge Base reference"
   fi
 }
 
@@ -351,25 +359,7 @@ run_drift() {
 
 # --- Phase 8: Provider health check ---
 run_providers() {
-  section "Provider router health"
-  local router=".cursor/skills/provider-router/scripts/provider-router.sh"
-  if [[ -x "$router" ]]; then
-    # Quiet check that doesn't modify state
-    local out; out="$("$router" --status 2>/dev/null || true)"
-    local available; available="$(echo "$out" | grep -c '✅' || true)"
-    local total; total="$(echo "$out" | grep -cE '(✅|⏳|🔴|⚠️|❓)' || true)"
-    if [[ "$available" -gt 0 ]]; then
-      ok "provider router: ${available}/${total} providers available"
-    else
-      warn "provider router: 0/${total} providers available — run: pnpm provider:route --check"
-    fi
-    # Show brief status
-    echo "$out" | while IFS= read -r line; do
-      [[ "$QUIET" -eq 1 ]] || echo "  $line"
-    done
-  else
-    warn "provider-router not installed — run: pnpm ai fix"
-  fi
+  : # Disabled provider-router
 }
 
 # --- Onboard checklist ---

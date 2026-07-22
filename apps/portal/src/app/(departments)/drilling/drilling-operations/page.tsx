@@ -3,8 +3,6 @@ import { redirect } from "next/navigation";
 import { DrillingOperationsTable } from "./DrillingOperationsTable";
 import { getOperationalToday } from "@repo/utils";
 
-export const dynamic = "force-dynamic";
-
 async function getDrillingOpsData() {
   const supabase = await createServerSupabaseClient();
   const {

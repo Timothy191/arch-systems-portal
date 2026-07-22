@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Validate hybrid agent layout: flat entry .md + sibling collateral folder
 set -euo pipefail
-ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../.." && pwd)"
 cd "$ROOT"
 
 ERR=0

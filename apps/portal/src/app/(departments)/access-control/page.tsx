@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { getDepartmentContext } from "@/lib/dept-context";
 import { GlassCard } from "@repo/ui/GlassCard";
 import nextDynamic from "next/dynamic";
@@ -9,8 +10,6 @@ import {
   getHourlyAccessStats,
   getBadgeStatusDistribution,
 } from "./actions";
-
-export const dynamic = "force-dynamic";
 
 const DashboardKPIGrid = nextDynamic(() => import("./components/DashboardKPIGrid"), {
   loading: () => <Skeleton className="h-[140px] w-full" />,
@@ -25,18 +24,32 @@ const DashboardEntityStatus = nextDynamic(() => import("./components/DashboardEn
   loading: () => <Skeleton className="h-[360px] w-full" />,
 });
 
+// Server component wrappers for streaming
+async function ChartsRowSection({ deptId, today }: { deptId: string; today: string }) {
+  const [hourlyStats, distribution] = await Promise.all([
+    getHourlyAccessStats(deptId, today),
+    getBadgeStatusDistribution(deptId),
+  ]);
+  return <DashboardChartsRow hourlyStats={hourlyStats} distribution={distribution} />;
+}
+
+async function ActivityFeedSection({ deptId }: { deptId: string }) {
+  const activity = await getRecentAccessActivity(deptId, 8);
+  return <DashboardActivityFeed activity={activity} />;
+}
+
+async function EntityStatusSection({ deptId }: { deptId: string }) {
+  const entityStatus = await getEntityBadgeStatus(deptId);
+  return <DashboardEntityStatus entityStatus={entityStatus} />;
+}
+
 export default async function AccessControlDashboardPage() {
   const { deptId, today } = await getDepartmentContext({
     department: "access-control",
   });
 
-  const [metrics, activity, entityStatus, hourlyStats, distribution] = await Promise.all([
-    getAccessControlMetrics(deptId),
-    getRecentAccessActivity(deptId, 8),
-    getEntityBadgeStatus(deptId),
-    getHourlyAccessStats(deptId, today),
-    getBadgeStatusDistribution(deptId),
-  ]);
+  // Only fetch the metrics for the top row to unblock the initial shell paint
+  const metrics = await getAccessControlMetrics(deptId);
 
   return (
     <div className="space-y-6">
@@ -89,15 +102,21 @@ export default async function AccessControlDashboardPage() {
       <DashboardKPIGrid metrics={metrics} />
 
       {/* Charts Row with real data */}
-      <DashboardChartsRow hourlyStats={hourlyStats} distribution={distribution} />
+      <Suspense fallback={<Skeleton className="h-[260px] w-full" />}>
+        <ChartsRowSection deptId={deptId} today={today} />
+      </Suspense>
 
       {/* Bottom Row: Activity Feed + Entity Status */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-5">
         <div className="xl:col-span-2">
-          <DashboardActivityFeed activity={activity} />
+          <Suspense fallback={<Skeleton className="h-[360px] w-full" />}>
+            <ActivityFeedSection deptId={deptId} />
+          </Suspense>
         </div>
         <div className="xl:col-span-1">
-          <DashboardEntityStatus entityStatus={entityStatus} />
+          <Suspense fallback={<Skeleton className="h-[360px] w-full" />}>
+            <EntityStatusSection deptId={deptId} />
+          </Suspense>
         </div>
       </div>
     </div>

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { cn } from "../../lib/utils";
 
-type Variant = "primary" | "secondary" | "ghost" | "destructive" | "outline";
+type Variant = "primary" | "secondary" | "ghost" | "destructive" | "outline" | "link";
 type Size = "sm" | "md" | "lg";
 
 const variantClasses: Record<Variant, string> = {
@@ -14,6 +14,7 @@ const variantClasses: Record<Variant, string> = {
   destructive: "bg-arch-accent-red text-white hover:opacity-90 focus-visible:ring-arch-accent-red",
   outline:
     "bg-transparent border border-arch-border-default text-arch-text-secondary hover:bg-arch-surface-tertiary hover:text-arch-text-primary focus-visible:ring-arch-border-emphasis",
+  link: "bg-transparent underline underline-offset-4 hover:underline",
 };
 
 const sizeClasses: Record<Size, string> = {
@@ -26,6 +27,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   variant?: Variant;
   size?: Size;
   isLoading?: boolean;
+  asChild?: boolean;
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(

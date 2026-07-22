@@ -19,6 +19,7 @@ build
 .env.development.local
 .env.test.local
 .env.production.local
+.env.production
 .env.tools
 
 # TLS certs / private keys (never commit)
@@ -58,7 +59,6 @@ Archive.tar.gz
 
 # Misc
 .vercel
-.kilo
 .remember
 .venv
 __pycache__
@@ -71,15 +71,53 @@ CLAUDE.local.md
 # Third-party agent runtime (Claude Code, claude-flow, swarm, etc.)
 .claude-flow/
 .claude/
+.claude-plugin/
 .swarm/
 .crush/
 .openclaude/
 .poolside/
 .devin/
 .junie/
-.hermes/
 .certbot-webroot/
 .harness-worktrees/
+.codeep/
+.commandcode/
+.freebuff/
+.roo/
+.qoder/
+.windsurf/
+.codex/
+.claude-code-harness*
+.kiro/specs/
+.env.production.example
+.agents/knowledge/
+.agents/types/
+.agents/skills/
+
+# Embedded git repos / independent projects
+agentic-system/
+python-web-scraper/
+redis/
+system-tools/
+
+# Orphaned/rogue files
+knowledge.md
+package-lock.json
+23810654.fxsnapshot
+Plans.md
+remove-dynamic.cjs
+.agents/.agents
+
+# Harness / agent runtime generated files
+harness.toml
+hosts.toml
+agent-harnesses/claude-code-harness/.skill-backups/
+agent-harnesses/claude-code-harness/scripts/
+agent-harnesses/claude-code-harness/skills-templates/
+hooks/
+bin/
+devops/
+.syncpackrc.json
 
 # Local-only legacy archives (do not shadow live src/app or @/features)
 apps/portal/_app_legacy_shadow/

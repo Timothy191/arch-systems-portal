@@ -2,8 +2,6 @@ import { NextResponse } from "next/server";
 import { createServerSupabaseClient } from "@repo/supabase/server";
 import { getRedisClient } from "@repo/redis";
 
-export const dynamic = "force-dynamic";
-
 export async function GET() {
   const startedAt = Date.now();
   const checks: Record<string, unknown> = {};

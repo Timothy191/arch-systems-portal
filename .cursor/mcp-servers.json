@@ -76,16 +76,8 @@
       "free_tier": true,
       "notes": "Pure reasoning — no external calls."
     },
-    "postgres": {
-      "category": "database",
-      "description": "PostgreSQL database access — read schemas, execute queries, analyze performance.",
-      "command": "npx",
-      "args": ["-y", "@anthropic/mcp-server-postgres", "postgresql://localhost:54322/postgres"],
-      "auto_start": false,
-      "requires_key": false,
-      "free_tier": true,
-      "notes": "Connects to local Supabase Postgres (port 54322)."
-    },
+// "postgres" disabled due to missing local Supabase instance
+// "postgres": { ... }
     "sqlite": {
       "category": "database",
       "description": "SQLite database exploration — inspect schemas, run queries, CRUD operations.",
@@ -126,16 +118,8 @@
       "free_tier": true,
       "notes": "Free Brave API key required."
     },
-    "toolradar": {
-      "category": "productivity",
-      "description": "Discover tools and software libraries. Query the open-source tool database.",
-      "command": "npx",
-      "args": ["-y", "toolradar-mcp"],
-      "auto_start": false,
-      "requires_key": false,
-      "free_tier": true,
-      "notes": "No API key needed."
-    },
+// "brave-search" disabled due to missing API key
+// "brave-search": { ... }
     "github": {
       "category": "github",
       "description": "GitHub API integration — manage repos, PRs, issues, commits, search code.",
@@ -186,16 +170,8 @@
       "free_tier": true,
       "notes": "Free tier available with Composio API key."
     },
-    "supabase": {
-      "category": "database",
-      "description": "Supabase project management — SQL queries, schema inspection, bucket management, edge functions.",
-      "command": "npx",
-      "args": ["-y", "mcp-server-supabase"],
-      "auto_start": false,
-      "requires_key": true,
-      "free_tier": true,
-      "notes": "Supabase service role key required."
-    },
+// "supabase" disabled due to missing local instance/keys
+// "supabase": { ... }
     "opencode-mcp": {
       "category": "codebase",
       "description": "OpenCode MCP server.",
@@ -205,16 +181,6 @@
       "requires_key": false,
       "free_tier": true,
       "notes": "Placeholder — configured in opencode config."
-    },
-    "kilo-mcp": {
-      "category": "codebase",
-      "description": "Kilo ACP server agent MCP bridge.",
-      "command": "",
-      "args": [],
-      "auto_start": false,
-      "requires_key": false,
-      "free_tier": true,
-      "notes": "Built into kilo agent."
     },
     "serena": {
       "category": "codebase",

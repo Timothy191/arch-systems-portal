@@ -9,6 +9,7 @@ import {
   ACCESS_CARD_ACTIONS_TABS,
   TRAINING_TABS,
   ADMIN_TABS,
+  SAFETY_TABS,
   PRODUCTIVITY_TOOLS,
   getDepartmentTabs,
 } from "./departments";
@@ -91,10 +92,14 @@ describe("getDepartmentTabs", () => {
   });
 
   it("returns standard DEPARTMENT_TABS for all other departments", () => {
-    const standardDepts = ["production", "safety"];
+    const standardDepts = ["production"];
     for (const slug of standardDepts) {
       expect(getDepartmentTabs(slug)).toBe(DEPARTMENT_TABS);
     }
+  });
+
+  it("returns SAFETY_TABS for safety", () => {
+    expect(getDepartmentTabs("safety")).toBe(SAFETY_TABS);
   });
 
   it("returns ADMIN_TABS for admin", () => {

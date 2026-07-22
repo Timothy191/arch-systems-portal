@@ -1,3 +1,10 @@
+# Copilot Instructions
+
+> **Canonical agent policy:** the root `AGENTS.md` is the source of truth for this repo.
+> **Shared knowledge base:** read and update `.agents/knowledge/` (repowiki) — start at
+> `.agents/knowledge/index.md`; protocol in `.agents/knowledge/README.md`.
+> The auto-generated harness content below is sidecar collateral, not policy.
+
 # Data Intensive Harness
 
 > **Harness Manager** - active harness: `data-intensive`  

@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/api/auth";
 
-export const dynamic = "force-dynamic";
-
 const ALLOWED_KEYS = new Set([
   "NODE_ENV",
   "PORT",

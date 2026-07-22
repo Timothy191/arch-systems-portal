@@ -54,7 +54,7 @@ export const shiftCompletenessCheckFn = inngest.createFunction(
         if (department.name !== "control-room") continue;
 
         const completeness = await getShiftCompleteness(
-          serviceRole as any,
+          serviceRole,
           department.id,
           null,
           today,

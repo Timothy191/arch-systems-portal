@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
+import { cacheLife, cacheTag } from "next/cache";
 import { createServerSupabaseClient, getUserSafely } from "@repo/supabase/server";
 import { createReadReplicaClient } from "@repo/supabase/read-replica";
 import {
@@ -26,55 +27,35 @@ import {
   Wrench,
   Power,
 } from "lucide-react";
-import { withCache } from "@/lib/cache-utils";
-import { cachedRSC } from "@/lib/server-cache";
-import { CacheCategory } from "@repo/redis";
 
 const PORTAL_VERSION = process.env.PORTAL_VERSION ?? "2.4.1";
-
-export const dynamic = "force-dynamic";
 
 async function getDashboardCounts(
   today: string,
   cookieList: Array<{ name: string; value: string }>
 ) {
-  return cachedRSC(
-    ["hub", "counts", today],
-    async () => {
-      return withCache(
-        async () => {
-          const db = await createReadReplicaClient(cookieList);
-          const [incidents, breakdowns, machines] = await Promise.all([
-            db
-              .from("safety_incidents")
-              .select("id", { count: "exact", head: true })
-              .eq("incident_date", today)
-              .eq("status", "open"),
-            db
-              .from("breakdowns")
-              .select("id", { count: "exact", head: true })
-              .eq("status", "active")
-              .is("deleted_at", null),
-            db.from("machines").select("id", { count: "exact", head: true }).eq("active", false),
-          ]);
-          return {
-            incidentCount: incidents.count ?? 0,
-            breakdownCount: breakdowns.count ?? 0,
-            offlineMachineCount: machines.count ?? 0,
-          };
-        },
-        {
-          category: CacheCategory.METRICS,
-          keyParts: ["hub", "counts", today],
-          tags: ["table:safety_incidents", "table:breakdowns", "table:machines"],
-        }
-      );
-    },
-    {
-      revalidate: 300,
-      tags: ["table:safety_incidents", "table:breakdowns", "table:machines"],
-    }
-  );
+  "use cache";
+  cacheLife("minutes");
+  cacheTag("table:safety_incidents", "table:breakdowns", "table:machines", `hub-counts-${today}`);
+  const db = await createReadReplicaClient(cookieList);
+  const [incidents, breakdowns, machines] = await Promise.all([
+    db
+      .from("safety_incidents")
+      .select("id", { count: "exact", head: true })
+      .eq("incident_date", today)
+      .eq("status", "open"),
+    db
+      .from("breakdowns")
+      .select("id", { count: "exact", head: true })
+      .eq("status", "active")
+      .is("deleted_at", null),
+    db.from("machines").select("id", { count: "exact", head: true }).eq("active", false),
+  ]);
+  return {
+    incidentCount: incidents.count ?? 0,
+    breakdownCount: breakdowns.count ?? 0,
+    offlineMachineCount: machines.count ?? 0,
+  };
 }
 
 const FALLBACK_TREND_DATA: TrendDataPoint[] = [
@@ -89,174 +70,126 @@ const FALLBACK_TREND_DATA: TrendDataPoint[] = [
 async function getProductionTrendData(
   cookieList: Array<{ name: string; value: string }>
 ): Promise<TrendDataPoint[]> {
-  return cachedRSC(
-    ["hub", "production-trend"],
-    async () => {
-      return withCache(
-        async () => {
-          const db = await createReadReplicaClient(cookieList);
-          const { data: trendData, error } = await db.rpc("get_production_trend", {
-            p_hours_back: 24,
-          });
+  "use cache";
+  cacheLife("minutes");
+  cacheTag("table:hourly_loads", "table:machines", "hub-production-trend");
+  const db = await createReadReplicaClient(cookieList);
+  const { data: trendData, error } = await db.rpc("get_production_trend", {
+    p_hours_back: 24,
+  });
 
-          if (error || !trendData || trendData.length === 0) {
-            return FALLBACK_TREND_DATA;
-          }
+  if (error || !trendData || trendData.length === 0) {
+    return FALLBACK_TREND_DATA;
+  }
 
-          // Format RPC response into TrendDataPoint[]
-          const hourlyMap = new Map<string, TrendDataPoint>();
+  // Format RPC response into TrendDataPoint[]
+  const hourlyMap = new Map<string, TrendDataPoint>();
 
-          for (const row of trendData) {
-            const hour = row.hour_label;
-            if (!hourlyMap.has(hour)) {
-              hourlyMap.set(hour, {
-                date: hour,
-                Drilling: 0,
-                Production: 0,
-                Engineering: 0,
-              });
-            }
-            const point = hourlyMap.get(hour)!;
-            // Map department name to the specific key in TrendDataPoint
-            // If department name is not one of the keys, we skip or handle accordingly
-            const deptKey = row.department_name as keyof Omit<TrendDataPoint, "date">;
-            if (deptKey === "Drilling" || deptKey === "Production" || deptKey === "Engineering") {
-              point[deptKey] = Number(row.tonnes);
-            }
-          }
-
-          const formatted = Array.from(hourlyMap.values());
-          return formatted.length > 0 ? formatted : FALLBACK_TREND_DATA;
-        },
-        {
-          category: CacheCategory.METRICS,
-          keyParts: ["hub", "production-trend"],
-          tags: ["table:hourly_loads", "table:machines"],
-        }
-      );
-    },
-    {
-      revalidate: 300,
-      tags: ["table:hourly_loads", "table:machines"],
+  for (const row of trendData) {
+    const hour = row.hour_label;
+    if (!hourlyMap.has(hour)) {
+      hourlyMap.set(hour, {
+        date: hour,
+        Drilling: 0,
+        Production: 0,
+        Engineering: 0,
+      });
     }
-  );
+    const point = hourlyMap.get(hour)!;
+    // Map department name to the specific key in TrendDataPoint
+    // If department name is not one of the keys, we skip or handle accordingly
+    const deptKey = row.department_name as keyof Omit<TrendDataPoint, "date">;
+    if (deptKey === "Drilling" || deptKey === "Production" || deptKey === "Engineering") {
+      point[deptKey] = Number(row.tonnes);
+    }
+  }
+
+  const formatted = Array.from(hourlyMap.values());
+  return formatted.length > 0 ? formatted : FALLBACK_TREND_DATA;
 }
 
 async function getRecentAlertEvents(
   today: string,
   cookieList: Array<{ name: string; value: string }>
 ): Promise<AlertEvent[]> {
-  return cachedRSC(
-    ["hub", "alerts", today],
-    async () => {
-      return withCache(
-        async () => {
-          const db = await createReadReplicaClient(cookieList);
-          const events: AlertEvent[] = [];
+  "use cache";
+  cacheLife("minutes");
+  cacheTag("table:safety_incidents", "table:breakdowns", `hub-alerts-${today}`);
+  const db = await createReadReplicaClient(cookieList);
+  const events: AlertEvent[] = [];
 
-          // Fetch recent open safety incidents with actual severity levels
-          const { data: incidents } = await db
-            .from("safety_incidents")
-            .select(
-              "id, description, created_at, severity_id, location, severity:safety_severities(level)"
-            )
-            .eq("incident_date", today)
-            .eq("status", "open")
-            .order("created_at", { ascending: false })
-            .limit(5);
+  // Fetch recent open safety incidents with actual severity levels
+  const { data: incidents } = await db
+    .from("safety_incidents")
+    .select("id, description, created_at, severity_id, location, severity:safety_severities(level)")
+    .eq("incident_date", today)
+    .eq("status", "open")
+    .order("created_at", { ascending: false })
+    .limit(5);
 
-          function mapSeverityLevel(level?: string): AlertEvent["severity"] {
-            if (!level) return "warning";
-            const lower = level.toLowerCase();
-            if (lower.includes("critical") || lower.includes("high") || lower.includes("severe")) {
-              return "critical";
-            }
-            if (
-              lower.includes("warning") ||
-              lower.includes("medium") ||
-              lower.includes("moderate")
-            ) {
-              return "warning";
-            }
-            return "info";
-          }
-
-          if (incidents) {
-            for (const incident of incidents) {
-              const sev = incident.severity as unknown as {
-                level: string;
-              } | null;
-              events.push({
-                id: `incident-${incident.id}`,
-                type: "incident",
-                title: incident.location ? `${incident.location}: Incident` : "Safety Incident",
-                description: incident.description,
-                timestamp: incident.created_at,
-                severity: mapSeverityLevel(sev?.level),
-                href: "/safety/daily-log",
-              });
-            }
-          }
-
-          // Fetch recent active breakdowns
-          const { data: breakdownsData } = await db
-            .from("breakdowns")
-            .select("id, machine_name, machine_type, reason, created_at, date_in")
-            .eq("status", "active")
-            .is("deleted_at", null)
-            .order("created_at", { ascending: false })
-            .limit(5);
-
-          if (breakdownsData) {
-            for (const b of breakdownsData) {
-              events.push({
-                id: `breakdown-${b.id}`,
-                type: "breakdown",
-                title: b.machine_name
-                  ? `${b.machine_name} Breakdown`
-                  : `${b.machine_type} Breakdown`,
-                description: b.reason,
-                timestamp: b.created_at,
-                severity: "warning",
-                href: "/engineering/breakdowns",
-              });
-            }
-          }
-
-          // Sort by timestamp descending and limit to 8 total
-          return events
-            .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
-            .slice(0, 8);
-        },
-        {
-          category: CacheCategory.METRICS,
-          keyParts: ["hub", "alerts", today],
-          tags: ["table:safety_incidents", "table:breakdowns"],
-        }
-      );
-    },
-    {
-      revalidate: 300,
-      tags: ["table:safety_incidents", "table:breakdowns"],
+  function mapSeverityLevel(level?: string): AlertEvent["severity"] {
+    if (!level) return "warning";
+    const lower = level.toLowerCase();
+    if (lower.includes("critical") || lower.includes("high") || lower.includes("severe")) {
+      return "critical";
     }
-  );
+    if (lower.includes("warning") || lower.includes("medium") || lower.includes("moderate")) {
+      return "warning";
+    }
+    return "info";
+  }
+
+  if (incidents) {
+    for (const incident of incidents) {
+      const sev = incident.severity as unknown as {
+        level: string;
+      } | null;
+      events.push({
+        id: `incident-${incident.id}`,
+        type: "incident",
+        title: incident.location ? `${incident.location}: Incident` : "Safety Incident",
+        description: incident.description,
+        timestamp: incident.created_at,
+        severity: mapSeverityLevel(sev?.level),
+        href: "/safety/daily-log",
+      });
+    }
+  }
+
+  // Fetch recent active breakdowns
+  const { data: breakdownsData } = await db
+    .from("breakdowns")
+    .select("id, machine_name, machine_type, reason, created_at, date_in")
+    .eq("status", "active")
+    .is("deleted_at", null)
+    .order("created_at", { ascending: false })
+    .limit(5);
+
+  if (breakdownsData) {
+    for (const b of breakdownsData) {
+      events.push({
+        id: `breakdown-${b.id}`,
+        type: "breakdown",
+        title: b.machine_name ? `${b.machine_name} Breakdown` : `${b.machine_type} Breakdown`,
+        description: b.reason,
+        timestamp: b.created_at,
+        severity: "warning",
+        href: "/engineering/breakdowns",
+      });
+    }
+  }
+
+  // Sort by timestamp descending and limit to 8 total
+  return events
+    .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+    .slice(0, 8);
 }
 
 async function getEmployeeDepartments(userId: string) {
-  return cachedRSC(
-    ["user", userId, "accessible-dept-names-v3"],
-    async () => {
-      return withCache(async () => resolveAccessibleDepartmentNames(userId), {
-        category: CacheCategory.AUTH,
-        keyParts: ["user", userId, "accessible-dept-names-v3"],
-        tags: [`auth:${userId}`, "table:employees", "table:departments"],
-      });
-    },
-    {
-      revalidate: 3600,
-      tags: [`auth:${userId}`, "table:employees", "table:departments"],
-    }
-  );
+  "use cache";
+  cacheLife("hours");
+  cacheTag(`auth:${userId}`, "table:employees", "table:departments");
+  return resolveAccessibleDepartmentNames(userId);
 }
 
 export default async function HubPage({

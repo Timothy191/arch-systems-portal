@@ -2,6 +2,8 @@
 
 Single source of truth for visual design, tokens, and Tailwind configuration.
 
+> **Canonical policy:** root `AGENTS.md`. **Shared knowledge base:** `.agents/knowledge/` (repowiki) — read `index.md` before non-trivial work; theme decisions live in `DECISIONS.md` and are cross-linked from `.agents/knowledge/decisions/index.md`.
+
 ## 🚀 Key Commands
 
 - `pnpm codegen`: Generate TypeScript tokens from `tokens.json` using Style Dictionary.

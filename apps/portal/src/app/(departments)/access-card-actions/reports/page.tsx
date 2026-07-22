@@ -23,8 +23,6 @@ import {
 } from "lucide-react";
 import { getPrintJobs } from "../actions";
 
-export const dynamic = "force-dynamic";
-
 /* ------------------------------------------------------------------ */
 /*  Status badge helpers                                               */
 /* ------------------------------------------------------------------ */

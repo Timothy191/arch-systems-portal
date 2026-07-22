@@ -32,15 +32,5 @@ export const config = {
       autoApprove: (process.env.OPENCODE_AUTO_APPROVE ?? "false") === "true",
       timeoutMs: parseInt(process.env.OPENCODE_TIMEOUT_MS ?? "120000", 10),
     },
-    kilo: {
-      enabled: (process.env.KILO_ENABLED ?? "true") === "true",
-      autoApprove: (process.env.KILO_AUTO_APPROVE ?? "false") === "true",
-      timeoutMs: parseInt(process.env.KILO_TIMEOUT_MS ?? "120000", 10),
-    },
-    agy: {
-      enabled: (process.env.AGY_ENABLED ?? "true") === "true",
-      autoApprove: (process.env.AGY_AUTO_APPROVE ?? "false") === "true",
-      timeoutMs: parseInt(process.env.AGY_TIMEOUT_MS ?? "120000", 10),
-    },
   },
 } as const;

@@ -1,3 +1,14 @@
+/**
+ * @module theme/tailwind/preset
+ * Tailwind CSS preset for the Arch System design language.
+ *
+ * Maps all design tokens (colors, shadows, radii, animations, fonts)
+ * to Tailwind utility classes. Import in `tailwind.config.ts`:
+ * ```ts
+ * import archTheme from "@repo/theme/tailwind/preset";
+ * export default archTheme;
+ * ```
+ */
 import type { Config } from "tailwindcss";
 
 const archTheme: Config = {

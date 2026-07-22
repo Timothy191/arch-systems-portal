@@ -1,11 +1,11 @@
 "use server";
 
-import { cacheInvalidateTags, CacheCategory } from "@repo/redis";
-import { createServerSupabaseClient } from "@repo/supabase/server";
+import { cacheInvalidateTags } from "@repo/redis";
+import { createServerSupabaseClient, createAdminClient } from "@repo/supabase/server";
 import { encodeCursor, decodeCursor } from "@repo/ui/components/ui/pagination-cursor";
 import { revalidatePath } from "next/cache";
+import { cacheTag } from "next/cache";
 import { AuthError, DatabaseError, ForbiddenError } from "@/lib/errors/error-classes";
-import { withCache } from "@/lib/cache-utils";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -81,45 +81,48 @@ async function assertAccessControlRole() {
 /*  1. KPI Metrics                                                     */
 /* ------------------------------------------------------------------ */
 
-export async function getAccessControlMetrics(deptId: string): Promise<AccessControlMetrics> {
-  return withCache(
-    async () => {
-      const { supabase } = await assertAccessControlRole();
-
-      const { data, error } = await supabase.rpc("get_access_control_metrics_jsonb", {
-        p_department_id: deptId,
-      });
-
-      if (error) {
-        throw new DatabaseError("Failed to load access control metrics", {
-          operation: "rpc",
-          context: { error: error.message },
-        });
-      }
-
-      const metrics = (data as Record<string, unknown>)?.metrics as
-        Record<string, number> | undefined;
-
-      const activeQrCodes = metrics?.active_qr_codes ?? 0;
-      const totalEntities = metrics?.total_entities ?? 0;
-      const entityCoverage =
-        totalEntities && activeQrCodes ? Math.round((activeQrCodes / totalEntities) * 100) : 0;
-
-      return {
-        activeQrCodes,
-        expiringSoon: metrics?.expiring_soon ?? 0,
-        deniedToday: metrics?.denied_today ?? 0,
-        accessEventsToday: metrics?.access_events_today ?? 0,
-        expiredAssigned: metrics?.expired_assigned ?? 0,
-        entityCoverage,
-      };
-    },
-    {
-      category: CacheCategory.METRICS,
-      keyParts: ["access-control", deptId, "metrics"],
-      tags: [`dept:${deptId}`, "table:badges", "table:access_logs", "table:personnel"],
-    }
+async function _getCachedMetrics(deptId: string): Promise<AccessControlMetrics> {
+  "use cache";
+  cacheTag(
+    `dept:${deptId}`,
+    "table:badges",
+    "table:access_logs",
+    "table:personnel",
+    "access-control-metrics"
   );
+  const supabase = createAdminClient();
+
+  const { data, error } = await supabase.rpc("get_access_control_metrics_jsonb", {
+    p_department_id: deptId,
+  });
+
+  if (error) {
+    throw new DatabaseError("Failed to load access control metrics", {
+      operation: "rpc",
+      context: { error: error.message },
+    });
+  }
+
+  const metrics = (data as Record<string, unknown>)?.metrics as Record<string, number> | undefined;
+
+  const activeQrCodes = metrics?.active_qr_codes ?? 0;
+  const totalEntities = metrics?.total_entities ?? 0;
+  const entityCoverage =
+    totalEntities && activeQrCodes ? Math.round((activeQrCodes / totalEntities) * 100) : 0;
+
+  return {
+    activeQrCodes,
+    expiringSoon: metrics?.expiring_soon ?? 0,
+    deniedToday: metrics?.denied_today ?? 0,
+    accessEventsToday: metrics?.access_events_today ?? 0,
+    expiredAssigned: metrics?.expired_assigned ?? 0,
+    entityCoverage,
+  };
+}
+
+export async function getAccessControlMetrics(deptId: string): Promise<AccessControlMetrics> {
+  await assertAccessControlRole();
+  return _getCachedMetrics(deptId);
 }
 
 /* ------------------------------------------------------------------ */
@@ -207,64 +210,69 @@ export async function getRecentAccessActivity(
 /*  3. Entity Badge Status                                             */
 /* ------------------------------------------------------------------ */
 
-export async function getEntityBadgeStatus(deptId: string): Promise<EntityBadgeStatus[]> {
-  return withCache(
-    async () => {
-      const { supabase } = await assertAccessControlRole();
+async function _getCachedEntityBadgeStatus(deptId: string): Promise<EntityBadgeStatus[]> {
+  "use cache";
+  cacheTag(
+    `dept:${deptId}`,
+    "table:badges",
+    "table:personnel",
+    "table:fleet",
+    "table:equipment",
+    "access-control-badge-status"
+  );
+  const supabase = createAdminClient();
 
-      const { data, error } = await supabase.rpc("get_access_control_metrics_jsonb", {
-        p_department_id: deptId,
-      });
+  const { data, error } = await supabase.rpc("get_access_control_metrics_jsonb", {
+    p_department_id: deptId,
+  });
 
-      if (error) {
-        throw new DatabaseError("Failed to load entity badge status", {
-          operation: "rpc",
-          context: { error: error.message },
-        });
-      }
+  if (error) {
+    throw new DatabaseError("Failed to load entity badge status", {
+      operation: "rpc",
+      context: { error: error.message },
+    });
+  }
 
-      const status = (data as Record<string, unknown>)?.entity_badge_status as
-        | Record<
-            string,
-            {
-              total?: number;
-              active?: number;
-              expiring?: number;
-              expired?: number;
-            }
-          >
-        | undefined;
-
-      return [
+  const status = (data as Record<string, unknown>)?.entity_badge_status as
+    | Record<
+        string,
         {
-          type: "Employees",
-          total: status?.employees?.total ?? 0,
-          active: status?.employees?.active ?? 0,
-          expiring: status?.employees?.expiring ?? 0,
-          expired: status?.employees?.expired ?? 0,
-        },
-        {
-          type: "Vehicles",
-          total: status?.vehicles?.total ?? 0,
-          active: status?.vehicles?.active ?? 0,
-          expiring: status?.vehicles?.expiring ?? 0,
-          expired: status?.vehicles?.expired ?? 0,
-        },
-        {
-          type: "Equipment",
-          total: status?.equipment?.total ?? 0,
-          active: status?.equipment?.active ?? 0,
-          expiring: status?.equipment?.expiring ?? 0,
-          expired: status?.equipment?.expired ?? 0,
-        },
-      ];
+          total?: number;
+          active?: number;
+          expiring?: number;
+          expired?: number;
+        }
+      >
+    | undefined;
+
+  return [
+    {
+      type: "Employees",
+      total: status?.employees?.total ?? 0,
+      active: status?.employees?.active ?? 0,
+      expiring: status?.employees?.expiring ?? 0,
+      expired: status?.employees?.expired ?? 0,
     },
     {
-      category: CacheCategory.METRICS,
-      keyParts: ["access-control", deptId, "badge-status"],
-      tags: [`dept:${deptId}`, "table:badges", "table:personnel", "table:fleet", "table:equipment"],
-    }
-  );
+      type: "Vehicles",
+      total: status?.vehicles?.total ?? 0,
+      active: status?.vehicles?.active ?? 0,
+      expiring: status?.vehicles?.expiring ?? 0,
+      expired: status?.vehicles?.expired ?? 0,
+    },
+    {
+      type: "Equipment",
+      total: status?.equipment?.total ?? 0,
+      active: status?.equipment?.active ?? 0,
+      expiring: status?.equipment?.expiring ?? 0,
+      expired: status?.equipment?.expired ?? 0,
+    },
+  ];
+}
+
+export async function getEntityBadgeStatus(deptId: string): Promise<EntityBadgeStatus[]> {
+  await assertAccessControlRole();
+  return _getCachedEntityBadgeStatus(deptId);
 }
 
 /* ------------------------------------------------------------------ */
@@ -313,48 +321,48 @@ export async function getHourlyAccessStats(
 /*  5. Badge Status Distribution                                       */
 /* ------------------------------------------------------------------ */
 
+async function _getCachedBadgeStatusDistribution(
+  deptId: string
+): Promise<BadgeStatusDistribution[]> {
+  "use cache";
+  cacheTag(`dept:${deptId}`, "table:badges", "access-control-distribution");
+  const supabase = createAdminClient();
+
+  const { data, error } = await supabase.rpc("get_access_control_metrics_jsonb", {
+    p_department_id: deptId,
+  });
+
+  if (error) {
+    throw new DatabaseError("Failed to load badge status distribution", {
+      operation: "rpc",
+      context: { error: error.message },
+    });
+  }
+
+  const dist = (data as Record<string, unknown>)?.badge_status_distribution as
+    Record<string, number> | undefined;
+
+  return [
+    { name: "Active", value: dist?.active ?? 0, fill: "var(--success)" },
+    {
+      name: "Expiring Soon",
+      value: dist?.expiring_soon ?? 0,
+      fill: "var(--warning)",
+    },
+    { name: "Expired", value: dist?.expired ?? 0, fill: "var(--danger)" },
+    {
+      name: "Revoked",
+      value: dist?.revoked ?? 0,
+      fill: "var(--muted-foreground)",
+    },
+  ];
+}
+
 export async function getBadgeStatusDistribution(
   deptId: string
 ): Promise<BadgeStatusDistribution[]> {
-  return withCache(
-    async () => {
-      const { supabase } = await assertAccessControlRole();
-
-      const { data, error } = await supabase.rpc("get_access_control_metrics_jsonb", {
-        p_department_id: deptId,
-      });
-
-      if (error) {
-        throw new DatabaseError("Failed to load badge status distribution", {
-          operation: "rpc",
-          context: { error: error.message },
-        });
-      }
-
-      const dist = (data as Record<string, unknown>)?.badge_status_distribution as
-        Record<string, number> | undefined;
-
-      return [
-        { name: "Active", value: dist?.active ?? 0, fill: "var(--success)" },
-        {
-          name: "Expiring Soon",
-          value: dist?.expiring_soon ?? 0,
-          fill: "var(--warning)",
-        },
-        { name: "Expired", value: dist?.expired ?? 0, fill: "var(--danger)" },
-        {
-          name: "Revoked",
-          value: dist?.revoked ?? 0,
-          fill: "var(--muted-foreground)",
-        },
-      ];
-    },
-    {
-      category: CacheCategory.METRICS,
-      keyParts: ["access-control", deptId, "distribution"],
-      tags: [`dept:${deptId}`, "table:badges"],
-    }
-  );
+  await assertAccessControlRole();
+  return _getCachedBadgeStatusDistribution(deptId);
 }
 
 /* ------------------------------------------------------------------ */

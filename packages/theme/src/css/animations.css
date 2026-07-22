@@ -467,11 +467,11 @@
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
   perspective: 1000px;
-  will-change: transform, opacity, backdrop-filter;
+  will-change: transform, opacity;
 }
 
 .will-change-glass {
-  will-change: transform, opacity, backdrop-filter;
+  will-change: transform, opacity;
 }
 
 /* ── Initial Sheen Sweep ── */
@@ -566,8 +566,38 @@
     var(--os-shell-enter-delay-3) both;
 }
 
+/* ── Scroll-Driven Animations & Anchor Positioning Utilities ── */
+
+.animate-scroll-progress {
+  animation-name: grow-progress;
+  animation-duration: auto;
+  animation-timing-function: linear;
+  animation-timeline: scroll();
+}
+
+.animate-scroll-view {
+  animation-name: os-shell-enter-up;
+  animation-duration: auto;
+  animation-timing-function: ease-out;
+  animation-timeline: view();
+  animation-range: entry 10% cover 30%;
+  animation-fill-mode: both;
+}
+
+/* Anchor positioning utility helpers */
+.anchor-target {
+  anchor-name: var(--anchor-target-name, --default-anchor);
+}
+
+.anchor-popover {
+  position: absolute;
+  position-anchor: var(--anchor-target-name, --default-anchor);
+}
+
 /* ── Prefers Reduced Motion Audited Overrides ── */
 @media (prefers-reduced-motion: reduce) {
+  .animate-scroll-progress,
+  .animate-scroll-view,
   .animate-window-open,
   .animate-fade-up,
   .animate-initial-sheen-sweep,

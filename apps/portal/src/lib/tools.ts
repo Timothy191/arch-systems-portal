@@ -1,3 +1,4 @@
+import { cacheLife, cacheTag } from "next/cache";
 import { createReadReplicaClient } from "@repo/supabase/read-replica";
 import { serverLogger } from "@repo/logger";
 import { PRODUCTIVITY_TOOLS } from "@/lib/departments";
@@ -25,6 +26,9 @@ interface ExternalTool {
  * Falls back to PRODUCTIVITY_TOOLS constant if database query fails.
  */
 export async function getTools(): Promise<Tool[]> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("tools");
   const db = await createReadReplicaClient();
 
   const { data, error } = await db

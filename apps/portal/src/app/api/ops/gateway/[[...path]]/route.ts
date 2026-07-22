@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabaseClient } from "@repo/supabase/server";
 import { serverLogger } from "@repo/logger";
 
-export const dynamic = "force-dynamic";
-
 // Hop-by-hop headers that should not be forwarded (defined as a static Record lookup)
 const SKIPPED_HEADERS: Record<string, boolean> = {
   host: true,

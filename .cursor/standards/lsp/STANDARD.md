@@ -6,7 +6,7 @@ correct code intelligence: go-to-definition, references, rename, diagnostics, ho
 ## Architecture
 
 ```
-Agent (omp/kilo/opencode/agy/devin/hermes/qwen)
+Agent (opencode/devin)
      │
      ├── LSP Router (scripts/lsp-router.sh)
      │     ├── TypeScript/JavaScript → bundled TS server (apps/portal/node_modules/.bin/typescript-language-server)

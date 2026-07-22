@@ -2,7 +2,7 @@
 
 import { createServerSupabaseClient } from "@repo/supabase/server";
 import { redirect } from "next/navigation";
-import { revalidateTag } from "next/cache";
+import { revalidateTag, updateTag } from "next/cache";
 import { inngest, aiGenerateEmbeddingEvent } from "@repo/utils/inngest";
 import { logError } from "@/lib/errors/error-logger";
 
@@ -54,6 +54,23 @@ export async function revalidateRSC(tags: string[]) {
 
   for (const tag of tags) {
     revalidateTag(tag, "max");
+  }
+  return { success: true };
+}
+
+export async function updateCacheTags(tags: string[]) {
+  // Always validate the user at the top
+  const supabase = await createServerSupabaseClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error("Unauthorized");
+  }
+
+  for (const tag of tags) {
+    updateTag(tag);
   }
   return { success: true };
 }

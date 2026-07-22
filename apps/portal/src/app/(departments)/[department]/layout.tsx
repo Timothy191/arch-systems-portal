@@ -2,7 +2,6 @@ import { DepartmentLayout } from "@repo/ui/DepartmentLayout";
 import { DEPARTMENTS, getDepartmentTabs } from "@/lib/departments";
 import { notFound } from "next/navigation";
 import { ActiveDepartmentSetter } from "@/components/nav/ActiveDepartmentSetter";
-import { AIAssistantWrapper } from "@/components/ai/AIAssistantWrapper";
 import type { Metadata } from "next";
 
 export async function generateMetadata({
@@ -35,7 +34,6 @@ export default async function DepartmentRootLayout({
       <ActiveDepartmentSetter department={department} />
       <DepartmentLayout department={dept} tabs={tabs}>
         {children}
-        <AIAssistantWrapper context={`${dept.displayName} Department`} />
       </DepartmentLayout>
     </>
   );

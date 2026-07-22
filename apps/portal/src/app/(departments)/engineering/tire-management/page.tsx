@@ -2,8 +2,6 @@ import { getDepartmentContext } from "@/lib/dept-context";
 import { GlassCard } from "@repo/ui/GlassCard";
 import { CircleDot, Plus, Wrench, ClipboardList } from "lucide-react";
 
-export const dynamic = "force-dynamic";
-
 export default async function TireManagementPage() {
   await getDepartmentContext({
     department: "engineering",

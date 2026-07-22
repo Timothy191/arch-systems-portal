@@ -41,6 +41,7 @@ export function cn(...inputs: Array<string | false | null | undefined>): string 
   return inputs.filter(Boolean).join(" ");
 }
 
+/** Information about the current 3-shift window (A/B/C). */
 export interface ThreeShiftInfo {
   shift: "A" | "B" | "C";
   label: string;
@@ -83,11 +84,13 @@ export function getOperationalToday(timeZone = "Africa/Johannesburg"): string {
 }
 
 /** Lightweight client analytics stub (no-op until a provider is wired). */
+/** Lightweight client analytics event payload. */
 export interface AnalyticsEvent {
   eventName: string;
   properties?: Record<string, unknown>;
 }
 
+/** No-op analytics stub — logs events in development when DEBUG_ANALYTICS=1. */
 export const analytics = {
   track(event: AnalyticsEvent): void {
     if (process.env.NODE_ENV === "development" && process.env.DEBUG_ANALYTICS === "1") {

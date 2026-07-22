@@ -20,8 +20,6 @@ interface ExpiringCard extends IssuedCardsRow {
   personnel: { first_name: string; surname: string } | null;
 }
 
-export const dynamic = "force-dynamic";
-
 function daysRemaining(expiresAt: string): number {
   return Math.ceil((new Date(expiresAt).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
 }

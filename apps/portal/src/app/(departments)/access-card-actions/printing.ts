@@ -43,7 +43,7 @@ export async function submitPrintJob(spec: CardPrintSpec) {
       // Attempt to spool the job. Will fail locally if CUPS is not configured.
       const { stdout } = await execAsync(`lp -d ${printerName} ${filePath}`);
       // eslint-disable-next-line no-console
-      console.log("Print spooled:", stdout);
+      console.info("[print] Spooled:", stdout);
     } catch (e) {
       // Fallback for development environments without CUPS
       // eslint-disable-next-line no-console

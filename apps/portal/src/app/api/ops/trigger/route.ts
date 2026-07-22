@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/api/auth";
 import { getRedis } from "@repo/redis";
 
-export const dynamic = "force-dynamic";
-
 /* ── POST /api/ops/trigger ──────────────────────────────────── */
 export async function POST(request: NextRequest) {
   const auth = await requireAdmin();

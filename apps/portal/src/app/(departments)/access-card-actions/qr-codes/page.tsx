@@ -12,8 +12,6 @@ import { QrCode, Smartphone, ShieldCheck, ShieldOff, AlertTriangle, Scan } from 
 import { createServerSupabaseClient } from "@repo/supabase/server";
 import { assertAccessCardActionsRole } from "../actions";
 
-export const dynamic = "force-dynamic";
-
 /* ------------------------------------------------------------------ */
 /*  Status badge helper                                                */
 /* ------------------------------------------------------------------ */

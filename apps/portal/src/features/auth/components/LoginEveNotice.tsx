@@ -15,8 +15,8 @@ export function LoginEveNotice() {
         href={EVE_BRAND.href ?? "https://eve.dev"}
         target="_blank"
         rel="noopener noreferrer"
-        title="eve — The agent framework"
-        className="login-eve-mark shrink-0 rounded-sm outline-none transition-opacity hover:opacity-80 focus-visible:outline-none"
+        aria-label="Visit eve - The agent framework"
+        className="login-eve-mark shrink-0 rounded-sm outline-none transition-opacity hover:opacity-80 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
       >
         <Image
           src={EVE_BRAND.src}
@@ -24,6 +24,7 @@ export function LoginEveNotice() {
           width={48}
           height={18}
           className="h-[18px] w-auto object-contain"
+          style={{ width: "auto", height: "auto" }}
           unoptimized
         />
       </Link>
