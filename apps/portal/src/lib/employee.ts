@@ -1,5 +1,5 @@
 import { headers } from 'next/headers'
-import type { SupabaseClient } from '@supabase/supabase-js'
+import type { SupabaseClient } from '@repo/supabase'
 
 /** Resolve employees.id from Supabase Auth user id (auth.users).
  *  Checks middleware header first to avoid redundant DB query.

@@ -101,7 +101,7 @@ source_portal_env() {
 # Sync anon/service keys from `supabase status` only when placeholders/missing.
 maybe_sync_supabase_keys() {
   local status_out anon service
-  status_out=$(cd "$REPO_ROOT/packages" && pnpm exec supabase status -o env 2>/dev/null || true)
+  status_out=$(cd "$REPO_ROOT/packages" && pnpm dlx supabase@^2.26.0 status -o env 2>/dev/null || true)
   [ -z "$status_out" ] && return 0
 
   anon=$(echo "$status_out" | sed -n 's/^ANON_KEY=//p' | tr -d '"' | head -1)

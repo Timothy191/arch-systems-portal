@@ -13,9 +13,9 @@
     "./service-role": "./src/service-role.ts"
   },
   "scripts": {
-    "supabase:start": "supabase start --workdir ..",
-    "supabase:stop": "supabase stop --workdir ..",
-    "supabase:status": "supabase status --workdir .."
+    "supabase:start": "pnpm dlx supabase@^2.26.0 start --workdir ..",
+    "supabase:stop": "pnpm dlx supabase@^2.26.0 stop --workdir ..",
+    "supabase:status": "pnpm dlx supabase@^2.26.0 status --workdir .."
   },
   "dependencies": {
     "@supabase/ssr": "^0.6.1",
@@ -25,7 +25,6 @@
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
     "@types/node": "^22",
-    "supabase": "^2.26.0",
     "typescript": "^5.7.0"
   }
 }

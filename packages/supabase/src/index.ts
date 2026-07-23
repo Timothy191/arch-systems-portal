@@ -6,6 +6,7 @@
  */
 export { createClient, createBrowserSupabaseClient } from './client'
 export { createAdminClient, createServerSupabaseClient, getUserSafely } from './server'
+export type { SupabaseClient } from '@supabase/supabase-js'
 
 // Legacy type exports for compatibility — prefer typed alternatives from @repo/database
 /** @deprecated Use typed row from @repo/database */
