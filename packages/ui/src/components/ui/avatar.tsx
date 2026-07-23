@@ -45,7 +45,7 @@ export function Avatar({
         />
       ) : (
         <div className="flex h-full w-full items-center justify-center font-semibold uppercase tracking-wider">
-          {fallback || alt.slice(0, 2)}
+          {(fallback || alt.slice(0, 2)).toUpperCase()}
         </div>
       )}
     </div>

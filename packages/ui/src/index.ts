@@ -51,7 +51,7 @@ export { Kbd } from './components/ui/kbd'
 // Legacy/large custom components
 export { Logo } from './components/Logo'
 export { GlassCard } from './components/GlassCard'
-export { Spinner } from './components/spinner'
+export { Spinner } from './components/ui/spinner'
 export { AnimatedButton } from './components/AnimatedButton'
 export { PageHeader } from './components/PageHeader'
 export { DepartmentLayout } from './components/DepartmentLayout'

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createServerSupabaseClient } from '@repo/supabase/server'
 import { getRedisClient } from '@repo/redis'
+import { generateLocalFallbackEmbedding } from '@/lib/ai/embedding-provider'
 
 export async function GET() {
   const startedAt = Date.now()
@@ -10,7 +11,6 @@ export async function GET() {
   // 1. Check Supabase / PostgreSQL Database connectivity
   try {
     const supabase = await createServerSupabaseClient()
-    // Fetch a single row/count from a basic table to check if connection works
     const { error } = await supabase.from('employees').select('role').limit(1)
 
     if (error) {
@@ -18,6 +18,29 @@ export async function GET() {
       status = 'degraded'
     } else {
       checks.database = { status: 'healthy' }
+    }
+
+    // 1b. Synthetic health check assertion for pgvector HNSW index
+    try {
+      const pingVector = generateLocalFallbackEmbedding('synthetic health check ping')
+      const { error: vecError } = await supabase.rpc('match_memories', {
+        query_embedding: pingVector,
+        match_threshold: 0.0,
+        match_count: 1,
+      })
+
+      if (vecError && !vecError.message.includes('function match_memories does not exist')) {
+        checks.pgvector_hnsw = { status: 'degraded', error: vecError.message }
+        if (status !== 'unhealthy') status = 'degraded'
+      } else {
+        checks.pgvector_hnsw = { status: 'healthy' }
+      }
+    } catch (vecErr) {
+      checks.pgvector_hnsw = {
+        status: 'degraded',
+        error: vecErr instanceof Error ? vecErr.message : String(vecErr),
+      }
+      if (status !== 'unhealthy') status = 'degraded'
     }
   } catch (err: unknown) {
     checks.database = {
