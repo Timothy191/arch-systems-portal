@@ -1,8 +1,4 @@
-import {
-  generateLocalFallbackEmbedding,
-  getEmbedding,
-  getBatchEmbeddings,
-} from './embedding-provider'
+import { generateLocalFallbackEmbedding, getBatchEmbeddings } from './embedding-provider'
 
 function cosineSimilarity(a: number[], b: number[]): number {
   let dot = 0

@@ -13,6 +13,8 @@ Single source of truth for cross-agent codebase knowledge. Read
 
 ## Architecture
 
+- [Addition Roadmap: primitives](architecture/radix-primitives-roadmap.md) — extraction candidates from radix-primitives.
+
 - [Addition Roadmap: lucide](architecture/lucide-roadmap.md) — extraction candidates from lucide.
 
 - [Addition Roadmap: ui](architecture/shadcn-ui-roadmap.md) — extraction candidates from shadcn-ui.
