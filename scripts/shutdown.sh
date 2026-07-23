@@ -24,6 +24,20 @@ else
   echo -e "  – No portal PID file found"
 fi
 
+# Kill gateway
+if [ -f "$REPO_ROOT/.gateway.pid" ]; then
+  pid=$(cat "$REPO_ROOT/.gateway.pid")
+  if kill "$pid" 2>/dev/null; then
+    echo -e "  ${GREEN}✓${NC} Ops Gateway process (PID $pid) stopped"
+  else
+    echo -e "  – Ops Gateway PID $pid not running"
+  fi
+  rm -f "$REPO_ROOT/.gateway.pid"
+else
+  echo -e "  – No Ops Gateway PID file found"
+fi
+
+
 # Optionally stop Supabase + Docker Compose infra (Redis)
 if [ "${1:-}" = "--infra" ]; then
   export PATH="${HOME}/.npm-global/bin:${PATH}"

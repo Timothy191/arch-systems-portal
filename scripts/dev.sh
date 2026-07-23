@@ -159,15 +159,20 @@ open_monitors() {
 
 
 cleanup() {
-  # Only stop a portal this script started (avoid killing an external/already-running PID)
-  if [ "${STARTED_PORTAL:-false}" != "true" ]; then
-    return 0
-  fi
   echo
-  echo -e "  ${YELLOW}Shutting down portal...${NC}"
-  if [ -f "$REPO_ROOT/.portal.pid" ]; then
-    kill "$(cat "$REPO_ROOT/.portal.pid")" 2>/dev/null || true
-    rm -f "$REPO_ROOT/.portal.pid" "$REPO_ROOT/.portal.start"
+  if [ "${STARTED_PORTAL:-false}" = "true" ]; then
+    echo -e "  ${YELLOW}Shutting down portal...${NC}"
+    if [ -f "$REPO_ROOT/.portal.pid" ]; then
+      kill "$(cat "$REPO_ROOT/.portal.pid")" 2>/dev/null || true
+      rm -f "$REPO_ROOT/.portal.pid" "$REPO_ROOT/.portal.start"
+    fi
+  fi
+  if [ "${STARTED_GATEWAY:-false}" = "true" ]; then
+    echo -e "  ${YELLOW}Shutting down Ops Gateway...${NC}"
+    if [ -f "$REPO_ROOT/.gateway.pid" ]; then
+      kill "$(cat "$REPO_ROOT/.gateway.pid")" 2>/dev/null || true
+      rm -f "$REPO_ROOT/.gateway.pid"
+    fi
   fi
 }
 trap cleanup EXIT INT TERM
@@ -180,7 +185,7 @@ banner() {
   echo -e "  ${BOLD}${CYAN}  ╚═══════════════════════════════════════╝${NC}"
   echo
   echo -e "  ${DIM}$(date '+%a %b %d %Y  %H:%M')${NC}"
-  echo -e "  ${DIM}Boot: Redis → Supabase → portal${NC}"
+  echo -e "  ${DIM}Boot: Redis → Supabase → Ops Gateway → portal${NC}"
   echo -e "  ${DIM}Flags: ${QUICK_MODE:+--quick }${NO_INFRA:+--no-infra }${RUN_QUALITY:+--quality }${NC}"
   echo
 }
@@ -212,6 +217,7 @@ RUN_QUALITY=false
 OPEN_BROWSER=true
 OPEN_MONITORS=true
 STARTED_PORTAL=false
+STARTED_GATEWAY=false
 while [ $# -gt 0 ]; do
   case "$1" in
     --quick|-q)     QUICK_MODE=true; shift ;;
@@ -378,8 +384,29 @@ else
   source_portal_env
 fi
 
-# ── Phase 4: Portal (host Next.js) ────────────────────────────────────────────
-phase 4 "Portal"
+# ── Phase 4: Backend (Ops Gateway) ────────────────────────────────────────────
+phase 4 "Backend (Ops Gateway)"
+
+if [ -f "$REPO_ROOT/.gateway.pid" ] && kill -0 "$(cat "$REPO_ROOT/.gateway.pid")" 2>/dev/null; then
+  check "Ops Gateway" "pass" "already running on :3100"
+  STARTED_GATEWAY=false
+else
+  cd "$REPO_ROOT/apps/ops-gateway"
+  pnpm dev > "$REPO_ROOT/gateway.log" 2>&1 &
+  echo $! > "$REPO_ROOT/.gateway.pid"
+  STARTED_GATEWAY=true
+  cd "$REPO_ROOT"
+  echo -e "  ${INFO} Starting Ops Gateway on :3100..."
+
+  if wait_for_port 3100 20; then
+    check "Ops Gateway" "pass" "http://localhost:3100"
+  else
+    check "Ops Gateway" "warn" "not responding on :3100 yet (continuing)"
+  fi
+fi
+
+# ── Phase 5: Portal (host Next.js) ────────────────────────────────────────────
+phase 5 "Portal"
 
 if [ -f "$REPO_ROOT/.portal.pid" ] && kill -0 "$(cat "$REPO_ROOT/.portal.pid")" 2>/dev/null; then
   check "Dev server" "pass" "already running on :${PORT}"
@@ -441,8 +468,8 @@ else
   fi
 fi
 
-# ── Phase 5: Stack smoke ──────────────────────────────────────────────────────
-phase 5 "Stack Smoke"
+# ── Phase 6: Stack smoke ──────────────────────────────────────────────────────
+phase 6 "Stack Smoke"
 
 smoke_ok=true
 
@@ -590,8 +617,8 @@ if [ "$RUN_QUALITY" = "true" ]; then
   fi
 fi
 
-# ── Phase 6: Daemons ──────────────────────────────────────────────────────────
-phase 6 "Daemons"
+# ── Phase 7: Daemons ──────────────────────────────────────────────────────────
+phase 7 "Daemons"
 bash "$REPO_ROOT/scripts/lsp-router.sh" start &
 bash "$REPO_ROOT/scripts/mcp-manager.sh" start &
 bash "$REPO_ROOT/scripts/heal-daemon.sh" &
