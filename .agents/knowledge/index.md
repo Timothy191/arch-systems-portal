@@ -13,6 +13,8 @@ Single source of truth for cross-agent codebase knowledge. Read
 
 ## Architecture
 
+- [Addition Roadmap: ui](architecture/shadcn-ui-roadmap.md) — extraction candidates from shadcn-ui.
+
 - [Monorepo boundaries & stack](architecture/monorepo-boundaries.md) — the two-layer
   product/agentic split, `@repo/*` packages, and hard boundary rules.
 - [Portal auth & routing](architecture/portal-auth-and-routing.md) — `proxy.ts`

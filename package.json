@@ -20,6 +20,7 @@
     "agent:run": "pnpm dlx tsx scripts/agent-runner.ts",
     "ai": "bash scripts/ai.sh status",
     "ai:check": "bash scripts/ai.sh check",
+    "ai:export-roadmap": "node scripts/export-roadmap.mjs",
     "ai:fix": "bash scripts/ai.sh fix",
     "ai:init": "bash scripts/ai.sh init",
     "ai:onboard": "bash scripts/ai.sh onboard",
