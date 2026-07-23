@@ -1,3 +1,8 @@
+// Jest requires NODE_ENV=test so React resolves its development build
+// (which exports `act`). Without this, an inherited NODE_ENV=production
+// causes `React.act is not a function` across all component tests.
+process.env.NODE_ENV = "test";
+
 module.exports = {
   testEnvironment: "jsdom",
   clearMocks: false,

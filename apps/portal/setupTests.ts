@@ -52,6 +52,9 @@ if (typeof window !== 'undefined' && typeof window.HTMLCanvasElement !== 'undefi
 // Override environment variables to prevent local development .env from polluting tests
 process.env.DISABLE_RATE_LIMIT = 'false'
 process.env.NEXT_PUBLIC_FUXA_URL = 'http://localhost:1881'
+// Empty strings fail Zod .url().optional() — delete so they resolve as undefined
+delete process.env.NEXT_PUBLIC_SENTRY_DSN
+delete process.env.OTEL_EXPORTER_OTLP_ENDPOINT
 process.env.NEXT_PUBLIC_SUPABASE_URL =
   process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://test.supabase.co'
 process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY =
