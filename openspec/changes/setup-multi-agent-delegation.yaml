@@ -2,7 +2,7 @@ schema: change-proposal
 version: 1
 id: setup-multi-agent-delegation
 title: "Setup Multi-Agent Delegation Infrastructure"
-status: proposed
+status: implemented
 author: system
 created: 2026-07-20
 
@@ -58,10 +58,10 @@ design:
   - qwen: cmd: `qwen -p "prompt"` — Qwen Code CLI
 
 tasks:
-  - Create delegation wrapper script at scripts/delegate-agent.sh
-  - Create OpenSpec context injector
-  - Add pnpm agent:delegate and agent:list scripts to package.json
-  - Wire auth check into delegation
+  - [x] Create delegation wrapper script at scripts/delegate-agent.sh
+  - [x] Create OpenSpec context injector
+  - [x] Add pnpm agent:delegate and agent:list scripts to package.json
+  - [x] Wire auth check into delegation
 
 risks:
   - hermes may need interactive auth for OpenRouter

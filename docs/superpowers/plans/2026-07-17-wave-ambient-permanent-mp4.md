@@ -21,16 +21,16 @@
 
 ### Task 2: Purge dead focus-mode / dual-video CSS & hook
 
-- [ ] Strip `route-bg-focus*` and `body.focus-mode` blocks from `packages/theme/src/css/glass.css`
-- [ ] Strip `:is(body.focus-mode)` block from `packages/ui/src/globals.css`
-- [ ] Delete `packages/ui/src/lib/useFocusMode.ts`
+- [x] Strip `route-bg-focus*` and `body.focus-mode` blocks from `packages/theme/src/css/glass.css`
+- [x] Strip `:is(body.focus-mode)` block from `packages/ui/src/globals.css`
+- [x] Delete `packages/ui/src/lib/useFocusMode.ts`
 
 ### Task 3: Consolidate RouteBackground + cache
 
-- [ ] Add `poster` to video elements; ensure dark container/fallback
-- [ ] Add production Cache-Control for `/background/:path*`
+- [x] Add `poster` to video elements; ensure dark container/fallback
+- [x] Add production Cache-Control for `/background/:path*`
 
 ### Task 4: Verify
 
-- [ ] ffprobe duration≈120, no audio, size≤7MB
-- [ ] Scoped lint/type-check / quality evidence + Alignment Score
+- [x] ffprobe duration≈120, no audio, size≤7MB
+- [x] Scoped lint/type-check / quality evidence + Alignment Score
