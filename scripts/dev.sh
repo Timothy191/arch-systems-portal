@@ -71,6 +71,25 @@ wait_for_port() {
   return 1
 }
 
+auto_free_port() {
+  local port="$1"
+  local label="$2"
+  if ss -tlnH 2>/dev/null | grep -qE ":${port} "; then
+    local pid; pid=$(lsof -ti :"$port" 2>/dev/null | head -n1 || true)
+    if [ -n "$pid" ]; then
+      kill -9 "$pid" 2>/dev/null || true
+      sleep 1
+      check "$label" "pass" "auto-freed (killed PID $pid holding :$port)"
+    else
+      fuser -k -9 "${port}/tcp" >/dev/null 2>&1 || true
+      sleep 1
+      check "$label" "pass" "auto-freed via fuser on :$port"
+    fi
+  else
+    check "$label" "pass" "free (port :$port)"
+  fi
+}
+
 wait_for_auth_health() {
   local max="${1:-60}"
   for _ in $(seq 1 "$max"); do
@@ -246,32 +265,20 @@ if [ -f "$REPO_ROOT/.portal.pid" ]; then
   fi
 fi
 
-# Free :3000 — host Next or arch-portal container (Compose portal must not own it)
-stop_arch_portal_container
-if ss -tlnH 2>/dev/null | grep -qE ":${PORT} "; then
-  if docker ps --format '{{.Names}} {{.Ports}}' 2>/dev/null | grep -qE "arch-portal.*:${PORT}->"; then
-    stop_arch_portal_container
-  fi
-  if ss -tlnH 2>/dev/null | grep -qE ":${PORT} "; then
-    pid=$(lsof -ti :"$PORT" 2>/dev/null | head -n1 || true)
-    if [ -n "$pid" ]; then
-      # Do not kill if it is our tracked portal PID still alive
-      if [ -f "$REPO_ROOT/.portal.pid" ] && [ "$(cat "$REPO_ROOT/.portal.pid")" = "$pid" ]; then
-        check "Port ${PORT}" "pass" "owned by current portal PID"
-      else
-        kill "$pid" 2>/dev/null || true
-        sleep 1
-        check "Port ${PORT}" "pass" "freed (killed PID $pid)"
-      fi
-    else
-      check "Port ${PORT}" "warn" "occupied, PID unknown — continuing"
-    fi
+if [ -f "$REPO_ROOT/.gateway.pid" ]; then
+  if ! kill -0 "$(cat "$REPO_ROOT/.gateway.pid")" 2>/dev/null; then
+    rm -f "$REPO_ROOT/.gateway.pid"
+    check "Stale gateway PID" "pass" "cleaned"
   else
-    check "Port ${PORT}" "pass" "free"
+    check "Gateway process" "pass" "PID $(cat "$REPO_ROOT/.gateway.pid") already running"
   fi
-else
-  check "Port ${PORT}" "pass" "free"
 fi
+
+# Free target ports if occupied
+stop_arch_portal_container
+auto_free_port "$PORT" "Port (Portal)"
+auto_free_port "3100" "Port (Gateway)"
+auto_free_port "3001" "Port (Monitor)"
 
 if [ -f "$REPO_ROOT/portal.log" ]; then
   : > "$REPO_ROOT/portal.log"
@@ -336,10 +343,29 @@ if [ "$QUICK_MODE" = "true" ] || [ "$NO_INFRA" = "true" ]; then
   if wait_for_port 6379 3; then
     check "Redis" "pass" "already listening on :6379"
   else
-    check "Redis" "warn" "not on :6379 — portal cache may degrade"
+    # Auto-handling: if port is closed, but container is stopped, try starting it
+    if docker ps -a --format '{{.Names}}' 2>/dev/null | grep -qx "arch-redis"; then
+      check "Redis" "warn" "stopped container found, starting it..."
+      docker start arch-redis >/dev/null 2>&1 || true
+      if wait_for_port 6379 10; then
+        check "Redis" "pass" "started stopped container"
+      else
+        check "Redis" "fail" "failed to start stopped container"
+      fi
+    else
+      check "Redis" "warn" "not on :6379 — portal cache may degrade"
+    fi
   fi
 else
   echo -e "  ${INFO} Starting Redis (compose profile infra)..."
+  # Auto-handling: remove existing stopped container if present to avoid conflicts
+  if docker ps -a --format '{{.Names}}' 2>/dev/null | grep -qx "arch-redis"; then
+    if ! docker ps --format '{{.Names}}' 2>/dev/null | grep -qx "arch-redis"; then
+      check "Redis container" "warn" "removing stopped arch-redis container"
+      docker rm -f arch-redis >/dev/null 2>&1 || true
+    fi
+  fi
+
   $COMPOSE_CMD -f "$REPO_ROOT/docker-compose.yml" --profile infra up -d redis >/dev/null 2>&1 &
   spinner $! "Booting Redis"
 
@@ -347,8 +373,16 @@ else
     if docker exec arch-redis redis-cli ping 2>/dev/null | grep -q PONG; then
       check "Redis" "pass" "localhost:6379 PONG"
     else
-      check "Redis" "fail" "port up but PING failed"
-      exit 1
+      # Auto-handling: try restarting once if ping fails
+      check "Redis" "warn" "port up but PING failed, restarting..."
+      docker restart arch-redis >/dev/null 2>&1 || true
+      sleep 2
+      if docker exec arch-redis redis-cli ping 2>/dev/null | grep -q PONG; then
+        check "Redis" "pass" "localhost:6379 PONG after restart"
+      else
+        check "Redis" "fail" "PING failed after restart"
+        exit 1
+      fi
     fi
   else
     check "Redis" "fail" "not responding on 6379"
@@ -391,17 +425,46 @@ if [ -f "$REPO_ROOT/.gateway.pid" ] && kill -0 "$(cat "$REPO_ROOT/.gateway.pid")
   check "Ops Gateway" "pass" "already running on :3100"
   STARTED_GATEWAY=false
 else
-  cd "$REPO_ROOT/apps/ops-gateway"
-  pnpm dev > "$REPO_ROOT/gateway.log" 2>&1 &
-  echo $! > "$REPO_ROOT/.gateway.pid"
-  STARTED_GATEWAY=true
-  cd "$REPO_ROOT"
-  echo -e "  ${INFO} Starting Ops Gateway on :3100..."
+  MAX_GATEWAY_RESTARTS=2
+  GATEWAY_RESTART_COUNT=0
+  gateway_started=false
 
-  if wait_for_port 3100 20; then
+  while [ $GATEWAY_RESTART_COUNT -le $MAX_GATEWAY_RESTARTS ] && [ "$gateway_started" = "false" ]; do
+    if [ "$GATEWAY_RESTART_COUNT" -gt 0 ]; then
+      check "Gateway Watchdog" "warn" "restart $GATEWAY_RESTART_COUNT of $MAX_GATEWAY_RESTARTS"
+      # Clear caches and retry
+      rm -rf "$REPO_ROOT/apps/ops-gateway/dist" "$REPO_ROOT/apps/ops-gateway/.turbo" 2>/dev/null
+      sleep 2
+    fi
+
+    cd "$REPO_ROOT/apps/ops-gateway"
+    pnpm dev > "$REPO_ROOT/gateway.log" 2>&1 &
+    echo $! > "$REPO_ROOT/.gateway.pid"
+    STARTED_GATEWAY=true
+    cd "$REPO_ROOT"
+    echo -e "  ${INFO} Starting Ops Gateway on :3100 (attempt $((GATEWAY_RESTART_COUNT + 1)))..."
+
+    # Wait and check
+    if wait_for_port 3100 15; then
+      gateway_started=true
+      break
+    fi
+
+    # Check if PID died early
+    if [ -f "$REPO_ROOT/.gateway.pid" ] && ! kill -0 "$(cat "$REPO_ROOT/.gateway.pid")" 2>/dev/null; then
+      check "Ops Gateway" "warn" "process died early"
+    fi
+
+    GATEWAY_RESTART_COUNT=$((GATEWAY_RESTART_COUNT + 1))
+  done
+
+  if [ "$gateway_started" = "true" ]; then
     check "Ops Gateway" "pass" "http://localhost:3100"
   else
-    check "Ops Gateway" "warn" "not responding on :3100 yet (continuing)"
+    check "Ops Gateway" "fail" "did not come up after $MAX_GATEWAY_RESTARTS restarts"
+    echo -e "\n  ${RED}Last 20 lines of gateway.log:${NC}"
+    tail -20 "$REPO_ROOT/gateway.log" 2>/dev/null | sed 's/^/    /'
+    exit 1
   fi
 fi
 
