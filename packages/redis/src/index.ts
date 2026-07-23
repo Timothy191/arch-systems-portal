@@ -92,4 +92,7 @@ export {
   cacheInvalidatePrefixes,
   cacheEvictL1ByPrefix,
   clearMemoryCache,
+  Cache,
+  type CacheOptions,
+  cache,
 } from "./cache";

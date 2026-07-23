@@ -39,10 +39,6 @@ jest.mock('@/lib/weather-api', () => ({
   }),
 }))
 
-jest.mock('@/app/logout-action', () => ({
-  logout: jest.fn(),
-}))
-
 describe('ServicesDropdown', () => {
   beforeEach(() => {
     // Clear persisted widget position

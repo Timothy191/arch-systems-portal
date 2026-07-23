@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect, useMemo } from 'react'
-import { logout } from '@/app/logout-action'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -351,7 +350,7 @@ export function ServicesDropdown() {
               <span className="text-[12px] font-medium text-arch-text-primary">Sleep</span>
             </DropdownMenuItem>
 
-            <form action={logout}>
+            <form action="/api/auth/logout" method="POST">
               <DropdownMenuItem asChild className="rounded-md">
                 <button
                   type="submit"

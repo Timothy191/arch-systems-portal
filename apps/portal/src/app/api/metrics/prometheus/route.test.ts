@@ -6,7 +6,16 @@ import { NextRequest } from 'next/server'
 
 // Mock the prom-client metrics generator
 jest.mock('@/lib/observability/metrics', () => ({
-  getMetrics: jest.fn().mockResolvedValue('mock_prometheus_metrics_data'),
+  getMetrics: jest.fn().mockResolvedValue({
+    jobMetrics: new Map([['job1', { count: 1, errors: 0, totalDurationMs: 100 }]]),
+    dbMetrics: new Map([['table1:select', { count: 1, errors: 0, totalDurationMs: 50 }]]),
+  }),
+}))
+
+jest.mock('@repo/supabase/server', () => ({
+  createAdminClient: jest.fn().mockReturnValue({
+    rpc: jest.fn().mockResolvedValue({ data: [], error: null }),
+  }),
 }))
 
 describe('GET /api/metrics/prometheus', () => {
@@ -30,7 +39,7 @@ describe('GET /api/metrics/prometheus', () => {
     expect(res.status).toBe(200)
     expect(res.headers.get('Content-Type')).toContain('text/plain')
     const text = await res.text()
-    expect(text).toBe(JSON.stringify('mock_prometheus_metrics_data'))
+    expect(text).toContain('arch_job_executions_total')
   })
 
   it('returns 401 if token is configured but not provided in request', async () => {
@@ -61,7 +70,7 @@ describe('GET /api/metrics/prometheus', () => {
 
     expect(res.status).toBe(200)
     const text = await res.text()
-    expect(text).toBe(JSON.stringify('mock_prometheus_metrics_data'))
+    expect(text).toContain('arch_job_executions_total')
   })
 
   it('returns 401 if token is configured but incorrect in Authorization header', async () => {
@@ -89,6 +98,6 @@ describe('GET /api/metrics/prometheus', () => {
 
     expect(res.status).toBe(200)
     const text = await res.text()
-    expect(text).toBe(JSON.stringify('mock_prometheus_metrics_data'))
+    expect(text).toContain('arch_job_executions_total')
   })
 })

@@ -1,10 +1,10 @@
 'use server'
 
-import { createServerSupabaseClient } from '@repo/supabase/server'
-import { inngest } from '@repo/utils/inngest'
 import { revalidatePath } from 'next/cache'
 
 export async function triggerManualAudit() {
+  const { createServerSupabaseClient } = await import('@repo/supabase/server')
+  const { inngest } = await import('@repo/utils/inngest')
   const supabase = await createServerSupabaseClient()
   const {
     data: { user },

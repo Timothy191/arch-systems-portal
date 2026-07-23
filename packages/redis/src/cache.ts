@@ -1,4 +1,4 @@
-import { recordCacheHit, recordCacheMiss, recordRedisError } from "@repo/redis/stats";
+import { recordCacheHit, recordCacheMiss, recordRedisError, getCacheStats } from "@repo/redis/stats";
 import {
   cacheInvalidateTags,
   cacheInvalidatePrefixes,
@@ -262,3 +262,92 @@ export function cacheEvictL1ByPrefix(prefix: string): void {
 export function clearMemoryCache(): void {
   memoryCache.clear();
 }
+
+// ------------------------------------------------------------------
+// Unified Cache Class & Global Singleton (@repo/redis v2 API)
+// ------------------------------------------------------------------
+
+export interface CacheOptions {
+  ttl?: number;
+  tags?: string[];
+  prefix?: string;
+}
+
+export class Cache {
+  private defaultUrl: string;
+
+  constructor(defaultUrl?: string) {
+    this.defaultUrl = defaultUrl ?? process.env["REDIS_URL"] ?? "";
+  }
+
+  private buildKey(key: string, prefix?: string): string {
+    return prefix ? `${prefix}:${key}` : key;
+  }
+
+  async get<T>(key: string, prefix?: string): Promise<T | null> {
+    const fullKey = this.buildKey(key, prefix);
+    return cacheGet<T>(fullKey);
+  }
+
+  async set<T>(key: string, value: T, opts?: CacheOptions): Promise<void> {
+    const fullKey = this.buildKey(key, opts?.prefix);
+    const ttl = opts?.ttl ?? 3600;
+    if (opts?.tags && opts.tags.length > 0) {
+      await cacheSetWithTags(fullKey, value, ttl, opts.tags);
+    } else {
+      await cacheSet(fullKey, value, ttl);
+    }
+  }
+
+  async wrap<T>(key: string, fn: () => Promise<T>, opts?: CacheOptions): Promise<T> {
+    const fullKey = this.buildKey(key, opts?.prefix);
+    const cached = await this.get<T>(key, opts?.prefix);
+    if (cached !== null) return cached;
+
+    let activeFetch = activeFetches.get(fullKey);
+    if (!activeFetch) {
+      activeFetch = fn()
+        .then(async (result) => {
+          await this.set(key, result, opts);
+          return result;
+        })
+        .finally(() => {
+          activeFetches.delete(fullKey);
+        });
+      activeFetches.set(fullKey, activeFetch);
+    }
+
+    return activeFetch as Promise<T>;
+  }
+
+  async invalidateTags(tags: string[]): Promise<number> {
+    return cacheInvalidateTags(tags);
+  }
+
+  async invalidatePrefix(prefix: string): Promise<number> {
+    return cacheInvalidatePrefixes([prefix]);
+  }
+
+  async clear(): Promise<void> {
+    clearMemoryCache();
+    try {
+      const redis = await getRedisClientSafe();
+      if (redis) {
+        await redis.flushdb();
+      }
+    } catch {
+      // Graceful fallback if Redis unavailable
+    }
+  }
+
+  get isConnected(): boolean {
+    return Boolean(process.env["REDIS_URL"]);
+  }
+
+  get stats() {
+    return getCacheStats();
+  }
+}
+
+export const cache = new Cache();
+

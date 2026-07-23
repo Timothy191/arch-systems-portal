@@ -1,7 +1,6 @@
 'use server'
 
 import { updateTag } from 'next/cache'
-import { createServerSupabaseClient } from '@repo/supabase/server'
 import { AuthError } from '@/lib/errors/error-classes'
 
 type AuditAction = 'insert' | 'update' | 'delete'
@@ -16,6 +15,7 @@ export interface AuditLogInput {
 }
 
 export async function logAuditEvent(input: AuditLogInput) {
+  const { createServerSupabaseClient } = await import('@repo/supabase/server')
   const supabase = await createServerSupabaseClient()
 
   const {

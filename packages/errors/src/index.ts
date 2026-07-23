@@ -102,6 +102,13 @@ export class WebFetchError extends AppError {
   }
 }
 
+export class InternalError extends AppError {
+  constructor(message = 'An unexpected internal error occurred.', meta?: Record<string, unknown>) {
+    super({ code: 'INTERNAL_ERROR', message, status: 500, meta })
+    this.name = 'InternalError'
+  }
+}
+
 /** Narrow an unknown value to AppError. */
 export function isAppError(err: unknown): err is AppError {
   return err instanceof AppError

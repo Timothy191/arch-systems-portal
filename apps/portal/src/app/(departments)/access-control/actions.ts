@@ -1,7 +1,5 @@
 'use server'
 
-import { cacheInvalidateTags } from '@repo/redis'
-import { createServerSupabaseClient, createAdminClient } from '@repo/supabase/server'
 import { encodeCursor, decodeCursor } from '@repo/ui/components/ui/pagination-cursor'
 import { revalidatePath } from 'next/cache'
 import { cacheTag } from 'next/cache'
@@ -55,6 +53,7 @@ export interface BadgeStatusDistribution {
 /* ------------------------------------------------------------------ */
 
 async function assertAccessControlRole() {
+  const { createServerSupabaseClient } = await import('@repo/supabase/server')
   const supabase = await createServerSupabaseClient()
   const {
     data: { user },
@@ -90,6 +89,7 @@ async function _getCachedMetrics(deptId: string): Promise<AccessControlMetrics> 
     'table:personnel',
     'access-control-metrics'
   )
+  const { createAdminClient } = await import('@repo/supabase/server')
   const supabase = createAdminClient()
 
   const { data, error } = await supabase.rpc('get_access_control_metrics_jsonb', {
@@ -220,6 +220,7 @@ async function _getCachedEntityBadgeStatus(deptId: string): Promise<EntityBadgeS
     'table:equipment',
     'access-control-badge-status'
   )
+  const { createAdminClient } = await import('@repo/supabase/server')
   const supabase = createAdminClient()
 
   const { data, error } = await supabase.rpc('get_access_control_metrics_jsonb', {
@@ -326,6 +327,7 @@ async function _getCachedBadgeStatusDistribution(
 ): Promise<BadgeStatusDistribution[]> {
   'use cache'
   cacheTag(`dept:${deptId}`, 'table:badges', 'access-control-distribution')
+  const { createAdminClient } = await import('@repo/supabase/server')
   const supabase = createAdminClient()
 
   const { data, error } = await supabase.rpc('get_access_control_metrics_jsonb', {
@@ -370,6 +372,7 @@ export async function getBadgeStatusDistribution(
 /* ------------------------------------------------------------------ */
 
 async function _revokeBadge(badgeId: string): Promise<{ success: boolean; error?: string }> {
+  const { cacheInvalidateTags } = await import('@repo/redis')
   const { supabase, employee } = await assertAccessControlRole()
 
   const { error } = await supabase

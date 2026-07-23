@@ -1,13 +1,11 @@
 'use server'
 
-import { createServerSupabaseClient } from '@repo/supabase/server'
-
 import { revalidateTag, updateTag } from 'next/cache'
-import { inngest, aiGenerateEmbeddingEvent } from '@repo/utils/inngest'
-import { logError } from '@/lib/errors/error-logger'
 
 export async function speculativeEmbedShiftLog(text: string) {
-  // Validate that the user is authenticated (Always validate the user at the top)
+  const { createServerSupabaseClient } = await import('@repo/supabase/server')
+  const { inngest, aiGenerateEmbeddingEvent } = await import('@repo/utils/inngest')
+  const { logError } = await import('@/lib/errors/error-logger')
   const supabase = await createServerSupabaseClient()
   const {
     data: { user },
@@ -36,7 +34,7 @@ export async function speculativeEmbedShiftLog(text: string) {
 }
 
 export async function revalidateRSC(tags: string[]) {
-  // Always validate the user at the top
+  const { createServerSupabaseClient } = await import('@repo/supabase/server')
   const supabase = await createServerSupabaseClient()
   const {
     data: { user },
@@ -53,7 +51,7 @@ export async function revalidateRSC(tags: string[]) {
 }
 
 export async function updateCacheTags(tags: string[]) {
-  // Always validate the user at the top
+  const { createServerSupabaseClient } = await import('@repo/supabase/server')
   const supabase = await createServerSupabaseClient()
   const {
     data: { user },
@@ -73,7 +71,8 @@ export async function generateMonthlyReport(
   reportData: Record<string, unknown>,
   departmentId?: string
 ) {
-  // Validate that the user is authenticated (Always validate the user at the top)
+  const { createServerSupabaseClient } = await import('@repo/supabase/server')
+  const { logError } = await import('@/lib/errors/error-logger')
   const supabase = await createServerSupabaseClient()
   const {
     data: { user },

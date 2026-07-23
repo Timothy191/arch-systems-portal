@@ -10,6 +10,7 @@ module.exports = {
     "postcss.config.mjs",
     "next.config.mjs",
     "storybook.d.ts",
+    "e2e/",
   ],
   extends: ["@repo/eslint-config/next"],
   parser: "@typescript-eslint/parser",
@@ -42,7 +43,7 @@ module.exports = {
   },
   overrides: [
     {
-      files: ["scripts/*.js"],
+      files: ["scripts/*.js", "e2e/**/*.ts"],
       env: { node: true },
       parserOptions: {
         project: null,
@@ -64,6 +65,26 @@ module.exports = {
       files: ["lib/env.ts", "lib/ai/tools.ts"],
       rules: {
         "no-restricted-imports": "off",
+      },
+    },
+    {
+      files: ["src/components/**/*.tsx", "src/hooks/**/*.ts"],
+      rules: {
+        "no-restricted-imports": [
+          "error",
+          {
+            paths: [
+              {
+                name: "@react-pdf/renderer",
+                message: "Server-only package @react-pdf/renderer must not be statically imported into Client Components.",
+              },
+              {
+                name: "server-only",
+                message: "server-only package cannot be imported into Client Components.",
+              },
+            ],
+          },
+        ],
       },
     },
   ],

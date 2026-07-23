@@ -1,6 +1,5 @@
 'use server'
 
-import { createServerSupabaseClient, createAdminClient } from '@repo/supabase/server'
 import { cacheTag } from 'next/cache'
 import { AuthError, DatabaseError, ForbiddenError } from '@/lib/errors/error-classes'
 
@@ -21,6 +20,7 @@ export interface SatelliteMetrics {
 /* ------------------------------------------------------------------ */
 
 async function assertSatelliteRole() {
+  const { createServerSupabaseClient } = await import('@repo/supabase/server')
   const supabase = await createServerSupabaseClient()
   const {
     data: { user },
@@ -57,6 +57,7 @@ async function _getCachedSatelliteMetrics(deptId: string): Promise<SatelliteMetr
     'department-dashboard'
   )
 
+  const { createAdminClient } = await import('@repo/supabase/server')
   const supabase = createAdminClient()
 
   const [{ data: allMachines, error: machinesError }, { data: recentLogs, error: logsError }] =

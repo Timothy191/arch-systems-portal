@@ -1,6 +1,5 @@
 'use server'
 
-import { createServerSupabaseClient, createAdminClient } from '@repo/supabase/server'
 import { cacheTag } from 'next/cache'
 import { AuthError, DatabaseError, ForbiddenError } from '@/lib/errors/error-classes'
 
@@ -33,6 +32,7 @@ export interface RecentSafetyIncident {
 /* ------------------------------------------------------------------ */
 
 async function assertSafetyRole() {
+  const { createServerSupabaseClient } = await import('@repo/supabase/server')
   const supabase = await createServerSupabaseClient()
   const {
     data: { user },
@@ -63,6 +63,7 @@ async function _getCachedSafetyMetrics(deptId: string): Promise<SafetyMetrics> {
   'use cache'
   cacheTag(`dept:${deptId}`, 'table:safety_incidents', 'department-safety', 'department-dashboard')
 
+  const { createAdminClient } = await import('@repo/supabase/server')
   const supabase = createAdminClient()
   const today = new Date().toISOString().split('T')[0]
   const firstOfMonth = new Date()

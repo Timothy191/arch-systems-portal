@@ -1,6 +1,5 @@
 'use server'
 
-import { createServerSupabaseClient } from '@repo/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { AuthError, DatabaseError, ForbiddenError } from '@/lib/errors/error-classes'
 import { detectAllPrinters } from './lib/printer-detection'
@@ -14,6 +13,7 @@ import { detectAllPrinters } from './lib/printer-detection'
 /* ------------------------------------------------------------------ */
 
 export async function assertAccessCardActionsRole() {
+  const { createServerSupabaseClient } = await import('@repo/supabase/server')
   const supabase = await createServerSupabaseClient()
   const {
     data: { user },
@@ -79,6 +79,7 @@ export async function registerPrinter(formData: {
   devicePath?: string
 }) {
   await assertAccessCardActionsRole()
+  const { createServerSupabaseClient } = await import('@repo/supabase/server')
   const supabase = await createServerSupabaseClient()
 
   const { data, error } = await supabase

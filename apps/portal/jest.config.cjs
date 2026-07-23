@@ -3,7 +3,7 @@ module.exports = {
   clearMocks: false,
   forceExit: true,
   setupFilesAfterEnv: ["<rootDir>/setupTests.ts"],
-  testPathIgnorePatterns: [],
+  testPathIgnorePatterns: ["<rootDir>/e2e/"],
   transform: {
     "^.+\\.(t|j)sx?$": [
       "@swc/jest",

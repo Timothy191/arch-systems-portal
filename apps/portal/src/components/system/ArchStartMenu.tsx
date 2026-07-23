@@ -22,7 +22,6 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 import { cn } from '@repo/ui/lib/utils'
-import { logout } from '@/app/logout-action'
 import { ARCH_LOCK_EVENT } from './ArchLockOverlay'
 
 export interface ArchStartMenuProps {
@@ -189,7 +188,8 @@ export function ArchStartMenu({ onClose }: ArchStartMenuProps) {
             <Lock className="h-4 w-4" aria-hidden />
           </button>
           <form
-            action={logout}
+            action="/api/auth/logout"
+            method="POST"
             onSubmit={() => {
               onClose()
             }}

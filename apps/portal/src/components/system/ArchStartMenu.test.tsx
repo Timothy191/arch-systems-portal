@@ -3,10 +3,6 @@ import { fireEvent, render, screen } from '@testing-library/react'
 import { ArchStartMenu } from './ArchStartMenu'
 import { ARCH_LOCK_EVENT, ArchLockOverlay } from './ArchLockOverlay'
 
-jest.mock('@/app/logout-action', () => ({
-  logout: jest.fn(),
-}))
-
 jest.mock('next/link', () => ({
   __esModule: true,
   default: ({

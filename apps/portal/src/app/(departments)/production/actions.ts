@@ -1,6 +1,5 @@
 'use server'
 
-import { createServerSupabaseClient, createAdminClient } from '@repo/supabase/server'
 import { cacheTag } from 'next/cache'
 import { AuthError, DatabaseError, ForbiddenError } from '@/lib/errors/error-classes'
 
@@ -31,6 +30,7 @@ export interface RecentProductionLog {
 /* ------------------------------------------------------------------ */
 
 async function assertProductionRole() {
+  const { createServerSupabaseClient } = await import('@repo/supabase/server')
   const supabase = await createServerSupabaseClient()
   const {
     data: { user },
@@ -67,6 +67,7 @@ async function _getCachedProductionMetrics(deptId: string): Promise<ProductionMe
     'department-production'
   )
 
+  const { createAdminClient } = await import('@repo/supabase/server')
   const supabase = createAdminClient()
   const today = new Date().toISOString().split('T')[0]
 

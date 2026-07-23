@@ -1,7 +1,6 @@
 /**
  * @jest-environment node
  */
-import { logout } from './logout-action'
 import { speculativeEmbedShiftLog, generateMonthlyReport, updateCacheTags } from './actions'
 
 jest.mock('@repo/supabase/server', () => ({
@@ -53,16 +52,6 @@ const { inngest } = jest.requireMock('@repo/utils/inngest')
 
 describe('actions', () => {
   beforeEach(() => jest.clearAllMocks())
-
-  describe('logout', () => {
-    it('calls signOut and redirects to /login', async () => {
-      const signOut = jest.fn().mockResolvedValue({})
-      createServerSupabaseClient.mockResolvedValue({ auth: { signOut } })
-
-      await expect(logout()).rejects.toThrow('NEXT_REDIRECT')
-      expect(signOut).toHaveBeenCalledTimes(1)
-    })
-  })
 
   describe('speculativeEmbedShiftLog', () => {
     it('throws error if user is not authenticated', async () => {

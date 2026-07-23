@@ -9,7 +9,6 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "@/app/*": ["./src/app/*"],
       "@/features/*": ["./src/features/*"],
       "@/components/*": ["./src/components/*"],
       "@/lib/*": ["./src/lib/*"],
@@ -40,6 +39,7 @@
     "hooks",
     "lib",
     "plugins",
-    "assets"
+    "assets",
+    "e2e"
   ]
 }

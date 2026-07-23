@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { logout } from '@/app/logout-action'
 import { cn } from '@repo/ui/lib/utils'
 import { getServiceUrls } from '@repo/ui/lib/urls'
 
@@ -121,7 +120,11 @@ const NAV_COMMANDS: CommandItem[] = [
     id: 'nav-logout',
     label: 'Log Out',
     action: () => {
-      logout().catch(console.error)
+      fetch('/api/auth/logout', { method: 'POST' })
+        .then(() => {
+          window.location.href = '/login'
+        })
+        .catch(console.error)
     },
     category: 'Navigation',
     icon: <LogOut className="w-4 h-4" />,

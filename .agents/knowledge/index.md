@@ -13,6 +13,8 @@ Single source of truth for cross-agent codebase knowledge. Read
 
 ## Architecture
 
+- [Addition Roadmap: arch-systems](architecture/monorepo-roadmap.md) — extraction candidates from Projects.
+
 - [Addition Roadmap: primitives](architecture/radix-primitives-roadmap.md) — extraction candidates from radix-primitives.
 
 - [Addition Roadmap: lucide](architecture/lucide-roadmap.md) — extraction candidates from lucide.
@@ -37,6 +39,7 @@ Single source of truth for cross-agent codebase knowledge. Read
 - [Layout Stability, Scripts & Telemetry](patterns/layout-stability-and-telemetry.md) — CLS minimization, script strategies, and Web Vitals client-side reporting.
 - [Next.js 16 Server Actions & Turbopack gotchas](patterns/nextjs16-server-actions.md) — isolating client-imported server actions to prevent module factory errors.
 - [Auto-formatting & Spec-First Global Policy](patterns/auto-formatting-and-specs.md) — background code formatting and mandatory spec-first cycle for multi-file tasks.
+- [High-Scale Systems, Microservices, and Design Patterns](patterns/high-scale-system-patterns.md) — extracted patterns from system-design-101, microservices, and design patterns.
 
 
 ## Reference

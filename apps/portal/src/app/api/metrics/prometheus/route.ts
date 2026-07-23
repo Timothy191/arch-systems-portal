@@ -1,7 +1,7 @@
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 import { getMetrics } from '@/lib/observability/metrics'
-import { createAdminClient } from '@repo/supabase/admin'
+import { createAdminClient } from '@repo/supabase/server'
 
 /**
  * @swagger
