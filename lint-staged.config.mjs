@@ -11,7 +11,7 @@ function liveTsFiles(filenames) {
 }
 
 export default {
-  "*.{js,jsx,mjs,ts,tsx,mts}": (filenames) => {
+  "*.{js,jsx,ts,tsx,mts}": (filenames) => {
     const files = liveTsFiles(filenames);
     if (files.length === 0) return [];
     const quoted = files.map((f) => `"${f}"`).join(" ");
@@ -21,4 +21,5 @@ export default {
     ];
   },
   "*.{json,md,css,html,yml,yaml}": "prettier --write",
+  ".agents/knowledge/**/*.md": "markdownlint",
 };

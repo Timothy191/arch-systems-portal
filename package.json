@@ -51,7 +51,8 @@
     "supabase:status": "pnpm dlx supabase@^2.26.0 status --workdir packages",
     "supabase:stop": "pnpm dlx supabase@^2.26.0 stop --workdir packages",
     "test": "turbo run test",
-    "type-check": "turbo run type-check"
+    "type-check": "turbo run type-check",
+    "wiki:lint": "markdownlint '.agents/knowledge/**/*.md'"
   },
   "devDependencies": {
     "@commitlint/cli": "^21.0.1",
@@ -63,6 +64,7 @@
     "eslint": "^8.57.0",
     "husky": "^9.1.7",
     "lint-staged": "^17.0.7",
+    "markdownlint-cli": "^0.44.0",
     "prettier": "^3.4.2",
     "tsx": "^4.0.0",
     "turbo": "^2.10.2",
