@@ -230,7 +230,9 @@ fi
 # Portal log critical errors check
 PORTAL_LOG="${REPO_ROOT:-.}/portal.log"
 if [ -f "$PORTAL_LOG" ]; then
-  critical_errors=$(grep -ciE '(FATAL|Unhandled exception|Cannot find module|Failed to compile)' "$PORTAL_LOG" 2>/dev/null || echo 0)
+  critical_errors=$(grep -ciE '(FATAL|Unhandled exception|Cannot find module|Failed to compile)' "$PORTAL_LOG" || true)
+  critical_errors=$(echo "$critical_errors" | tr -cd '0-9')
+  critical_errors="${critical_errors:-0}"
   if [ "$critical_errors" -eq 0 ]; then
     record "Portal log (no critical errors)" "pass"
   else

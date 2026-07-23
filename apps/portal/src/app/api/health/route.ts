@@ -31,7 +31,7 @@ export async function GET() {
 
       if (vecError && !vecError.message.includes('function match_memories does not exist')) {
         checks.pgvector_hnsw = { status: 'degraded', error: vecError.message }
-        if (status !== 'unhealthy') status = 'degraded'
+        status = 'degraded'
       } else {
         checks.pgvector_hnsw = { status: 'healthy' }
       }
@@ -40,7 +40,7 @@ export async function GET() {
         status: 'degraded',
         error: vecErr instanceof Error ? vecErr.message : String(vecErr),
       }
-      if (status !== 'unhealthy') status = 'degraded'
+      status = 'degraded'
     }
   } catch (err: unknown) {
     checks.database = {
