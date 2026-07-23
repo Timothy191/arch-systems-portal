@@ -93,6 +93,11 @@ CLAUDE.local.md
 .agents/knowledge/
 .agents/types/
 .agents/skills/
+.agents/teamwork_preview_*/
+.agents/victory_auditor/
+.agents/BRIEFING.md
+.agents/ORIGINAL_REQUEST.md
+ORIGINAL_REQUEST.md
 
 # Embedded git repos / independent projects
 agentic-system/
@@ -124,3 +129,6 @@ apps/portal/_app_legacy_shadow/
 apps/portal/_features_legacy_shadow/
 apps/portal/src.backup/
 .aider*
+**/.codewhale/*
+!**/.codewhale/constitution.json
+.deepseek/

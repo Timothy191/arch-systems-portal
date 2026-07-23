@@ -3,6 +3,8 @@
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",
     "saoudrizwan.claude-dev",
-    "roocode.roo-cline"
+    "roocode.roo-cline",
+    "tombonnike.vscode-statusbar-filepath",
+    "artempyanykh.marksman"
   ]
 }
