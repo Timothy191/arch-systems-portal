@@ -82,12 +82,10 @@
     </div>
     <div id="canvas-container"></div>
 
-    <!-- Three.js from CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- OrbitControls -->
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script type="module">
+      import * as THREE from 'https://unpkg.com/three@0.128.0/build/three.module.js'
+      import { OrbitControls } from 'https://unpkg.com/three@0.128.0/examples/jsm/controls/OrbitControls.js'
 
-    <script>
       // Setup scene, camera, and renderer
       const scene = new THREE.Scene()
       scene.fog = new THREE.FogExp2(0x0b0c10, 0.002)
@@ -106,7 +104,7 @@
       renderer.setPixelRatio(window.devicePixelRatio)
       document.getElementById('canvas-container').appendChild(renderer.domElement)
 
-      const controls = new THREE.OrbitControls(camera, renderer.domElement)
+      const controls = new OrbitControls(camera, renderer.domElement)
       controls.enableDamping = true
       controls.dampingFactor = 0.05
       controls.autoRotate = true
