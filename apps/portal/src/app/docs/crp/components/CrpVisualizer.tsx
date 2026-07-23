@@ -8,7 +8,6 @@ import {
   Maximize2,
   Paintbrush,
   ArrowRight,
-  CheckCircle2,
   AlertTriangle,
   Info,
   Clock,

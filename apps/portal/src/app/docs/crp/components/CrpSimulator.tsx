@@ -1,17 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import {
-  Sliders,
-  Zap,
-  Clock,
-  AlertCircle,
-  CheckCircle2,
-  FileText,
-  Layers,
-  ShieldCheck,
-  Activity,
-} from 'lucide-react'
+import { Sliders, Zap, AlertCircle, CheckCircle2, Activity } from 'lucide-react'
 
 export function CrpSimulator() {
   // Config state
@@ -22,7 +12,7 @@ export function CrpSimulator() {
   const [cssSpecificityLevel, setCssSpecificityLevel] = useState<'simple' | 'medium' | 'deep'>(
     'medium'
   )
-  const [hasViewportMeta, setHasViewportMeta] = useState<boolean>(true)
+  const [hasViewportMeta] = useState<boolean>(true)
 
   // Calculations based on simulation variables
   const blockingScripts = scriptMode === 'sync' ? 2 : 0

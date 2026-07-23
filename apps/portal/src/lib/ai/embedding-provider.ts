@@ -126,7 +126,7 @@ export async function getBatchEmbeddings(texts: string[]): Promise<EmbeddingResu
         const resJson = await response.json()
         const data = resJson.data
         if (Array.isArray(data) && data.length === texts.length) {
-          return data.map((item: any) => ({
+          return data.map((item: { embedding: number[] }) => ({
             embedding: item.embedding,
             provider: config.isOllama ? 'ollama' : 'router',
           }))

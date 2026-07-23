@@ -12,7 +12,7 @@ interface AdminTabsProps {
  * AdminTabs — navigation tabs for admin panel.
  * Used by AdminTabsClient to wrap admin tab content with URL-based tab switching.
  */
-export function AdminTabs({ value, onValueChange, children }: AdminTabsProps) {
+export function AdminTabs({ value, onValueChange: _onValueChange, children }: AdminTabsProps) {
   return (
     <div className="admin-tabs" data-active-tab={value}>
       {/* Tab navigation and content are rendered via children */}

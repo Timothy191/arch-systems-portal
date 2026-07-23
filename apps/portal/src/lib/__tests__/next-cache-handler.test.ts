@@ -54,7 +54,7 @@ describe('NextCacheHandler', () => {
       mockCacheGet.mockResolvedValueOnce(null)
 
       // First: set to populate per-request cache
-      await handler.set('test-key-2', { data: 'cached' }, { tags: ['tag-b'], revalidate: 60 })
+      await handler.set('test-key-2', entry.value, { tags: ['tag-b'], revalidate: 60 })
 
       // Second: get should return from per-request cache, not Redis
       const result = await handler.get('test-key-2')

@@ -21,7 +21,6 @@ import { Building2, Cpu, ShieldCheck, type LucideIcon } from 'lucide-react'
 import { Logo } from '@repo/ui/Logo'
 import { cn } from '@repo/ui/lib/utils'
 import { semanticIconClass } from '@/lib/semantic-icon'
-import { HERO_ARCH_PILL } from '@/features/hub/constants/hero-pill'
 
 interface TrustLogo {
   src: string

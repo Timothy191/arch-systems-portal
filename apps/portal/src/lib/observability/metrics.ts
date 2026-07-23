@@ -13,11 +13,11 @@ interface ObservabilityMetrics {
 const jobMetrics = new Map<string, MetricEntry>()
 const dbMetrics = new Map<string, MetricEntry>()
 
-export function incrementMetric(name: string, value: number = 1) {
+export function incrementMetric(_name: string, _value: number = 1) {
   // Stub implementation
 }
 
-export function recordMetric(name: string, value: number) {
+export function recordMetric(_name: string, _value: number) {
   // Stub implementation
 }
 

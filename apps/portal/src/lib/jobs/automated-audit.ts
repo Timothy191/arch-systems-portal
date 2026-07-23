@@ -36,7 +36,10 @@ export const automatedAuditFn = inngest.createFunction(
 
       // 2. Aggregate metrics for the past 24 hours
       const targetDate = new Date()
-      const reportData = await getAggregatedAuditData(supabase as any, targetDate)
+      const reportData = await getAggregatedAuditData(
+        supabase as unknown as Parameters<typeof getAggregatedAuditData>[0],
+        targetDate
+      )
 
       // 3. Render PDF layout to a local temporary file
       const tempDir = os.tmpdir()
@@ -75,7 +78,7 @@ export const automatedAuditFn = inngest.createFunction(
         department_id: dept.id,
         report_date: reportData.reportDate,
         shift_type: 'daily_audit',
-        report_data: reportData as any,
+        report_data: reportData as unknown as Record<string, unknown>,
         pdf_url: pdfUrl,
       })
 
@@ -105,11 +108,9 @@ export const automatedAuditFn = inngest.createFunction(
             }),
           })
           if (!response.ok) {
-             
             console.warn(`Novu trigger failed: status ${response.status}`)
           }
         } catch (err) {
-           
           console.warn('Novu trigger network error:', err)
         }
       }

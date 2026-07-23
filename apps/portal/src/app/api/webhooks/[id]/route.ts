@@ -96,7 +96,7 @@
  *       500:
  *         description: Internal server error
  */
-import type { NextRequest} from 'next/server';
+import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 import { createServerSupabaseClient } from '@repo/supabase/server'
 import { revalidatePath } from 'next/cache'
@@ -198,7 +198,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
 }
 
 async function handleDeleteWebhook(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse> {
   const { id } = await params

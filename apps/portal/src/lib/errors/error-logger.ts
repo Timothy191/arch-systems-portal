@@ -34,7 +34,7 @@ interface ErrorLogEntry {
 /**
  * Determine error severity based on status code and error type
  */
-function getSeverity(error: Error, statusCode?: number): ErrorSeverity {
+function getSeverity(_error: Error, statusCode?: number): ErrorSeverity {
   if (!statusCode) return 'error'
   if (statusCode >= 500) return 'error'
   if (statusCode >= 400) return 'warn'

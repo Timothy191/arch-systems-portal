@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { CheckCircle2, XCircle, Lightbulb, Flame, ShieldCheck, ArrowUpRight } from 'lucide-react'
+import { CheckCircle2, Lightbulb } from 'lucide-react'
 
 export function CrpDiagnostics() {
   const optimizationRules = [
