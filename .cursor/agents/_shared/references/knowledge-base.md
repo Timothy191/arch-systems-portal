@@ -53,3 +53,4 @@ This file is a shared knowledge base where agents, subagents, and automated loop
 - 2026-07-21: portal:type-check: ../../packages/ui/src/components/ui/bento-grid.tsx(71,11): error TS2322: Type '"link"' is not assignable to type 'Variant | undefin
 - 2026-07-22: portal:type-check: src/app/actions.test.ts(4,10): error TS2305: Module '"./actions"' has no exported member 'logout'.
 - 2026-07-22: portal:type-check: src/components/ReviewSchema.test.tsx(76,31): error TS2532: Object is possibly 'undefined'.portal:type-check: src/components/ReviewS
+- 2026-07-23: portal:type-check: src/app/api/health/route.ts(34,13): error TS2367: This comparison appears to be unintentional because the types '"healthy" | "degra
