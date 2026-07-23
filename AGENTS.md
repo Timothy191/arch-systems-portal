@@ -63,7 +63,7 @@ For iterative development on the portal app, use watch mode:
 - **Styling**: Tailwind CSS (via `@repo/theme`, light-mode only). Standardized on macOS semi-transparent white palette (`rgba(255, 255, 255, 0.72)` translucency, `backdrop-filter: blur(28px) saturate(180%)`, specular hairlines, and high-contrast text primitives).
 - **Async/Jobs**: Inngest 4 for background jobs.
 - **Boundary**: Never import from `apps/` inside `packages/`. Never add application logic to `packages/`.
-- **Output & Response**: Always at the end of an output, present the user with 3 Recommended Follow-ups. Under each follow-up, include an `Outcome:` line describing the expected result.
+- **Output & Response**: Always at the end of an output, present the user with 3 Recommended Follow-ups. Under each follow-up, include an `Outcome:` line describing the expected result. Never waste recommendation slots suggesting `.kiro/specs/` spec creation (apply `.kiro/specs/` spec-first cycles automatically for tasks); keep recommendations focused on technical & architectural next steps.
 - **Spec-First Requirement**: Always create a new spec under `.kiro/specs/<feature-slug>/` for any upcoming multi-file feature or task before implementation.
 
 ## Important Files

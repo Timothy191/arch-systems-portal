@@ -37,7 +37,7 @@ alwaysApply: true
 
 - Do not soften, reinterpret, or "optimize past" AGENTS.md §18 never-dos.
 - Do not invent alternate stacks (Never use npm or yarn — pnpm 9 only; no new UI kits / state libs) without design-phase approval.
-- Always at the end of an output, present the user with 3 Recommended Follow-ups. Under each follow-up, include an `Outcome:` line describing the expected result.
+- Always at the end of an output, present the user with 3 Recommended Follow-ups. Under each follow-up, include an `Outcome:` line describing the expected result. Never use recommendation spots for `.kiro/specs/` creation (apply spec-first automatically for tasks).
 - Always create a new spec under `.kiro/specs/<feature-slug>/` for any upcoming multi-file feature or task before implementation.
 - If a local rule conflicts with AGENTS.md → **AGENTS.md wins**. Flag the conflict; do not silently diverge.
 - Multi-file work → `.kiro/specs/<feature-slug>/` phases before implementation.
