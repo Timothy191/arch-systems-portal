@@ -18,6 +18,7 @@ Collateral: `.cursor/agents/<name>/{references,scripts,assets}/`.
 | [sceptic.md](sceptic.md)                               | Adversarial review                 | [sceptic/](sceptic/)                               |
 | [idle-runner.md](idle-runner.md)                       | Parallel safe work while blocked   | [idle-runner/](idle-runner/)                       |
 | [ai-maintenance-checker.md](ai-maintenance-checker.md) | Background AI layout janitor       | [ai-maintenance-checker/](ai-maintenance-checker/) |
+| [auto-formatter.md](auto-formatter.md)                 | Background workspace code formatter| [auto-formatter/](auto-formatter/)                 |
 | [vercel-brand-sync.md](vercel-brand-sync.md)           | Vercel-family brand assets         | [vercel-brand-sync/](vercel-brand-sync/)           |
 | [openspec.md](openspec.md)                             | OpenSpec change lifecycle (CLI)    | [openspec/](openspec/)                             |
 | [aider.md](aider.md)                                   | Aider surgical headless edits      | [aider/](aider/)                                   |

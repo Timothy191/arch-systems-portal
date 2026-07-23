@@ -167,6 +167,8 @@ Every non-trivial task follows a three-phase spec cycle. Spec files go in `.kiro
 - Use `next/image` for all images — never raw `<img>` tags. Exception: signed Supabase storage URLs with rotating signatures (e.g. `card-actions-view.tsx`) where `next/image` cannot handle URL expiry.
 - Lazy-load heavy Client Components with `next/dynamic` + `{ ssr: false }`
 - Never commit `.env.local` or any secrets
+- Always at the end of an output, present the user with 3 Recommended Follow-ups
+- Always create a new spec under `.kiro/specs/<feature-slug>/` for any upcoming multi-file feature or task before implementation
 
 ## Portal Architecture Details
 

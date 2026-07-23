@@ -49,6 +49,7 @@ A change is considered complete when ALL criteria are met:
 - No motivational filler or empty encouragement
 - Evidence-based claims preferred over agreement-seeking statements
 - When uncertain, state uncertainty explicitly and propose verification steps
+- Always at the end of an output, present the user with 3 Recommended Follow-ups
 
 ## Infrastructure Hardening Patterns
 

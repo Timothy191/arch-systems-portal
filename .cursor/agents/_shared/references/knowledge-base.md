@@ -51,3 +51,5 @@ This file is a shared knowledge base where agents, subagents, and automated loop
 - 2026-07-21: portal:type-check: src/lib/api/api-guard.ts(11,45): error TS2554: Expected 1 arguments, but got 2.portal:type-check: src/lib/api/api-guard.ts(17,60): 
 - 2026-07-21: portal:type-check: src/lib/jobs/automated-audit.ts(42,55): error TS2345: Argument of type 'import("/home/timothy/Projects/node_modules/.pnpm/@supabase
 - 2026-07-21: portal:type-check: ../../packages/ui/src/components/ui/bento-grid.tsx(71,11): error TS2322: Type '"link"' is not assignable to type 'Variant | undefin
+- 2026-07-22: portal:type-check: src/app/actions.test.ts(4,10): error TS2305: Module '"./actions"' has no exported member 'logout'.
+- 2026-07-22: portal:type-check: src/components/ReviewSchema.test.tsx(76,31): error TS2532: Object is possibly 'undefined'.portal:type-check: src/components/ReviewS

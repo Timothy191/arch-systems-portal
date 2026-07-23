@@ -1,0 +1,45 @@
+---
+title: Knowledge Base Index
+tags: [index, meta]
+updated: 2026-07-23
+source_agent: claude-code
+status: active
+---
+
+# Knowledge Base Index
+
+Single source of truth for cross-agent codebase knowledge. Read
+[`README.md`](README.md) for the read/write protocol before contributing.
+
+## Architecture
+
+- [Monorepo boundaries & stack](architecture/monorepo-boundaries.md) — the two-layer
+  product/agentic split, `@repo/*` packages, and hard boundary rules.
+- [Portal auth & routing](architecture/portal-auth-and-routing.md) — `proxy.ts`
+  enforcement, route groups, departments, path aliases.
+- [AI orchestration & memory](architecture/ai-orchestration-and-memory.md) — LangGraph
+  agent graph, `lib/ai/` subsystem, and the product `memory_embeddings` runtime feature.
+
+## Decisions
+
+- [Global decision log](decisions/index.md) — numbered ADR-lite entries. Cross-links
+  package-scoped logs such as [`packages/theme/DECISIONS.md`](../../packages/theme/DECISIONS.md).
+
+## Patterns
+
+- [Patterns index](patterns/README.md) — reusable solutions, gotchas, and recipes.
+- [Layout Stability, Scripts & Telemetry](patterns/layout-stability-and-telemetry.md) — CLS minimization, script strategies, and Web Vitals client-side reporting.
+- [Next.js 16 Server Actions & Turbopack gotchas](patterns/nextjs16-server-actions.md) — isolating client-imported server actions to prevent module factory errors.
+- [Auto-formatting & Spec-First Global Policy](patterns/auto-formatting-and-specs.md) — background code formatting and mandatory spec-first cycle for multi-file tasks.
+
+
+## Reference
+
+- [Glossary](glossary.md) — domain + codebase vocabulary.
+
+## How to add an entry
+
+1. Create the Markdown file in the right folder with frontmatter (see
+   [`README.md`](README.md)).
+2. Cite file-path evidence for each claim.
+3. Add a link to it here under the matching section.

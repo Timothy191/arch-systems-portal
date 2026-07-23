@@ -60,9 +60,11 @@ For iterative development on the portal app, use watch mode:
 - **TypeScript**: Strict (TS 5.7+), no `any`, no `@ts-ignore`.
 - **Validation**: Zod (all external input).
 - **Errors**: `@repo/errors` (typed `AppError` subclasses).
-- **Styling**: Tailwind CSS (via `@repo/theme`, light-mode only).
+- **Styling**: Tailwind CSS (via `@repo/theme`, light-mode only). Standardized on macOS semi-transparent white palette (`rgba(255, 255, 255, 0.72)` translucency, `backdrop-filter: blur(28px) saturate(180%)`, specular hairlines, and high-contrast text primitives).
 - **Async/Jobs**: Inngest 4 for background jobs.
 - **Boundary**: Never import from `apps/` inside `packages/`. Never add application logic to `packages/`.
+- **Output & Response**: Always at the end of an output, present the user with 3 Recommended Follow-ups.
+- **Spec-First Requirement**: Always create a new spec under `.kiro/specs/<feature-slug>/` for any upcoming multi-file feature or task before implementation.
 
 ## Important Files
 - `package.json`: Main workspace configuration.
@@ -134,5 +136,6 @@ When applying the native `"use cache"` directive to Server Components or data-fe
 - **`app-page.ts` is a build template**: Any `require()` in template files is traced by the bundler at build time. You cannot require internal modules with relative paths — export helpers from `entry-base.ts` instead.
 - **Stale `.next` cache**: If the portal produces unexpected errors after switching branches, delete `apps/portal/.next/` and retry.
 - **`"use cache"` rule**: Never read `cookies()` or `headers()` inside a `"use cache"` scope. Decouple auth from caching — verify auth in an outer function, then call an inner cached function using `createAdminClient()`. See [Next.js 16 Caching](#nextjs-16-caching--data-fetching) for details.
+- **Client-imported Server Actions**: Avoid importing Server Actions from files that contain heavy server-only imports (e.g. `@react-pdf/renderer`, Inngest) into Client Components. This triggers Turbopack client-side bundling errors ("module factory not available"). Isolate these actions into dedicated lightweight files (e.g., `logout-action.ts`).
 - **Source maps**: `findSourceMap()` needs `--enable-source-maps` flag. Source map paths vary between bundlers — try multiple formats.
 - **Console output in tests**: `console.log` output may be captured by Jest. Use `--verbose` or `--debug` flags to see full output when debugging tests.
