@@ -7,13 +7,15 @@ import { handleTriggerevent, periodicIncidentCheck } from './incident/engine.js'
 import { Logger } from './logger.js'
 import { getConfiguredeves } from './dispatcher/eve-dispatcher.js'
 import { config } from './config.js'
+import { startHttpServer } from './http-server.js'
 
 const logger = new Logger('main')
 
 async function main(): Promise<void> {
   logger.info('Starting Ops Gateway (Meta-Backend)...')
 
-  // 1. Start system pollers
+  // 1. Start system pollers and HTTP server
+  startHttpServer()
   startHealthPoller()
   startMetricsPoller()
 
