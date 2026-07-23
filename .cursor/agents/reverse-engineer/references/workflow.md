@@ -1,19 +1,24 @@
-# Reverse Engineering Workflow
+# Reverse Engineering & Addition Mapping Workflow
 
-## Steps
+## Detailed Steps
 
-1. **Ingest Target Repo**:
-   - Clone or inspect remote GitHub repository into temporary workspace or `.agents/knowledge/external/`.
-   - Audit directory layout, `package.json`, build configs, and entry points.
+1. **Temp Workspace Ingestion**:
+   - Clone remote repository into an isolated directory: `/tmp/reverse-engineer/<repo-name>`.
+   - Inspect `package.json`, build manifests, dependency graph, and framework configurations.
 
-2. **Deconstruct Architecture**:
-   - Trace data flow from route entry to backend service boundary.
-   - Extract Zod/OpenAPI schemas, database models (SQL/Prisma/Kysely), and state management stores.
+2. **Full Codebase Analysis & Test Suite Execution**:
+   - Execute test suites (`pnpm test` / `npm test`) or build checks in `/tmp/reverse-engineer/<repo-name>` to verify functionality and stability.
+   - Analyze source code structure, API boundaries, Zod/OpenAPI schemas, UI components, and state management logic.
 
-3. **Port & Extract Components**:
-   - Copy relevant components or algorithms into `@repo/ui`, `@repo/utils`, or `apps/portal/src/features/`.
-   - Remove unused external dependencies and align with `@repo/theme` light-mode design system.
+3. **Actionable Monorepo Addition Mapping**:
+   - Compare extracted features against Arch Systems monorepo standards.
+   - List explicit candidates for monorepo additions:
+     - `@repo/ui`: Visual UI primitives, animations, and icons.
+     - `@repo/utils`: Pure functions, algorithms, and helper utilities.
+     - `@repo/contract`: Shared Zod validation schemas and DTO types.
+     - `@repo/database`: SQL migrations, table definitions, and indexes.
+     - `apps/portal`: Feature routes, Server Actions, and page components.
 
-4. **Document Learnings**:
-   - Write durable learning document in `.agents/knowledge/architecture/` or `.agents/knowledge/patterns/`.
-   - Update `.agents/knowledge/index.md` with new reference entry.
+4. **Durable Knowledge Recording**:
+   - Save full blueprint and Addition Roadmap to `.agents/knowledge/architecture/` or `.agents/knowledge/patterns/`.
+   - Update `.agents/knowledge/index.md` index.
