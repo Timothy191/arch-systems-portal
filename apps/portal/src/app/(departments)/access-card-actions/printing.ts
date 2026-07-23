@@ -42,11 +42,11 @@ export async function submitPrintJob(spec: CardPrintSpec) {
     try {
       // Attempt to spool the job. Will fail locally if CUPS is not configured.
       const { stdout } = await execAsync(`lp -d ${printerName} ${filePath}`)
-       
+
       console.info('[print] Spooled:', stdout)
     } catch (e) {
       // Fallback for development environments without CUPS
-       
+
       console.warn("CUPS 'lp' command failed or not found, falling back to mock success. Error:", e)
     }
 
@@ -56,7 +56,6 @@ export async function submitPrintJob(spec: CardPrintSpec) {
       filePath,
     }
   } catch (error) {
-     
     console.error('Print job failed:', error)
     return {
       success: false,

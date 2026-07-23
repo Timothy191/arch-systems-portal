@@ -35,7 +35,7 @@ export default async function LoginPage() {
           e.message.includes('network'))
       ) {
         // Transient — don't show unavailable, just serve the form
-         
+
         console.warn('Transient auth check failure, serving login form:', e.message)
       } else {
         systemUnavailable = true

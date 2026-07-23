@@ -1,7 +1,7 @@
 import React from 'react'
 import { CheckCircle2, XCircle, AlertTriangle, Clock, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
-import type { AccessStatus } from '@/features/access-control/components/StatusBadge';
+import type { AccessStatus } from '@/features/access-control/components/StatusBadge'
 import StatusBadge from '@/features/access-control/components/StatusBadge'
 import { AutoAnimateList } from '@repo/ui/AnimatedList'
 

@@ -3,74 +3,11 @@
 import Image from 'next/image'
 import { Marquee } from '@repo/ui/Marquee'
 import { GlassCard } from '@repo/ui/GlassCard'
+import { DEPARTMENT_REVIEWS } from '@/data/reviews'
 import React from 'react'
 
-// AGENT-TRACE: Curated testimonials representing realistic operational feedback from key departments and directors
-const REVIEWS = [
-  {
-    name: 'Drilling Dept',
-    username: '@drilling',
-    body: 'Rig 4 telemetry tracking is extremely fast now. Makes scheduling down-hole operations trivial.',
-    img: 'https://avatar.vercel.sh/drilling',
-  },
-  {
-    name: 'Safety Control',
-    username: '@safety',
-    body: 'The real-time incident reports have helped us maintain our LTI-free record. Seamless compliance.',
-    img: 'https://avatar.vercel.sh/safety',
-  },
-  {
-    name: 'Production Unit',
-    username: '@production',
-    body: 'Tonnage logs are highly accurate. It makes shift handovers much cleaner.',
-    img: 'https://avatar.vercel.sh/production',
-  },
-  {
-    name: 'Control Room Shift',
-    username: '@controlroom',
-    body: "SCADA panel integrations are incredibly responsive. Best portal we've used.",
-    img: 'https://avatar.vercel.sh/controlroom',
-  },
-  {
-    name: 'Training LMS',
-    username: '@training',
-    body: 'Competency training dashboard has reduced certification overhead by 40%.',
-    img: 'https://avatar.vercel.sh/training',
-  },
-  {
-    name: 'Satellite Operations',
-    username: '@satellite',
-    body: 'Hyperspectral imagery rendering is super clean. Soil stability alerts are spot on.',
-    img: 'https://avatar.vercel.sh/satellite',
-  },
-  {
-    name: 'Engineering Lead',
-    username: '@engineering',
-    body: 'Tire management calculations are highly precise. Prevented multiple haul truck flats.',
-    img: 'https://avatar.vercel.sh/engineering',
-  },
-  {
-    name: 'Access Control Crew',
-    username: '@accesscontrol',
-    body: 'Visitor logs are super easy to check. Temp badges compile in seconds.',
-    img: 'https://avatar.vercel.sh/accesscontrol',
-  },
-  {
-    name: 'Operations Director',
-    username: '@director',
-    body: 'Excellent visibility into plant metrics and shift logs. Real-time monitoring works perfectly.',
-    img: 'https://avatar.vercel.sh/director',
-  },
-  {
-    name: 'Site Supervisor',
-    username: '@supervisor',
-    body: 'Highly reliable system. The offline banner and resilient auth keep operators in focus.',
-    img: 'https://avatar.vercel.sh/supervisor',
-  },
-]
-
-const firstRow = REVIEWS.slice(0, REVIEWS.length / 2)
-const secondRow = REVIEWS.slice(REVIEWS.length / 2)
+const firstRow = DEPARTMENT_REVIEWS.slice(0, DEPARTMENT_REVIEWS.length / 2)
+const secondRow = DEPARTMENT_REVIEWS.slice(DEPARTMENT_REVIEWS.length / 2)
 
 interface ReviewCardProps {
   img: string

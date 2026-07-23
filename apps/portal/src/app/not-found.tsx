@@ -22,9 +22,20 @@ export default function NotFound() {
             The page you are looking for does not exist.
           </p>
         </div>
-        <SecondaryButton asChild>
-          <Link href="/">Return to Hub</Link>
-        </SecondaryButton>
+        <div className="space-y-4">
+          <SecondaryButton asChild>
+            <Link href="/">Return to Home</Link>
+          </SecondaryButton>
+          <SecondaryButton asChild>
+            <Link href="/hub">Go to Hub</Link>
+          </SecondaryButton>
+          <SecondaryButton asChild>
+            <Link href="/docs/api">API Documentation</Link>
+          </SecondaryButton>
+          <SecondaryButton asChild>
+            <Link href="/privacy">Privacy Policy</Link>
+          </SecondaryButton>
+        </div>
       </div>
     </div>
   )

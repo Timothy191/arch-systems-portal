@@ -1,4 +1,4 @@
-import type { NextRequest} from 'next/server';
+import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 import { createMiddlewareClient } from '@repo/supabase/middleware'
 import { cacheGet, cacheSet, cacheEvictL1ByPrefix } from '@repo/redis/cache'

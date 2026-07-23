@@ -19,4 +19,4 @@ status: active
    - The spec cycle consists of Requirements, Design, and Tasks phases.
 
 3. **Mandatory Response Follow-ups**:
-   - Every agent completion MUST end with 3 Recommended Follow-ups presented to the user.
+   - Every agent completion MUST end with 3 Recommended Follow-ups presented to the user, with an `Outcome:` line under each follow-up describing the expected result.

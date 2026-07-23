@@ -29,7 +29,6 @@ export const onRequestError: Instrumentation.onRequestError = async (err, reques
       : undefined
 
   if (process.env.NODE_ENV === 'development') {
-     
     console.error(
       `[Server Error] Path: ${request.path} | Method: ${request.method} | Message: ${message}`,
       { digest, context }

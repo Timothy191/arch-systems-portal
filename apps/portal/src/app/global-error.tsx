@@ -15,7 +15,6 @@ export default function GlobalError({
   useEffect(() => {
     // Log to console in development; Sentry is initialized via instrumentation.ts
     if (process.env.NODE_ENV === 'development') {
-       
       console.error('Global error:', error)
     }
   }, [error])

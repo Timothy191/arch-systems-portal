@@ -12,7 +12,6 @@ export function TriggerButton() {
       try {
         await triggerManualAudit()
       } catch (err) {
-         
         alert(`Failed to trigger audit report: ${err instanceof Error ? err.message : String(err)}`)
       }
     })

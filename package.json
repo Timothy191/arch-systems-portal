@@ -68,5 +68,8 @@
     "turbo": "^2.10.2",
     "typescript": "^5.7.0",
     "zod": "^4.4.3"
+  },
+  "dependencies": {
+    "streamdown": "^2.5.0"
   }
 }

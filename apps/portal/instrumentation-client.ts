@@ -12,7 +12,6 @@ export function onRouterTransitionStart(
   navigationType: 'push' | 'replace' | 'traverse'
 ) {
   if (process.env.NODE_ENV === 'development') {
-     
     console.log(`[Router Transition] ${navigationType} to ${url}`)
   }
 }

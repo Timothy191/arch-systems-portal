@@ -387,7 +387,7 @@ if [ -f "$REPO_ROOT/.portal.pid" ] && kill -0 "$(cat "$REPO_ROOT/.portal.pid")" 
 else
   stop_arch_portal_container
   cd "$REPO_ROOT/apps/portal"
-  PORT="$PORT" pnpm dev > "$REPO_ROOT/portal.log" 2>&1 &
+  FORCE_COLOR=1 PORT="$PORT" pnpm dev > "$REPO_ROOT/portal.log" 2>&1 &
   echo $! > "$REPO_ROOT/.portal.pid"
   STARTED_PORTAL=true
   cd "$REPO_ROOT"
@@ -405,7 +405,7 @@ else
       sleep 2
       stop_arch_portal_container
       cd "$REPO_ROOT/apps/portal"
-      PORT="$PORT" pnpm dev > "$REPO_ROOT/portal.log" 2>&1 &
+      FORCE_COLOR=1 PORT="$PORT" pnpm dev > "$REPO_ROOT/portal.log" 2>&1 &
       echo $! > "$REPO_ROOT/.portal.pid"
       cd "$REPO_ROOT"
       echo -e "  ${INFO} Restarting Next.js on :${PORT} (attempt $((RESTART_COUNT + 1)))..."
@@ -499,6 +499,39 @@ else
     check "/api/health" "fail" "endpoint not responding"
     smoke_ok=false
   fi
+fi
+
+# /api/health/live — liveness probe (should always respond 200)
+live_code=$(curl -s -o /dev/null -w "%{http_code}" --connect-timeout 3 \
+  "http://localhost:${PORT}/api/health/live" 2>/dev/null || echo 000)
+if [ "$live_code" = "200" ]; then
+  check "/api/health/live" "pass"
+else
+  check "/api/health/live" "warn" "code=${live_code} (expected 200)"
+fi
+
+# /api/health/ready — readiness probe (may degrade without infra)
+ready_json=$(curl -fs "http://localhost:${PORT}/api/health/ready" 2>/dev/null || echo "")
+if [ -n "$ready_json" ]; then
+  ready_status=$(echo "$ready_json" | python3 -c 'import sys,json; print(json.load(sys.stdin).get("status",""))' 2>/dev/null || echo "")
+  if [ "$ready_status" = "ready" ]; then
+    check "/api/health/ready" "pass" "ready"
+  elif [ "$QUICK_MODE" = "true" ] || [ "$NO_INFRA" = "true" ]; then
+    check "/api/health/ready" "warn" "${ready_status:-unreachable} (ok for --quick/--no-infra)"
+  else
+    check "/api/health/ready" "warn" "${ready_status:-unreachable}"
+  fi
+else
+  check "/api/health/ready" "warn" "endpoint not responding"
+fi
+
+# /api/health/cache — cache health (informational)
+cache_code=$(curl -s -o /dev/null -w "%{http_code}" --connect-timeout 3 \
+  "http://localhost:${PORT}/api/health/cache" 2>/dev/null || echo 000)
+if [ "$cache_code" = "200" ]; then
+  check "/api/health/cache" "pass"
+else
+  check "/api/health/cache" "warn" "code=${cache_code} (expected 200)"
 fi
 
 # Login HTML — accept 200/3xx with document markers (retry once for HMR race)

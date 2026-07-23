@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useMemo } from 'react'
-import { logout } from '@/app/actions'
+import { logout } from '@/app/logout-action'
 import {
   DropdownMenu,
   DropdownMenuContent,

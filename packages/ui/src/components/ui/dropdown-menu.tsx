@@ -117,7 +117,7 @@ export function DropdownMenuContent({
     align === 'end' ? 'right-0' : align === 'start' ? 'left-0' : 'left-1/2 -translate-x-1/2'
   const base = `absolute ${alignment} z-50`
   const fallback =
-    'w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'
+    'w-56 origin-top-right rounded-md bg-white/80 backdrop-blur-xl border border-white/40 shadow-window focus:outline-none'
 
   return (
     <div

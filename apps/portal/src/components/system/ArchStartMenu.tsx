@@ -22,7 +22,7 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 import { cn } from '@repo/ui/lib/utils'
-import { logout } from '@/app/actions'
+import { logout } from '@/app/logout-action'
 import { ARCH_LOCK_EVENT } from './ArchLockOverlay'
 
 export interface ArchStartMenuProps {

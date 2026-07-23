@@ -53,7 +53,7 @@
  *       500:
  *         description: Internal server error
  */
-import type { NextRequest} from 'next/server';
+import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 import { inngest, syncPlaybackEvent } from '@repo/utils/inngest'
 import { logError } from '@/lib/errors/error-logger'

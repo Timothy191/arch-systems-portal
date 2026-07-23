@@ -29,7 +29,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 COMPOSE_FILE="docker-compose.production.yml"
-COMPOSE_PROJECT="arch-production"
+COMPOSE_PROJECT="arch-systems-production"
 ENV_FILE=".env.production"
 ENV_FLAG="--env-file ${ENV_FILE}"
 
@@ -104,19 +104,21 @@ show_status() {
   echo -e "${CYAN}Health Check URLs:${NC}"
   echo -e "  Portal:  ${BLUE}http://localhost:${NGINX_HTTP_PORT:-80}${NC}"
   echo -e "  API:     ${BLUE}http://localhost:${NGINX_HTTP_PORT:-80}/api/health/live${NC}"
-  echo -e "  Nginx:   ${BLUE}http://localhost:${NGINX_HTTP_PORT:-80}${NC}"
+  echo -e "  Ops-Gateway:${BLUE}http://localhost:${NGINX_HTTP_PORT:-80}/ops/health${NC}"
+  echo -e "  Nginx:   ${BLUE}http://localhost:${NGINX_HTTP_PORT:-80}/health${NC}"
 
   echo ""
-  echo -e "${CYAN}Service Endpoints (internal):${NC}"
-  echo -e "  PostgreSQL: ${BLUE}localhost:${POSTGRES_PORT:-5432}${NC}"
-  echo -e "  Redis:      ${BLUE}localhost:${REDIS_PORT:-6379}${NC}"
-  echo -e "  API:        ${BLUE}localhost:${API_PORT:-3001}${NC}"
-  echo -e "  Portal:     ${BLUE}localhost:${PORTAL_PORT:-3000}${NC}"
-  echo -e "  Ops-Gateway:${BLUE}localhost:${OPS_GATEWAY_PORT:-3100}${NC}"
+  echo -e "${CYAN}Service Endpoints (via nginx proxy):${NC}"
+  echo -e "  Portal:       ${BLUE}http://localhost:${NGINX_HTTP_PORT:-80}${NC}"
+  echo -e "  API:          ${BLUE}http://localhost:${NGINX_HTTP_PORT:-80}/api/health/live${NC}"
+  echo -e "  Ops-Gateway:  ${BLUE}http://localhost:${NGINX_HTTP_PORT:-80}/ops/health${NC}"
+  echo -e "  Nginx Health: ${BLUE}http://localhost:${NGINX_HTTP_PORT:-80}/health${NC}"
 
   echo ""
-  echo -e "${CYAN}Volumes:${NC}"
-  docker volume ls --filter "name=arch-" --format "table {{.Name}}\t{{.Driver}}\t{{.Size}}" 2>/dev/null || true
+  echo -e "${CYAN}Internal Endpoints (direct, no proxy):${NC}"
+  echo -e "  API:         ${BLUE}localhost:${API_PORT:-3001}${NC}"
+  echo -e "  Portal:      ${BLUE}localhost:${PORTAL_PORT:-3000}${NC}"
+  echo -e "  Ops-Gateway: ${BLUE}localhost:${OPS_GATEWAY_PORT:-3100}${NC}"
 
   # Quick health probe
   echo ""
@@ -133,6 +135,12 @@ show_status() {
     echo -e "  ${GREEN}✓${NC} Portal frontend: ${http_code}"
   else
     echo -e "  ${RED}✗${NC} Portal frontend: ${http_code} (expected 2xx/3xx)"
+  fi
+  http_code=$(curl -s -o /dev/null -w "%{http_code}" "http://localhost:${NGINX_HTTP_PORT:-80}/ops/health" 2>/dev/null || echo "000")
+  if [[ "$http_code" == "200" ]]; then
+    echo -e "  ${GREEN}✓${NC} Ops-Gateway health: ${http_code}"
+  else
+    echo -e "  ${YELLOW}⚠${NC} Ops-Gateway health: ${http_code} (optional service)"
   fi
 
   echo ""
@@ -233,12 +241,14 @@ echo ""
 # ── Confirmation ─────────────────────────────────────────────────────────────
 if [[ "$INTERACTIVE" == "true" ]]; then
   echo -e "${YELLOW}This will deploy the Arch-Mk2 production stack:${NC}"
-  echo "  - PostgreSQL (database)"
-  echo "  - Redis (cache)"
+  echo "  - Nginx (reverse proxy, SSL termination)"
   echo "  - Portal (Next.js frontend)"
   echo "  - API (NestJS backend)"
-  echo "  - Ops-Gateway (control plane)"
-  echo "  - Nginx (reverse proxy)"
+  echo "  - Ops-Gateway (control plane / MCP)"
+  echo ""
+  echo -e "${YELLOW}Prerequisites (managed externally):${NC}"
+  echo "  - PostgreSQL / Supabase"
+  echo "  - Redis / Upstash"
   echo ""
   read -rp "Continue? [Y/n] " confirm
   if [[ "$confirm" =~ ^[Nn] ]]; then
@@ -300,20 +310,29 @@ echo -e "${BLUE}[5/6]${NC} Verifying endpoints..."
 
 sleep 3
 
-# Check API health
-API_CHECK=$(curl -s -o /dev/null -w "%{http_code}" "http://localhost:${NGINX_HTTP_PORT:-80}/api/health/live" 2>/dev/null || echo "000")
+# Wait for nginx to be ready (it depends on portal + api)
+NGINX_BASE="http://localhost:${NGINX_HTTP_PORT:-80}"
+
+# Check API health via nginx
+API_CHECK=$(curl -s -o /dev/null -w "%{http_code}" "${NGINX_BASE}/api/health/live" 2>/dev/null || echo "000")
 if [[ "$API_CHECK" == "200" ]]; then
   echo -e "${GREEN}  ✓${NC} API health: ${API_CHECK}"
 else
   echo -e "${RED}  ✗${NC} API health: ${API_CHECK} (expected 200)"
 fi
 
-# Check Portal
-PORTAL_CHECK=$(curl -s -o /dev/null -w "%{http_code}" "http://localhost:${NGINX_HTTP_PORT:-80}" 2>/dev/null || echo "000")
+# Check Portal via nginx
+PORTAL_CHECK=$(curl -s -o /dev/null -w "%{http_code}" "${NGINX_BASE}" 2>/dev/null || echo "000")
 if [[ "$PORTAL_CHECK" == "200" || "$PORTAL_CHECK" == "301" || "$PORTAL_CHECK" == "302" ]]; then
   echo -e "${GREEN}  ✓${NC} Portal: ${PORTAL_CHECK}"
 else
   echo -e "${RED}  ✗${NC} Portal: ${PORTAL_CHECK}"
+fi
+
+# Check nginx health
+NGINX_CHECK=$(curl -s -o /dev/null -w "%{http_code}" "${NGINX_BASE}/health" 2>/dev/null || echo "000")
+if [[ "$NGINX_CHECK" == "200" ]]; then
+  echo -e "${GREEN}  ✓${NC} Nginx health: ${NGINX_CHECK}"
 fi
 
 # ── Set Up Database Backups ──────────────────────────────────────────────────
@@ -346,8 +365,10 @@ echo -e "${CYAN}═════════════════════�
 echo -e "${GREEN}   Deployment Complete!${NC}"
 echo -e "${CYAN}══════════════════════════════════════════════════${NC}"
 echo ""
-echo -e "  ${BLUE}Portal:${NC}      http://localhost:${NGINX_HTTP_PORT:-80}"
-echo -e "  ${BLUE}API Health:${NC}  http://localhost:${NGINX_HTTP_PORT:-80}/api/health/live"
+echo -e "  ${BLUE}Portal:${NC}        http://localhost:${NGINX_HTTP_PORT:-80}"
+echo -e "  ${BLUE}API Health:${NC}    http://localhost:${NGINX_HTTP_PORT:-80}/api/health/live"
+echo -e "  ${BLUE}Nginx Health:${NC}  http://localhost:${NGINX_HTTP_PORT:-80}/health"
+echo -e "  ${BLUE}Ops-Gateway:${NC}   http://localhost:${NGINX_HTTP_PORT:-80}/ops/health"
 echo ""
 echo -e "  ${YELLOW}Useful commands:${NC}"
 echo -e "  ${GREEN}→${NC} ./scripts/deploy-production.sh --status    Show stack status"

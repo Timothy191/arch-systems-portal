@@ -184,7 +184,7 @@
  *       500:
  *         description: Internal server error
  */
-import type { NextRequest} from 'next/server';
+import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 import { createServiceRoleClient } from '@repo/supabase/service-role'
 import { createServerSupabaseClient } from '@repo/supabase/server'

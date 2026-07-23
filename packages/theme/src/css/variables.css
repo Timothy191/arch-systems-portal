@@ -357,11 +357,11 @@
   --os-shell-surface:
     linear-gradient(
       180deg,
-      var(--palette-glass-fill-top) 0%,
-      var(--palette-glass-fill-mid) 45%,
-      var(--palette-glass-fill-bottom) 100%
+      rgba(255, 255, 255, 0.88) 0%,
+      rgba(255, 255, 255, 0.78) 45%,
+      rgba(246, 246, 250, 0.84) 100%
     ),
-    var(--palette-glass-tint);
+    rgba(255, 255, 255, 0.85);
   --os-shell-border: 1px solid var(--palette-border-glass);
   --os-shell-shadow:
     var(--palette-glass-shadow-ambient), var(--palette-glass-shadow-contact),
@@ -385,8 +385,7 @@
     rgba(246, 246, 250, 0.92);
   --os-shell-taskbar-backdrop: blur(12px) saturate(135%);
   --os-shell-taskbar-shadow:
-    0 4px 14px rgba(4, 12, 24, 0.14),
-    0 1px 3px rgba(4, 12, 24, 0.1),
+    0 4px 14px rgba(4, 12, 24, 0.14), 0 1px 3px rgba(4, 12, 24, 0.1),
     inset 0 1px 0 var(--palette-glass-specular-top),
     inset 0 -1px 0 var(--palette-glass-contact-bottom),
     inset 1px 0 0 var(--palette-glass-specular-side),
@@ -400,7 +399,11 @@
   /* Login supporting copy */
   --login-text-muted: #848992;
   --login-text-emphasis: var(--text-heading);
-  --login-text-placeholder: color-mix(in srgb, var(--login-text-muted) 78%, var(--text-heading) 22%);
+  --login-text-placeholder: color-mix(
+    in srgb,
+    var(--login-text-muted) 78%,
+    var(--text-heading) 22%
+  );
   --login-chrome-band: rgba(0, 0, 0, 0.04);
   --login-card-max-width: 26.25rem;
   --login-card-min-height: 40rem;
@@ -430,11 +433,10 @@
 
   /* Login controls — light glass interior (white translucent, dark borders) */
   --login-control-radius: var(--radius-lg);
-  --login-field-bg: rgba(255, 255, 255, 0.52);
-  --login-field-bg-focus: rgba(255, 255, 255, 0.68);
+  --login-field-bg: rgba(255, 255, 255, 0.75);
+  --login-field-bg-focus: rgba(255, 255, 255, 0.92);
   --login-field-border: rgba(15, 23, 42, 0.12);
-  --login-field-shadow:
-    var(--login-focus-inset-highlight), inset 0 1px 2px rgba(15, 23, 42, 0.04);
+  --login-field-shadow: var(--login-focus-inset-highlight), inset 0 1px 2px rgba(15, 23, 42, 0.04);
   --login-field-backdrop: blur(4px) saturate(120%);
   --login-cta-bg: var(--palette-neutral-950);
   --login-cta-bg-hover: var(--palette-brand-primary-hover);
@@ -442,8 +444,8 @@
   --login-cta-border: color-mix(in srgb, var(--palette-neutral-950) 82%, black);
   --login-cta-border-hover: color-mix(in srgb, var(--palette-brand-primary-hover) 88%, black);
   --login-cta-shadow: 0 2px 12px rgba(0, 0, 0, 0.24), 0 1px 3px rgba(0, 0, 0, 0.14);
-  --login-oauth-bg: rgba(255, 255, 255, 0.45);
-  --login-oauth-bg-hover: rgba(255, 255, 255, 0.62);
+  --login-oauth-bg: rgba(255, 255, 255, 0.75);
+  --login-oauth-bg-hover: rgba(255, 255, 255, 0.88);
   --login-oauth-border: rgba(15, 23, 42, 0.1);
   --login-oauth-backdrop: blur(4px) saturate(120%);
   --login-notice-bg: var(--overlay-dim);
@@ -464,12 +466,12 @@
   --theme-transition-duration: 0ms;
 
   /* Font variables used in Tailwind config preset */
-  --font-sans: "SF Pro", -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+  --font-sans: 'SF Pro', -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
   --font-inter:
-    "SF Pro", -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
-  --font-outfit: "Outfit", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Anurati", "Orbitron", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    'SF Pro', -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+  --font-outfit: 'Outfit', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Anurati', 'Orbitron', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
   color-scheme: light;
 }

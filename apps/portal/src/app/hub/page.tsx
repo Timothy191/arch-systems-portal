@@ -4,6 +4,7 @@ import { cookies } from 'next/headers'
 import { cacheLife, cacheTag } from 'next/cache'
 import { createServerSupabaseClient, getUserSafely } from '@repo/supabase/server'
 import { createReadReplicaClient } from '@repo/supabase/read-replica'
+import { ReviewSchema } from '@/components/ReviewSchema'
 import {
   AlertTicker,
   ProductionTrendWrapper as ProductionTrend,
@@ -329,6 +330,7 @@ export default async function HubPage({
 
       {/* Department & Operational Testimonials Double Marquee */}
       <DepartmentReviews />
+      <ReviewSchema />
 
       {/* Operational Urgencies & Alerts */}
       <div

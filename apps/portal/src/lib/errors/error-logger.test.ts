@@ -1,7 +1,7 @@
 /**
  * @jest-environment node
  */
- 
+
 import { logError, withErrorLogging, withServerActionLogging } from './error-logger'
 
 const mockCaptureException = jest.fn()

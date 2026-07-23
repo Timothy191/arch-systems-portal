@@ -57,10 +57,8 @@ export function PWAInstallButton() {
     const { outcome } = await deferredPrompt.userChoice
 
     if (outcome === 'accepted') {
-       
       console.warn('[pwa] User accepted the install prompt')
     } else {
-       
       console.warn('[pwa] User dismissed the install prompt')
     }
 

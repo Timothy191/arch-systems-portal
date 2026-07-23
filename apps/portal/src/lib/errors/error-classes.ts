@@ -6,7 +6,6 @@
  * This is intentional - they are part of the public API for the error classes
  * If modifying error handling, maintain this pattern or consider re-integrating @repo/errors
  */
- 
 
 export class AppError extends Error {
   public code?: string

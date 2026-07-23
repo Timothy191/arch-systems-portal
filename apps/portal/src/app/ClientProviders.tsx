@@ -16,7 +16,6 @@ export default function ClientProviders({ children }: { children: ReactNode }) {
         if (registrations.length > 0) {
           Promise.all(registrations.map((r) => r.unregister())).then((results) => {
             if (results.some(Boolean)) {
-               
               console.warn(
                 '[sw] Unregistered stale service worker(s) in development mode. Reloading...'
               )
@@ -34,7 +33,6 @@ export default function ClientProviders({ children }: { children: ReactNode }) {
             // Service worker registered silently
           })
           .catch((registrationError) => {
-             
             console.error('SW registration failed: ', registrationError)
           })
       })

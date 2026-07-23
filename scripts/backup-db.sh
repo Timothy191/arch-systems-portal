@@ -33,7 +33,7 @@ RETENTION_DAYS=30
 
 # Docker compose context
 COMPOSE_FILE="${COMPOSE_FILE:-docker-compose.production.yml}"
-COMPOSE_PROJECT="${COMPOSE_PROJECT:-arch-production}"
+COMPOSE_PROJECT="${COMPOSE_PROJECT:-arch-systems-production}"
 
 # Remote storage (optional — set these in .env.production)
 # S3_ENDPOINT=...
