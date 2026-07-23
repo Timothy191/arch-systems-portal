@@ -77,3 +77,33 @@ on later without moving it. The runtime `memory_embeddings` product feature
 **Why**: Prevents cumulative layout shifts (CLS) on dynamic image resolutions, improving user experience and visual stability metrics.
 
 **Status**: Accepted.
+
+---
+
+## 006 — Redis Cache v2: L1+L2 Two-Tier Architecture
+
+**Decision**: Implemented two-tier caching in `packages/redis/src/cache.ts` with in-memory L1 (1000 entries, LRU eviction, 30s max TTL) and Redis L2. Added `Cache` class with unified API, tag-based invalidation, and request coalescing.
+
+**Why**: Single-tier Redis caching added latency on every read. L1 memory cache provides sub-millisecond access for hot keys while L2 Redis provides distributed persistence. Request coalescing prevents cache stampede on misses.
+
+**Status**: Accepted.
+
+---
+
+## 007 — Portal CI Pipeline with Bundle Analysis
+
+**Decision**: Added `.github/workflows/portal-ci.yml` with four jobs: quality gate (type-check, lint, test), structured data validation, build check, and bundle analysis with size-limit tracking.
+
+**Why**: Automated quality gates prevent regressions. Bundle analysis tracks Supabase dependency footprint and ensures page chunks stay under 350KB. Size-limit config at `apps/portal/.size-limit.json` enforces budgets.
+
+**Status**: Accepted.
+
+---
+
+## 008 — Supabase Dependency Slimming
+
+**Decision**: Removed Supabase CLI from `@repo/supabase` dependencies, keeping only `@supabase/ssr` and `@supabase/supabase-js`. CLI commands now use `pnpm dlx supabase@^2.26.0` on-demand.
+
+**Why**: Supabase CLI is only needed for local dev/scripts, not runtime. Removing it from dependencies reduces install size and avoids pulling CLI into production builds.
+
+**Status**: Accepted.

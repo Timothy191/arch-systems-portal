@@ -95,6 +95,13 @@ export class RateLimitError extends AppError {
   }
 }
 
+export class TooManyRequestsError extends RateLimitError {
+  constructor(message = 'Too many requests. Please try again later.') {
+    super(message)
+    this.name = 'TooManyRequestsError'
+  }
+}
+
 export class WebFetchError extends AppError {
   constructor(message: string, meta?: Record<string, unknown>) {
     super({ code: 'SERVICE_UNAVAILABLE', message, status: 502, meta })
@@ -102,10 +109,34 @@ export class WebFetchError extends AppError {
   }
 }
 
+export class ServiceUnavailableError extends AppError {
+  constructor(
+    message = 'Service unavailable. Please try again later.',
+    meta?: Record<string, unknown>
+  ) {
+    super({ code: 'SERVICE_UNAVAILABLE', message, status: 503, meta })
+    this.name = 'ServiceUnavailableError'
+  }
+}
+
 export class InternalError extends AppError {
   constructor(message = 'An unexpected internal error occurred.', meta?: Record<string, unknown>) {
     super({ code: 'INTERNAL_ERROR', message, status: 500, meta })
     this.name = 'InternalError'
+  }
+}
+
+export class InternalServerError extends InternalError {
+  constructor(message = 'An unexpected internal error occurred.', meta?: Record<string, unknown>) {
+    super(message, meta)
+    this.name = 'InternalServerError'
+  }
+}
+
+export class ConflictError extends AppError {
+  constructor(message = 'Resource conflict.', meta?: Record<string, unknown>) {
+    super({ code: 'CONFLICT', message, status: 409, meta })
+    this.name = 'ConflictError'
   }
 }
 

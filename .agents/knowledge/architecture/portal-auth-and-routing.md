@@ -22,6 +22,14 @@ Grounded in [`apps/portal/AGENTS.md`](../../../apps/portal/AGENTS.md) and
   crashes on stale sessions.
 - The `employees` table is the source of truth for roles and `accessible_departments`.
 
+## Logout
+
+- Route handler at `/api/auth/logout` (POST and GET)
+- POST: Returns JSON `{ success: true, redirectUrl: '/login' }`
+- GET: Redirects to `/login`
+- Uses `createServerSupabaseClient()` and calls `supabase.auth.signOut()`
+- Errors return 500 with `InternalError` from `@repo/errors`
+
 ## Route groups
 
 - `(auth)/` — login and password management.

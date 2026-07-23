@@ -11,9 +11,10 @@ import { getRedisClient } from '@repo/redis'
 import os from 'os'
 import { getRateLimitConfig } from './rate-limit-config'
 
-// Simple in-memory store for rate limiting
+// In-memory store for rate limiting supporting counters and key-value state
 class MemoryStore {
   private counters = new Map<string, { count: number; resetTime: number }>()
+  private storage = new Map<string, { value: string; expiresAt: number }>()
 
   async increment(key: string, windowMs: number): Promise<{ count: number; resetTime: number }> {
     const now = Date.now()
@@ -29,16 +30,29 @@ class MemoryStore {
     return entry
   }
 
-  async get(key: string): Promise<{ count: number; resetTime: number } | undefined> {
-    return this.counters.get(key)
+  async get(key: string): Promise<string | null> {
+    const now = Date.now()
+    const entry = this.storage.get(key)
+    if (!entry) return null
+    if (now > entry.expiresAt) {
+      this.storage.delete(key)
+      return null
+    }
+    return entry.value
+  }
+
+  async set(key: string, value: string, ttlMs: number): Promise<void> {
+    const expiresAt = Date.now() + ttlMs
+    this.storage.set(key, { value, expiresAt })
   }
 
   clear(): void {
     this.counters.clear()
+    this.storage.clear()
   }
 }
 
-// Simple Redis store for rate limiting
+// Redis store for rate limiting supporting atomic increments and state persistence
 class RedisStore {
   constructor(private _redis: Awaited<ReturnType<typeof getRedisClient>>) {}
 
@@ -54,14 +68,18 @@ class RedisStore {
     return { count: result, resetTime }
   }
 
-  async get(key: string): Promise<{ count: number; resetTime: number } | undefined> {
+  async get(key: string): Promise<string | null> {
     const count = await this._redis.get(key)
-    if (!count) return undefined
-    return { count: parseInt(count, 10), resetTime: Date.now() + 60000 }
+    return count ?? null
+  }
+
+  async set(key: string, value: string, ttlMs: number): Promise<void> {
+    const ttlSeconds = Math.max(1, Math.ceil(ttlMs / 1000))
+    await this._redis.set(key, value, 'EX', ttlSeconds)
   }
 }
 
-// Token bucket strategy
+// Token bucket strategy - tracks capacity, tokens, refill rate, and last refill timestamp
 class TokenBucketStrategy {
   async check(
     key: string,
@@ -69,21 +87,56 @@ class TokenBucketStrategy {
     windowMs: number,
     store: MemoryStore | RedisStore
   ): Promise<RateLimitResult> {
-    const result = await store.increment(key, windowMs)
-    const allowed = result.count <= limit
-    const remaining = Math.max(0, limit - result.count)
+    const now = Date.now()
+    const refillRate = limit / windowMs // tokens per ms
+    const bucketKey = `${key}:tb`
+
+    const rawState = await store.get(bucketKey)
+    let state: { tokens: number; lastRefill: number }
+
+    if (rawState) {
+      try {
+        state = JSON.parse(rawState)
+      } catch {
+        state = { tokens: limit, lastRefill: now }
+      }
+    } else {
+      state = { tokens: limit, lastRefill: now }
+    }
+
+    // Refill tokens based on elapsed time
+    const elapsed = Math.max(0, now - state.lastRefill)
+    state.tokens = Math.min(limit, state.tokens + elapsed * refillRate)
+    state.lastRefill = now
+
+    let allowed = false
+    let remaining = 0
+    let retryAfter: number | undefined
+
+    if (state.tokens >= 1) {
+      state.tokens -= 1
+      allowed = true
+      remaining = Math.floor(state.tokens)
+    } else {
+      allowed = false
+      remaining = 0
+      const missing = 1 - state.tokens
+      retryAfter = Math.max(1, Math.ceil(missing / refillRate / 1000))
+    }
+
+    await store.set(bucketKey, JSON.stringify(state), windowMs * 2)
 
     return {
       allowed,
       limit,
       remaining,
-      resetTime: result.resetTime,
-      retryAfter: Math.max(0, Math.ceil((result.resetTime - Date.now()) / 1000)),
+      resetTime: now + (retryAfter ? retryAfter * 1000 : windowMs),
+      retryAfter,
     }
   }
 }
 
-// Sliding window strategy
+// Sliding window strategy - tracks timestamp log to prevent boundary bursts
 class SlidingWindowStrategy {
   async check(
     key: string,
@@ -91,16 +144,51 @@ class SlidingWindowStrategy {
     windowMs: number,
     store: MemoryStore | RedisStore
   ): Promise<RateLimitResult> {
-    const result = await store.increment(key, windowMs)
-    const allowed = result.count <= limit
-    const remaining = Math.max(0, limit - result.count)
+    const now = Date.now()
+    const windowKey = `${key}:sw`
+    const windowStart = now - windowMs
+
+    const rawLogs = await store.get(windowKey)
+    let timestamps: number[] = []
+
+    if (rawLogs) {
+      try {
+        const parsed = JSON.parse(rawLogs)
+        if (Array.isArray(parsed)) {
+          timestamps = parsed.filter((ts) => typeof ts === 'number' && ts > windowStart)
+        }
+      } catch {
+        timestamps = []
+      }
+    }
+
+    let allowed = false
+    let remaining = 0
+    let retryAfter: number | undefined
+    let resetTime = now + windowMs
+
+    if (timestamps.length < limit) {
+      timestamps.push(now)
+      allowed = true
+      remaining = limit - timestamps.length
+      const firstTs = timestamps[0] ?? now
+      resetTime = firstTs + windowMs
+    } else {
+      allowed = false
+      remaining = 0
+      const oldestTs = timestamps[0] ?? now
+      retryAfter = Math.max(1, Math.ceil((oldestTs + windowMs - now) / 1000))
+      resetTime = oldestTs + windowMs
+    }
+
+    await store.set(windowKey, JSON.stringify(timestamps), windowMs * 2)
 
     return {
       allowed,
       limit,
       remaining,
-      resetTime: result.resetTime,
-      retryAfter: Math.max(0, Math.ceil((result.resetTime - Date.now()) / 1000)),
+      resetTime,
+      retryAfter,
     }
   }
 }

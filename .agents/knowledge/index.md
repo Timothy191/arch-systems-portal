@@ -27,6 +27,8 @@ Single source of truth for cross-agent codebase knowledge. Read
   enforcement, route groups, departments, path aliases.
 - [AI orchestration & memory](architecture/ai-orchestration-and-memory.md) — LangGraph
   agent graph, `lib/ai/` subsystem, and the product `memory_embeddings` runtime feature.
+- [Health checks & observability](architecture/health-and-observability.md) — Kubernetes
+  readiness/liveness probes, Prometheus metrics, and health endpoint map.
 
 ## Decisions
 
@@ -40,6 +42,7 @@ Single source of truth for cross-agent codebase knowledge. Read
 - [Next.js 16 Server Actions & Turbopack gotchas](patterns/nextjs16-server-actions.md) — isolating client-imported server actions to prevent module factory errors.
 - [Auto-formatting & Spec-First Global Policy](patterns/auto-formatting-and-specs.md) — background code formatting and mandatory spec-first cycle for multi-file tasks.
 - [High-Scale Systems, Microservices, and Design Patterns](patterns/high-scale-system-patterns.md) — extracted patterns from system-design-101, microservices, and design patterns.
+- [Redis Cache v2 — L1+L2 Two-Tier Pattern](patterns/redis-cache-v2.md) — in-memory L1 + Redis L2 with request coalescing and tag-based invalidation.
 
 
 ## Reference

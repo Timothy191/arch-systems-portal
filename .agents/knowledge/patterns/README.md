@@ -41,6 +41,10 @@ Use the native `"use cache"` directive without breaking caching. Separate auth f
 
 Maintain a low Cumulative Layout Shift (CLS), optimize third-party scripts, and measure performance metrics using Web Vitals APIs. See [layout-stability-and-telemetry.md](layout-stability-and-telemetry.md) for full details.
 
+### Redis Cache v2 — L1+L2 Two-Tier Pattern
+
+Two-tier caching with in-memory L1 (1000 entries, LRU eviction, 30s max TTL) and Redis L2. Includes request coalescing, tag-based invalidation, and stats tracking. See [redis-cache-v2.md](redis-cache-v2.md) for full details.
+
 ---
 
 Promote deeper recipes into their own file in this folder (with frontmatter) and link it

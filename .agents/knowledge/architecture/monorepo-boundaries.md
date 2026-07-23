@@ -31,6 +31,16 @@ Grounded in [`AGENTS.md`](../../../AGENTS.md) and [`CLAUDE.md`](../../../CLAUDE.
 `@repo/eslint-config`, `@repo/logger`, `@repo/rate-limiter`, `@repo/redis`,
 `@repo/supabase`, `@repo/theme`, `@repo/typescript-config`, `@repo/ui`, `@repo/utils`.
 
+### `@repo/redis` — L1+L2 Cache System (v2)
+
+Two-tier caching with in-memory L1 (1000 entries, LRU eviction) and Redis L2:
+- `cacheGet()`, `cacheSet()`, `cacheWrap()` — core operations
+- `cacheSetWithTags()` — tag-based invalidation
+- `Cache` class — unified API with prefix support
+- Request coalescing (single-flight) prevents duplicate fetches
+- Stats tracking: `recordCacheHit()`, `recordCacheMiss()`, `recordRedisError()`
+- See [Redis Cache v2 Pattern](../patterns/redis-cache-v2.md)
+
 ## Hard rules (do not violate)
 
 - **Never import from `apps/` inside `packages/`.** Packages stay framework-agnostic.
