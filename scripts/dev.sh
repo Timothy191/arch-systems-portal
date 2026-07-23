@@ -595,6 +595,7 @@ phase 6 "Daemons"
 bash "$REPO_ROOT/scripts/lsp-router.sh" start &
 bash "$REPO_ROOT/scripts/mcp-manager.sh" start &
 bash "$REPO_ROOT/scripts/heal-daemon.sh" &
+node "$REPO_ROOT/scripts/monitor/serve-monitor.mjs" &
 
 # ── Done ──────────────────────────────────────────────────────────────────────
 show_results
