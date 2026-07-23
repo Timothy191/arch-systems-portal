@@ -45,6 +45,8 @@ export { ScrollArea } from './components/ui/scroll-area'
 export { DropdownMenu } from './components/ui/dropdown-menu'
 export { DataGrid } from './components/ui/data-grid'
 export { BentoGrid } from './components/ui/bento-grid'
+export { Avatar } from './components/ui/avatar'
+export { Kbd } from './components/ui/kbd'
 
 // Legacy/large custom components
 export { Logo } from './components/Logo'
